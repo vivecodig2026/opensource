@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-tEA7cpHlRd+ompqyUz7fHynvbCtji6J+KeYFfY77dzY=' 'sha256-8cTO+FMxwWZKOT3abtlu8P/8QApM2jN1Pp2H/MrnLxU='; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-+MZ+61o+QmQr3uxypMGuAQb4dTzsSTNB7k/Jdc7yPdw=' 'sha256-8Jwabit5chuCtNbYbJ/Utdi4gNvZTuyu+M1KBbD2rYg='; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08786d">
@@ -92,7 +92,7 @@
 <dialog id="privacyDialog" aria-labelledby="privacyTitle"><div class="dialog-head"><div><small>Datos y servicios externos</small><h2 id="privacyTitle">Tu navegación, explicada.</h2></div><button class="icon-btn" data-close aria-label="Cerrar privacidad"><span data-icon="close"></span></button></div><div class="dialog-content"><p>Este catálogo no incorpora publicidad, píxeles de seguimiento ni identificadores de visitantes. Guarda una copia temporal de los metadatos públicos de las apps y de sus estadísticas para reducir consultas.</p><p>Consulta GitHub para obtener archivos, tamaños y contadores; GitHub procesa esas solicitudes según sus propias condiciones. Cuando abres WhatsApp, ese servicio recibe el mensaje preparado, además de los datos habituales de una conexión.</p><p>Las aplicaciones del catálogo son documentos independientes. Consulta sus funciones y requisitos; esta explicación no sustituye sus propios avisos de privacidad.</p><button class="btn secondary" id="clearCache">Borrar la caché del catálogo</button></div></dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script id="siteConfig" type="application/json">{
-  "version": 3,
+  "version": 4,
   "owner": "vivecodig2026",
   "repo": "opensource",
   "branch": "main",
@@ -154,10 +154,8 @@
         "Importación y exportación de DOCX; PDF mediante impresión."
       ],
       "requirements": "Recomendado en computadora. No reproduce todas las funciones de Word. Algunas funciones de voz y dictado dependen del navegador y pueden requerir internet.",
-      "size": 2,
-      "sha256": "8ef77ec27b560776364e7e0968a7efc75610b0176e3b766efa7fac6f7d5bac05",
-      "available": false,
-      "unavailableReason": "El archivo de OmniWord publicado en GitHub está vacío (2 bytes). Falta subir el HTML completo."
+      "size": 9170315,
+      "sha256": "8ef77ec27b560776364e7e0968a7efc75610b0176e3b766efa7fac6f7d5bac05"
     },
     {
       "id": "corte-studio",
@@ -285,7 +283,7 @@ const APPS=CONFIG.apps,byId=new Map(APPS.map(a=>[a.id,a])),byFile=new Map(APPS.m
 const API=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
 const REPO=`https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
 const RAW=`https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/`;
-const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v2`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v3`;
+const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v2`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v4`;
 const stats=new Map(),health=new Map(APPS.map(a=>[a.id,{available:a.available!==false,size:a.size,reason:a.unavailableReason||""}]));
 const MAX_FILE=60*1024*1024,CACHE_TTL=15*60*1000;
 let category='all',statsState='loading',statsTime=0,statsComplete=true,statsBusy=null,lastAttempt=0,toastTimer=null,detailApp=null,modalOpener=null;
@@ -372,5 +370,6 @@ los mismos nombres que los archivos del catálogo. Las descargas directas no
 se suman a esos contadores. No borrar las Releases si se desea conservar
 el historial. No se requieren claves privadas en este documento.
 -->
+
 
 
