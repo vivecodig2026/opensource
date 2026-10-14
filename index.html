@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VibeCoding Lab — Ing. Rubén Sierra | Apps HTML Gratis & Software con IA Pro</title>
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --accent: #10b981;
+      --purple: #8b5cf6;
+      --amber: #f59e0b;
+      --bg: #070b14;
+      --surface: #111827;
+      --surface-2: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #283548;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.58;
+      padding-bottom: 90px;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(17, 24, 39, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      padding: 12px 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.08rem;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--purple), var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .author-sub {
+      display: block;
+      font-size: 0.72rem;
+      color: #a5b4fc;
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px 15px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+    }
+
+    .btn-free {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .btn-improve {
+      background: rgba(59, 130, 246, 0.14);
+      border-color: #3b82f6;
+      color: #93c5fd;
+    }
+
+    .btn-improve:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-custom-app {
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      border-color: #8b5cf6;
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-donate {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border-color: #f59e0b;
+      color: #070b14;
+      font-weight: 800;
+    }
+
+    .btn-sm {
+      padding: 6px 11px;
+      font-size: 0.78rem;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 44px 0 26px;
+      text-align: center;
+    }
+
+    .pill-vibe {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(139, 92, 246, 0.16);
+      border: 1px solid rgba(139, 92, 246, 0.45);
+      color: #c4b5fd;
+      padding: 6px 15px;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.75rem, 3.8vw, 2.6rem);
+      font-weight: 900;
+      max-width: 880px;
+      margin: 0 auto 12px;
+      line-height: 1.18;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 780px;
+      margin: 0 auto 22px;
+      font-size: 0.98rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    /* Manifiesto Vibe Coding & Autor */
+    .manifesto-box {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(17, 24, 39, 0.98));
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 30px;
+      text-align: left;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .manifesto-col h3 {
+      font-size: 1.05rem;
+      color: #c4b5fd;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .manifesto-col p {
+      font-size: 0.87rem;
+      color: #cbd5e1;
+    }
+
+    .llm-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .llm-tag {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #f8fafc;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Apps Grid */
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 18px;
+      margin-bottom: 42px;
+    }
+
+    .app-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.15s ease;
+    }
+
+    .app-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .badge-free {
+      background: rgba(16, 185, 129, 0.18);
+      color: #6ee7b7;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 99px;
+    }
+
+    .app-card h3 {
+      font-size: 1.05rem;
+      margin: 10px 0 6px;
+    }
+
+    .app-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .app-card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Dual Bottom Section */
+    .dual-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 22px;
+      margin-top: 20px;
+    }
+
+    .box-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .box-card.custom-app-box {
+      border-color: var(--purple);
+      background: linear-gradient(180deg, rgba(139, 92, 246, 0.08), var(--surface));
+    }
+
+    .box-card.donation-box {
+      border-color: var(--amber);
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.08), var(--surface));
+    }
+
+    .llm-support-banner {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.83rem;
+      color: #fde68a;
+      margin-bottom: 14px;
+    }
+
+    .pay-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+      gap: 8px;
+      margin: 12px 0 16px;
+    }
+
+    .pay-chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 6px;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .pay-chip.active, .pay-chip:hover {
+      border-color: var(--amber);
+      background: rgba(245, 158, 11, 0.16);
+      color: #fcd34d;
+    }
+
+    .input, select, textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius);
+      max-width: 530px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.65);
+    }
+
+    .admin-panel {
+      background: var(--surface-2);
+      border: 2px dashed var(--accent);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 20px 0;
+      display: none;
+    }
+
+    .admin-panel.active {
+      display: block;
+    }
+
+    .footer {
+      margin-top: 50px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA SUPERIOR -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <div>
+          <span id="ui-brand-title">VibeCoding Lab — Bóveda Abierta</span>
+          <span class="author-sub">Autor y Co-creador: Ing. de Sistemas Rubén Sierra</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="#catalogo-gratis" class="btn btn-sm">📂 Apps Gratis</a>
+        <a href="#seccion-donar" class="btn btn-donate btn-sm">☕ Apoyar Mensualidad LLMs</a>
+        <button class="btn btn-custom-app btn-sm" onclick="scrollToCustomApp()">
+          🚀 Crear Tu Propia App
+        </button>
+        <button id="btn-admin-mode" class="btn btn-sm" style="border-color:var(--accent); color:#6ee7b7;" onclick="toggleCreatorPanel()">
+          ⚙️ Modo Creador
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- PANEL MODO CREADOR (CON OFUSCADOR AUTOMÁTICO DE TELÉFONO) -->
+    <section id="creator-panel" class="admin-panel">
+      <h3 style="color:#6ee7b7; margin-bottom:6px;">⚙️ Panel del Creador (Ing. Rubén Sierra) — Configuración & Ofuscación</h3>
+      <p style="font-size:0.84rem; color:var(--muted); margin-bottom:14px;">
+        Tu número de WhatsApp y billeteras se guardan <strong>ofuscados mediante cifrado XOR de bytes</strong> para que ningún bot o curioso pueda leerlos en texto plano al inspeccionar el código fuente.
+      </p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre de la Plataforma</label>
+          <input type="text" id="adm-title" class="input" value="VibeCoding Lab — Bóveda Abierta" />
+        </div>
+        <div class="form-group">
+          <label>Nuevo WhatsApp (con código país, se ofuscará automáticamente)</label>
+          <input type="password" id="adm-wa-plain" class="input" placeholder="Dejar vacío para mantener el actual ofuscado" />
+        </div>
+        <div class="form-group">
+          <label>Link de Pago Bold / Mercado Pago</label>
+          <input type="text" id="adm-linkpago" class="input" value="https://bold.co/" />
+        </div>
+      </div>
+
+      <hr style="border:none; border-top:1px solid var(--border); margin:12px 0;" />
+      <h4 style="font-size:0.9rem; margin-bottom:8px;">➕ Añadir Otra App Gratuita al Catálogo</h4>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre de la App</label>
+          <input type="text" id="adm-app-name" class="input" placeholder="Ej. Generador de Contratos IA" />
+        </div>
+        <div class="form-group">
+          <label>Categoría</label>
+          <select id="adm-app-cat" class="input">
+            <option value="Ofimática & Video">Ofimática & Video</option>
+            <option value="Negocios & Ventas">Negocios & Ventas</option>
+            <option value="Productividad & Finanzas">Productividad & Finanzas</option>
+            <option value="Utilidades">Utilidades</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Archivo .html o Ruta en Drive</label>
+          <input type="text" id="adm-app-file" class="input" placeholder="Ej. ./mi_nueva_app.html" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Descripción corta</label>
+        <input type="text" id="adm-app-desc" class="input" placeholder="Describe qué problema resuelve esta herramienta..." />
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-free btn-sm" onclick="addNewFreeApp()">+ Añadir App al Catálogo</button>
+        <button class="btn btn-donate btn-sm" onclick="exportCleanPublicHTML()">📦 Descargar Web Lista para Publicar (con Teléfono Ofuscado)</button>
+      </div>
+    </section>
+
+    <!-- HERO PRINCIPAL -->
+    <section class="hero">
+      <div class="pill-vibe">
+        <span>✨ FILOSOFÍA VIBE CODING • AUTOR Y CO-CREADOR: ING. DE SISTEMAS RUBÉN SIERRA</span>
+      </div>
+      <h1>Micro-Software Libre, Ultraligero y Co-Creado con Inteligencia Artificial de Vanguardia</h1>
+      <p>
+        Descarga y usa gratis nuestras aplicaciones en HTML offline sin suscripciones ni instaladores pesados. Si necesitas <strong>adaptar o mejorar una herramienta para tu negocio</strong> o <strong>crear tu propia aplicación desde cero</strong>, la construimos a tu medida.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#catalogo-gratis" class="btn btn-free">⬇️ Usar y Descargar Apps Gratis</a>
+        <button class="btn btn-custom-app" onclick="scrollToCustomApp()">
+          🚀 Solicitar la Creación de Tu Propia App
+        </button>
+        <a href="#seccion-donar" class="btn btn-donate">☕ Donar para Sostener los Modelos IA</a>
+      </div>
+
+      <!-- MANIFIESTO VIBE CODING, MODELOS PRO Y SOSTENIBILIDAD LLM -->
+      <div class="manifesto-box">
+        <div class="manifesto-col">
+          <h3>🧠 ¿Qué es nuestra Filosofía Vibe Coding?</h3>
+          <p>
+            El <strong>Vibe Coding</strong> une el criterio de arquitectura de software con el poder generativo de la Inteligencia Artificial. Cada aplicación de esta bóveda es dirigida, auditada y co-creada por el <strong>Ing. de Sistemas Rubén Sierra</strong> utilizando las versiones profesionales de los modelos más avanzados del mundo:
+          </p>
+          <div class="llm-badges">
+            <span class="llm-tag">🤖 ChatGPT Pro</span>
+            <span class="llm-tag">✨ Gemini Pro</span>
+            <span class="llm-tag">⚡ Claude Pro</span>
+            <span class="llm-tag">👨‍💻 Ing. Rubén Sierra</span>
+          </div>
+        </div>
+
+        <div class="manifesto-col">
+          <h3>🔋 ¿Por qué tu contribución mantiene viva esta fábrica?</h3>
+          <p>
+            Todas las aplicaciones base se entregan de forma <strong>gratuita</strong> para ayudar a emprendedores, estudiantes y negocios. Sin embargo, mantener activas las suscripciones mensuales de los modelos Pro de Inteligencia Artificial (<strong>LLMs</strong>) tiene un costo elevado en dólares.
+          </p>
+          <p style="margin-top:8px; color:#fcd34d; font-weight:600;">
+            👉 Las donaciones voluntarias, las mejoras personalizadas y la creación de apps a medida permiten pagar la mensualidad de estos modelos Pro para seguir creando más herramientas gratuitas para todos.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATÁLOGO DE APPS GRATIS -->
+    <section id="catalogo-gratis">
+      <div class="filter-bar">
+        <div style="display:flex; gap:6px; flex-wrap:wrap;" id="filter-btns">
+          <button class="btn btn-free btn-sm" onclick="filterCatalog('all', this)">Todas las Apps Gratis</button>
+          <button class="btn btn-sm" onclick="filterCatalog('Ofimática & Video', this)">Ofimática & Video</button>
+          <button class="btn btn-sm" onclick="filterCatalog('Negocios & Ventas', this)">Negocios & Ventas</button>
+          <button class="btn btn-sm" onclick="filterCatalog('Productividad & Finanzas', this)">Productividad & Finanzas</button>
+          <button class="btn btn-sm" onclick="filterCatalog('Utilidades', this)">Utilidades</button>
+        </div>
+        <input type="text" id="search-input" class="input" style="max-width:250px;" placeholder="🔍 Buscar aplicación..." oninput="renderFreeApps()" />
+      </div>
+
+      <div class="apps-grid" id="free-apps-grid"></div>
+    </section>
+
+    <!-- SECCIÓN DOBLE: 1. CREAR TU PROPIA APP | 2. DONACIÓN OPCIONAL PARA MENSUALIDAD DE LLMs -->
+    <section class="dual-section">
+
+      <!-- BOTÓN Y FORMULARIO INDEPENDIENTE: CREAR TU PROPIA APP DESDE CERO -->
+      <div id="seccion-crear-app" class="box-card custom-app-box">
+        <span class="badge-free" style="background:rgba(139,92,246,0.25); color:#c4b5fd;">CO-CREACIÓN A MEDIDA CON EL ING. RUBÉN SIERRA</span>
+        <h2 style="font-size:1.32rem; margin:10px 0 6px;">🚀 ¿Quieres que Creemos Tu Propia App desde Cero?</h2>
+        <p style="font-size:0.87rem; color:var(--muted); margin-bottom:14px;">
+          Si tienes una idea o necesitas automatizar un cálculo, inventario, cotizador o flujo de trabajo propio, el <strong>Ing. de Sistemas Rubén Sierra</strong> lo diseña a tu medida combinando ingeniería de software y modelos IA Pro (ChatGPT, Gemini y Claude).
+        </p>
+
+        <div class="form-group">
+          <label>Tu Nombre o el de tu Empresa</label>
+          <input type="text" id="newapp-client" class="input" placeholder="Ej. Distribuidora Central / Andrés López" />
+        </div>
+        <div class="form-group">
+          <label>¿Para qué necesitas tu App?</label>
+          <select id="newapp-type" class="input">
+            <option value="Uso interno en mi propio negocio o profesión">Para usarla en mi propio negocio o trabajo</option>
+            <option value="Marca Blanca para comercializar con mis clientes">Para venderla o distribuirla a mis propios clientes</option>
+            <option value="Proyecto especial a medida">Proyecto especial / Otro requerimiento</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Describe qué quieres que haga tu propia App</label>
+          <textarea id="newapp-idea" rows="3" class="input" placeholder="Describe qué datos quieres ingresar, qué cálculos debe hacer y si necesitas exportar recibos en PDF o enviar a WhatsApp..."></textarea>
+        </div>
+
+        <button class="btn btn-custom-app" style="width:100%; padding:13px; font-size:0.95rem;" onclick="sendCustomNewAppWhatsApp()">
+          🚀 Solicitar Cotización de Mi Propia App por WhatsApp
+        </button>
+      </div>
+
+      <!-- MÓDULO DE DONACIÓN OPCIONAL PARA PAGAR MENSUALIDAD DE LOS LLM -->
+      <div id="seccion-donar" class="box-card donation-box">
+        <span class="badge-free" style="background:rgba(245,158,11,0.25); color:#fcd34d;">FONDO COMUNITARIO PARA SUSCRIPCIONES IA PRO</span>
+        <h2 style="font-size:1.32rem; margin:10px 0 6px;">☕ Apoya con una Donación Opcional</h2>
+
+        <div class="llm-support-banner">
+          💡 <strong>¿Por qué es importante tu aporte?</strong> La contribución de todos hace posible que se sigan creando y actualizando más herramientas gratuitas, ya que con estos aportes cubrimos el pago mensual de las licencias Pro de los LLMs (<strong>ChatGPT Pro, Gemini Pro y Claude Pro</strong>).
+        </div>
+
+        <p style="font-size:0.84rem; color:var(--muted); margin-bottom:10px;">
+          Elige tu aplicación de pago favorita y haz clic en <strong>"Mostrar / Copiar Cuenta"</strong> para realizar tu aporte voluntario:
+        </p>
+
+        <div class="pay-grid">
+          <button class="pay-chip active" onclick="selectDonationMethod('Nequi', this)">🟣 Nequi</button>
+          <button class="pay-chip" onclick="selectDonationMethod('DaviPlata', this)">🔴 DaviPlata</button>
+          <button class="pay-chip" onclick="selectDonationMethod('Mercado Pago', this)">🤝 Mercado Pago</button>
+          <button class="pay-chip" onclick="selectDonationMethod('Bold', this)">💳 Bold</button>
+          <button class="pay-chip" onclick="selectDonationMethod('Lulo Bank', this)">🟢 Lulo Bank</button>
+          <button class="pay-chip" onclick="selectDonationMethod('Uno / Ualá', this)">🔵 Uno</button>
+          <button class="pay-chip" onclick="selectDonationMethod('Tarjeta Plata', this)">⚪ Tarjeta Plata</button>
+          <button class="pay-chip" onclick="selectDonationMethod('Tpaga', this)">🟠 Tpaga</button>
+          <button class="pay-chip" onclick="selectDonationMethod('PayPal', this)">🌎 PayPal</button>
+          <button class="pay-chip" onclick="selectDonationMethod('Paysend', this)">💸 Paysend</button>
+          <button class="pay-chip" onclick="selectDonationMethod('AstroPay', this)">🚀 AstroPay</button>
+          <button class="pay-chip" onclick="selectDonationMethod('Cupy', this)">⚡ Cupy</button>
+        </div>
+
+        <div style="background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:14px;">
+          <div style="font-size:0.74rem; color:var(--muted); font-weight:700;" id="don-method-label">APORTE VOLUNTARIO VÍA NEQUI:</div>
+          <div style="font-size:0.98rem; font-weight:800; color:#fcd34d; margin:6px 0 12px;" id="don-method-value">
+            Haz clic en "Revelar y Copiar Cuenta" para ver el número protegido
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-donate btn-sm" onclick="revealAndCopyWallet()">🔒 Revelar y Copiar Número de Cuenta</button>
+            <a id="don-ext-link" href="#" target="_blank" class="btn btn-sm" style="display:none;">🔗 Abrir Pasarela de Pago</a>
+            <button class="btn btn-sm" onclick="notifyDonationWhatsApp()">💚 Enviar Comprobante de Apoyo por WhatsApp</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <footer class="footer">
+      <div><strong>VibeCoding Lab</strong> — Herramientas Web Ligeras creadas con Inteligencia Artificial (ChatGPT Pro, Gemini Pro y Claude Pro).</div>
+      <div style="margin-top:4px;">Autor, Arquitecto y Co-creador: <strong>Ing. de Sistemas Rubén Sierra</strong> • Número de contacto protegido contra bots de spam.</div>
+    </footer>
+
+  </div>
+
+  <!-- MODAL PARA SOLICITAR MEJORA O PERSONALIZACIÓN DE UNA APP ESPECÍFICA -->
+  <div id="improve-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+        <div>
+          <span class="badge-free" style="background:rgba(59,130,246,0.2); color:#93c5fd;">PERSONALIZACIÓN O MEJORA DE APP</span>
+          <h3 style="font-size:1.15rem; margin-top:6px;" id="modal-app-title">App Seleccionada</h3>
+        </div>
+        <button class="btn btn-sm" onclick="closeImproveModal()">✕</button>
+      </div>
+
+      <p style="font-size:0.85rem; color:var(--muted); margin-bottom:14px;">
+        El <strong>Ing. de Sistemas Rubén Sierra</strong> puede adaptar esta herramienta para tu negocio (agregar tu logo, colores, nuevos cálculos o funciones específicas). Al continuar, serás redirigido a su WhatsApp con los datos de esta app para acordar internamente el valor de la mejora.
+      </p>
+
+      <div class="form-group">
+        <label>¿Qué mejora o personalización deseas en esta App?</label>
+        <select id="modal-improve-type" class="input">
+          <option value="Personalización de Marca (Incluir mi logo, nombre de negocio y colores)">Personalizar con mi Logo, Nombre de Empresa y Colores</option>
+          <option value="Agregar nuevas funciones, columnas o cálculos específicos">Agregar nuevas funciones o cálculos a esta App</option>
+          <option value="Adaptar formato de exportación PDF / Envío a WhatsApp">Adaptar recibo PDF o formato de WhatsApp</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Describe qué te gustaría agregarle o cambiarle</label>
+        <textarea id="modal-improve-notes" rows="3" class="input" placeholder="Ej. Me gustaría que esta app lleve el logo de mi negocio y un botón adicional para..."></textarea>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+        <button class="btn btn-free" style="flex:1; padding:12px;" onclick="sendSpecificAppImproveWhatsApp()">
+          📲 Acordar Precio de Mejora por WhatsApp Directo
+        </button>
+        <button class="btn" onclick="closeImproveModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // OFUSCACIÓN XOR (Clave 73): El número de teléfono nunca está en texto plano dentro del código fuente
+    const _K = 73;
+    const PLATFORM_CFG = /*__FREE_CFG_START__*/ {
+      title: "VibeCoding Lab — Bóveda Abierta",
+      author: "Ing. de Sistemas Rubén Sierra",
+      // Bytes XOR correspondientes al número internacional y nacional (indetectables por bots de scraping)
+      waXor: [124, 126, 122, 121, 121, 113, 125, 127, 121, 122, 123, 126],
+      localXor: [122, 121, 121, 105, 113, 125, 127, 105, 121, 122, 123, 126],
+      linkPago: "https://bold.co/",
+      lockedMode: false,
+      apps: [
+        {
+          id: 1,
+          name: "🎬 StudioCut Video & Reels Lite",
+          cat: "Ofimática & Video",
+          file: "./suite_office_y_estudio_video_lite.html",
+          desc: "Alternativa ligera a CapCut co-creada con IA: edita videos en formato 9:16 TikTok/Reels, agrega subtítulos, filtros y exporta sin marca de agua."
+        },
+        {
+          id: 2,
+          name: "📝 DocuWord Lite (Procesador Textos & PDF)",
+          cat: "Ofimática & Video",
+          file: "./suite_office_y_estudio_video_lite.html",
+          desc: "Alternativa rápida a Word con plantillas de contratos y cartas, exportación a .DOC e impresión limpia en PDF."
+        },
+        {
+          id: 3,
+          name: "📊 HojaCalc Lite (Excel con Fórmulas)",
+          cat: "Ofimática & Video",
+          file: "./suite_office_y_estudio_video_lite.html",
+          desc: "Hoja de cálculo ligera con soporte para fórmulas (=SUMA, =PROMEDIO, multiplicación de celdas) y exportación a Excel (.csv)."
+        },
+        {
+          id: 4,
+          name: "🖥️ Presenta Lite (Creador de Diapositivas)",
+          cat: "Ofimática & Video",
+          file: "./suite_office_y_estudio_video_lite.html",
+          desc: "Crea presentaciones modernas por bloques en segundos y proyecta en pantalla completa sin instalar programas pesados."
+        },
+        {
+          id: 5,
+          name: "📄 Cotizador & Generador de Recibos PDF",
+          cat: "Negocios & Ventas",
+          file: "./boveda_software_offline_hub.html",
+          desc: "Genera cotizaciones y comprobantes listos para imprimir en PDF o enviar directo al WhatsApp de tu cliente."
+        },
+        {
+          id: 6,
+          name: "🛒 Punto de Venta (POS) + Control de Fiados",
+          cat: "Negocios & Ventas",
+          file: "./boveda_software_offline_hub.html",
+          desc: "Registra ventas diarias de contado o a crédito ('fiados'), descuenta inventario automáticamente y gestiona cobros."
+        },
+        {
+          id: 7,
+          name: "📌 Tablero Kanban & Calculadora de Precios",
+          cat: "Productividad & Finanzas",
+          file: "./boveda_software_offline_hub.html",
+          desc: "Organiza tareas en columnas visuales (Por Hacer, En Proceso, Terminado) y calcula márgenes de ganancia exactos."
+        },
+        {
+          id: 8,
+          name: "📲 Catálogo Digital con Pedido a WhatsApp",
+          cat: "Negocios & Ventas",
+          file: "./00_lanzador_maestro_drive.html",
+          desc: "Permite mostrar tus productos y precios para que el cliente arme su pedido y te llegue listo al WhatsApp."
+        },
+        {
+          id: 9,
+          name: "🏦 Control de Préstamos, Cuotas y Abonos",
+          cat: "Productividad & Finanzas",
+          file: "./00_lanzador_maestro_drive.html",
+          desc: "Calcula intereses, cuotas diarias o mensuales y lleva el historial de pagos de cada deudor sin internet."
+        }
+      ]
+    } /*__FREE_CFG_END__*/;
+
+    // Decodificador en memoria (solo se ejecuta al interactuar el usuario)
+    function _dec(arr) {
+      return arr.map(b => String.fromCharCode(b ^ _K)).join("");
+    }
+
+    function _enc(str) {
+      return Array.from(str).map(ch => ch.charCodeAt(0) ^ _K);
+    }
+
+    let currentCategory = "all";
+    let currentAppForImprove = "";
+    let currentDonationMethod = "Nequi";
+
+    function toggleCreatorPanel() {
+      document.getElementById("creator-panel").classList.toggle("active");
+    }
+
+    function filterCatalog(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll("#filter-btns .btn").forEach(b => b.classList.remove("btn-free"));
+      if (btn) btn.classList.add("btn-free");
+      renderFreeApps();
+    }
+
+    function renderFreeApps() {
+      document.getElementById("ui-brand-title").textContent = PLATFORM_CFG.title;
+      const q = (document.getElementById("search-input").value || "").toLowerCase();
+      const grid = document.getElementById("free-apps-grid");
+      grid.innerHTML = "";
+
+      PLATFORM_CFG.apps
+        .filter(a => currentCategory === "all" || a.cat === currentCategory)
+        .filter(a => a.name.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q))
+        .forEach(app => {
+          const card = document.createElement("div");
+          card.className = "app-card";
+          const safeName = app.name.replace(/'/g, "\'");
+          card.innerHTML = `
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.72rem; color:var(--muted); font-weight:700;">${app.cat}</span>
+                <span class="badge-free">GRATIS • VIBE CODING</span>
+              </div>
+              <h3>${app.name}</h3>
+              <p>${app.desc}</p>
+            </div>
+            <div class="app-card-actions">
+              <a href="${app.file}" class="btn btn-free btn-sm" style="width:100%;">
+                ⬇️ Abrir / Descargar Gratis
+              </a>
+              <button class="btn btn-improve btn-sm" style="width:100%;" onclick="openImproveModal('${safeName}')">
+                🛠️ Pedir Mejora o Personalizar esta App
+              </button>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+    }
+
+    // --- 1. BOTÓN DE MEJORA / PERSONALIZACIÓN DE UNA APP ESPECÍFICA (CON REDIRECCIÓN OFUSCADA) ---
+    function openImproveModal(appName) {
+      currentAppForImprove = appName;
+      document.getElementById("modal-app-title").textContent = appName;
+      document.getElementById("modal-improve-notes").value = "";
+      document.getElementById("improve-modal").classList.add("active");
+    }
+
+    function closeImproveModal() {
+      document.getElementById("improve-modal").classList.remove("active");
+    }
+
+    function sendSpecificAppImproveWhatsApp() {
+      const type = document.getElementById("modal-improve-type").value;
+      const notes = document.getElementById("modal-improve-notes").value.trim() || "Deseo cotizar el valor de esta adaptación.";
+      const dest = _dec(PLATFORM_CFG.waXor);
+
+      const msg = `¡Hola Ing. Rubén Sierra! Estoy usando la plataforma *${PLATFORM_CFG.title}* y quiero solicitar una *MEJORA / PERSONALIZACIÓN* para esta aplicación específica:\n\n` +
+                  `📌 *App a personalizar:* ${currentAppForImprove}\n` +
+                  `🛠️ *Ajuste requerido:* ${type}\n` +
+                  `📝 *Detalles específicos:* ${notes}\n\n` +
+                  `Quedo atento para cuadrar internamente el precio de esta personalización.`;
+
+      window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, "_blank");
+      closeImproveModal();
+    }
+
+    // --- 2. BOTÓN INDEPENDIENTE PARA CREACIÓN DE TU PROPIA APP DESDE CERO ---
+    function scrollToCustomApp() {
+      document.getElementById("seccion-crear-app").scrollIntoView({ behavior: "smooth" });
+      document.getElementById("newapp-idea").focus();
+    }
+
+    function sendCustomNewAppWhatsApp() {
+      const client = document.getElementById("newapp-client").value.trim() || "Interesado";
+      const useType = document.getElementById("newapp-type").value;
+      const idea = document.getElementById("newapp-idea").value.trim();
+
+      if (!idea) {
+        alert("Por favor describe brevemente qué quieres que haga tu propia app antes de enviar.");
+        return;
+      }
+
+      const dest = _dec(PLATFORM_CFG.waXor);
+      const msg = `¡Hola Ing. Rubén Sierra! Quiero cotizar la *CREACIÓN DE MI PROPIA APP A MEDIDA* bajo la filosofía Vibe Coding:\n\n` +
+                  `👤 *Cliente / Negocio:* ${client}\n` +
+                  `🎯 *Modalidad:* ${useType}\n` +
+                  `💡 *Idea / Necesidad:* ${idea}\n\n` +
+                  `Quedo atento para acordar el presupuesto y alcance.`;
+
+      window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    // --- 3. DONACIONES OPCIONALES PARA SOSTENER LOS LLMs PRO ---
+    function selectDonationMethod(method, btn) {
+      currentDonationMethod = method;
+      document.querySelectorAll(".pay-chip").forEach(c => c.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+
+      const lbl = document.getElementById("don-method-label");
+      const val = document.getElementById("don-method-value");
+      const lnk = document.getElementById("don-ext-link");
+
+      lbl.textContent = "APOYAR MENSUALIDAD DE LLMs VÍA " + method.toUpperCase() + ":";
+      lnk.style.display = "none";
+
+      if (["Bold", "Mercado Pago"].includes(method)) {
+        val.textContent = `Pasarela en línea (${method}): Haz clic en "Abrir Pasarela de Pago"`;
+        lnk.href = PLATFORM_CFG.linkPago;
+        lnk.style.display = "inline-flex";
+      } else {
+        val.textContent = `Cuenta protegida contra spam para ${method}. Pulsa "Revelar y Copiar Número de Cuenta".`;
+      }
+    }
+
+    function revealAndCopyWallet() {
+      const numLocal = _dec(PLATFORM_CFG.localXor);
+      const val = document.getElementById("don-method-value");
+      val.textContent = `${currentDonationMethod}: ${numLocal} (Titular: Ing. Rubén Sierra)`;
+      navigator.clipboard.writeText(numLocal.replace(/\s+/g, ""));
+      alert(`Número copiado al portapapeles para tu donación en ${currentDonationMethod}: ${numLocal}`);
+    }
+
+    function notifyDonationWhatsApp() {
+      const dest = _dec(PLATFORM_CFG.waXor);
+      const msg = `¡Hola Ing. Rubén Sierra! Acabo de realizar una donación voluntaria por *${currentDonationMethod}* para apoyar el pago de las mensualidades de los modelos IA Pro y que se sigan creando más herramientas gratuitas. Adjunto mi comprobante:`;
+      window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    // --- MODO CREADOR ---
+    function syncAdminSettings() {
+      PLATFORM_CFG.title = document.getElementById("adm-title").value.trim() || PLATFORM_CFG.title;
+      PLATFORM_CFG.linkPago = document.getElementById("adm-linkpago").value.trim() || PLATFORM_CFG.linkPago;
+      const newWa = document.getElementById("adm-wa-plain").value.replace(/\D/g, "");
+      if (newWa.length >= 10) {
+        const fullWa = newWa.startsWith("57") ? newWa : "57" + newWa;
+        const localOnly = fullWa.startsWith("57") ? fullWa.substring(2) : fullWa;
+        PLATFORM_CFG.waXor = _enc(fullWa);
+        PLATFORM_CFG.localXor = _enc(localOnly);
+      }
+      renderFreeApps();
+    }
+
+    function addNewFreeApp() {
+      syncAdminSettings();
+      const name = document.getElementById("adm-app-name").value.trim();
+      const cat = document.getElementById("adm-app-cat").value;
+      const file = document.getElementById("adm-app-file").value.trim() || "./00_lanzador_maestro_drive.html";
+      const desc = document.getElementById("adm-app-desc").value.trim();
+      if (!name) return alert("Escribe el nombre de la aplicación.");
+
+      PLATFORM_CFG.apps.push({
+        id: Date.now(),
+        name,
+        cat,
+        file,
+        desc: desc || "Aplicación HTML offline co-creada con IA Pro."
+      });
+      document.getElementById("adm-app-name").value = "";
+      document.getElementById("adm-app-file").value = "";
+      document.getElementById("adm-app-desc").value = "";
+      renderFreeApps();
+    }
+
+    function exportCleanPublicHTML() {
+      syncAdminSettings();
+      const cleanCfg = { ...PLATFORM_CFG, lockedMode: true };
+      const raw = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      const updated = raw.replace(
+        /\/\*__FREE_CFG_START__\*\/[\s\S]*?\/\*__FREE_CFG_END__\*\//,
+        "/*__FREE_CFG_START__*/ " + JSON.stringify(cleanCfg, null, 2) + " /*__FREE_CFG_END__*/"
+      );
+      const blob = new Blob([updated], { type: "text/html;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "index.html";
+      a.click();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (PLATFORM_CFG.lockedMode) {
+        const btnAdm = document.getElementById("btn-admin-mode");
+        if (btnAdm) btnAdm.style.display = "none";
+        document.getElementById("creator-panel").style.display = "none";
+      }
+      renderFreeApps();
+      selectDonationMethod("Nequi", document.querySelector(".pay-chip.active"));
+    });
+  </script>
+</body>
+</html>
