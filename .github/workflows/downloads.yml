@@ -1,0 +1,58 @@
+name: Publicar descargas medibles
+on:
+  push:
+    branches: [main]
+    paths:
+      - "*.html"
+      - ".github/workflows/downloads.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: publish-downloads
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publicar HTML completos conservando el historial
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib, re, json, os, subprocess
+          def gh(*args):
+              return subprocess.check_output(['gh', *args], text=True)
+          source = pathlib.Path('index.html').read_text()
+          config = json.loads(re.search(r'<script id="siteConfig" type="application/json">([\s\S]*?)</script>', source)[1])
+          tag = 'apps-' + os.environ['GITHUB_SHA']
+          releases = json.loads(gh('api', 'repos/' + os.environ['GH_REPO'] + '/releases?per_page=100'))
+          current = next((r for r in releases if r['tag_name'] == tag), None)
+          if current is None:
+              gh('release', 'create', tag, '--target', os.environ['GITHUB_SHA'], '--title', 'Aplicaciones ' + os.environ['GITHUB_SHA'][:7], '--notes', 'Descargas del catálogo. Conservar esta versión para mantener el historial de contadores.', '--draft')
+              current = json.loads(gh('api', 'repos/' + os.environ['GH_REPO'] + '/releases/tags/' + tag))
+          uploaded = {a['name'] for a in current['assets']}
+          valid = 0
+          for app in config['apps']:
+              path = pathlib.Path(app['file'])
+              if path.parent != pathlib.Path('.') or not path.is_file():
+                  continue
+              size = path.stat().st_size
+              with path.open('rb') as f:
+                  prefix = f.read(8192)
+              if not 256 <= size <= 60 * 1024 * 1024 or not re.search(br'<(?:!doctype\s+html|html\b)', prefix, re.I):
+                  print('Omitido por estar vacío o incompleto:', path)
+                  continue
+              valid += 1
+              if path.name not in uploaded:
+                  gh('release', 'upload', tag, str(path))
+          if not valid:
+              raise SystemExit('No hay aplicaciones HTML completas para publicar.')
+          if current['draft']:
+              gh('release', 'edit', tag, '--draft=false', '--latest')
+          print('Publicadas', valid, 'aplicaciones; historial anterior conservado.')
+          PY
