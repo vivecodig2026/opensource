@@ -34,7 +34,7 @@ jobs:
           current = next((r for r in releases if r['tag_name'] == tag), None)
           if current is None:
               gh('release', 'create', tag, '--target', os.environ['GITHUB_SHA'], '--title', 'Aplicaciones ' + os.environ['GITHUB_SHA'][:7], '--notes', 'Descargas del catálogo. Conservar esta versión para mantener el historial de contadores.', '--draft')
-              current = json.loads(gh('api', 'repos/' + os.environ['GH_REPO'] + '/releases/tags/' + tag))
+              current = next(r for r in json.loads(gh('api', 'repos/' + os.environ['GH_REPO'] + '/releases?per_page=100')) if r['tag_name'] == tag)
           uploaded = {a['name'] for a in current['assets']}
           valid = 0
           for app in config['apps']:
