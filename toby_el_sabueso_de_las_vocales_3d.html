@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Toby 3D: El Sabueso de las Vocales — Juego Educativo WebGL</title>
+    <!-- Tailwind CSS para interfaz adaptativa -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js r128 para renderizado 3D WebGL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Iconos FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Tipografía redondeada amigable para niños y lectura clara -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: none;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100dvh;
+            overflow: hidden;
+            background-color: #0f172a;
+            font-family: 'Fredoka', 'Nunito', sans-serif;
+        }
+
+        #webgl-container {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Animaciones de interfaz */
+        @keyframes popBounce {
+            0% { transform: scale(0.7); opacity: 0; }
+            60% { transform: scale(1.12); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
+            50% { box-shadow: 0 0 0 12px rgba(250, 204, 21, 0); }
+        }
+
+        .vowel-slot {
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .vowel-slot.collected {
+            background: linear-gradient(135deg, #facc15 0%, #f59e0b 100%);
+            color: #0f172a;
+            transform: translateY(-2px) scale(1.08);
+            border-color: #fef08a;
+            animation: pulseGlow 2s infinite;
+        }
+
+        /* Joystick analógico táctil */
+        #joystick-zone {
+            position: relative;
+            width: 128px;
+            height: 128px;
+            border-radius: 9999px;
+            background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(15,23,42,0.55) 100%);
+            border: 3px solid rgba(255, 255, 255, 0.45);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35), inset 0 2px 10px rgba(255,255,255,0.2);
+            backdrop-filter: blur(6px);
+        }
+
+        #joystick-knob {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 54px;
+            height: 54px;
+            margin-top: -27px;
+            margin-left: -27px;
+            border-radius: 9999px;
+            background: radial-gradient(circle at 30% 30%, #fde047, #eab308);
+            border: 3px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+            transition: transform 0.04s linear;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #422006;
+            font-size: 1.25rem;
+        }
+
+        /* Botones táctiles de acción */
+        .action-btn {
+            transition: transform 0.1s ease, filter 0.1s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 3px 6px rgba(255, 255, 255, 0.4);
+        }
+        .action-btn:active, .action-btn.pressed {
+            transform: scale(0.90) translateY(3px);
+            filter: brightness(1.1);
+        }
+
+        /* Efecto de viñeta de daño */
+        #damage-overlay {
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            background: radial-gradient(circle, transparent 45%, rgba(220, 38, 38, 0.65) 100%);
+        }
+
+        /* Etiquetas flotantes 2D proyectadas desde coordenadas 3D */
+        .floating-feedback {
+            position: absolute;
+            pointer-events: none;
+            font-weight: 800;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.65);
+            animation: popBounce 0.3s ease-out forwards;
+            z-index: 25;
+        }
+    </style>
+</head>
+<body class="relative select-none overflow-hidden">
+
+    <!-- LIENZO 3D WEBGL -->
+    <div id="webgl-container" aria-label="Mundo 3D del Perro Caza-Vocales"></div>
+
+    <!-- CAPA DE FEEDBACK FLOTANTE 3D -> 2D -->
+    <div id="floating-labels-layer" class="fixed inset-0 pointer-events-none z-20 overflow-hidden"></div>
+
+    <!-- VIÑETA ROJA DE DAÑO AL CHOCAR CON CONSONANTE -->
+    <div id="damage-overlay" class="fixed inset-0 opacity-0 z-20"></div>
+
+    <!-- HUD SUPERIOR OPTIMIZADO PARA VERTICAL Y HORIZONTAL -->
+    <header id="game-hud" class="fixed top-0 left-0 right-0 z-30 p-2.5 sm:p-4 flex flex-col gap-2 pointer-events-none" style="padding-top: calc(var(--safe-top) + 0.5rem);">
+        
+        <!-- Fila 1: Vidas, Nivel, Puntos y Controles de Audio/Guía -->
+        <div class="flex items-center justify-between gap-2 w-full max-w-4xl mx-auto">
+            
+            <!-- Tarjeta de Salud y Energía del Perro -->
+            <div class="bg-slate-900/80 backdrop-blur-md border-2 border-white/20 rounded-2xl px-3 py-1.5 flex items-center gap-2.5 shadow-lg pointer-events-auto">
+                <div class="w-9 h-9 rounded-xl bg-amber-400 flex items-center justify-center text-slate-900 text-lg shadow-inner font-bold">
+                    <i class="fa-solid fa-dog"></i>
+                </div>
+                <div>
+                    <div id="hearts-container" class="flex items-center gap-1 text-rose-500 text-sm sm:text-base" title="Salud de Toby">
+                        <i class="fa-solid fa-heart"></i>
+                        <i class="fa-solid fa-heart"></i>
+                        <i class="fa-solid fa-heart"></i>
+                        <i class="fa-solid fa-heart"></i>
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <!-- Barra de Energía para Correr -->
+                    <div class="w-24 sm:w-28 h-2 bg-slate-700 rounded-full overflow-hidden mt-1 border border-white/10">
+                        <div id="stamina-bar" class="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all duration-100" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marcador Central de Puntaje y Nivel -->
+            <div class="bg-slate-900/80 backdrop-blur-md border-2 border-amber-400/40 rounded-2xl px-3.5 py-1.5 text-center shadow-lg pointer-events-auto">
+                <div id="hud-level-badge" class="text-[10px] sm:text-xs uppercase tracking-wider text-amber-300 font-bold">
+                    Nivel 1 • Parque Soleado
+                </div>
+                <div class="flex items-center justify-center gap-2 text-white font-extrabold text-base sm:text-xl leading-tight">
+                    <i class="fa-solid fa-bone text-amber-400 text-sm"></i>
+                    <span id="score-display">0</span>
+                    <span id="combo-badge" class="hidden text-xs bg-emerald-500 text-slate-950 px-1.5 py-0.5 rounded-md font-black">x2</span>
+                </div>
+            </div>
+
+            <!-- Botones de Voz, Guía Educativa y Pausa -->
+            <div class="flex items-center gap-1.5 pointer-events-auto">
+                <button id="btn-toggle-voice" onclick="toggleAudioAndVoice()" class="w-10 h-10 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-amber-300 border-2 border-white/20 flex items-center justify-center shadow-lg transition" title="Activar/Desactivar Voz y Sonidos">
+                    <i id="audio-icon" class="fa-solid fa-volume-high text-base"></i>
+                </button>
+                <button onclick="openStudyModal()" class="w-10 h-10 rounded-2xl bg-indigo-600/90 hover:bg-indigo-500 text-white border-2 border-indigo-300/40 flex items-center justify-center shadow-lg transition" title="Guía de Vocales y Consonantes">
+                    <i class="fa-solid fa-book-open text-base"></i>
+                </button>
+                <button onclick="togglePauseGame()" class="w-10 h-10 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-white border-2 border-white/20 flex items-center justify-center shadow-lg transition" title="Pausar Juego">
+                    <i id="pause-icon" class="fa-solid fa-pause text-base"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Fila 2: Coleccionador de las 5 Vocales (A - E - I - O - U) + Brújula Radar -->
+        <div class="flex items-center justify-between gap-2 w-full max-w-4xl mx-auto">
+            <div class="flex-1 bg-slate-900/75 backdrop-blur-md border-2 border-white/15 rounded-2xl px-3 py-1.5 flex items-center justify-between shadow-lg pointer-events-auto">
+                <span class="text-xs font-bold text-emerald-300 hidden sm:inline mr-2">
+                    <i class="fa-solid fa-utensils mr-1"></i>¡Come las 5 Vocales!:
+                </span>
+                <div class="flex items-center justify-around flex-1 gap-1.5 sm:gap-2.5" id="vowel-tracker">
+                    <div data-vowel="A" class="vowel-slot w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/90 border-2 border-slate-600 text-slate-300 font-black text-base sm:text-lg flex items-center justify-center">A</div>
+                    <div data-vowel="E" class="vowel-slot w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/90 border-2 border-slate-600 text-slate-300 font-black text-base sm:text-lg flex items-center justify-center">E</div>
+                    <div data-vowel="I" class="vowel-slot w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/90 border-2 border-slate-600 text-slate-300 font-black text-base sm:text-lg flex items-center justify-center">I</div>
+                    <div data-vowel="O" class="vowel-slot w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/90 border-2 border-slate-600 text-slate-300 font-black text-base sm:text-lg flex items-center justify-center">O</div>
+                    <div data-vowel="U" class="vowel-slot w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/90 border-2 border-slate-600 text-slate-300 font-black text-base sm:text-lg flex items-center justify-center">U</div>
+                </div>
+            </div>
+
+            <!-- Mini Radar / Brújula hacia la vocal más cercana -->
+            <div class="bg-slate-900/80 backdrop-blur-md border-2 border-emerald-400/40 rounded-2xl px-3 py-1.5 flex items-center gap-2 text-xs text-white shadow-lg pointer-events-auto" title="Dirección a la vocal más cercana">
+                <div id="radar-arrow" class="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-emerald-300 transition-transform duration-75">
+                    <i class="fa-solid fa-location-arrow"></i>
+                </div>
+                <div class="leading-tight">
+                    <div class="text-[10px] text-slate-300">Vocal cerca</div>
+                    <div id="radar-target-letter" class="font-black text-emerald-400 text-sm">A (8m)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner Educativo Dinámico -->
+        <div id="educational-toast" class="mx-auto bg-slate-900/90 border-2 border-amber-400 text-white px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold shadow-xl transition-all duration-300 opacity-0 -translate-y-2 pointer-events-none flex items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-amber-400"></i>
+            <span id="educational-toast-text">¡Busca las vocales verdes/doradas y evita las consonantes rojas!</span>
+        </div>
+    </header>
+
+    <!-- CONTROLES TÁCTILES INFERIORES (OPTIMIZADOS PARA PULGARES EN VERTICAL) -->
+    <footer id="touch-controls" class="fixed bottom-0 left-0 right-0 z-30 px-4 pb-4 pt-2 flex items-end justify-between pointer-events-none" style="padding-bottom: calc(var(--safe-bottom) + 1rem);">
+        
+        <!-- Izquierda: Joystick Analógico Virtual 360° -->
+        <div class="flex flex-col items-center gap-1.5 pointer-events-auto">
+            <div id="joystick-zone" aria-label="Joystick de movimiento">
+                <!-- Indicadores cardinales sutiles -->
+                <span class="absolute top-1.5 left-1/2 -translate-x-1/2 text-[10px] text-white/50 font-bold">▲</span>
+                <span class="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[10px] text-white/50 font-bold">▼</span>
+                <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-white/50 font-bold">◀</span>
+                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-white/50 font-bold">▶</span>
+                <div id="joystick-knob">
+                    <i class="fa-solid fa-paw"></i>
+                </div>
+            </div>
+            <span class="text-[11px] font-bold text-white/85 bg-slate-900/60 px-2.5 py-0.5 rounded-full backdrop-blur-xs">
+                Mover / Correr
+            </span>
+        </div>
+
+        <!-- Centro inferior (Solo visible en escritorio): Ayuda de teclado -->
+        <div class="hidden lg:flex items-center gap-3 bg-slate-900/75 text-slate-200 text-xs px-4 py-2 rounded-2xl border border-white/15 backdrop-blur-md">
+            <span><kbd class="bg-slate-700 px-1.5 py-0.5 rounded text-amber-300 font-bold">WASD / Flechas</kbd> Mover</span>
+            <span>•</span>
+            <span><kbd class="bg-slate-700 px-1.5 py-0.5 rounded text-emerald-300 font-bold">Espacio</kbd> Abrir Boca y Comer</span>
+            <span>•</span>
+            <span><kbd class="bg-slate-700 px-1.5 py-0.5 rounded text-cyan-300 font-bold">Shift</kbd> Correr</span>
+        </div>
+
+        <!-- Derecha: Botones de Acción (Morder/Comer y Sprint) -->
+        <div class="flex items-end gap-3 pointer-events-auto">
+            <!-- Botón Correr / Sprint -->
+            <div class="flex flex-col items-center gap-1">
+                <button id="btn-sprint" class="action-btn w-16 h-16 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 border-4 border-white text-white flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-bolt text-xl"></i>
+                    <span class="text-[10px] font-black uppercase tracking-tighter">Correr</span>
+                </button>
+            </div>
+
+            <!-- Botón Principal: Abrir Boca / Morder Vocal -->
+            <div class="flex flex-col items-center gap-1">
+                <button id="btn-bite" class="action-btn w-22 h-22 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 border-4 border-amber-200 text-slate-950 flex flex-col items-center justify-center" style="width: 86px; height: 86px;">
+                    <i class="fa-solid fa-drumstick-bite text-2xl sm:text-3xl text-white drop-shadow"></i>
+                    <span class="text-xs font-black text-white uppercase tracking-tight drop-shadow">¡Comer!</span>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL DE INICIO / SELECCIÓN DE NIVEL -->
+    <div id="start-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-gradient-to-b from-slate-800 to-slate-900 border-4 border-amber-400 rounded-3xl max-w-md w-full p-5 sm:p-6 text-white shadow-2xl text-center my-auto">
+            
+            <div class="w-20 h-20 mx-auto mb-3 rounded-3xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-slate-950 text-4xl shadow-lg border-4 border-white">
+                <i class="fa-solid fa-dog"></i>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-black text-amber-300 tracking-tight">
+                Toby: El Sabueso de las Vocales
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1 mb-4">
+                Explora el parque en 3D, abre la boca para comer las <strong>5 Vocales</strong> y esquiva las <strong>Consonantes</strong> espinosas.
+            </p>
+
+            <!-- Reglas Visuales Rápidas -->
+            <div class="grid grid-cols-2 gap-2.5 text-left mb-4">
+                <div class="bg-emerald-950/70 border-2 border-emerald-400/60 rounded-2xl p-3">
+                    <div class="flex items-center gap-1.5 text-emerald-300 font-black text-xs sm:text-sm mb-1">
+                        <i class="fa-solid fa-circle-check"></i> ¡COME VOCALES!
+                    </div>
+                    <div class="flex gap-1 my-1.5">
+                        <span class="w-6 h-6 rounded bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">A</span>
+                        <span class="w-6 h-6 rounded bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">E</span>
+                        <span class="w-6 h-6 rounded bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">I</span>
+                        <span class="w-6 h-6 rounded bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">O</span>
+                        <span class="w-6 h-6 rounded bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">U</span>
+                    </div>
+                    <p class="text-[11px] text-emerald-100/90 leading-tight">
+                        Brillan en verde/dorado. ¡Dan puntos, energía y curan a Toby!
+                    </p>
+                </div>
+
+                <div class="bg-rose-950/70 border-2 border-rose-500/60 rounded-2xl p-3">
+                    <div class="flex items-center gap-1.5 text-rose-300 font-black text-xs sm:text-sm mb-1">
+                        <i class="fa-solid fa-triangle-exclamation"></i> EVITA CONSONANTES
+                    </div>
+                    <div class="flex gap-1 my-1.5">
+                        <span class="w-6 h-6 rounded bg-rose-600 text-white font-black text-xs flex items-center justify-center">B</span>
+                        <span class="w-6 h-6 rounded bg-rose-600 text-white font-black text-xs flex items-center justify-center">M</span>
+                        <span class="w-6 h-6 rounded bg-rose-600 text-white font-black text-xs flex items-center justify-center">P</span>
+                        <span class="w-6 h-6 rounded bg-rose-600 text-white font-black text-xs flex items-center justify-center">S</span>
+                        <span class="w-6 h-6 rounded bg-rose-600 text-white font-black text-xs flex items-center justify-center">Z</span>
+                    </div>
+                    <p class="text-[11px] text-rose-100/90 leading-tight">
+                        Son rojas con picos. ¡Le hacen daño en la pancita a Toby!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Selector de Dificultad / Nivel -->
+            <div class="mb-4 text-left">
+                <label class="block text-xs font-bold text-amber-200 uppercase tracking-wider mb-1.5">
+                    Selecciona el Nivel de Aventura:
+                </label>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="selectLevel(1)" id="lvl-btn-1" class="lvl-btn py-2 px-2 rounded-xl border-2 border-amber-400 bg-amber-400/20 text-white font-bold text-xs flex flex-col items-center">
+                        <span class="text-sm font-black">Nivel 1</span>
+                        <span class="text-[10px] text-amber-200">Explorador</span>
+                    </button>
+                    <button onclick="selectLevel(2)" id="lvl-btn-2" class="lvl-btn py-2 px-2 rounded-xl border-2 border-slate-600 bg-slate-800/70 text-slate-300 font-bold text-xs flex flex-col items-center">
+                        <span class="text-sm font-black">Nivel 2</span>
+                        <span class="text-[10px] text-slate-400">Travieso</span>
+                    </button>
+                    <button onclick="selectLevel(3)" id="lvl-btn-3" class="lvl-btn py-2 px-2 rounded-xl border-2 border-slate-600 bg-slate-800/70 text-slate-300 font-bold text-xs flex flex-col items-center">
+                        <span class="text-sm font-black">Nivel 3</span>
+                        <span class="text-[10px] text-slate-400">Maestro</span>
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-300 hover:to-green-400 text-slate-950 font-black text-lg shadow-xl border-b-4 border-green-700 active:translate-y-0.5 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play"></i> ¡JUGAR AHORA!
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL GUÍA EDUCATIVA DE VOCALES Y CONSONANTES -->
+    <div id="study-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-4 border-indigo-400 rounded-3xl max-w-lg w-full p-5 sm:p-6 text-white shadow-2xl max-h-[90dvh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+                <h2 class="text-xl font-black text-indigo-300 flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap"></i> Guía de Vocales y Consonantes
+                </h2>
+                <button onclick="closeStudyModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs sm:text-sm">
+                <div class="bg-emerald-950/60 border border-emerald-500/40 rounded-2xl p-3.5">
+                    <h3 class="font-black text-emerald-300 text-base mb-1">1. ¿Qué son las Vocales? (A, E, I, O, U)</h3>
+                    <p class="text-slate-200 leading-relaxed mb-2">
+                        Las <strong>vocales</strong> son los 5 sonidos del idioma español que pronunciamos abriendo la boca sin que nada bloquee el aire. Se dividen en:
+                    </p>
+                    <ul class="space-y-1 text-emerald-100">
+                        <li>• <strong>Vocales Abiertas (Fuertes):</strong> <span class="font-black text-amber-300">A, E, O</span> (Toby abre mucho su mandíbula).</li>
+                        <li>• <strong>Vocales Cerradas (Débiles):</strong> <span class="font-black text-cyan-300">I, U</span> (Suenan más suaves).</li>
+                    </ul>
+                    <div class="flex gap-2 mt-3">
+                        <button onclick="speakEducationalSample('A, de Árbol y Amigo')" class="flex-1 py-1.5 bg-emerald-500 text-slate-950 font-black rounded-xl hover:bg-emerald-400">🔊 A</button>
+                        <button onclick="speakEducationalSample('E, de Estrella y Elefante')" class="flex-1 py-1.5 bg-emerald-500 text-slate-950 font-black rounded-xl hover:bg-emerald-400">🔊 E</button>
+                        <button onclick="speakEducationalSample('I, de Isla e Iguana')" class="flex-1 py-1.5 bg-emerald-500 text-slate-950 font-black rounded-xl hover:bg-emerald-400">🔊 I</button>
+                        <button onclick="speakEducationalSample('O, de Oso y Oreja')" class="flex-1 py-1.5 bg-emerald-500 text-slate-950 font-black rounded-xl hover:bg-emerald-400">🔊 O</button>
+                        <button onclick="speakEducationalSample('U, de Uva y Universo')" class="flex-1 py-1.5 bg-emerald-500 text-slate-950 font-black rounded-xl hover:bg-emerald-400">🔊 U</button>
+                    </div>
+                </div>
+
+                <div class="bg-rose-950/60 border border-rose-500/40 rounded-2xl p-3.5">
+                    <h3 class="font-black text-rose-300 text-base mb-1">2. ¿Qué son las Consonantes?</h3>
+                    <p class="text-slate-200 leading-relaxed">
+                        Son todas las demás letras del abecedario (como <strong>B, C, D, F, G, L, M, N, P, R, S, T, V, Z</strong>). Para sonar necesitan juntarse con una vocal (por ejemplo: <em>M + A = MA</em>). ¡En el juego tienen picos rojos y debes esquivarlas!
+                    </p>
+                </div>
+            </div>
+
+            <button onclick="closeStudyModal()" class="mt-5 w-full py-3 rounded-2xl bg-indigo-500 hover:bg-indigo-400 text-white font-black text-base shadow-lg">
+                ¡Entendido, volver al juego!
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DE FIN DE JUEGO / VICTORIA DE RONDA -->
+    <div id="end-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-4 border-amber-400 rounded-3xl max-w-md w-full p-6 text-white text-center shadow-2xl">
+            <div id="end-icon" class="w-20 h-20 mx-auto mb-3 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-4xl shadow-lg">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h2 id="end-title" class="text-2xl font-black text-amber-300">¡Ronda Completada!</h2>
+            <p id="end-subtitle" class="text-sm text-slate-300 mt-1 mb-4">¡Toby aprendió y comió muchas vocales!</p>
+
+            <div class="bg-slate-800/90 rounded-2xl p-4 mb-5 grid grid-cols-2 gap-3 text-left border border-white/10">
+                <div>
+                    <div class="text-xs text-slate-400">Puntaje Total</div>
+                    <div id="end-score" class="text-2xl font-black text-amber-400">0</div>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400">Vocales Comidas</div>
+                    <div id="end-vowels-count" class="text-2xl font-black text-emerald-400">0</div>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="openStudyModal()" class="flex-1 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 font-bold text-sm">
+                    Repasar Letras
+                </button>
+                <button onclick="restartGame()" class="flex-1 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm">
+                    ¡Jugar Otra Vez!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * ============================================================================
+         * ARQUITECTURA DE INGENIERÍA DE SOFTWARE Y ALGORITMOS (THREE.JS + WEBGL)
+         * ============================================================================
+         * 1. SpatialGrid: Hash espacial 2D O(1) para detección de colisiones amplia (Broad-phase)
+         *    combinado con esferas delimitadoras al cuadrado (distanceToSquared) en Narrow-phase.
+         * 2. ArticulatedDog3D: Modelo jerárquico en 3D con cinemática directa (FK) para
+         *    mandíbula inferior, lengua, orejas, cola y 4 patas con articulación fémur/tibia.
+         * 3. ParticlePool: Pool de objetos pre-alocados para evitar pausas de Garbage Collection.
+         * 4. Control Híbrido: Joystick analógico con zona muerta + cámara adaptable Vertical/Horizontal.
+         */
+
+        const VOWELS_LIST = ['A', 'E', 'I', 'O', 'U'];
+        const VOWEL_WORDS = {
+            'A': 'Vocal A, abierta — como Árbol y Avión',
+            'E': 'Vocal E, abierta — como Estrella y Elefante',
+            'I': 'Vocal I, cerrada — como Isla e Iguana',
+            'O': 'Vocal O, abierta — como Oso y Oveja',
+            'U': 'Vocal U, cerrada — como Uva y Unicornio'
+        };
+
+        const CONSONANTS_LIST = ['B', 'C', 'D', 'F', 'G', 'J', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'V', 'Z'];
+        const WORLD_RADIUS = 38; // Radio del parque cercado
+
+        const GameState = {
+            running: false,
+            paused: false,
+            level: 1,
+            score: 0,
+            combo: 1,
+            vowelsEatenTotal: 0,
+            collectedSet: new Set(),
+            health: 5,
+            maxHealth: 5,
+            stamina: 100,
+            audioEnabled: true,
+            cameraYawOffset: 0
+        };
+
+        class SoundAndVoiceEngine {
+            constructor() {
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) this.ctx = new AudioCtx();
+                }
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            playTone(freq, type, duration, delay = 0, gainVal = 0.14) {
+                if (!GameState.audioEnabled) return;
+                this.init();
+                if (!this.ctx) return;
+
+                const now = this.ctx.currentTime + delay;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now);
+
+                gain.gain.setValueAtTime(gainVal, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + duration);
+            }
+
+            playBiteSnap() {
+                // Sonido corto de mordisco y ladrido alegre
+                this.playTone(260, 'triangle', 0.09, 0, 0.2);
+                this.playTone(420, 'sine', 0.11, 0.04, 0.18);
+            }
+
+            playEatVowel(isSetComplete = false) {
+                if (isSetComplete) {
+                    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                    notes.forEach((n, i) => this.playTone(n, 'triangle', 0.24, i * 0.08, 0.2));
+                } else {
+                    this.playTone(587.33, 'sine', 0.14, 0, 0.18);
+                    this.playTone(880.00, 'triangle', 0.22, 0.08, 0.2);
+                }
+            }
+
+            playConsonantHurt() {
+                this.playTone(155, 'sawtooth', 0.22, 0, 0.22);
+                this.playTone(110, 'sawtooth', 0.30, 0.1, 0.22);
+            }
+
+            speak(text) {
+                if (!GameState.audioEnabled || !('speechSynthesis' in window)) return;
+                try {
+                    window.speechSynthesis.cancel();
+                    const utter = new SpeechSynthesisUtterance(text);
+                    utter.lang = 'es-ES';
+                    utter.rate = 1.05;
+                    utter.pitch = 1.15;
+                    window.speechSynthesis.speak(utter);
+                } catch (_) {}
+            }
+        }
+
+        const soundEngine = new SoundAndVoiceEngine();
+
+        class SpatialHashGrid {
+            constructor(cellSize = 6) {
+                this.cellSize = cellSize;
+                this.cells = new Map();
+            }
+
+            clear() {
+                this.cells.clear();
+            }
+
+            _key(cx, cz) {
+                return `${cx},${cz}`;
+            }
+
+            insert(entity) {
+                const cx = Math.floor(entity.mesh.position.x / this.cellSize);
+                const cz = Math.floor(entity.mesh.position.z / this.cellSize);
+                const k = this._key(cx, cz);
+                if (!this.cells.has(k)) this.cells.set(k, []);
+                this.cells.get(k).push(entity);
+            }
+
+            queryNear(x, z, radius) {
+                const results = [];
+                const minX = Math.floor((x - radius) / this.cellSize);
+                const maxX = Math.floor((x + radius) / this.cellSize);
+                const minZ = Math.floor((z - radius) / this.cellSize);
+                const maxZ = Math.floor((z + radius) / this.cellSize);
+
+                for (let cx = minX; cx <= maxX; cx++) {
+                    for (let cz = minZ; cz <= maxZ; cz++) {
+                        const bucket = this.cells.get(this._key(cx, cz));
+                        if (bucket) {
+                            for (let i = 0; i < bucket.length; i++) {
+                                results.push(bucket[i]);
+                            }
+                        }
+                    }
+                }
+                return results;
+            }
+        }
+
+        class ArticulatedDog3D {
+            constructor(scene) {
+                this.root = new THREE.Group();
+                this.position = this.root.position;
+                this.velocity = new THREE.Vector3();
+                this.yaw = 0;
+                this.targetYaw = 0;
+
+                // Estado cinemático y de animación
+                this.walkCycle = 0;
+                this.breathCycle = 0;
+                this.jawOpenAmount = 0;      // 0 = cerrada, 1 = totalmente abierta
+                this.biteTimer = 0;          // Temporizador de mordisco activo
+                this.invulnerableTimer = 0;  // i-frames tras daño
+                this.celebrateTimer = 0;
+                this.isSprinting = false;
+
+                this._buildMaterials();
+                this._buildHierarchy();
+                scene.add(this.root);
+            }
+
+            _buildMaterials() {
+                this.furMainMat = new THREE.MeshStandardMaterial({ color: 0xd97724, roughness: 0.65, metalness: 0.05 });
+                this.furLightMat = new THREE.MeshStandardMaterial({ color: 0xfef3c7, roughness: 0.7, metalness: 0.02 });
+                this.furDarkMat = new THREE.MeshStandardMaterial({ color: 0x5c2d0c, roughness: 0.7, metalness: 0.05 });
+                this.noseMat = new THREE.MeshStandardMaterial({ color: 0x1e1b18, roughness: 0.25, metalness: 0.2 });
+                this.mouthInsideMat = new THREE.MeshStandardMaterial({ color: 0x991b1b, roughness: 0.6 });
+                this.tongueMat = new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.4 });
+                this.toothMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 });
+                this.collarMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.4 });
+                this.goldMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.2, metalness: 0.8 });
+            }
+
+            _buildHierarchy() {
+                // Grupo principal del cuerpo (permitirá balanceo al caminar/correr)
+                this.bodyPivot = new THREE.Group();
+                this.bodyPivot.position.y = 1.15;
+                this.root.add(this.bodyPivot);
+
+                // Torso central y pecho
+                const torsoGeo = new THREE.BoxGeometry(1.15, 0.92, 1.85);
+                const torsoMesh = new THREE.Mesh(torsoGeo, this.furMainMat);
+                torsoMesh.castShadow = true;
+                torsoMesh.receiveShadow = true;
+                this.bodyPivot.add(torsoMesh);
+
+                // Pecho crema suave
+                const chestGeo = new THREE.BoxGeometry(0.92, 0.76, 0.65);
+                const chestMesh = new THREE.Mesh(chestGeo, this.furLightMat);
+                chestMesh.position.set(0, -0.08, 0.68);
+                chestMesh.castShadow = true;
+                this.bodyPivot.add(chestMesh);
+
+                // Collar rojo con medalla dorada
+                const collarGeo = new THREE.BoxGeometry(1.22, 0.22, 0.32);
+                const collarMesh = new THREE.Mesh(collarGeo, this.collarMat);
+                collarMesh.position.set(0, 0.18, 0.82);
+                 collarMesh.rotation.x = 0.25;
+                this.bodyPivot.add(collarMesh);
+
+                const medalGeo = new THREE.CylinderGeometry(0.16, 0.16, 0.06, 16);
+                const medalMesh = new THREE.Mesh(medalGeo, this.goldMat);
+                medalMesh.rotation.x = Math.PI / 2;
+                medalMesh.position.set(0, -0.08, 1.02);
+                this.bodyPivot.add(medalMesh);
+
+                /* --- CUELLO Y CABEZA ARTICULADA --- */
+                this.neckPivot = new THREE.Group();
+                this.neckPivot.position.set(0, 0.42, 0.78);
+                this.bodyPivot.add(this.neckPivot);
+
+                this.headGroup = new THREE.Group();
+                this.headGroup.position.set(0, 0.35, 0.15);
+                this.neckPivot.add(this.headGroup);
+
+                // Cráneo
+                const skullGeo = new THREE.BoxGeometry(1.08, 0.92, 0.98);
+                const skullMesh = new THREE.Mesh(skullGeo, this.furMainMat);
+                skullMesh.castShadow = true;
+                this.headGroup.add(skullMesh);
+
+                // Mejillas claras
+                const cheekGeo = new THREE.BoxGeometry(1.14, 0.42, 0.55);
+                const cheekMesh = new THREE.Mesh(cheekGeo, this.furLightMat);
+                cheekMesh.position.set(0, -0.2, 0.22);
+                this.headGroup.add(cheekMesh);
+
+                // Hocico Superior (Upper Snout)
+                this.upperSnout = new THREE.Group();
+                this.upperSnout.position.set(0, -0.04, 0.72);
+                this.headGroup.add(this.upperSnout);
+
+                const snoutTopMesh = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.36, 0.72), this.furLightMat);
+                snoutTopMesh.castShadow = true;
+                this.upperSnout.add(snoutTopMesh);
+
+                // Nariz húmeda
+                const noseMesh = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.20, 0.18), this.noseMat);
+                noseMesh.position.set(0, 0.12, 0.36);
+                this.upperSnout.add(noseMesh);
+
+                // Dientes superiores
+                for (let side of [-0.22, 0.22]) {
+                    const fang = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.14, 6), this.toothMat);
+                    fang.rotation.x = Math.PI;
+                    fang.position.set(side, -0.20, 0.22);
+                    this.upperSnout.add(fang);
+                }
+
+                /* --- MANDÍBULA INFERIOR ARTICULADA (SE ABRE PARA COMER VOCALES) --- */
+                this.lowerJawPivot = new THREE.Group();
+                this.lowerJawPivot.position.set(0, -0.24, 0.38);
+                this.headGroup.add(this.lowerJawPivot);
+
+                const jawMesh = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.18, 0.66), this.furLightMat);
+                jawMesh.position.set(0, -0.04, 0.30);
+                jawMesh.castShadow = true;
+                this.lowerJawPivot.add(jawMesh);
+
+                const mouthCavity = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.06, 0.54), this.mouthInsideMat);
+                mouthCavity.position.set(0, 0.05, 0.30);
+                this.lowerJawPivot.add(mouthCavity);
+
+                // Lengua animada
+                this.tongueMesh = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.07, 0.48), this.tongueMat);
+                this.tongueMesh.position.set(0, 0.09, 0.36);
+                this.lowerJawPivot.add(this.tongueMesh);
+
+                // Colmillos inferiores
+                for (let side of [-0.18, 0.18]) {
+                    const lowFang = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.12, 6), this.toothMat);
+                    lowFang.position.set(side, 0.10, 0.52);
+                    this.lowerJawPivot.add(lowFang);
+                }
+
+                /* --- OJOS EXPRESIVOS Y CEJAS --- */
+                const eyeWhiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+                const pupilMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
+
+                for (let side of [-1, 1]) {
+                    const eyeGroup = new THREE.Group();
+                    eyeGroup.position.set(side * 0.30, 0.16, 0.50);
+
+                    const sclera = new THREE.Mesh(new THREE.SphereGeometry(0.13, 12, 12), eyeWhiteMat);
+                    sclera.scale.set(1, 1.15, 0.6);
+                    eyeGroup.add(sclera);
+
+                    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.075, 10, 10), pupilMat);
+                    pupil.position.set(0, 0, 0.06);
+                    eyeGroup.add(pupil);
+
+                    const sparkle = new THREE.Mesh(new THREE.SphereGeometry(0.028, 8, 8), eyeWhiteMat);
+                    sparkle.position.set(0.03, 0.04, 0.11);
+                    eyeGroup.add(sparkle);
+
+                    // Ceja expresiva
+                    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.07, 0.08), this.furDarkMat);
+                    brow.position.set(0, 0.19, 0.04);
+                    brow.rotation.z = side * -0.15;
+                    eyeGroup.add(brow);
+
+                    this.headGroup.add(eyeGroup);
+                }
+
+                /* --- OREJAS CAÍDAS ARTICULADAS --- */
+                this.leftEarPivot = new THREE.Group();
+                this.leftEarPivot.position.set(-0.54, 0.34, 0.05);
+                const earGeo = new THREE.BoxGeometry(0.22, 0.68, 0.38);
+                const leftEarMesh = new THREE.Mesh(earGeo, this.furDarkMat);
+                leftEarMesh.position.set(-0.06, -0.28, 0);
+                leftEarMesh.castShadow = true;
+                this.leftEarPivot.add(leftEarMesh);
+                this.headGroup.add(this.leftEarPivot);
+
+                this.rightEarPivot = new THREE.Group();
+                this.rightEarPivot.position.set(0.54, 0.34, 0.05);
+                const rightEarMesh = new THREE.Mesh(earGeo, this.furDarkMat);
+                rightEarMesh.position.set(0.06, -0.28, 0);
+                rightEarMesh.castShadow = true;
+                this.rightEarPivot.add(rightEarMesh);
+                this.headGroup.add(this.rightEarPivot);
+
+                /* --- COLA ARTICULADA --- */
+                this.tailPivot = new THREE.Group();
+                this.tailPivot.position.set(0, 0.32, -0.92);
+                const tailMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.13, 0.85, 8), this.furDarkMat);
+                tailMesh.position.set(0, 0.35, -0.18);
+                tailMesh.rotation.x = -0.55;
+                tailMesh.castShadow = true;
+                this.tailPivot.add(tailMesh);
+                this.bodyPivot.add(this.tailPivot);
+
+                /* --- 4 PATAS CON DOBLE ARTICULACIÓN (CADERA/HOMBRO + RODILLA + PATA) --- */
+                this.legs = {
+                    frontLeft:  this._createArticulatedLeg(-0.42, -0.32,  0.65),
+                    frontRight: this._createArticulatedLeg( 0.42, -0.32,  0.65),
+                    backLeft:   this._createArticulatedLeg(-0.42, -0.32, -0.65),
+                    backRight:  this._createArticulatedLeg( 0.42, -0.32, -0.65)
+                };
+            }
+
+            _createArticulatedLeg(x, y, z) {
+                const hipPivot = new THREE.Group();
+                hipPivot.position.set(x, y, z);
+
+                // Muslo / Brazo superior
+                const upperMesh = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.48, 0.30), this.furMainMat);
+                upperMesh.position.y = -0.22;
+                upperMesh.castShadow = true;
+                hipPivot.add(upperMesh);
+
+                // Articulación de la rodilla / codo
+                const kneePivot = new THREE.Group();
+                kneePivot.position.set(0, -0.44, 0);
+                hipPivot.add(kneePivot);
+
+                const lowerMesh = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.42, 0.24), this.furLightMat);
+                lowerMesh.position.y = -0.20;
+                lowerMesh.castShadow = true;
+                kneePivot.add(lowerMesh);
+
+                // Almohadilla / Pata inferior
+                const pawMesh = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.14, 0.34), this.furLightMat);
+                pawMesh.position.set(0, -0.38, 0.05);
+                pawMesh.castShadow = true;
+                kneePivot.add(pawMesh);
+
+                this.bodyPivot.add(hipPivot);
+                return { hipPivot, kneePivot };
+            }
+
+            triggerBite() {
+                this.biteTimer = 0.38;
+                soundEngine.playBiteSnap();
+            }
+
+            update(dt, inputVector, nearestVowelDist) {
+                this.breathCycle += dt * 3.2;
+                const speedSq = this.velocity.lengthSq();
+                const speed = Math.sqrt(speedSq);
+
+                // 1. Interpolación suave del ángulo de orientación (Shortest-angle Yaw)
+                if (inputVector.lengthSq() > 0.01) {
+                    this.targetYaw = Math.atan2(inputVector.x, inputVector.z);
+                }
+                let angleDiff = this.targetYaw - this.yaw;
+                while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+                this.yaw += angleDiff * Math.min(1, dt * 12);
+                this.root.rotation.y = this.yaw;
+
+                // 2. Ciclo de marcha diagonal realista (Trote / Galope)
+                if (speed > 0.35) {
+                    const cadence = this.isSprinting ? 16.5 : 11.5;
+                    this.walkCycle += dt * cadence * (speed / 7.5);
+                    const strideAmp = Math.min(0.85, speed * 0.095);
+
+                    const pairs = [
+                        { leg: this.legs.frontLeft,  phase: this.walkCycle },
+                        { leg: this.legs.backRight,  phase: this.walkCycle },
+                        { leg: this.legs.frontRight, phase: this.walkCycle + Math.PI },
+                        { leg: this.legs.backLeft,   phase: this.walkCycle + Math.PI }
+                    ];
+
+                    pairs.forEach(({ leg, phase }) => {
+                        leg.hipPivot.rotation.x = Math.sin(phase) * strideAmp;
+                        // Flexión de rodilla durante fase de vuelo hacia adelante
+                        leg.kneePivot.rotation.x = -Math.max(0, Math.cos(phase)) * strideAmp * 0.85;
+                    });
+
+                    // Rebote vertical del torso y balanceo de orejas
+                    this.bodyPivot.position.y = 1.15 + Math.abs(Math.sin(this.walkCycle)) * 0.14;
+                    this.bodyPivot.rotation.x = Math.cos(this.walkCycle * 2) * 0.05;
+                    this.leftEarPivot.rotation.z = 0.15 + Math.abs(Math.sin(this.walkCycle)) * 0.28;
+                    this.rightEarPivot.rotation.z = -0.15 - Math.abs(Math.sin(this.walkCycle)) * 0.28;
+                } else {
+                    // Postura de reposo (Idle) con respiración suave
+                    const damp = Math.min(1, dt * 10);
+                    Object.values(this.legs).forEach(leg => {
+                        leg.hipPivot.rotation.x *= (1 - damp);
+                        leg.kneePivot.rotation.x *= (1 - damp);
+                    });
+                    this.bodyPivot.position.y = 1.15 + Math.sin(this.breathCycle) * 0.025;
+                    this.bodyPivot.rotation.x *= (1 - damp);
+                    this.leftEarPivot.rotation.z = 0.12 + Math.sin(this.breathCycle * 0.8) * 0.04;
+                    this.rightEarPivot.rotation.z = -0.12 - Math.sin(this.breathCycle * 0.8) * 0.04;
+                }
+
+                // 3. Movimiento alegre de la cola
+                const wagSpeed = (this.celebrateTimer > 0) ? 24 : (speed > 0.5 ? 15 : 7);
+                this.tailPivot.rotation.z = Math.sin( performance.now() * 0.001 * wagSpeed ) * 0.48;
+
+                // 4. Cinemática de la Mandíbula (Se abre al acercarse a una vocal o al presionar ¡Comer!)
+                let desiredJawOpen = 0.08 + Math.sin(this.breathCycle) * 0.04; // Jadeo sutil
+
+                // Si hay una vocal muy cerca (< 4.2 metros), Toby abre la boca anticipando el bocado
+                if (nearestVowelDist < 4.2) {
+                    desiredJawOpen = Math.max(desiredJawOpen, (1 - nearestVowelDist / 4.2) * 0.78);
+                }
+
+                if (this.biteTimer > 0) {
+                    this.biteTimer -= dt;
+                    // Abre grande y cierra de golpe ("Chomp!")
+                    desiredJawOpen = (this.biteTimer > 0.16) ? 1.05 : 0.0;
+                    this.headGroup.scale.setScalar(1 + Math.sin(this.biteTimer * 25) * 0.06);
+                } else {
+                    this.headGroup.scale.setScalar(1);
+                }
+
+                this.jawOpenAmount += (desiredJawOpen - this.jawOpenAmount) * Math.min(1, dt * 18);
+                this.lowerJawPivot.rotation.x = this.jawOpenAmount * 0.68;
+                this.tongueMesh.position.z = 0.36 + this.jawOpenAmount * 0.12;
+
+                // 5. Parpadeo de invulnerabilidad tras daño
+                if (this.invulnerableTimer > 0) {
+                    this.invulnerableTimer -= dt;
+                    this.root.visible = Math.floor(this.invulnerableTimer * 16) % 2 === 0;
+                } else {
+                    this.root.visible = true;
+                }
+
+                if (this.celebrateTimer > 0) this.celebrateTimer -= dt;
+            }
+
+            getMouthWorldPosition() {
+                const pos = new THREE.Vector3(0, 1.3, 1.35);
+                pos.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.yaw);
+                pos.add(this.position);
+                return pos;
+            }
+        }
+
+        const textureCache = new Map();
+
+        function createLetterBadgeTexture(letter, isVowel) {
+            const key = `${letter}_${isVowel ? 'V' : 'C'}`;
+            if (textureCache.has(key)) return textureCache.get(key);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            // Fondo con gradiente vibrante
+            const grad = ctx.createRadialGradient(128, 128, 20, 128, 128, 128);
+            if (isVowel) {
+                grad.addColorStop(0, '#fef08a');
+                grad.addColorStop(0.55, '#22c55e');
+                grad.addColorStop(1, '#15803d');
+            } else {
+                grad.addColorStop(0, '#fda4af');
+                grad.addColorStop(0.55, '#e11d48');
+                grad.addColorStop(1, '#881337');
+            }
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 256, 256);
+
+            // Marco interior brillante
+            ctx.lineWidth = 14;
+            ctx.strokeStyle = isVowel ? '#fef9c3' : '#fecdd3';
+            ctx.strokeRect(14, 14, 228, 228);
+
+            // Etiqueta superior pequeña
+            ctx.font = 'bold 24px Fredoka, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = isVowel ? '#052e16' : '#ffe4e6';
+            ctx.fillText(isVowel ? '★ VOCAL ★' : '⚠ CONSONANTE', 128, 46);
+
+            // Letra central gigante con borde
+            ctx.font = '900 150px Fredoka, Arial, sans-serif';
+            ctx.textBaseline = 'middle';
+            ctx.lineWidth = 10;
+            ctx.strokeStyle = '#0f172a';
+            ctx.strokeText(letter, 128, 146);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(letter, 128, 146);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            textureCache.set(key, texture);
+            return texture;
+        }
+
+        class LetterEntity3D {
+            constructor(scene, letter, isVowel, x, z, speedFactor = 1) {
+                this.letter = letter;
+                this.isVowel = isVowel;
+                this.active = true;
+                this.baseY = 1.25;
+                this.phase = Math.random() * Math.PI * 2;
+                this.radius = isVowel ? 1.15 : 1.05;
+
+                // Patrullaje suave para consonantes o vocales en niveles altos
+                const angle = Math.random() * Math.PI * 2;
+                const moveSpeed = (isVowel ? 0.6 : 1.8) * speedFactor;
+                this.velX = Math.cos(angle) * moveSpeed;
+                this.velZ = Math.sin(angle) * moveSpeed;
+
+                this.mesh = new THREE.Group();
+                this.mesh.position.set(x, this.baseY, z);
+
+                const tex = createLetterBadgeTexture(letter, isVowel);
+                const sideMat = new THREE.MeshStandardMaterial({
+                    color: isVowel ? 0xfacc15 : 0x9f1239,
+                    roughness: 0.3,
+                    metalness: 0.2
+                });
+                const faceMat = new THREE.MeshStandardMaterial({
+                    map: tex,
+                    roughness: 0.25
+                });
+
+                // Cubo biselado con la letra en las caras
+                const materials = [sideMat, sideMat, sideMat, sideMat, faceMat, faceMat];
+                const boxGeo = new THREE.BoxGeometry(1.35, 1.35, 0.42);
+                const boxMesh = new THREE.Mesh(boxGeo, materials);
+                boxMesh.castShadow = true;
+                this.mesh.add(boxMesh);
+
+                // Si es consonante, añadir picos de advertencia alrededor
+                if (!isVowel) {
+                    const spikeGeo = new THREE.ConeGeometry(0.16, 0.45, 6);
+                    const spikeMat = new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.3 });
+                    const dirs = [
+                        [0, 0.85, 0, 0, 0],
+                        [0.85, 0, 0, 0, -Math.PI / 2],
+                        [-0.85, 0, 0, 0, Math.PI / 2]
+                    ];
+                    dirs.forEach(([sx, sy, sz, rx, rz]) => {
+                        const sp = new THREE.Mesh(spikeGeo, spikeMat);
+                        sp.position.set(sx, sy, sz);
+                        sp.rotation.set(rx, 0, rz);
+                        this.mesh.add(sp);
+                    });
+                }
+
+                // Anillo de suelo indicador (Verde/Dorado = Vocal comestible, Rojo = Peligro)
+                const ringGeo = new THREE.RingGeometry(0.75, 1.05, 24);
+                const ringMat = new THREE.MeshBasicMaterial({
+                    color: isVowel ? 0x4ade80 : 0xf43f5e,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 0.65
+                });
+                this.groundRing = new THREE.Mesh(ringGeo, ringMat);
+                this.groundRing.rotation.x = -Math.PI / 2;
+                this.groundRing.position.y = -this.baseY + 0.04;
+                this.mesh.add(this.groundRing);
+
+                scene.add(this.mesh);
+            }
+
+            update(dt) {
+                if (!this.active) return;
+                this.phase += dt * 3.0;
+
+                // Rotación y levitación senoidal
+                this.mesh.rotation.y += dt * (this.isVowel ? 1.6 : -2.1);
+                const bobOffset = Math.sin(this.phase) * 0.22;
+                this.mesh.position.y = this.baseY + bobOffset;
+                this.groundRing.position.y = -this.mesh.position.y + 0.05;
+
+                // Desplazamiento dentro de los límites del parque
+                this.mesh.position.x += this.velX * dt;
+                this.mesh.position.z += this.velZ * dt;
+
+                const maxR = WORLD_RADIUS - 3.5;
+                const distSq = this.mesh.position.x * this.mesh.position.x + this.mesh.position.z * this.mesh.position.z;
+                if (distSq > maxR * maxR) {
+                    const angleToCenter = Math.atan2(-this.mesh.position.z, -this.mesh.position.x);
+                    const speed = Math.hypot(this.velX, this.velZ);
+                    this.velX = Math.cos(angleToCenter) * speed;
+                    this.velZ = Math.sin(angleToCenter) * speed;
+                }
+            }
+
+            destroy(scene) {
+                this.active = false;
+                scene.remove(this.mesh);
+            }
+        }
+
+        class ParticlePool3D {
+            constructor(scene, maxParticles = 60) {
+                this.particles = [];
+                const geo = new THREE.SphereGeometry(0.14, 6, 6);
+
+                for (let i = 0; i < maxParticles; i++) {
+                    const mat = new THREE.MeshBasicMaterial({ color: 0xfacc15 });
+                    const mesh = new THREE.Mesh(geo, mat);
+                    mesh.visible = false;
+                    scene.add(mesh);
+                    this.particles.push({
+                        mesh,
+                        vel: new THREE.Vector3(),
+                        life: 0,
+                        maxLife: 0.6
+                    });
+                }
+            }
+
+            spawnBurst(position, colorHex, count = 14) {
+                let spawned = 0;
+                for (let i = 0; i < this.particles.length && spawned < count; i++) {
+                    const p = this.particles[i];
+                    if (p.life <= 0) {
+                        p.mesh.position.copy(position);
+                        p.mesh.material.color.setHex(colorHex);
+                        p.mesh.visible = true;
+                        p.mesh.scale.setScalar(1);
+
+                        const angle = Math.random() * Math.PI * 2;
+                        const speed = 2.5 + Math.random() * 4.5;
+                        p.vel.set(
+                            Math.cos(angle) * speed,
+                            3.0 + Math.random() * 4.0,
+                            Math.sin(angle) * speed
+                        );
+                        p.maxLife = 0.45 + Math.random() * 0.25;
+                        p.life = p.maxLife;
+                        spawned++;
+                    }
+                }
+            }
+
+            update(dt) {
+                for (let i = 0; i < this.particles.length; i++) {
+                    const p = this.particles[i];
+                    if (p.life > 0) {
+                        p.life -= dt;
+                        p.vel.y -= 12 * dt; // Gravedad
+                        p.mesh.position.addScaledVector(p.vel, dt);
+                        const ratio = Math.max(0.01, p.life / p.maxLife);
+                        p.mesh.scale.setScalar(ratio);
+                        if (p.life <= 0) {
+                            p.mesh.visible = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        let scene, camera, renderer;
+        let dog, particlePool, spatialGrid;
+        let letters = [];
+        let obstacles = []; // Árboles y rocas con colisión deslizante
+        let lastFrameTime = performance.now();
+
+        function initThreeWorld() {
+            const container = document.getElementById('webgl-container');
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x7dd3fc);
+            scene.fog = new THREE.FogExp2(0x7dd3fc, 0.011);
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 160);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // Iluminación atmosférica cálida
+            const hemiLight = new THREE.HemisphereLight(0xffffff, 0x3f6212, 0.72);
+            scene.add(hemiLight);
+
+            const dirLight = new THREE.DirectionalLight(0xfffbeb, 0.95);
+            dirLight.position.set(22, 36, 20);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 1024;
+            dirLight.shadow.mapSize.height = 1024;
+            dirLight.shadow.camera.near = 5;
+            dirLight.shadow.camera.far = 95;
+            const d = 38;
+            dirLight.shadow.camera.left = -d;
+            dirLight.shadow.camera.right = d;
+            dirLight.shadow.camera.top = d;
+            dirLight.shadow.camera.bottom = -d;
+            scene.add(dirLight);
+
+            buildParkEnvironment();
+
+            dog = new ArticulatedDog3D(scene);
+            particlePool = new ParticlePool3D(scene, 70);
+            spatialGrid = new SpatialHashGrid(6);
+
+            window.addEventListener('resize', onWindowResize);
+            onWindowResize();
+        }
+
+        function buildParkEnvironment() {
+            // Suelo de césped con patrón de tablero sutil
+            const grassCanvas = document.createElement('canvas');
+            grassCanvas.width = 256;
+            grassCanvas.height = 256;
+            const gCtx = grassCanvas.getContext('2d');
+            gCtx.fillStyle = '#4d7c0f';
+            gCtx.fillRect(0, 0, 256, 256);
+            gCtx.fillStyle = '#65a30d';
+            gCtx.fillRect(0, 0, 128, 128);
+            gCtx.fillRect(128, 128, 128, 128);
+
+            const grassTex = new THREE.CanvasTexture(grassCanvas);
+            grassTex.wrapS = THREE.RepeatWrapping;
+            grassTex.wrapT = THREE.RepeatWrapping;
+            grassTex.repeat.set(22, 22);
+
+            const groundGeo = new THREE.CircleGeometry(WORLD_RADIUS + 4, 64);
+            const groundMat = new THREE.MeshStandardMaterial({ map: grassTex, roughness: 0.9 });
+            const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+            groundMesh.rotation.x = -Math.PI / 2;
+            groundMesh.receiveShadow = true;
+            scene.add(groundMesh);
+
+            // Cerca perimetral de madera
+            const postGeo = new THREE.BoxGeometry(0.35, 1.4, 0.35);
+            const railGeo = new THREE.BoxGeometry(3.2, 0.18, 0.14);
+            const woodMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.8 });
+            const postCount = 40;
+
+            for (let i = 0; i < postCount; i++) {
+                const theta = (i / postCount) * Math.PI * 2;
+                const px = Math.cos(theta) * WORLD_RADIUS;
+                const pz = Math.sin(theta) * WORLD_RADIUS;
+
+                const post = new THREE.Mesh(postGeo, woodMat);
+                post.position.set(px, 0.7, pz);
+                post.lookAt(0, 0.7, 0);
+                post.castShadow = true;
+                scene.add(post);
+
+                const rail = new THREE.Mesh(railGeo, woodMat);
+                rail.position.set(px, 1.0, pz);
+                rail.lookAt(0, 1.0, 0);
+                scene.add(rail);
+            }
+
+            // Árboles y rocas decorativas con colisión suave
+            const trunkMat = new THREE.MeshStandardMaterial({ color: 0x713f12, roughness: 0.85 });
+            const crownMat = new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.7 });
+            const rockMat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.8 });
+
+            const treeCoords = [
+                [-14, -14], [15, -13], [-16, 14], [16, 15],
+                [0, -22], [-23, 0], [23, 2], [0, 23]
+            ];
+
+            treeCoords.forEach(([tx, tz]) => {
+                const treeGroup = new THREE.Group();
+                treeGroup.position.set(tx, 0, tz);
+
+                const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.65, 2.4, 10), trunkMat);
+                trunk.position.y = 1.2;
+                trunk.castShadow = true;
+                treeGroup.add(trunk);
+
+                const foliage1 = new THREE.Mesh(new THREE.ConeGeometry(2.2, 3.2, 10), crownMat);
+                foliage1.position.y = 3.2;
+                foliage1.castShadow = true;
+                treeGroup.add(foliage1);
+
+                const foliage2 = new THREE.Mesh(new THREE.ConeGeometry(1.7, 2.5, 10), crownMat);
+                foliage2.position.y = 4.6;
+                foliage2.castShadow = true;
+                treeGroup.add(foliage2);
+
+                scene.add(treeGroup);
+                obstacles.push({ x: tx, z: tz, radius: 1.15 });
+            });
+
+            // Rocas bajas
+            const rockCoords = [[-8, 9], [10, -7], [-10, -5], [9, 10]];
+            rockCoords.forEach(([rx, rz]) => {
+                const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(0.75, 0), rockMat);
+                rock.position.set(rx, 0.4, rz);
+                rock.scale.set(1.2, 0.7, 1.0);
+                rock.castShadow = true;
+                scene.add(rock);
+                obstacles.push({ x: rx, z: rz, radius: 0.9 });
+            });
+        }
+
+        const InputState = {
+            joyX: 0,
+            joyY: 0,
+            keys: {},
+            sprintHeld: false,
+            joyTouchId: null
+        };
+
+        function setupInputHandlers() {
+            // 1. Joystick Virtual Táctil y con Ratón
+            const joyZone = document.getElementById('joystick-zone');
+            const joyKnob = document.getElementById('joystick-knob');
+            const maxRadius = 42;
+
+            function updateJoystickFromPoint(clientX, clientY) {
+                const rect = joyZone.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                let dx = clientX - centerX;
+                let dy = clientY - centerY;
+                const dist = Math.hypot(dx, dy);
+
+                if (dist > maxRadius) {
+                    dx = (dx / dist) * maxRadius;
+                    dy = (dy / dist) * maxRadius;
+                }
+
+                joyKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+
+                // Zona muerta del 12%
+                const normX = dx / maxRadius;
+                const normY = dy / maxRadius;
+                const mag = Math.hypot(normX, normY);
+                if (mag < 0.12) {
+                    InputState.joyX = 0;
+                    InputState.joyY = 0;
+                } else {
+                    InputState.joyX = normX;
+                    InputState.joyY = normY;
+                }
+            }
+
+            function resetJoystick() {
+                InputState.joyX = 0;
+                InputState.joyY = 0;
+                InputState.joyTouchId = null;
+                joyKnob.style.transform = `translate(0px, 0px)`;
+            }
+
+            joyZone.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const t = e.changedTouches[0];
+                InputState.joyTouchId = t.identifier;
+                updateJoystickFromPoint(t.clientX, t.clientY);
+            }, { passive: false });
+
+            joyZone.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === InputState.joyTouchId) {
+                        updateJoystickFromPoint(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+                    }
+                }
+            }, { passive: false });
+
+            joyZone.addEventListener('touchend', (e) => {
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === InputState.joyTouchId) {
+                        resetJoystick();
+                    }
+                }
+            });
+            joyZone.addEventListener('touchcancel', resetJoystick);
+
+            // Soporte de ratón para el joystick en PC
+            let mouseJoyActive = false;
+            joyZone.addEventListener('mousedown', (e) => {
+                mouseJoyActive = true;
+                updateJoystickFromPoint(e.clientX, e.clientY);
+            });
+            window.addEventListener('mousemove', (e) => {
+                if (mouseJoyActive) updateJoystickFromPoint(e.clientX, e.clientY);
+            });
+            window.addEventListener('mouseup', () => {
+                if (mouseJoyActive) {
+                    mouseJoyActive = false;
+                    resetJoystick();
+                }
+            });
+
+            // 2. Botón ¡COMER! (Abre la mandíbula y da un impulso hacia la vocal)
+            const btnBite = document.getElementById('btn-bite');
+            const triggerBiteAction = (e) => {
+                if (e) e.preventDefault();
+                if (!GameState.running || GameState.paused) return;
+                dog.triggerBite();
+                // Pequeño impulso hacia adelante al morder
+                dog.velocity.x += Math.sin(dog.yaw) * 4.2;
+                dog.velocity.z += Math.cos(dog.yaw) * 4.2;
+            };
+            btnBite.addEventListener('touchstart', triggerBiteAction, { passive: false });
+            btnBite.addEventListener('mousedown', triggerBiteAction);
+
+            // 3. Botón CORRER / SPRINT
+            const btnSprint = document.getElementById('btn-sprint');
+            btnSprint.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                InputState.sprintHeld = true;
+                btnSprint.classList.add('pressed');
+            }, { passive: false });
+            btnSprint.addEventListener('touchend', () => {
+                InputState.sprintHeld = false;
+                btnSprint.classList.remove('pressed');
+            });
+            btnSprint.addEventListener('mousedown', () => InputState.sprintHeld = true);
+            btnSprint.addEventListener('mouseup', () => InputState.sprintHeld = false);
+
+            // 4. Teclado (WASD / Flechas / Espacio / Shift)
+            window.addEventListener('keydown', (e) => {
+                InputState.keys[e.code] = true;
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    triggerBiteAction();
+                }
+            });
+            window.addEventListener('keyup', (e) => {
+                InputState.keys[e.code] = false;
+            });
+        }
+
+        function onWindowResize() {
+            if (!camera || !renderer) return;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const aspect = w / h;
+
+            // Ajuste inteligente de FOV para celulares en orientación vertical (Portrait)
+            camera.fov = aspect < 1.0 ? 68 : 54;
+            camera.aspect = aspect;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        }
+
+        function spawnWaveOfLetters() {
+            // Limpiar letras anteriores
+            letters.forEach(l => l.destroy(scene));
+            letters = [];
+
+            const speedFactor = GameState.level === 1 ? 0.65 : (GameState.level === 2 ? 1.1 : 1.55);
+
+            // Generar al menos 2 de cada una de las 5 vocales (10 vocales en el parque)
+            VOWELS_LIST.forEach(vowel => {
+                for (let copy = 0; copy < 2; copy++) {
+                    const pos = getSafeSpawnPosition(6.5);
+                    letters.push(new LetterEntity3D(scene, vowel, true, pos.x, pos.z, speedFactor));
+                }
+            });
+
+            // Generar consonantes según el nivel
+            const consonantCount = GameState.level === 1 ? 9 : (GameState.level === 2 ? 14 : 18);
+            for (let i = 0; i < consonantCount; i++) {
+                const cons = CONSONANTS_LIST[i % CONSONANTS_LIST.length];
+                const pos = getSafeSpawnPosition(8.0);
+                letters.push(new LetterEntity3D(scene, cons, false, pos.x, pos.z, speedFactor));
+            }
+        }
+
+        function getSafeSpawnPosition(minDistFromDog = 7) {
+            for (let attempt = 0; attempt < 30; attempt++) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = 6 + Math.random() * (WORLD_RADIUS - 9);
+                const x = Math.cos(angle) * r;
+                const z = Math.sin(angle) * r;
+
+                const distToDog = Math.hypot(x - dog.position.x, z - dog.position.z);
+                if (distToDog < minDistFromDog) continue;
+
+                let hitsObstacle = false;
+                for (const obs of obstacles) {
+                    if (Math.hypot(x - obs.x, z - obs.z) < obs.radius + 1.8) {
+                        hitsObstacle = true;
+                        break;
+                    }
+                }
+                if (!hitsObstacle) return { x, z };
+            }
+            return { x: 12, z: 12 };
+        }
+
+        function showFloatingText3D(worldPos, text, colorClass) {
+            const layer = document.getElementById('floating-labels-layer');
+            const vec = worldPos.clone();
+            vec.y += 1.2;
+            vec.project(camera);
+
+            const x = (vec.x * 0.5 + 0.5) * window.innerWidth;
+            const y = (-vec.y * 0.5 + 0.5) * window.innerHeight;
+
+            const el = document.createElement('div');
+            el.className = `floating-feedback ${colorClass} text-lg sm:text-2xl px-3 py-1 rounded-full bg-slate-950/75 border border-white/20`;
+            el.style.left = `${Math.max(20, Math.min(window.innerWidth - 140, x - 50))}px`;
+            el.style.top = `${Math.max(60, Math.min(window.innerHeight - 100, y))}px`;
+            el.textContent = text;
+            layer.appendChild(el);
+
+            setTimeout(() => el.remove(), 1100);
+        }
+
+        let toastTimeout = null;
+        function showEducationalBanner(msg) {
+            const banner = document.getElementById('educational-toast');
+            const txt = document.getElementById('educational-toast-text');
+            txt.textContent = msg;
+            banner.classList.remove('opacity-0', '-translate-y-2');
+            banner.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                banner.classList.remove('opacity-100', 'translate-y-0');
+                banner.classList.add('opacity-0', '-translate-y-2');
+            }, 3400);
+        }
+
+        function onEatVowel(entity) {
+            const v = entity.letter;
+            dog.triggerBite();
+            dog.celebrateTimer = 0.7;
+
+            GameState.vowelsEatenTotal++;
+            GameState.collectedSet.add(v);
+
+            // Actualizar casilla visual A-E-I-O-U
+            const slot = document.querySelector(`.vowel-slot[data-vowel="${v}"]`);
+            if (slot) slot.classList.add('collected');
+
+            const completedAllFive = GameState.collectedSet.size === 5;
+            const pointsEarned = (completedAllFive ? 300 : 100) * GameState.combo;
+            GameState.score += pointsEarned;
+            GameState.combo = Math.min(5, GameState.combo + 1);
+            GameState.stamina = Math.min(100, GameState.stamina + 30);
+
+            particlePool.spawnBurst(entity.mesh.position, 0xfacc15, 18);
+            soundEngine.playEatVowel(completedAllFive);
+
+            if (completedAllFive) {
+                // Bonificación por completar A-E-I-O-U
+                if (GameState.health < GameState.maxHealth) GameState.health++;
+                showFloatingText3D(entity.mesh.position, `¡A-E-I-O-U! +${pointsEarned}`, 'text-amber-300');
+                showEducationalBanner(`¡Increíble! Completaste las 5 vocales: A, E, I, O, U (+1 Corazón)`);
+                soundEngine.speak(`¡Fantástico! Completaste las cinco vocales: A, E, I, O, U.`);
+
+                setTimeout(() => {
+                    GameState.collectedSet.clear();
+                    document.querySelectorAll('.vowel-slot').forEach(s => s.classList.remove('collected'));
+                }, 1400);
+            } else {
+                showFloatingText3D(entity.mesh.position, `¡Vocal ${v}! +${pointsEarned}`, 'text-emerald-300');
+                showEducationalBanner(`¡Ñam! Comiste la ${VOWEL_WORDS[v]}`);
+                soundEngine.speak(VOWEL_WORDS[v]);
+            }
+
+            // Reaparecer otra vocal en lugar seguro para mantener flujo continuo
+            const newPos = getSafeSpawnPosition(10);
+            entity.mesh.position.set(newPos.x, entity.baseY, newPos.z);
+
+            updateHUD();
+        }
+
+        function onHitConsonant(entity) {
+            if (dog.invulnerableTimer > 0) return;
+
+            dog.invulnerableTimer = 1.6;
+            GameState.health = Math.max(0, GameState.health - 1);
+            GameState.combo = 1;
+
+            // Impulso de retroceso (Knockback físico)
+            const pushX = dog.position.x - entity.mesh.position.x;
+            const pushZ = dog.position.z - entity.mesh.position.z;
+            const len = Math.hypot(pushX, pushZ) || 1;
+            dog.velocity.x = (pushX / len) * 11;
+            dog.velocity.z = (pushZ / len) * 11;
+
+            particlePool.spawnBurst(dog.position, 0xf43f5e, 16);
+            soundEngine.playConsonantHurt();
+
+            // Destello rojo de daño
+            const overlay = document.getElementById('damage-overlay');
+            overlay.style.opacity = '1';
+            setTimeout(() => overlay.style.opacity = '0', 320);
+
+            showFloatingText3D(dog.position, `¡Ay! Consonante ${entity.letter}`, 'text-rose-400');
+            showEducationalBanner(`¡Cuidado! La "${entity.letter}" es una CONSONANTE. ¡Solo come A, E, I, O, U!`);
+            soundEngine.speak(`¡Ay! Cuidado, la letra ${entity.letter} es una consonante.`);
+
+            // Reubicar consonante lejos del perro
+            const newPos = getSafeSpawnPosition(12);
+            entity.mesh.position.set(newPos.x, entity.baseY, newPos.z);
+
+            updateHUD();
+
+            if (GameState.health <= 0) {
+                endGameSession();
+            }
+        }
+
+        function updateGamePhysics(dt) {
+            // 1. Vector de entrada combinado (Joystick + Teclado)
+            let inX = InputState.joyX;
+            let inZ = InputState.joyY;
+
+            if (InputState.keys['KeyW'] || InputState.keys['ArrowUp']) inZ -= 1;
+            if (InputState.keys['KeyS'] || InputState.keys['ArrowDown']) inZ += 1;
+            if (InputState.keys['KeyA'] || InputState.keys['ArrowLeft']) inX -= 1;
+            if (InputState.keys['KeyD'] || InputState.keys['ArrowRight']) inX += 1;
+
+            const inputVec = new THREE.Vector3(inX, 0, inZ);
+            const inputMag = Math.min(1, inputVec.length());
+            if (inputVec.lengthSq() > 1) inputVec.normalize();
+
+            // Determinar si corre por botón o por empujar el joystick al borde
+            const wantsSprint = InputState.sprintHeld || InputState.keys['ShiftLeft'] || InputState.keys['ShiftRight'] || inputMag > 0.88;
+            dog.isSprinting = wantsSprint && GameState.stamina > 8 && inputMag > 0.15;
+
+            if (dog.isSprinting) {
+                GameState.stamina = Math.max(0, GameState.stamina - 22 * dt);
+            } else {
+                GameState.stamina = Math.min(100, GameState.stamina + 16 * dt);
+            }
+            document.getElementById('stamina-bar').style.width = `${GameState.stamina}%`;
+
+            // 2. Cinemática del perro con suavizado exponencial
+            const maxSpeed = dog.isSprinting ? 12.2 : 7.8;
+            const targetVx = inputVec.x * maxSpeed;
+            const targetVz = inputVec.z * maxSpeed;
+            const accelFactor = 1 - Math.exp(-10 * dt);
+
+            dog.velocity.x += (targetVx - dog.velocity.x) * accelFactor;
+            dog.velocity.z += (targetVz - dog.velocity.z) * accelFactor;
+
+            dog.position.x += dog.velocity.x * dt;
+            dog.position.z += dog.velocity.z * dt;
+
+            // 3. Colisión deslizante con obstáculos (Árboles y Rocas)
+            const dogRadius = 0.85;
+            for (let i = 0; i < obstacles.length; i++) {
+                const obs = obstacles[i];
+                const dx = dog.position.x - obs.x;
+                const dz = dog.position.z - obs.z;
+                const minDist = dogRadius + obs.radius;
+                const distSq = dx * dx + dz * dz;
+                if (distSq < minDist * minDist && distSq > 0.0001) {
+                    const dist = Math.sqrt(distSq);
+                    const overlap = minDist - dist;
+                    dog.position.x += (dx / dist) * overlap;
+                    dog.position.z += (dz / dist) * overlap;
+                }
+            }
+
+            // 4. Límite circular del parque con deslizamiento suave
+            const maxParkR = WORLD_RADIUS - 1.4;
+            const dogDistFromCenter = Math.hypot(dog.position.x, dog.position.z);
+            if (dogDistFromCenter > maxParkR) {
+                const scale = maxParkR / dogDistFromCenter;
+                dog.position.x *= scale;
+                dog.position.z *= scale;
+            }
+
+            // 5. Actualizar letras e insertar en SpatialHashGrid
+            spatialGrid.clear();
+            let nearestVowel = null;
+            let nearestVowelDistSq = Infinity;
+
+            for (let i = 0; i < letters.length; i++) {
+                const item = letters[i];
+                item.update(dt);
+                spatialGrid.insert(item);
+
+                if (item.isVowel) {
+                    const dx = item.mesh.position.x - dog.position.x;
+                    const dz = item.mesh.position.z - dog.position.z;
+                    const dSq = dx * dx + dz * dz;
+                    if (dSq < nearestVowelDistSq) {
+                        nearestVowelDistSq = dSq;
+                        nearestVowel = item;
+                    }
+                }
+            }
+
+            const nearestVowelDist = Math.sqrt(nearestVowelDistSq);
+            dog.update(dt, inputVec, nearestVowelDist);
+
+            // Actualizar Brújula Radar hacia la vocal más cercana
+            if (nearestVowel) {
+                const angleToVowel = Math.atan2(
+                    nearestVowel.mesh.position.x - dog.position.x,
+                    nearestVowel.mesh.position.z - dog.position.z
+                );
+                // En cámara vista desde +Z hacia -Z, rotamos la flecha en pantalla
+                const deg = (angleToVowel * 180 / Math.PI) + 135;
+                document.getElementById('radar-arrow').style.transform = `rotate(${deg}deg)`;
+                document.getElementById('radar-target-letter').textContent =
+                    `${nearestVowel.letter} (${Math.round(nearestVowelDist)}m)`;
+            }
+
+            // 6. Detección de Colisiones Narrow-Phase usando SpatialHashGrid
+            const mouthPos = dog.getMouthWorldPosition();
+            const biteBonusRadius = dog.biteTimer > 0 ? 0.95 : 0.25;
+            const candidates = spatialGrid.queryNear(dog.position.x, dog.position.z, 3.5);
+
+            for (let i = 0; i < candidates.length; i++) {
+                const ent = candidates[i];
+                if (!ent.active) continue;
+
+                if (ent.isVowel) {
+                    // Las vocales se comen con el hocico/boca o acercándose
+                    const dx = ent.mesh.position.x - mouthPos.x;
+                    const dz = ent.mesh.position.z - mouthPos.z;
+                    const eatRadius = ent.radius + 0.75 + biteBonusRadius;
+                    if (dx * dx + dz * dz <= eatRadius * eatRadius) {
+                        onEatVowel(ent);
+                    }
+                } else {
+                    // Las consonantes dañan el cuerpo del perro si choca con ellas
+                    const dx = ent.mesh.position.x - dog.position.x;
+                    const dz = ent.mesh.position.z - dog.position.z;
+                    const hitRadius = ent.radius + 0.65;
+                    if (dx * dx + dz * dz <= hitRadius * hitRadius) {
+                        onHitConsonant(ent);
+                    }
+                }
+            }
+
+            // 7. Seguimiento de Cámara Inteligente (Optimizado para Vertical y Horizontal)
+            const isPortrait = window.innerWidth < window.innerHeight;
+            const camDist = isPortrait ? 13.5 : 10.2;
+            const camHeight = isPortrait ? 9.2 : 6.4;
+
+            const desiredCamPos = new THREE.Vector3(
+                dog.position.x,
+                dog.position.y + camHeight,
+                dog.position.z + camDist
+            );
+            camera.position.lerp(desiredCamPos, Math.min(1, dt * 7.5));
+
+            const lookTarget = new THREE.Vector3(
+                dog.position.x + dog.velocity.x * 0.18,
+                dog.position.y + (isPortrait ? 0.6 : 1.1),
+                dog.position.z + dog.velocity.z * 0.18 - 1.2
+            );
+            camera.lookAt(lookTarget);
+
+            particlePool.update(dt);
+        }
+
+        function updateHUD() {
+            document.getElementById('score-display').textContent = GameState.score.toLocaleString('es-ES');
+
+            const comboBadge = document.getElementById('combo-badge');
+            if (GameState.combo > 1) {
+                comboBadge.textContent = `x${GameState.combo}`;
+                comboBadge.classList.remove('hidden');
+            } else {
+                comboBadge.classList.add('hidden');
+            }
+
+            const heartsContainer = document.getElementById('hearts-container');
+            heartsContainer.innerHTML = '';
+            for (let i = 0; i < GameState.maxHealth; i++) {
+                const heart = document.createElement('i');
+                heart.className = i < GameState.health
+                    ? 'fa-solid fa-heart text-rose-500 transition-transform scale-100'
+                    : 'fa-regular fa-heart text-slate-600';
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+        function selectLevel(lvl) {
+            GameState.level = lvl;
+            const names = {
+                1: 'Nivel 1 • Parque Soleado',
+                2: 'Nivel 2 • Consonantes Traviesas',
+                3: 'Nivel 3 • Maestro de las Vocales'
+            };
+            document.getElementById('hud-level-badge').textContent = names[lvl];
+
+            [1, 2, 3].forEach(n => {
+                const btn = document.getElementById(`lvl-btn-${n}`);
+                if (n === lvl) {
+                    btn.className = 'lvl-btn py-2 px-2 rounded-xl border-2 border-amber-400 bg-amber-400/20 text-white font-bold text-xs flex flex-col items-center';
+                } else {
+                    btn.className = 'lvl-btn py-2 px-2 rounded-xl border-2 border-slate-600 bg-slate-800/70 text-slate-300 font-bold text-xs flex flex-col items-center';
+                }
+            });
+        }
+
+        function startGame() {
+            soundEngine.init();
+            document.getElementById('start-modal').classList.add('hidden');
+            document.getElementById('end-modal').classList.add('hidden');
+
+            GameState.score = 0;
+            GameState.combo = 1;
+            GameState.vowelsEatenTotal = 0;
+            GameState.health = GameState.maxHealth;
+            GameState.stamina = 100;
+            GameState.collectedSet.clear();
+            document.querySelectorAll('.vowel-slot').forEach(s => s.classList.remove('collected'));
+
+            dog.position.set(0, 0, 0);
+            dog.velocity.set(0, 0, 0);
+            dog.yaw = 0;
+
+            spawnWaveOfLetters();
+            updateHUD();
+
+            GameState.running = true;
+            GameState.paused = false;
+            showEducationalBanner('¡Usa el joystick para llevar a Toby hacia las Vocales A, E, I, O, U!');
+            soundEngine.speak('¡Hola! Ayuda a Toby a comer las cinco vocales: A, E, I, O, U.');
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        function endGameSession() {
+            GameState.running = false;
+            document.getElementById('end-score').textContent = GameState.score.toLocaleString('es-ES');
+            document.getElementById('end-vowels-count').textContent = GameState.vowelsEatenTotal;
+            document.getElementById('end-modal').classList.remove('hidden');
+            soundEngine.speak(`Buen intento. Comiste ${GameState.vowelsEatenTotal} vocales. ¡Intentémoslo de nuevo!`);
+        }
+
+        function togglePauseGame() {
+            if (!GameState.running) return;
+            GameState.paused = !GameState.paused;
+            const icon = document.getElementById('pause-icon');
+            icon.className = GameState.paused ? 'fa-solid fa-play text-emerald-400' : 'fa-solid fa-pause text-base';
+            showEducationalBanner(GameState.paused ? 'Juego en pausa' : '¡Continúa buscando vocales!');
+        }
+
+        function toggleAudioAndVoice() {
+            GameState.audioEnabled = !GameState.audioEnabled;
+            const icon = document.getElementById('audio-icon');
+            icon.className = GameState.audioEnabled
+                ? 'fa-solid fa-volume-high text-base text-amber-300'
+                : 'fa-solid fa-volume-xmark text-base text-slate-400';
+            if (!GameState.audioEnabled && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        function openStudyModal() {
+            GameState.paused = true;
+            document.getElementById('study-modal').classList.remove('hidden');
+        }
+
+        function closeStudyModal() {
+            document.getElementById('study-modal').classList.add('hidden');
+            if (GameState.running) GameState.paused = false;
+        }
+
+        function speakEducationalSample(phrase) {
+            soundEngine.speak(phrase);
+        }
+
+        function animateLoop(now) {
+            requestAnimationFrame(animateLoop);
+            const rawDt = (now - lastFrameTime) * 0.001;
+            lastFrameTime = now;
+            // Limitar deltaTime a máx 50ms para estabilidad física en cambios de pestaña
+            const dt = Math.min(rawDt, 0.05);
+
+            if (GameState.running && !GameState.paused) {
+                updateGamePhysics(dt);
+            } else if (dog) {
+                // Animación suave de Toby en la pantalla de inicio
+                dog.update(dt, new THREE.Vector3(0, 0, 0), 99);
+                const t = now * 0.0005;
+                camera.position.set(Math.sin(t) * 6.5, 4.2, Math.cos(t) * 6.5 + 2);
+                camera.lookAt(0, 1.2, 0);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function () {
+            initThreeWorld();
+            setupInputHandlers();
+            lastFrameTime = performance.now();
+            animateLoop(lastFrameTime);
+        };
+    </script>
+</body>
+</html>
