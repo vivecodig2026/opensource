@@ -1,985 +1,344 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VibeCoding Lab — Ing. Rubén Sierra | Apps HTML Gratis & Software con IA Pro</title>
-  <style>
-    :root {
-      --primary: #3b82f6;
-      --primary-dark: #2563eb;
-      --accent: #10b981;
-      --purple: #8b5cf6;
-      --amber: #f59e0b;
-      --bg: #070b14;
-      --surface: #111827;
-      --surface-2: #1e293b;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --border: #283548;
-      --radius: 14px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.58;
-      padding-bottom: 90px;
-    }
-
-    .container {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0 18px;
-    }
-
-    /* Navbar */
-    .navbar {
-      background: rgba(17, 24, 39, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 60;
-      padding: 12px 0;
-    }
-
-    .nav-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      font-size: 1.08rem;
-    }
-
-    .brand-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--purple), var(--primary));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      color: #fff;
-      font-size: 1rem;
-    }
-
-    .author-sub {
-      display: block;
-      font-size: 0.72rem;
-      color: #a5b4fc;
-      font-weight: 600;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      padding: 9px 15px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      color: var(--text);
-      text-decoration: none;
-      transition: all 0.15s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      border-color: var(--primary);
-    }
-
-    .btn-free {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    .btn-improve {
-      background: rgba(59, 130, 246, 0.14);
-      border-color: #3b82f6;
-      color: #93c5fd;
-    }
-
-    .btn-improve:hover {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .btn-custom-app {
-      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-      border-color: #8b5cf6;
-      color: #fff;
-      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
-    }
-
-    .btn-donate {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      border-color: #f59e0b;
-      color: #070b14;
-      font-weight: 800;
-    }
-
-    .btn-sm {
-      padding: 6px 11px;
-      font-size: 0.78rem;
-    }
-
-    /* Hero */
-    .hero {
-      padding: 44px 0 26px;
-      text-align: center;
-    }
-
-    .pill-vibe {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(139, 92, 246, 0.16);
-      border: 1px solid rgba(139, 92, 246, 0.45);
-      color: #c4b5fd;
-      padding: 6px 15px;
-      border-radius: 99px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-bottom: 14px;
-    }
-
-    .hero h1 {
-      font-size: clamp(1.75rem, 3.8vw, 2.6rem);
-      font-weight: 900;
-      max-width: 880px;
-      margin: 0 auto 12px;
-      line-height: 1.18;
-    }
-
-    .hero p {
-      color: var(--muted);
-      max-width: 780px;
-      margin: 0 auto 22px;
-      font-size: 0.98rem;
-    }
-
-    .hero-actions {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 32px;
-    }
-
-    /* Manifiesto Vibe Coding & Autor */
-    .manifesto-box {
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(17, 24, 39, 0.98));
-      border: 1px solid rgba(139, 92, 246, 0.4);
-      border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 30px;
-      text-align: left;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .manifesto-col h3 {
-      font-size: 1.05rem;
-      color: #c4b5fd;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .manifesto-col p {
-      font-size: 0.87rem;
-      color: #cbd5e1;
-    }
-
-    .llm-badges {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .llm-tag {
-      font-size: 0.74rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: #f8fafc;
-    }
-
-    /* Filter Bar */
-    .filter-bar {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    /* Apps Grid */
-    .apps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-      gap: 18px;
-      margin-bottom: 42px;
-    }
-
-    .app-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.15s ease;
-    }
-
-    .app-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
-    }
-
-    .badge-free {
-      background: rgba(16, 185, 129, 0.18);
-      color: #6ee7b7;
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 3px 9px;
-      border-radius: 99px;
-    }
-
-    .app-card h3 {
-      font-size: 1.05rem;
-      margin: 10px 0 6px;
-    }
-
-    .app-card p {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .app-card-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    /* Dual Bottom Section */
-    .dual-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 22px;
-      margin-top: 20px;
-    }
-
-    .box-card {
-      background: var(--surface);
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-    }
-
-    .box-card.custom-app-box {
-      border-color: var(--purple);
-      background: linear-gradient(180deg, rgba(139, 92, 246, 0.08), var(--surface));
-    }
-
-    .box-card.donation-box {
-      border-color: var(--amber);
-      background: linear-gradient(180deg, rgba(245, 158, 11, 0.08), var(--surface));
-    }
-
-    .llm-support-banner {
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-size: 0.83rem;
-      color: #fde68a;
-      margin-bottom: 14px;
-    }
-
-    .pay-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
-      gap: 8px;
-      margin: 12px 0 16px;
-    }
-
-    .pay-chip {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 9px 6px;
-      color: var(--text);
-      font-weight: 700;
-      font-size: 0.78rem;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .pay-chip.active, .pay-chip:hover {
-      border-color: var(--amber);
-      background: rgba(245, 158, 11, 0.16);
-      color: #fcd34d;
-    }
-
-    .input, select, textarea {
-      width: 100%;
-      padding: 9px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      font-size: 0.88rem;
-    }
-
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 10px;
-    }
-
-    /* Modal */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.78);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 16px;
-    }
-
-    .modal-backdrop.active {
-      display: flex;
-    }
-
-    .modal-card {
-      background: var(--surface);
-      border: 2px solid var(--primary);
-      border-radius: var(--radius);
-      max-width: 530px;
-      width: 100%;
-      padding: 24px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.65);
-    }
-
-    .admin-panel {
-      background: var(--surface-2);
-      border: 2px dashed var(--accent);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin: 20px 0;
-      display: none;
-    }
-
-    .admin-panel.active {
-      display: block;
-    }
-
-    .footer {
-      margin-top: 50px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      text-align: center;
-      font-size: 0.84rem;
-      color: var(--muted);
-    }
-  </style>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-G1/w7KZ0NDTydqoWGSd2GMWqHH/aFld1U+7lbXJpLgY=' 'sha256-RoUBAaEU4FhMi6wyiIITDFkT9hNh4tAhHY3kK5lDQ9U='; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08786d">
+<meta name="description" content="Apps HTML gratuitas de Rubén Sierra para educación, documentos y creatividad. Descarga las herramientas, apoya el proyecto o solicita una aplicación a medida.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta property="og:title" content="VibeCoding Lab · Apps gratuitas, soluciones a medida">
+<meta property="og:description" content="Herramientas HTML para tu día a día. Descargas gratis, aportes voluntarios y desarrollo personalizado con Rubén Sierra.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vivecodig2026.github.io/opensource/">
+<title>VibeCoding Lab · Apps gratuitas y desarrollo a medida</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2308786d'/%3E%3Cpath d='m24 20-12 12 12 12m16-24 12 12-12 12' stroke='white' stroke-width='5' fill='none'/%3E%3C/svg%3E">
+<style>:root{--ink:#10233f;--muted:#52647b;--green:#08786d;--green-dark:#065e56;--mint:#ddf6ed;--paper:#f7f9fc;--line:#d8e1e9;--white:#fff;--amber:#fff0cc;--amber-ink:#72501b;--radius:18px;--shadow:0 18px 50px rgba(16,35,63,.07)}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}button,input,textarea,select{font:inherit}button,a,input,select,textarea{ -webkit-tap-highlight-color:transparent}a{color:inherit;text-decoration:none}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.65}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #1255bd;outline-offset:4px}svg{display:block;flex-shrink:0}button svg,a svg{width:19px;height:19px}h1,h2,h3,p{margin:0}h1,h2,h3{letter-spacing:-.035em;line-height:1.14}h2{font-size:clamp(28px,3.5vw,42px)}h3{font-size:22px}small{font-size:13px}.shell{width:min(1192px,calc(100% - 64px));margin:auto}.skip{position:fixed;top:-60px;left:12px;background:var(--ink);color:white;padding:12px;z-index:300}.skip:focus{top:8px}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.topbar{background:rgba(255,255,255,.97);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}.nav{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:26px}.brand{display:flex;align-items:center;gap:11px;line-height:1.25;flex-shrink:0}.brand-icon{width:42px;height:42px;border-radius:12px;background:var(--green);color:white;display:grid;place-items:center;font:800 23px ui-monospace,monospace;letter-spacing:-4px;padding-right:4px}.brand strong{font-size:19px;letter-spacing:-.04em}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.08em;margin-top:4px;text-transform:uppercase}.nav-links{display:flex;align-items:center;gap:26px;font-size:14px;font-weight:600}.nav-links a:hover{color:var(--green)}.nav-actions{display:flex;gap:10px}.btn,.icon-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid transparent;border-radius:10px;min-height:44px;padding:10px 17px;font-weight:700;font-size:14px;text-align:center;line-height:1.35;background:white;color:var(--ink);transition:background .15s,box-shadow .15s,transform .15s}.btn:hover:not(:disabled){transform:translateY(-1px)}.btn.primary{background:var(--green);color:white}.btn.primary:hover:not(:disabled){background:var(--green-dark)}.btn.secondary{border-color:var(--line);background:white}.btn.secondary:hover:not(:disabled){border-color:var(--green)}.btn.soft{background:var(--mint);color:#075e56}.btn.amber{background:var(--amber);color:var(--amber-ink);border-color:#e4cf9e}.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}.btn.ghost:hover{background:#edf1f6;color:var(--ink)}.icon-btn{border-color:var(--line);padding:10px;width:44px;flex-shrink:0}.mobile-toggle{display:none}.hero{padding:72px 0 48px}.hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:65px;align-items:center}.eyebrow{font-size:12px;line-height:1.5;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:8px}.eyebrow:before{content:'';width:7px;height:7px;background:currentColor;border-radius:50%}h1{font-size:clamp(42px,4.75vw,64px);letter-spacing:-.055em;line-height:1.06;margin:19px 0 22px}h1 em{font-style:normal;color:var(--green)}.hero-copy>p{font-size:17px;color:var(--muted);max-width:530px;line-height:1.75}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:27px}.hero-actions .btn{min-height:50px;padding:13px 21px;font-size:15px}.hero-proof{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:20px}.hero-proof span{display:flex;align-items:center;gap:5px}.hero-proof svg{width:15px;height:15px;color:var(--green)}.workbench{position:relative;padding:31px 27px 26px;border-radius:27px;background:#e6f1ee;min-height:355px}.bench-caption{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.1em;font-weight:700;color:#466960;margin-bottom:22px}.file-stack{position:relative;padding-left:10px}.file-tile{display:flex;align-items:center;gap:16px;padding:19px 18px;background:white;border:1px solid #d3e4de;border-radius:14px;box-shadow:0 7px 16px #203a2d08;margin-bottom:11px;position:relative;transition:transform .15s}.file-tile:hover{transform:translateX(5px)}.file-tile:nth-child(2){margin-left:17px;margin-right:-5px}.file-tile:nth-child(3){margin-left:5px}.file-icon{display:grid;place-items:center;width:48px;height:52px;border-radius:11px;background:var(--mint);color:var(--green);flex-shrink:0}.file-icon svg{width:27px;height:27px}.file-tile:nth-child(2) .file-icon{background:#e9edfb;color:#4057a1}.file-tile:nth-child(3) .file-icon{background:#fff0de;color:#865623}.file-tile strong{font-size:15px;display:block;letter-spacing:-.02em}.file-tile small{font-size:12px;color:var(--muted)}.file-tile .file-ext{margin-left:auto;color:#64778b;font:11px ui-monospace,monospace}.bench-footer{display:flex;gap:7px;align-items:center;justify-content:center;font-size:12px;color:#466960;margin-top:20px}.bench-footer svg{width:16px;height:16px}.model-strip{display:grid;grid-template-columns:repeat(3,1fr);background:white;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:0 0 68px}.model-item{display:flex;align-items:center;gap:13px;padding:20px 24px}.model-item+ .model-item{border-left:1px solid var(--line)}.model-item svg{color:var(--green);width:24px;height:24px}.model-item strong{font-size:14px;display:block}.model-item small{color:var(--muted);font-size:12px}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:26px}.section-head .eyebrow{margin-bottom:10px}.section-head p{color:var(--muted);margin-top:12px;max-width:630px;font-size:15px}.count-pill{white-space:nowrap;border:1px solid var(--line);padding:7px 12px;border-radius:99px;color:var(--muted);font-size:12px;background:white}.catalog-tools{display:grid;grid-template-columns:minmax(250px,1fr) auto;gap:12px;margin-bottom:19px}.searchbox{position:relative}.searchbox svg{position:absolute;left:15px;top:15px;width:18px;height:18px;color:var(--muted)}input[type=search]{width:100%;height:48px;border:1px solid #98a8b9;border-radius:10px;padding:10px 40px 10px 44px;background:white;color:var(--ink);font-size:14px}input::placeholder,textarea::placeholder{color:#617388;opacity:1}.sort{position:relative;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}select{border:1px solid #98a8b9;border-radius:9px;background:white;color:var(--ink);padding:10px 12px;min-height:46px;max-width:100%}.filters{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:27px}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:transparent;color:var(--muted);padding:8px 15px;border-radius:99px;font-size:13px;min-height:40px;font-weight:600}.chip[aria-pressed=true]{background:var(--ink);color:white;border-color:var(--ink)}.offline-filter{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:13px;color:var(--muted);cursor:pointer}.offline-filter input{width:17px;height:17px;accent-color:var(--green)}.app-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.app-card{background:white;border:1px solid var(--line);border-radius:var(--radius);display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .18s,border-color .18s}.app-card:hover{box-shadow:var(--shadow);border-color:#9fbfb7}.card-visual{height:120px;background:var(--tone);padding:22px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden}.app-mark{width:61px;height:65px;display:grid;place-items:center;background:white;border-radius:15px;color:var(--tone-ink);box-shadow:0 4px 10px #162b3a08;transform:rotate(-5deg)}.app-mark svg{width:33px;height:33px}.card-art{display:flex;align-items:center;gap:7px;color:var(--tone-ink);font:700 11px ui-monospace,monospace;opacity:.85}.card-art .art-bar{width:10px;height:28px;border-radius:4px;background:currentColor;opacity:.23}.card-art .art-bar:nth-child(2){height:43px}.card-art .art-bar:nth-child(3){height:35px}.card-art .art-bar:nth-child(4){height:54px}.card-art .art-word{font:700 31px Georgia,serif;letter-spacing:1px}.card-content{padding:22px;flex:1;display:flex;flex-direction:column}.card-topline{display:flex;justify-content:space-between;align-items:center;gap:7px;margin-bottom:12px;color:var(--muted);font-size:11px;font-weight:650}.state-badge{display:inline-flex;gap:5px;align-items:center;padding:3px 8px;border-radius:99px;background:var(--mint);color:#075e56;font-size:10px;font-weight:750;white-space:nowrap}.state-badge.online{background:var(--amber);color:var(--amber-ink)}.state-badge.unavailable{background:#fce8e4;color:#8c3326}.state-dot{width:5px;height:5px;border-radius:50%;background:currentColor}.card-title{font-size:22px;margin-bottom:9px}.app-description{font-size:13px;line-height:1.65;color:var(--muted);min-height:66px;margin-bottom:16px}.card-meta{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin:auto 0 18px;padding-top:12px;border-top:1px solid #edf0f5;font-size:11px;color:var(--muted)}.card-meta span{display:inline-flex;align-items:center;gap:5px}.card-meta svg{width:13px;height:13px}.card-buttons{display:grid;grid-template-columns:1fr auto;gap:8px}.card-buttons .btn{padding:10px 12px;font-size:13px}.card-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:13px}.text-btn{padding:0;min-height:34px;background:none;border:0;color:var(--green);font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:5px;text-align:left}.text-btn svg{width:15px;height:15px}.text-btn.muted{color:var(--muted)}.custom-card{border:1px dashed #a4bdb6;border-radius:var(--radius);padding:29px 24px;background:#edf5f1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:15px;min-height:360px}.custom-card .circle{background:white;color:var(--green);width:45px;height:45px;border-radius:50%;display:grid;place-items:center}.custom-card h3{font-size:25px}.custom-card p{font-size:14px;color:var(--muted)}.empty{padding:38px;border:1px dashed var(--line);border-radius:15px;text-align:center;color:var(--muted);grid-column:1/-1}.empty h3{margin-bottom:8px}.empty button{margin-top:15px}.metrics-line{margin:19px 0 0;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)}.metrics-line button{font-size:12px}.section{padding:78px 0 0}.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding:28px 0 40px;border-bottom:1px solid var(--line)}.how-step{display:flex;gap:17px}.step-no{font:500 13px ui-monospace,monospace;color:var(--green);display:grid;place-items:center;width:36px;height:36px;flex-shrink:0;border:1px solid #bad6ce;border-radius:50%;background:white}.how-step h3{font-size:19px;margin:5px 0 9px}.how-step p{font-size:14px;color:var(--muted)}.services-wrap{background:var(--ink);border-radius:23px;padding:42px;color:white;display:grid;grid-template-columns:.9fr 1.2fr;gap:48px}.services-wrap .eyebrow{color:#89dfc8}.services-wrap h2{font-size:36px;margin:15px 0 18px}.services-wrap p{color:#c6d1e2;font-size:14px}.service-options{display:flex;flex-direction:column;gap:12px}.service-option{padding:23px 24px;border:1px solid #4e617b;border-radius:14px;background:#1b304d}.service-option .eyebrow{font-size:10px;letter-spacing:.1em;margin-bottom:8px}.service-option h3{font-size:23px;margin-bottom:10px}.service-option p{margin-bottom:19px;font-size:13px}.service-option .btn{background:#c5f4e5;color:#10233f;padding:9px 14px}.process-note{display:flex;align-items:center;gap:8px;font-size:12px!important;margin-top:25px}.process-note svg{width:19px;height:19px;flex-shrink:0;color:#89dfc8}.support-wrap{display:grid;grid-template-columns:1.3fr .85fr;gap:60px;align-items:center;background:#fff8e9;border:1px solid #eadbb8;border-radius:22px;padding:38px 42px}.support-wrap .eyebrow{color:#72501b}.support-wrap h2{font-size:31px;margin:14px 0}.support-wrap p{color:#675a42;font-size:14px}.support-action{text-align:center}.support-action .btn{min-height:50px;width:100%;background:#72501b;color:white}.support-action small{display:block;color:#675a42;margin-top:12px;font-size:12px}.faq-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:70px}.faq-intro p{font-size:14px;color:var(--muted);margin-top:15px}.faq-list details{border-bottom:1px solid var(--line);padding:19px 0}.faq-list details:first-child{padding-top:0}.faq-list summary{font-weight:700;font-size:15px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:15px}.faq-list summary:after{content:'+';font-weight:500;font-size:20px;color:var(--green)}.faq-list details[open] summary:after{content:'−'}.faq-list summary::-webkit-details-marker{display:none}.faq-list details p{font-size:14px;color:var(--muted);padding-top:12px}.faq-list a{text-decoration:underline;text-underline-offset:3px}.footer{margin-top:78px;background:white;border-top:1px solid var(--line);padding:35px 0 24px}.footer-main{display:flex;justify-content:space-between;align-items:flex-start;gap:25px}.footer-main p{font-size:12px;color:var(--muted);max-width:460px;margin-top:14px}.footer-links{display:flex;gap:23px;font-size:12px;flex-wrap:wrap}.footer-links a,.footer-links button{min-height:32px}.footer-bottom{margin-top:27px;padding-top:19px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;font-size:11px;color:var(--muted)}.footer-bottom a{text-decoration:underline}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);padding:12px 18px;border-radius:10px;background:var(--ink);color:white;max-width:min(600px,calc(100vw - 30px));z-index:150;box-shadow:var(--shadow);font-size:13px;display:none}.toast.show{display:block}dialog{padding:0;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 70px #10233f30;max-width:calc(100vw - 28px);width:620px;background:white;color:var(--ink);max-height:calc(100dvh - 40px);overflow:auto}dialog::backdrop{background:rgba(12,27,47,.55)}.dialog-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;padding:26px 28px 18px;position:sticky;top:0;z-index:2;background:white;border-bottom:1px solid var(--line)}.dialog-head h2{font-size:27px;max-width:470px}.dialog-head small{display:block;color:var(--green);font-size:11px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}.dialog-content{padding:24px 28px 28px}.dialog-content>p{color:var(--muted);font-size:14px;margin-bottom:18px}.dialog-content .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.dialog-content label{display:block;font-size:13px;font-weight:650;margin:15px 0 6px}.dialog-content input:not([type=checkbox]),.dialog-content textarea,.dialog-content select{width:100%;border:1px solid #98a8b9;border-radius:8px;padding:11px 12px;background:white;color:var(--ink);font-size:14px}.dialog-content textarea{resize:vertical;min-height:110px}.dialog-content .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 15px}.field-hint{font-size:12px;color:var(--muted);margin-top:6px}.request-summary{padding:15px;background:var(--paper);border:1px solid var(--line);border-radius:10px;white-space:pre-wrap;word-break:break-word;font-size:13px;max-height:270px;overflow:auto}.form-note{font-size:12px!important;margin:16px 0 0!important;line-height:1.55}.dialog-content .app-features{padding-left:21px;color:var(--muted);font-size:14px;line-height:1.85}.detail-meta{display:grid;grid-template-columns:1fr 1fr;gap:13px;border-top:1px solid var(--line);padding-top:16px;margin-top:20px}.detail-meta dt{font-size:11px;color:var(--muted)}.detail-meta dd{margin:3px 0 0;font-size:13px;font-weight:650;overflow-wrap:anywhere}.notice{padding:13px 15px;background:var(--amber);color:var(--amber-ink);font-size:13px;border-radius:10px;margin:15px 0}.stats-table-wrap{overflow:auto}.stats-table{width:100%;border-collapse:collapse;font-size:12px}.stats-table th,.stats-table td{text-align:left;border-bottom:1px solid var(--line);padding:12px 8px}.stats-table th{font-size:11px;color:var(--muted)}.stats-table td:nth-child(2){font-variant-numeric:tabular-nums}.stats-table a{text-decoration:underline}.feedback{color:#a02e20;font-size:13px;min-height:18px}.download-status{font-size:12px;min-height:0;color:var(--muted);margin-top:5px}.download-status:empty{display:none}[hidden]{display:none!important}
+@media(min-width:1400px){.hero{padding-top:84px}.hero-grid{gap:85px}.workbench{padding:36px;min-height:360px}}
+@media(max-width:1050px){.nav-links{gap:17px}.nav-actions .btn{display:none}.hero-grid{gap:30px;grid-template-columns:1.1fr 1fr}h1{font-size:49px}.workbench{padding:24px 18px}.app-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.model-item{padding:17px 14px;gap:9px}.model-item small{font-size:11px}.services-wrap{padding:32px;gap:28px}.faq-grid{gap:35px}.support-wrap{gap:30px}}
+@media(max-width:720px){.shell{width:calc(100% - 36px)}.nav{min-height:72px;gap:12px}.brand strong{font-size:18px}.brand small{font-size:9px}.brand-icon{width:37px;height:37px}.mobile-toggle{display:inline-flex}.nav-actions{gap:7px}.nav-links{display:none;position:absolute;left:0;top:71px;width:100%;background:white;border-bottom:1px solid var(--line);padding:18px;box-shadow:0 12px 20px #10233f10;flex-direction:column;align-items:stretch;gap:0}.nav-links.open{display:flex}.nav-links a{padding:12px}.hero{padding:42px 0 30px}.hero-grid{grid-template-columns:1fr;gap:32px}.hero h1{font-size:45px}.hero-copy>p{font-size:16px}.hero-actions{gap:9px}.hero-actions .btn{font-size:14px;flex:1;padding:12px}.hero-proof{font-size:11px;gap:13px}.workbench{max-width:490px;width:100%;margin:auto;padding:22px 23px;min-height:0}.file-tile{padding:13px 14px}.file-icon{width:41px;height:44px}.file-tile strong{font-size:14px}.bench-caption{margin-bottom:16px}.bench-footer{margin-top:13px}.model-strip{grid-template-columns:1fr;margin-bottom:46px}.model-item{padding:14px 20px}.model-item+.model-item{border-left:0;border-top:1px solid var(--line)}.model-item small{font-size:12px}.section-head{align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:22px}.count-pill{padding:4px 10px;font-size:11px}.section-head p{font-size:14px}.catalog-tools{grid-template-columns:1fr}.sort{justify-content:space-between}.sort select{flex:1;max-width:230px}.filters{align-items:flex-start;flex-direction:column;gap:14px;margin-top:17px}.chip{padding:7px 12px;font-size:12px}.app-grid{gap:16px}.card-content{padding:18px}.card-visual{height:103px;padding:18px}.card-topline{flex-wrap:wrap}.card-title{font-size:21px}.card-buttons{grid-template-columns:1fr}.app-description{min-height:0}.card-bottom{align-items:flex-start;flex-direction:column;gap:0}.metrics-line{font-size:11px;gap:5px}.section{padding-top:52px}.how-grid{grid-template-columns:1fr;padding-top:8px;gap:23px}.services-wrap{grid-template-columns:1fr;padding:28px 22px;gap:27px}.services-wrap h2{font-size:31px}.service-option{padding:20px}.support-wrap{grid-template-columns:1fr;padding:28px 23px;gap:24px}.support-wrap h2{font-size:29px}.support-action{text-align:left}.support-action .btn{width:auto;min-width:200px}.faq-grid{grid-template-columns:1fr;gap:26px}.footer{margin-top:52px}.footer-main{flex-direction:column;gap:22px}.footer-bottom{flex-direction:column;gap:9px}.dialog-head{padding:22px 20px 16px}.dialog-content{padding:20px}.dialog-head h2{font-size:24px}.dialog-content .field-grid{grid-template-columns:1fr}.dialog-content .actions .btn{flex:1}.custom-card{padding:25px 22px}.toast{bottom:12px;font-size:12px}}
+@media(max-width:480px){.app-grid{grid-template-columns:1fr}.card-visual{height:108px}.card-buttons{grid-template-columns:1fr auto}.card-bottom{flex-direction:row;align-items:center;gap:8px}.card-content{padding:20px}.card-topline{flex-wrap:nowrap}.custom-card{min-height:255px}.hero h1{font-size:43px}.file-stack{padding-left:0}.file-tile:nth-child(2){margin-left:10px}.file-tile .file-ext{font-size:10px}.hero-actions .btn{flex:auto}.hero-proof span:last-child{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+@media print{.topbar,.hero-actions,.catalog-tools,.filters,.card-buttons,.card-bottom,.service-options .btn,.support-action,.footer-links,.metrics-line button,.toast,dialog{display:none!important}.hero{padding:15px 0}.app-grid{grid-template-columns:repeat(2,1fr)}.app-card,.model-strip{break-inside:avoid}.section{padding-top:25px}.shell{width:100%}.workbench{display:none}.hero-grid{display:block}.footer{margin-top:25px}.services-wrap{color:black;background:white}.services-wrap p{color:#333}}
+</style>
 </head>
 <body>
-
-  <!-- BARRA SUPERIOR -->
-  <nav class="navbar">
-    <div class="container nav-inner">
-      <div class="brand">
-        <div class="brand-icon">⚡</div>
-        <div>
-          <span id="ui-brand-title">VibeCoding Lab — Bóveda Abierta</span>
-          <span class="author-sub">Autor y Co-creador: Ing. de Sistemas Rubén Sierra</span>
-        </div>
-      </div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <a href="#catalogo-gratis" class="btn btn-sm">📂 Apps Gratis</a>
-        <a href="#seccion-donar" class="btn btn-donate btn-sm">☕ Apoyar Mensualidad LLMs</a>
-        <button class="btn btn-custom-app btn-sm" onclick="scrollToCustomApp()">
-          🚀 Crear Tu Propia App
-        </button>
-        <button id="btn-admin-mode" class="btn btn-sm" style="border-color:var(--accent); color:#6ee7b7;" onclick="toggleCreatorPanel()">
-          ⚙️ Modo Creador
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <div class="container">
-
-    <!-- PANEL MODO CREADOR (CON OFUSCADOR AUTOMÁTICO DE TELÉFONO) -->
-    <section id="creator-panel" class="admin-panel">
-      <h3 style="color:#6ee7b7; margin-bottom:6px;">⚙️ Panel del Creador (Ing. Rubén Sierra) — Configuración & Ofuscación</h3>
-      <p style="font-size:0.84rem; color:var(--muted); margin-bottom:14px;">
-        Tu número de WhatsApp y billeteras se guardan <strong>ofuscados mediante cifrado XOR de bytes</strong> para que ningún bot o curioso pueda leerlos en texto plano al inspeccionar el código fuente.
-      </p>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Nombre de la Plataforma</label>
-          <input type="text" id="adm-title" class="input" value="VibeCoding Lab — Bóveda Abierta" />
-        </div>
-        <div class="form-group">
-          <label>Nuevo WhatsApp (con código país, se ofuscará automáticamente)</label>
-          <input type="password" id="adm-wa-plain" class="input" placeholder="Dejar vacío para mantener el actual ofuscado" />
-        </div>
-        <div class="form-group">
-          <label>Link de Pago Bold / Mercado Pago</label>
-          <input type="text" id="adm-linkpago" class="input" value="https://bold.co/" />
-        </div>
-      </div>
-
-      <hr style="border:none; border-top:1px solid var(--border); margin:12px 0;" />
-      <h4 style="font-size:0.9rem; margin-bottom:8px;">➕ Añadir Otra App Gratuita al Catálogo</h4>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Nombre de la App</label>
-          <input type="text" id="adm-app-name" class="input" placeholder="Ej. Generador de Contratos IA" />
-        </div>
-        <div class="form-group">
-          <label>Categoría</label>
-          <select id="adm-app-cat" class="input">
-            <option value="Ofimática & Video">Ofimática & Video</option>
-            <option value="Negocios & Ventas">Negocios & Ventas</option>
-            <option value="Productividad & Finanzas">Productividad & Finanzas</option>
-            <option value="Utilidades">Utilidades</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Archivo .html o Ruta en Drive</label>
-          <input type="text" id="adm-app-file" class="input" placeholder="Ej. ./mi_nueva_app.html" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Descripción corta</label>
-        <input type="text" id="adm-app-desc" class="input" placeholder="Describe qué problema resuelve esta herramienta..." />
-      </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn btn-free btn-sm" onclick="addNewFreeApp()">+ Añadir App al Catálogo</button>
-        <button class="btn btn-donate btn-sm" onclick="exportCleanPublicHTML()">📦 Descargar Web Lista para Publicar (con Teléfono Ofuscado)</button>
-      </div>
-    </section>
-
-    <!-- HERO PRINCIPAL -->
-    <section class="hero">
-      <div class="pill-vibe">
-        <span>✨ FILOSOFÍA VIBE CODING • AUTOR Y CO-CREADOR: ING. DE SISTEMAS RUBÉN SIERRA</span>
-      </div>
-      <h1>Micro-Software Libre, Ultraligero y Co-Creado con Inteligencia Artificial de Vanguardia</h1>
-      <p>
-        Descarga y usa gratis nuestras aplicaciones en HTML offline sin suscripciones ni instaladores pesados. Si necesitas <strong>adaptar o mejorar una herramienta para tu negocio</strong> o <strong>crear tu propia aplicación desde cero</strong>, la construimos a tu medida.
-      </p>
-
-      <div class="hero-actions">
-        <a href="#catalogo-gratis" class="btn btn-free">⬇️ Usar y Descargar Apps Gratis</a>
-        <button class="btn btn-custom-app" onclick="scrollToCustomApp()">
-          🚀 Solicitar la Creación de Tu Propia App
-        </button>
-        <a href="#seccion-donar" class="btn btn-donate">☕ Donar para Sostener los Modelos IA</a>
-      </div>
-
-      <!-- MANIFIESTO VIBE CODING, MODELOS PRO Y SOSTENIBILIDAD LLM -->
-      <div class="manifesto-box">
-        <div class="manifesto-col">
-          <h3>🧠 ¿Qué es nuestra Filosofía Vibe Coding?</h3>
-          <p>
-            El <strong>Vibe Coding</strong> une el criterio de arquitectura de software con el poder generativo de la Inteligencia Artificial. Cada aplicación de esta bóveda es dirigida, auditada y co-creada por el <strong>Ing. de Sistemas Rubén Sierra</strong> utilizando las versiones profesionales de los modelos más avanzados del mundo:
-          </p>
-          <div class="llm-badges">
-            <span class="llm-tag">🤖 ChatGPT Pro</span>
-            <span class="llm-tag">✨ Gemini Pro</span>
-            <span class="llm-tag">⚡ Claude Pro</span>
-            <span class="llm-tag">👨‍💻 Ing. Rubén Sierra</span>
-          </div>
-        </div>
-
-        <div class="manifesto-col">
-          <h3>🔋 ¿Por qué tu contribución mantiene viva esta fábrica?</h3>
-          <p>
-            Todas las aplicaciones base se entregan de forma <strong>gratuita</strong> para ayudar a emprendedores, estudiantes y negocios. Sin embargo, mantener activas las suscripciones mensuales de los modelos Pro de Inteligencia Artificial (<strong>LLMs</strong>) tiene un costo elevado en dólares.
-          </p>
-          <p style="margin-top:8px; color:#fcd34d; font-weight:600;">
-            👉 Las donaciones voluntarias, las mejoras personalizadas y la creación de apps a medida permiten pagar la mensualidad de estos modelos Pro para seguir creando más herramientas gratuitas para todos.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CATÁLOGO DE APPS GRATIS -->
-    <section id="catalogo-gratis">
-      <div class="filter-bar">
-        <div style="display:flex; gap:6px; flex-wrap:wrap;" id="filter-btns">
-          <button class="btn btn-free btn-sm" onclick="filterCatalog('all', this)">Todas las Apps Gratis</button>
-          <button class="btn btn-sm" onclick="filterCatalog('Ofimática & Video', this)">Ofimática & Video</button>
-          <button class="btn btn-sm" onclick="filterCatalog('Negocios & Ventas', this)">Negocios & Ventas</button>
-          <button class="btn btn-sm" onclick="filterCatalog('Productividad & Finanzas', this)">Productividad & Finanzas</button>
-          <button class="btn btn-sm" onclick="filterCatalog('Utilidades', this)">Utilidades</button>
-        </div>
-        <input type="text" id="search-input" class="input" style="max-width:250px;" placeholder="🔍 Buscar aplicación..." oninput="renderFreeApps()" />
-      </div>
-
-      <div class="apps-grid" id="free-apps-grid"></div>
-    </section>
-
-    <!-- SECCIÓN DOBLE: 1. CREAR TU PROPIA APP | 2. DONACIÓN OPCIONAL PARA MENSUALIDAD DE LLMs -->
-    <section class="dual-section">
-
-      <!-- BOTÓN Y FORMULARIO INDEPENDIENTE: CREAR TU PROPIA APP DESDE CERO -->
-      <div id="seccion-crear-app" class="box-card custom-app-box">
-        <span class="badge-free" style="background:rgba(139,92,246,0.25); color:#c4b5fd;">CO-CREACIÓN A MEDIDA CON EL ING. RUBÉN SIERRA</span>
-        <h2 style="font-size:1.32rem; margin:10px 0 6px;">🚀 ¿Quieres que Creemos Tu Propia App desde Cero?</h2>
-        <p style="font-size:0.87rem; color:var(--muted); margin-bottom:14px;">
-          Si tienes una idea o necesitas automatizar un cálculo, inventario, cotizador o flujo de trabajo propio, el <strong>Ing. de Sistemas Rubén Sierra</strong> lo diseña a tu medida combinando ingeniería de software y modelos IA Pro (ChatGPT, Gemini y Claude).
-        </p>
-
-        <div class="form-group">
-          <label>Tu Nombre o el de tu Empresa</label>
-          <input type="text" id="newapp-client" class="input" placeholder="Ej. Distribuidora Central / Andrés López" />
-        </div>
-        <div class="form-group">
-          <label>¿Para qué necesitas tu App?</label>
-          <select id="newapp-type" class="input">
-            <option value="Uso interno en mi propio negocio o profesión">Para usarla en mi propio negocio o trabajo</option>
-            <option value="Marca Blanca para comercializar con mis clientes">Para venderla o distribuirla a mis propios clientes</option>
-            <option value="Proyecto especial a medida">Proyecto especial / Otro requerimiento</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Describe qué quieres que haga tu propia App</label>
-          <textarea id="newapp-idea" rows="3" class="input" placeholder="Describe qué datos quieres ingresar, qué cálculos debe hacer y si necesitas exportar recibos en PDF o enviar a WhatsApp..."></textarea>
-        </div>
-
-        <button class="btn btn-custom-app" style="width:100%; padding:13px; font-size:0.95rem;" onclick="sendCustomNewAppWhatsApp()">
-          🚀 Solicitar Cotización de Mi Propia App por WhatsApp
-        </button>
-      </div>
-
-      <!-- MÓDULO DE DONACIÓN OPCIONAL PARA PAGAR MENSUALIDAD DE LOS LLM -->
-      <div id="seccion-donar" class="box-card donation-box">
-        <span class="badge-free" style="background:rgba(245,158,11,0.25); color:#fcd34d;">FONDO COMUNITARIO PARA SUSCRIPCIONES IA PRO</span>
-        <h2 style="font-size:1.32rem; margin:10px 0 6px;">☕ Apoya con una Donación Opcional</h2>
-
-        <div class="llm-support-banner">
-          💡 <strong>¿Por qué es importante tu aporte?</strong> La contribución de todos hace posible que se sigan creando y actualizando más herramientas gratuitas, ya que con estos aportes cubrimos el pago mensual de las licencias Pro de los LLMs (<strong>ChatGPT Pro, Gemini Pro y Claude Pro</strong>).
-        </div>
-
-        <p style="font-size:0.84rem; color:var(--muted); margin-bottom:10px;">
-          Elige tu aplicación de pago favorita y haz clic en <strong>"Mostrar / Copiar Cuenta"</strong> para realizar tu aporte voluntario:
-        </p>
-
-        <div class="pay-grid">
-          <button class="pay-chip active" onclick="selectDonationMethod('Nequi', this)">🟣 Nequi</button>
-          <button class="pay-chip" onclick="selectDonationMethod('DaviPlata', this)">🔴 DaviPlata</button>
-          <button class="pay-chip" onclick="selectDonationMethod('Mercado Pago', this)">🤝 Mercado Pago</button>
-          <button class="pay-chip" onclick="selectDonationMethod('Bold', this)">💳 Bold</button>
-          <button class="pay-chip" onclick="selectDonationMethod('Lulo Bank', this)">🟢 Lulo Bank</button>
-          <button class="pay-chip" onclick="selectDonationMethod('Uno / Ualá', this)">🔵 Uno</button>
-          <button class="pay-chip" onclick="selectDonationMethod('Tarjeta Plata', this)">⚪ Tarjeta Plata</button>
-          <button class="pay-chip" onclick="selectDonationMethod('Tpaga', this)">🟠 Tpaga</button>
-          <button class="pay-chip" onclick="selectDonationMethod('PayPal', this)">🌎 PayPal</button>
-          <button class="pay-chip" onclick="selectDonationMethod('Paysend', this)">💸 Paysend</button>
-          <button class="pay-chip" onclick="selectDonationMethod('AstroPay', this)">🚀 AstroPay</button>
-          <button class="pay-chip" onclick="selectDonationMethod('Cupy', this)">⚡ Cupy</button>
-        </div>
-
-        <div style="background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:14px;">
-          <div style="font-size:0.74rem; color:var(--muted); font-weight:700;" id="don-method-label">APORTE VOLUNTARIO VÍA NEQUI:</div>
-          <div style="font-size:0.98rem; font-weight:800; color:#fcd34d; margin:6px 0 12px;" id="don-method-value">
-            Haz clic en "Revelar y Copiar Cuenta" para ver el número protegido
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn btn-donate btn-sm" onclick="revealAndCopyWallet()">🔒 Revelar y Copiar Número de Cuenta</button>
-            <a id="don-ext-link" href="#" target="_blank" class="btn btn-sm" style="display:none;">🔗 Abrir Pasarela de Pago</a>
-            <button class="btn btn-sm" onclick="notifyDonationWhatsApp()">💚 Enviar Comprobante de Apoyo por WhatsApp</button>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <footer class="footer">
-      <div><strong>VibeCoding Lab</strong> — Herramientas Web Ligeras creadas con Inteligencia Artificial (ChatGPT Pro, Gemini Pro y Claude Pro).</div>
-      <div style="margin-top:4px;">Autor, Arquitecto y Co-creador: <strong>Ing. de Sistemas Rubén Sierra</strong> • Número de contacto protegido contra bots de spam.</div>
-    </footer>
-
-  </div>
-
-  <!-- MODAL PARA SOLICITAR MEJORA O PERSONALIZACIÓN DE UNA APP ESPECÍFICA -->
-  <div id="improve-modal" class="modal-backdrop">
-    <div class="modal-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
-        <div>
-          <span class="badge-free" style="background:rgba(59,130,246,0.2); color:#93c5fd;">PERSONALIZACIÓN O MEJORA DE APP</span>
-          <h3 style="font-size:1.15rem; margin-top:6px;" id="modal-app-title">App Seleccionada</h3>
-        </div>
-        <button class="btn btn-sm" onclick="closeImproveModal()">✕</button>
-      </div>
-
-      <p style="font-size:0.85rem; color:var(--muted); margin-bottom:14px;">
-        El <strong>Ing. de Sistemas Rubén Sierra</strong> puede adaptar esta herramienta para tu negocio (agregar tu logo, colores, nuevos cálculos o funciones específicas). Al continuar, serás redirigido a su WhatsApp con los datos de esta app para acordar internamente el valor de la mejora.
-      </p>
-
-      <div class="form-group">
-        <label>¿Qué mejora o personalización deseas en esta App?</label>
-        <select id="modal-improve-type" class="input">
-          <option value="Personalización de Marca (Incluir mi logo, nombre de negocio y colores)">Personalizar con mi Logo, Nombre de Empresa y Colores</option>
-          <option value="Agregar nuevas funciones, columnas o cálculos específicos">Agregar nuevas funciones o cálculos a esta App</option>
-          <option value="Adaptar formato de exportación PDF / Envío a WhatsApp">Adaptar recibo PDF o formato de WhatsApp</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Describe qué te gustaría agregarle o cambiarle</label>
-        <textarea id="modal-improve-notes" rows="3" class="input" placeholder="Ej. Me gustaría que esta app lleve el logo de mi negocio y un botón adicional para..."></textarea>
-      </div>
-
-      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
-        <button class="btn btn-free" style="flex:1; padding:12px;" onclick="sendSpecificAppImproveWhatsApp()">
-          📲 Acordar Precio de Mejora por WhatsApp Directo
-        </button>
-        <button class="btn" onclick="closeImproveModal()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // OFUSCACIÓN XOR (Clave 73): El número de teléfono nunca está en texto plano dentro del código fuente
-    const _K = 73;
-    const PLATFORM_CFG = /*__FREE_CFG_START__*/ {
-      title: "VibeCoding Lab — Bóveda Abierta",
-      author: "Ing. de Sistemas Rubén Sierra",
-      // Bytes XOR correspondientes al número internacional y nacional (indetectables por bots de scraping)
-      waXor: [124, 126, 122, 121, 121, 113, 125, 127, 121, 122, 123, 126],
-      localXor: [122, 121, 121, 105, 113, 125, 127, 105, 121, 122, 123, 126],
-      linkPago: "https://bold.co/",
-      lockedMode: false,
-      apps: [
-        {
-          id: 1,
-          name: "🎬 StudioCut Video & Reels Lite",
-          cat: "Ofimática & Video",
-          file: "./suite_office_y_estudio_video_lite.html",
-          desc: "Alternativa ligera a CapCut co-creada con IA: edita videos en formato 9:16 TikTok/Reels, agrega subtítulos, filtros y exporta sin marca de agua."
-        },
-        {
-          id: 2,
-          name: "📝 DocuWord Lite (Procesador Textos & PDF)",
-          cat: "Ofimática & Video",
-          file: "./suite_office_y_estudio_video_lite.html",
-          desc: "Alternativa rápida a Word con plantillas de contratos y cartas, exportación a .DOC e impresión limpia en PDF."
-        },
-        {
-          id: 3,
-          name: "📊 HojaCalc Lite (Excel con Fórmulas)",
-          cat: "Ofimática & Video",
-          file: "./suite_office_y_estudio_video_lite.html",
-          desc: "Hoja de cálculo ligera con soporte para fórmulas (=SUMA, =PROMEDIO, multiplicación de celdas) y exportación a Excel (.csv)."
-        },
-        {
-          id: 4,
-          name: "🖥️ Presenta Lite (Creador de Diapositivas)",
-          cat: "Ofimática & Video",
-          file: "./suite_office_y_estudio_video_lite.html",
-          desc: "Crea presentaciones modernas por bloques en segundos y proyecta en pantalla completa sin instalar programas pesados."
-        },
-        {
-          id: 5,
-          name: "📄 Cotizador & Generador de Recibos PDF",
-          cat: "Negocios & Ventas",
-          file: "./boveda_software_offline_hub.html",
-          desc: "Genera cotizaciones y comprobantes listos para imprimir en PDF o enviar directo al WhatsApp de tu cliente."
-        },
-        {
-          id: 6,
-          name: "🛒 Punto de Venta (POS) + Control de Fiados",
-          cat: "Negocios & Ventas",
-          file: "./boveda_software_offline_hub.html",
-          desc: "Registra ventas diarias de contado o a crédito ('fiados'), descuenta inventario automáticamente y gestiona cobros."
-        },
-        {
-          id: 7,
-          name: "📌 Tablero Kanban & Calculadora de Precios",
-          cat: "Productividad & Finanzas",
-          file: "./boveda_software_offline_hub.html",
-          desc: "Organiza tareas en columnas visuales (Por Hacer, En Proceso, Terminado) y calcula márgenes de ganancia exactos."
-        },
-        {
-          id: 8,
-          name: "📲 Catálogo Digital con Pedido a WhatsApp",
-          cat: "Negocios & Ventas",
-          file: "./00_lanzador_maestro_drive.html",
-          desc: "Permite mostrar tus productos y precios para que el cliente arme su pedido y te llegue listo al WhatsApp."
-        },
-        {
-          id: 9,
-          name: "🏦 Control de Préstamos, Cuotas y Abonos",
-          cat: "Productividad & Finanzas",
-          file: "./00_lanzador_maestro_drive.html",
-          desc: "Calcula intereses, cuotas diarias o mensuales y lleva el historial de pagos de cada deudor sin internet."
-        }
-      ]
-    } /*__FREE_CFG_END__*/;
-
-    // Decodificador en memoria (solo se ejecuta al interactuar el usuario)
-    function _dec(arr) {
-      return arr.map(b => String.fromCharCode(b ^ _K)).join("");
+<svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+<symbol id="i-external" viewBox="0 0 24 24"><path d="M14 3h7v7m0-7L10 14M10 5H4v16h16v-6"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 5-6 7 6 7m8-14 6 7-6 7M14 3l-4 18"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M20 4c-3-3-7-1-8 2-1-3-5-5-8-2-5 5 1 11 8 16 7-5 13-11 8-16Z"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 6 6"/></symbol>
+<symbol id="i-school" viewBox="0 0 24 24"><path d="m2 8 10-5 10 5-10 5L2 8Zm4 3v7c4 3 8 3 12 0v-7m4-3v8"/></symbol>
+<symbol id="i-document" viewBox="0 0 24 24"><path d="M6 2h8l5 5v15H6V2Zm8 0v6h5M9 12h7m-7 4h7"/></symbol>
+<symbol id="i-video" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 8h20M7 3l4 5m4-5 4 5m-9 4v6l5-3-5-3Z"/></symbol>
+<symbol id="i-pen" viewBox="0 0 24 24"><path d="m15 3 6 6L9 21H3v-6L15 3Zm-10 10 6 6M13 5l6 6"/></symbol>
+<symbol id="i-game" viewBox="0 0 24 24"><path d="M7 7h10c3 0 5 8 4 12-1 3-4 0-6-3H9c-2 3-5 6-6 3C2 15 4 7 7 7Z"/><path d="M8 10v5m-2.5-2.5h5M16 11h.01M18 14h.01"/></symbol>
+<symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8c6-6 14-6 20 0M5 12c4-4 10-4 14 0m-10 4c2-2 4-2 6 0m-3 4h.01"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M5 2h9l5 5v15H5V2Zm9 0v6h5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11a9 9 0 0 1-13 8l-5 2 1-5a9 9 0 1 1 17-5Z"/><path d="M8 8c1 4 3 6 7 7"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="currentColor"/><circle cx="16" cy="17" r="3" fill="currentColor"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M8 16v-5m5 5V6m5 10V9"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 5V3H3v13h2"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+</defs></svg>
+<a class="skip" href="#catalogo">Saltar al catálogo</a>
+<header class="topbar"><div class="shell nav">
+<a class="brand" href="#inicio" aria-label="VibeCoding Lab, inicio"><span class="brand-icon" aria-hidden="true">‹›</span><span><strong>VibeCoding Lab</strong><small>Por Rubén Sierra</small></span></a>
+<nav class="nav-links" id="mainNav" aria-label="Navegación principal"><a href="#catalogo">Explorar apps</a><a href="#como-funciona">Cómo funciona</a><a href="#a-medida">A tu medida</a><a href="#apoyar">Apoyar</a></nav>
+<div class="nav-actions"><button class="btn secondary" data-request="new">Tengo una idea <span data-icon="arrow"></span></button><a class="icon-btn" href="https://github.com/vivecodig2026/opensource" target="_blank" rel="noopener noreferrer" aria-label="Ver el código en GitHub" title="Código en GitHub"><span data-icon="code"></span></a><button class="icon-btn mobile-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menú"><span data-icon="menu"></span></button></div>
+</div></header>
+<main id="inicio" class="shell">
+<section class="hero" aria-labelledby="heroTitle"><div class="hero-grid">
+<div class="hero-copy"><div class="eyebrow">Pequeñas herramientas. Más posibilidades.</div><h1 id="heroTitle">Apps gratuitas.<br>Tu trabajo,<br><em>más sencillo.</em></h1><p>Herramientas para enseñar, crear y organizarte desde el navegador. Descarga la que necesitas y, si tu idea va más allá, la desarrollamos a tu medida.</p><div class="hero-actions"><a class="btn primary" href="#catalogo">Explorar las apps <span data-icon="arrow"></span></a><button class="btn secondary" data-request="new">Solicitar una app</button></div><div class="hero-proof"><span><span data-icon="check"></span> Sin registro</span><span><span data-icon="check"></span> Descarga gratuita</span><span><span data-icon="check"></span> Código disponible</span></div></div>
+<div class="workbench" aria-label="Herramientas destacadas del catálogo"><div class="bench-caption"><span>TU CAJA DE HERRAMIENTAS</span><span>.HTML</span></div><div class="file-stack">
+<a class="file-tile" href="#catalogo" data-feature="aula-magica"><span class="file-icon" data-icon="school"></span><span><strong>Una clase más organizada</strong><small>Aula Mágica · Educación</small></span><span class="file-ext">.html</span></a>
+<a class="file-tile" href="#catalogo" data-feature="omniword"><span class="file-icon" data-icon="document"></span><span><strong>Ideas que toman forma</strong><small>OmniWord · Documentos</small></span><span class="file-ext">.html</span></a>
+<a class="file-tile" href="#catalogo" data-feature="corte-studio"><span class="file-icon" data-icon="video"></span><span><strong>Historias en movimiento</strong><small>Corte Studio · Video</small></span><span class="file-ext">.html</span></a>
+</div><div class="bench-footer"><span data-icon="file"></span> Elige una herramienta y hazla parte de tu día.</div></div>
+</div></section>
+<div class="model-strip" aria-label="Cómo se sostiene el proyecto"><div class="model-item"><span data-icon="download"></span><div><strong>Las apps son gratuitas</strong><small>Úsalas sin pagar una suscripción.</small></div></div><div class="model-item"><span data-icon="settings"></span><div><strong>El trabajo a medida se cotiza</strong><small>Personalizaciones y nuevos proyectos.</small></div></div><div class="model-item"><span data-icon="heart"></span><div><strong>Tu aporte es voluntario</strong><small>Ayuda a crear y mantener herramientas.</small></div></div></div>
+<section id="catalogo" aria-labelledby="catalogTitle"><div class="section-head"><div><div class="eyebrow">Hechas para usarse</div><h2 id="catalogTitle">Encuentra tu próxima herramienta.</h2><p>Solo proyectos publicados. Revisa su tamaño y si necesitan conexión antes de descargar.</p></div><span class="count-pill" id="catalogCount">5 proyectos</span></div>
+<div class="catalog-tools"><div class="searchbox"><label for="search" class="sr-only">Buscar aplicaciones</label><span data-icon="search"></span><input id="search" type="search" placeholder="Busca una app o lo que necesitas hacer…" autocomplete="off" maxlength="120"></div><label class="sort" for="sort">Ordenar por <select id="sort"><option value="recommended">Recomendadas</option><option value="name">Nombre</option><option value="downloads">Más descargadas</option><option value="size">Menor tamaño</option></select></label></div>
+<div class="filters"><div class="chips" role="group" aria-label="Categorías"><button class="chip" data-category="all" aria-pressed="true">Todas</button><button class="chip" data-category="educacion" aria-pressed="false">Educación</button><button class="chip" data-category="productividad" aria-pressed="false">Productividad</button><button class="chip" data-category="creatividad" aria-pressed="false">Creatividad</button></div><label class="offline-filter"><input id="offlineOnly" type="checkbox"> Solo para usar sin conexión</label></div>
+<div id="appGrid" class="app-grid"></div><p id="resultAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
+<noscript><p class="notice">Activa JavaScript para filtrar y ver las estadísticas. Las aplicaciones siguen disponibles en el <a href="https://github.com/vivecodig2026/opensource">repositorio público</a>.</p></noscript>
+<div class="metrics-line"><span id="metricsStatus" aria-live="polite">Consultando el historial de descargas…</span><button class="text-btn muted" id="showStats"><span data-icon="chart"></span> Ver estadísticas</button></div>
+</section>
+<section id="como-funciona" class="section" aria-labelledby="howTitle"><div class="section-head"><div><div class="eyebrow">Del navegador a tu equipo</div><h2 id="howTitle">Tres pasos y puedes empezar.</h2></div></div><div class="how-grid"><div class="how-step"><span class="step-no">01</span><div><h3>Elige y prueba</h3><p>Abre la app en otra pestaña para conocerla. En su ficha encontrarás las funciones y los requisitos.</p></div></div><div class="how-step"><span class="step-no">02</span><div><h3>Guarda el archivo</h3><p>Pulsa Descargar y conserva el HTML en una carpeta. El tamaño aparece antes de descargarlo.</p></div></div><div class="how-step"><span class="step-no">03</span><div><h3>Ábrelo cuando lo necesites</h3><p>Haz doble clic y elige tu navegador. Las apps con la etiqueta Offline funcionan sin conexión; guarda copias de tus trabajos.</p></div></div></div></section>
+<section id="a-medida" class="section" aria-labelledby="servicesTitle"><div class="services-wrap"><div><div class="eyebrow">Tu necesidad, tu herramienta</div><h2 id="servicesTitle">¿La app que buscas<br>todavía no existe?</h2><p>Cuéntame qué haces hoy y qué te gustaría simplificar. Soy Rubén Sierra, ingeniero de sistemas, y desarrollo estas herramientas con apoyo de IA para convertir necesidades concretas en aplicaciones prácticas.</p><p class="process-note"><span data-icon="check"></span> Acordamos alcance, precio y entrega antes de empezar.</p></div><div class="service-options"><article class="service-option"><div class="eyebrow">A partir de una app del catálogo</div><h3>Personaliza una herramienta</h3><p>Tu identidad visual, nuevos campos, cálculos o formatos de exportación, según lo que necesites.</p><button class="btn" data-request="custom">Quiero una personalización <span data-icon="arrow"></span></button></article><article class="service-option"><div class="eyebrow">A partir de tu idea</div><h3>Construyamos una app nueva</h3><p>Para tu aula, emprendimiento o trabajo. Definimos qué puede resolverse en un HTML y qué necesita otros servicios.</p><button class="btn" data-request="new">Contarte mi idea <span data-icon="arrow"></span></button></article></div></div></section>
+<section id="apoyar" class="section" aria-labelledby="supportTitle"><div class="support-wrap"><div><div class="eyebrow">Gratis para usar. Abierto a tu apoyo.</div><h2 id="supportTitle">Si te ayuda, puedes ayudar a que siga.</h2><p>Los aportes voluntarios contribuyen al tiempo de desarrollo, las mejoras y las herramientas de IA de pago que uso para crear nuevas apps. Descargar seguirá siendo gratis, aportes o no.</p></div><div class="support-action"><button class="btn" id="supportButton"><span data-icon="heart"></span> Quiero apoyar el proyecto</button><small>Sin monto mínimo ni pago recurrente.<br>Solicita los datos de aporte por WhatsApp.</small></div></div></section>
+<section id="preguntas" class="section" aria-labelledby="faqTitle"><div class="faq-grid"><div class="faq-intro"><div class="eyebrow">Todo claro desde el principio</div><h2 id="faqTitle" style="margin-top:12px">Antes de descargar.</h2><p>Estas son las preguntas que importan cuando eliges una herramienta para trabajar.</p></div><div class="faq-list">
+<details><summary>¿Qué es gratis y qué se cobra?</summary><p>Las versiones publicadas en el catálogo se descargan gratis. Los aportes son voluntarios. Se cotiza el trabajo de personalizar una aplicación o desarrollar una nueva; cada solicitud se acuerda antes de comenzar.</p></details>
+<details><summary>¿Todas las aplicaciones funcionan sin internet?</summary><p>No. La etiqueta de cada app lo indica. Aula Mágica, OmniWord, Corte Studio y AnimSketch incluyen sus recursos principales; algunas funciones del navegador, como el dictado, pueden necesitar conexión. La versión actual de Toby carga bibliotecas externas y requiere internet.</p></details>
+<details><summary>¿En qué equipo puedo usarlas?</summary><p>Necesitas un navegador actualizado que pueda abrir archivos HTML. Para editar video, animaciones o documentos grandes conviene una computadora. El juego 3D necesita WebGL; el rendimiento y algunas funciones dependen del navegador y del equipo.</p></details>
+<details><summary>¿Dónde quedan mis trabajos?</summary><p>Depende de la app. Varias guardan datos en el navegador y permiten exportarlos. Ese almacenamiento puede borrarse al limpiar el navegador o cambiar de dispositivo, por lo que conviene descargar copias de tus proyectos.</p></details>
+<details id="licencias"><summary>¿Puedo ver y modificar el código?</summary><p>El código está disponible en el <a href="https://github.com/vivecodig2026/opensource" target="_blank" rel="noopener noreferrer">repositorio de GitHub</a>. Revisa la licencia de cada herramienta y los avisos de sus bibliotecas antes de redistribuirla. El código original de este catálogo se entrega con licencia MIT.</p></details>
+<details><summary>¿Qué cuenta como descarga?</summary><p>El contador muestra los registros que GitHub ofrece para los archivos publicados como Releases, sumando sus versiones conservadas. No cuenta las visitas, las aperturas de la demo ni las descargas directas anteriores a su activación. No representa personas únicas ni confirma que el archivo se haya guardado en el disco.</p></details>
+<details><summary>¿Encontraste un error o tienes una sugerencia?</summary><p>Puedes <button class="text-btn" id="feedbackButton">enviar el detalle por WhatsApp</button> o abrir una incidencia en GitHub. Indica la app, el navegador y los pasos para reproducir el problema. El catálogo está en evolución y tus observaciones ayudan a mejorarlo.</p></details>
+</div></div></section>
+</main>
+<footer class="footer"><div class="shell"><div class="footer-main"><div><a class="brand" href="#inicio"><span class="brand-icon" aria-hidden="true">‹›</span><span><strong>VibeCoding Lab</strong><small>Ingeniería con apoyo de IA</small></span></a><p>Un proyecto de Rubén Sierra para compartir herramientas útiles y construir soluciones a medida.</p></div><div class="footer-links"><a href="#catalogo">Catálogo</a><a href="https://github.com/vivecodig2026/opensource" target="_blank" rel="noopener noreferrer">Código fuente ↗</a><button class="text-btn muted" id="privacyButton">Privacidad</button></div></div><div class="footer-bottom"><span>© 2026 Rubén Sierra · Hecho para resolver necesidades reales.</span><span>Descargas gratuitas · Aportes voluntarios · <a href="#a-medida">Desarrollo a medida</a></span></div></div></footer>
+<dialog id="detailDialog" aria-labelledby="detailTitle"><div class="dialog-head"><div><small id="detailCategory"></small><h2 id="detailTitle"></h2></div><button class="icon-btn" data-close aria-label="Cerrar detalles"><span data-icon="close"></span></button></div><div id="detailBody" class="dialog-content"></div></dialog>
+<dialog id="requestDialog" aria-labelledby="requestTitle"><div class="dialog-head"><div><small>Hablemos de tu proyecto</small><h2 id="requestTitle">Cuéntame qué necesitas.</h2></div><button class="icon-btn" data-close aria-label="Cerrar solicitud"><span data-icon="close"></span></button></div><div class="dialog-content"><p>Prepara el mensaje aquí y revísalo antes de abrir WhatsApp. La cotización se acuerda directamente contigo.</p><form id="requestForm"><label for="requestType">¿Qué quieres hacer?</label><select id="requestType"><option value="custom">Personalizar una app</option><option value="new">Crear una aplicación nueva</option><option value="feedback">Reportar un error o sugerencia</option></select><div id="appField"><label for="requestApp">Aplicación</label><select id="requestApp"></select></div><label for="requestName">Tu nombre o el de tu organización <span style="font-weight:400">(opcional)</span></label><input id="requestName" autocomplete="name" maxlength="100" placeholder="¿Cómo te llamas?"><label for="requestNeed" id="needLabel">¿Qué necesitas resolver?</label><textarea id="requestNeed" rows="4" required minlength="12" maxlength="2000" placeholder="Cuéntame qué haces hoy, qué te quita tiempo y cómo te gustaría que funcionara…"></textarea><div class="field-grid"><div><label for="requestDevice">¿Dónde la usarías?</label><select id="requestDevice"><option>Computadora</option><option>Celular o tableta</option><option>Computadora y celular</option></select></div><div><label for="requestConnection">Conexión disponible</label><select id="requestConnection"><option>Debe funcionar offline</option><option>Tengo conexión a internet</option><option>Quiero revisar las opciones</option></select></div></div><p class="form-note">El formulario no envía ni guarda tus datos en un servidor. El mensaje se comparte con WhatsApp solo cuando decides continuar y enviarlo allí.</p><div class="feedback" id="requestError" role="alert"></div><div class="actions"><button class="btn primary" type="submit">Revisar mi mensaje <span data-icon="arrow"></span></button><button class="btn secondary" type="button" data-close>Cancelar</button></div></form><section id="requestReview" hidden><p class="field-hint" style="margin-bottom:12px">Este es el mensaje que vas a llevar a WhatsApp.</p><div class="request-summary" id="requestSummary"></div><div class="actions"><a class="btn primary" id="requestSend" target="_blank" rel="noopener noreferrer"><span data-icon="chat"></span> Abrir WhatsApp</a><button class="btn secondary" id="copyRequest"><span data-icon="copy"></span> Copiar</button><button class="btn ghost" id="editRequest">Editar</button></div><p class="form-note">Aún no se ha enviado nada. Pulsa Enviar dentro de WhatsApp cuando estés listo.</p></section></div></dialog>
+<dialog id="supportDialog" aria-labelledby="supportDialogTitle"><div class="dialog-head"><div><small>Gracias por considerar un aporte</small><h2 id="supportDialogTitle">Ayuda a mantener el proyecto.</h2></div><button class="icon-btn" data-close aria-label="Cerrar apoyo"><span data-icon="close"></span></button></div><div class="dialog-content"><p>Un aporte ayuda a sostener el desarrollo y las herramientas de IA utilizadas. Puedes solicitar los medios de pago directamente a Rubén, sin comprometerte a una suscripción.</p><div class="notice">La descarga de las apps es gratuita. Donar no es un requisito ni un pago por una personalización.</div><div class="actions"><a class="btn primary" id="donationLink" target="_blank" rel="noopener noreferrer"><span data-icon="chat"></span> Pedir datos para aportar</a><button class="btn secondary" data-close>Seguir explorando</button></div></div></dialog>
+<dialog id="statsDialog" aria-labelledby="statsTitle"><div class="dialog-head"><div><small>Transparencia del catálogo</small><h2 id="statsTitle">Descargas por herramienta.</h2></div><button class="icon-btn" data-close aria-label="Cerrar estadísticas"><span data-icon="close"></span></button></div><div class="dialog-content"><p id="statsExplanation"></p><div class="stats-table-wrap"><table class="stats-table"><thead><tr><th scope="col">Aplicación</th><th scope="col">Descargas</th><th scope="col">Versiones medidas</th></tr></thead><tbody id="statsRows"></tbody></table></div><p class="field-hint" id="statsUpdated"></p><div class="actions"><button class="btn primary" id="exportStats"><span data-icon="download"></span> Exportar CSV</button><button class="btn secondary" id="refreshStats">Actualizar</button></div><p class="form-note">Fuente: GitHub Releases. Los totales dependen de que se conserven las versiones publicadas. Los guiones significan que no hay datos verificables, no cero descargas.</p></div></dialog>
+<dialog id="privacyDialog" aria-labelledby="privacyTitle"><div class="dialog-head"><div><small>Datos y servicios externos</small><h2 id="privacyTitle">Tu navegación, explicada.</h2></div><button class="icon-btn" data-close aria-label="Cerrar privacidad"><span data-icon="close"></span></button></div><div class="dialog-content"><p>Este catálogo no incorpora publicidad, píxeles de seguimiento ni identificadores de visitantes. Guarda una copia temporal de los metadatos públicos de las apps y de sus estadísticas para reducir consultas.</p><p>Consulta GitHub para obtener archivos, tamaños y contadores; GitHub procesa esas solicitudes según sus propias condiciones. Cuando abres WhatsApp, ese servicio recibe el mensaje preparado, además de los datos habituales de una conexión.</p><p>Las aplicaciones del catálogo son documentos independientes. Consulta sus funciones y requisitos; esta explicación no sustituye sus propios avisos de privacidad.</p><button class="btn secondary" id="clearCache">Borrar la caché del catálogo</button></div></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script id="siteConfig" type="application/json">{
+  "version": 2,
+  "owner": "vivecodig2026",
+  "repo": "opensource",
+  "branch": "main",
+  "whatsapp": "573008460327",
+  "author": "Rubén Sierra",
+  "apps": [
+    {
+      "id": "aula-magica",
+      "name": "Aula Mágica",
+      "file": "AulaMagica.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "school",
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "offline": true,
+      "rank": 1,
+      "description": "Organiza tus grupos, asistencia, permisos y actividades de clase en un solo lugar.",
+      "tags": [
+        "asistencia",
+        "ruleta",
+        "estudiantes",
+        "permisos",
+        "colegio",
+        "notas"
+      ],
+      "features": [
+        "Asistencia por hora y gestión de estudiantes.",
+        "Ruleta, permisos, novedades y herramientas de clase.",
+        "Copias y exportaciones para conservar tus registros."
+      ],
+      "requirements": "Las herramientas de clase funcionan localmente. Enviar mensajes por WhatsApp necesita conexión; la voz depende de las voces instaladas en el navegador.",
+      "size": 357243,
+      "sha256": "e44741673bf600643d302bc686fc3c6def84cc4cce5ed72ec8547bab4039d6c5"
+    },
+    {
+      "id": "omniword",
+      "name": "OmniWord",
+      "file": "OmniWord_SuperApp_Office_Pro.html",
+      "category": "productividad",
+      "categoryLabel": "Productividad",
+      "icon": "document",
+      "tone": "#e9edfa",
+      "ink": "#4057a1",
+      "offline": true,
+      "rank": 2,
+      "description": "Redacta documentos, trabaja con tablas e imágenes y prepara archivos para compartir.",
+      "tags": [
+        "word",
+        "documentos",
+        "textos",
+        "docx",
+        "recortar",
+        "ofimatica"
+      ],
+      "features": [
+        "Edición de texto, tablas y herramientas de imagen.",
+        "Recorte, giro y optimización de imágenes en la versión incluida.",
+        "Importación y exportación de DOCX; PDF mediante impresión."
+      ],
+      "requirements": "Recomendado en computadora. No reproduce todas las funciones de Word. Algunas funciones de voz y dictado dependen del navegador y pueden requerir internet.",
+      "size": 9170315,
+      "sha256": "8ef77ec27b560776364e7e0968a7efc75610b0176e3b766efa7fac6f7d5bac05"
+    },
+    {
+      "id": "corte-studio",
+      "name": "Corte Studio",
+      "file": "Corte_Studio_Final.html",
+      "category": "creatividad",
+      "categoryLabel": "Creatividad",
+      "icon": "video",
+      "tone": "#f6e8e8",
+      "ink": "#914650",
+      "offline": true,
+      "rank": 3,
+      "description": "Crea y edita piezas de video desde el navegador, con el motor de procesamiento incluido.",
+      "tags": [
+        "video",
+        "reels",
+        "editar",
+        "mp4",
+        "multimedia"
+      ],
+      "features": [
+        "Edición de video y montaje de piezas audiovisuales.",
+        "Motor de procesamiento embebido en el HTML.",
+        "Importación de archivos locales y exportación del resultado."
+      ],
+      "requirements": "Para trabajar con video conviene una computadora con memoria disponible. La duración, resolución y compatibilidad de formatos influyen en el rendimiento.",
+      "size": 13968438,
+      "sha256": "ad8d2927f66c23e2df87ed165c4bff71dfc6064cd59b22eb2964205d80a67f33"
+    },
+    {
+      "id": "animsketch",
+      "name": "AnimSketch",
+      "file": "Draw_Animation_CleanRoom_Pro.html",
+      "category": "creatividad",
+      "categoryLabel": "Creatividad",
+      "icon": "pen",
+      "tone": "#f9eddc",
+      "ink": "#875b25",
+      "offline": true,
+      "rank": 4,
+      "description": "Dibuja, organiza objetos y dale movimiento a tus ideas con herramientas de animación.",
+      "tags": [
+        "dibujar",
+        "dibujo",
+        "animacion",
+        "svg",
+        "gif",
+        "personajes"
+      ],
+      "features": [
+        "Dibujo y edición de objetos seleccionables.",
+        "Poses, movimiento y herramientas de animación.",
+        "Exportación de imágenes y animaciones según el formato elegido."
+      ],
+      "requirements": "Recomendado en computadora para proyectos grandes. El procesamiento se realiza en el equipo; las animaciones complejas pueden requerir más memoria.",
+      "size": 14266111,
+      "sha256": "68efee9533f069279a5c77539f607d430d71ef3a00bf565d19281d9ca109aaca"
+    },
+    {
+      "id": "toby-vocales",
+      "name": "Toby y las vocales",
+      "file": "toby_el_sabueso_de_las_vocales_3d.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "game",
+      "tone": "#e6eef8",
+      "ink": "#3f6192",
+      "offline": false,
+      "rank": 5,
+      "description": "Un juego 3D para explorar las vocales con Toby, aprender y avanzar entre niveles.",
+      "tags": [
+        "juego",
+        "vocales",
+        "ninos",
+        "lectura",
+        "3d",
+        "toby"
+      ],
+      "features": [
+        "Exploración de letras en un escenario 3D.",
+        "Niveles y guía de vocales y consonantes.",
+        "Controles del juego y apoyo de voz del navegador."
+      ],
+      "requirements": "Esta versión necesita internet para cargar Three.js, Tailwind, iconos y fuentes. Requiere un navegador con WebGL. El HTML es pequeño, pero descarga recursos adicionales.",
+      "size": 90284,
+      "sha256": "6d3dc1c4ae2a4637f9fc303b09682fb8f459e500e2f9b04b41170f8e4f52e27f"
     }
+  ]
+}</script>
+<script>'use strict';
+/* VibeCoding Lab — catálogo estático. Los contadores provienen de GitHub, nunca de clics locales. */
+const CONFIG=JSON.parse(document.getElementById('siteConfig').textContent);
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const icon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
+$$('[data-icon]').forEach(el=>{el.innerHTML=icon(el.dataset.icon);});
+const APPS=CONFIG.apps,byId=new Map(APPS.map(a=>[a.id,a])),byFile=new Map(APPS.map(a=>[a.file,a]));
+const API=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
+const REPO=`https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
+const RAW=`https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/`;
+const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v1`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v1`;
+const stats=new Map(),health=new Map(APPS.map(a=>[a.id,{available:true,size:a.size}]));
+const MAX_FILE=60*1024*1024,CACHE_TTL=15*60*1000;
+let category='all',statsState='loading',statsTime=0,statsComplete=true,statsBusy=null,lastAttempt=0,toastTimer=null,detailApp=null,modalOpener=null;
+const busyDownloads=new Set();
+function storageRead(key){try{return JSON.parse(localStorage.getItem(key)||'null');}catch{return null;}}
+function storageWrite(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch{}}
+function toast(message){$('#toast').textContent=message;$('#toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),4800);}
+function bytes(n){return n>=1e6?(n/1e6).toLocaleString('es-CO',{maximumFractionDigits:1})+' MB':Math.max(1,Math.round(n/1000))+' KB';}
+function normalize(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();}
+function appURL(app){return new URL('./'+encodeURIComponent(app.file),location.href).href;}
+function sourceURL(app){return REPO+'/blob/'+encodeURIComponent(CONFIG.branch)+'/'+encodeURIComponent(app.file);}
+function releaseURL(value,file){try{const u=new URL(value);return u.protocol==='https:'&&u.hostname==='github.com'&&!u.port&&!u.username&&!u.password&&u.pathname.startsWith(`/${CONFIG.owner}/${CONFIG.repo}/releases/download/`)&&decodeURIComponent(u.pathname.split('/').pop())===file?u.href:null;}catch{return null;}}
+function validAsset(asset,app){if(!asset||asset.name!==app.file||!Number.isSafeInteger(asset.id)||asset.id<1||asset.state!=='uploaded'||!Number.isSafeInteger(asset.download_count)||asset.download_count<0||!Number.isSafeInteger(asset.size)||asset.size<256||asset.size>MAX_FILE)return null;const url=releaseURL(asset.browser_download_url,app.file);if(!url)return null;return {id:String(asset.id),url,size:asset.size,count:asset.download_count,date:Date.parse(asset.created_at)||0,digest:typeof asset.digest==='string'&&/^sha256:[a-f0-9]{64}$/.test(asset.digest)?asset.digest:null};}
+function collectReleaseStats(releases){const out=new Map(),seen=new Set();for(const r of releases){if(!r||r.draft||r.prerelease||!Array.isArray(r.assets))continue;for(const raw of r.assets){const app=byFile.get(raw?.name);if(!app)continue;const a=validAsset(raw,app);if(!a||seen.has(a.id))continue;seen.add(a.id);const previous=out.get(app.id)||{count:0,versions:0,latest:null};if(!Number.isSafeInteger(previous.count+a.count))continue;previous.count+=a.count;previous.versions++;if(!previous.latest||a.date>previous.latest.date||(a.date===previous.latest.date&&Number(a.id)>Number(previous.latest.id)))previous.latest=a;out.set(app.id,previous);}}return out;}
+function applyCachedStats(cached){if(!cached||cached.version!==1||!Number.isFinite(cached.time)||cached.time<=0||cached.time>Date.now()+60000||!Array.isArray(cached.items))return false;const next=new Map();for(const item of cached.items){if(!Array.isArray(item)||item.length!==2)continue;const [id,value]=item;const app=byId.get(id);if(!app||!value||!Number.isSafeInteger(value.count)||value.count<0||!Number.isSafeInteger(value.versions)||value.versions<1||!value.latest)continue;const url=releaseURL(value.latest.url,app.file);if(!url||!Number.isSafeInteger(value.latest.size)||value.latest.size<256||value.latest.size>MAX_FILE)continue;next.set(id,{count:value.count,versions:value.versions,latest:{...value.latest,url}});}stats.clear();for(const entry of next)stats.set(...entry);statsTime=cached.time;statsComplete=cached.complete!==false;statsState='cached';return true;}
+async function fetchJSON(url){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),9000);try{const r=await fetch(url,{headers:{Accept:'application/vnd.github+json'},credentials:'omit',referrerPolicy:'no-referrer',signal:controller.signal});if(!r.ok)throw Error(r.status===403||r.status===429?'GitHub ha limitado temporalmente las consultas.':'No se pudo consultar GitHub ('+r.status+').');const data=await r.json();if(!Array.isArray(data))throw Error('Respuesta de catálogo no válida.');return data;}finally{clearTimeout(timer);}}
+async function loadStats(force=false){if(statsBusy)return statsBusy;if(force&&Date.now()-lastAttempt<60000){toast('Espera un minuto antes de actualizar de nuevo.');return;}if(!force&&statsTime&&Date.now()-statsTime<CACHE_TTL)return;if(!navigator.onLine){statsState=stats.size?'stale':'offline';updateMetrics();return;}lastAttempt=Date.now();statsBusy=(async()=>{let all=[],complete=false;try{for(let page=1;page<=10;page++){const list=await fetchJSON(API+'/releases?per_page=100&page='+page);all.push(...list);if(list.length<100){complete=true;break;}}const next=collectReleaseStats(all);stats.clear();for(const entry of next)stats.set(...entry);statsTime=Date.now();statsComplete=complete;statsState=stats.size?'ready':'empty';storageWrite(cacheKey,{version:1,time:statsTime,complete,items:[...stats]});}catch(e){statsState=stats.size?'stale':'error';}finally{statsBusy=null;updateMetrics();renderApps(false);if($('#statsDialog').open)renderStats();if($('#detailDialog').open&&detailApp)renderDetail(detailApp);}})();return statsBusy;}
+function setCatalogHealth(files){if(!Array.isArray(files))return;const fileMap=new Map(files.filter(f=>f&&f.type==='file'&&typeof f.name==='string').map(f=>[f.name,f]));for(const app of APPS){const f=fileMap.get(app.file),size=f?.size;health.set(app.id,{available:!!f&&Number.isSafeInteger(size)&&size>=256&&size<=MAX_FILE,size:Number.isSafeInteger(size)&&size>=256?size:app.size});}}
+async function loadCatalogHealth(){const local=location.protocol==='file:'||['localhost','127.0.0.1','[::1]'].includes(location.hostname);if(local){if(location.protocol!=='file:'){await Promise.allSettled(APPS.map(async app=>{try{const r=await fetch(appURL(app),{method:'HEAD',cache:'no-cache'}),size=Number(r.headers.get('content-length'));health.set(app.id,{available:r.ok&&(!size||size>=256),size:size>=256?size:app.size});}catch{}}));renderApps(false);}return;}const cached=storageRead(catalogKey);if(cached&&Array.isArray(cached.files)&&Date.now()-cached.time<CACHE_TTL){setCatalogHealth(cached.files);renderApps(false);return;}try{const files=await fetchJSON(API+'/contents/?ref='+encodeURIComponent(CONFIG.branch));setCatalogHealth(files);storageWrite(catalogKey,{time:Date.now(),files:files.filter(f=>byFile.has(f.name)).map(f=>({name:f.name,size:f.size,type:f.type}))});renderApps(false);}catch{/* El catálogo incluido sigue disponible cuando GitHub limita la API. */}}
+function metric(app){const s=stats.get(app.id);if(s)return (statsComplete?'':'≥ ')+s.count.toLocaleString('es-CO')+' descargas';return statsState==='loading'?'Consultando…':'Sin historial medido';}
+function currentApps(){const query=normalize($('#search').value.trim()),onlyOffline=$('#offlineOnly').checked;let items=APPS.filter(a=>(category==='all'||a.category===category)&&(!onlyOffline||a.offline)&&(!query||normalize([a.name,a.description,...a.tags].join(' ')).includes(query)));const order=$('#sort').value;if(order==='name')items.sort((a,b)=>a.name.localeCompare(b.name,'es'));else if(order==='size')items.sort((a,b)=>(stats.get(a.id)?.latest.size||health.get(a.id).size)-(stats.get(b.id)?.latest.size||health.get(b.id).size));else if(order==='downloads')items.sort((a,b)=>(stats.get(b.id)?.count??-1)-(stats.get(a.id)?.count??-1)||a.rank-b.rank);else items.sort((a,b)=>a.rank-b.rank);return items;}
+function card(app){const available=health.get(app.id).available,asset=stats.get(app.id)?.latest,canDownload=available||!!asset,size=asset?.size||health.get(app.id).size;const badge=!canDownload?'En actualización':app.offline?'Offline':'Necesita internet';const className=!canDownload?'unavailable':app.offline?'':'online';const sourceTitle=app.offline?'Recursos principales incluidos. Consulta las funciones que dependen del navegador.':'Esta versión carga bibliotecas externas y necesita conexión.';let art=app.id==='omniword'?'<span class="art-word">Aa</span>':app.id==='toby-vocales'?'<span class="art-word">A e i</span>':'<span class="art-bar"></span>'.repeat(4);return `<article class="app-card" data-app="${app.id}" style="--tone:${app.tone};--tone-ink:${app.ink}"><div class="card-visual" aria-hidden="true"><span class="app-mark">${icon(app.icon)}</span><span class="card-art">${art}</span></div><div class="card-content"><div class="card-topline"><span>${esc(app.categoryLabel)}</span><span class="state-badge ${className}" title="${esc(sourceTitle)}"><span class="state-dot"></span>${badge}</span></div><h3 class="card-title">${esc(app.name)}</h3><p class="app-description">${esc(app.description)}</p><div class="card-meta"><span>${icon('file')}HTML · ${bytes(size)}</span><span title="Registros públicos de GitHub Releases; no visitas ni personas únicas.">${icon('download')}${metric(app)}</span></div><div class="card-buttons"><button class="btn primary" data-download="${app.id}" ${canDownload?'':'disabled'}>${icon('download')}<span>${canDownload?'Descargar gratis':'No disponible'}</span></button>${available?`<a class="btn secondary" href="${esc(appURL(app))}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${esc(app.name)} en otra pestaña">Abrir ${icon('external')}</a>`:`<button class="btn secondary" disabled>Demo pendiente</button>`}</div><p class="download-status" id="download-${app.id}" role="status"></p><div class="card-bottom"><button class="text-btn" data-custom="${app.id}">Personalizar ${icon('arrow')}</button><button class="text-btn muted" data-detail="${app.id}">Ver detalles</button></div></div></article>`;}
+function renderApps(announce=true){const items=currentApps(),focused=document.activeElement?.dataset;const active=focused?.download?['download',focused.download]:focused?.detail?['detail',focused.detail]:focused?.custom?['custom',focused.custom]:null;$('#appGrid').innerHTML=items.length?items.map(card).join(''):'<div class="empty"><h3>No encontramos esa herramienta.</h3><p>Prueba otra palabra o elimina los filtros.</p><button class="btn secondary" id="resetFilters">Ver todas las apps</button></div>';if(items.length===APPS.length&&category==='all'&&!$('#search').value&&!$('#offlineOnly').checked)$('#appGrid').insertAdjacentHTML('beforeend',`<aside class="custom-card"><span class="circle">${icon('plus')}</span><h3>¿Y si hacemos<br>la tuya?</h3><p>Tu idea puede convertirse en una herramienta útil para tu trabajo o tu comunidad.</p><button class="text-btn" data-request="new">Cuéntame qué necesitas ${icon('arrow')}</button></aside>`);$('#catalogCount').textContent=items.length+' de '+APPS.length+' proyectos';if(announce)$('#resultAnnouncement').textContent=items.length+' aplicaciones encontradas.';for(const id of busyDownloads){for(const button of $$(`[data-download="${id}"]`)){button.disabled=true;button.querySelector('span').textContent='Preparando…';}}if(active)$(`[data-${active[0]}="${active[1]}"]`)?.focus({preventScroll:true});}
+function updateMetrics(){let text;if(statsState==='loading')text='Consultando el historial de descargas…';else if(!stats.size)text=statsState==='empty'||statsState==='cached'?'Aún no hay historial medido de descargas.':statsState==='offline'?'Sin conexión · historial de descargas no disponible.':'Estadísticas no disponibles temporalmente.';else{const total=[...stats.values()].reduce((s,v)=>s+v.count,0);text=(statsComplete?'':'Al menos ')+total.toLocaleString('es-CO')+' descargas registradas en GitHub'+(['stale','cached'].includes(statsState)?' · última consulta guardada.':'.');}$('#metricsStatus').textContent=text;}
+async function directDownload(app,status){const local=location.protocol==='file:';if(local){const a=document.createElement('a');a.href=appURL(app);a.download=app.file;a.click();status('Descarga local. Este HTML debe estar junto al index; no se suma al contador global.');return;}const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),90000);try{const r=await fetch(appURL(app),{signal:controller.signal,credentials:'omit'});if(!r.ok)throw Error('El archivo no está disponible ('+r.status+').');const length=Number(r.headers.get('content-length'));if(length>MAX_FILE)throw Error('El archivo supera el tamaño previsto. Ábrelo desde GitHub.');const reader=r.body?.getReader();let chunks=[],received=0,last=0;if(reader){for(;;){const {value,done}=await reader.read();if(done)break;received+=value.byteLength;if(received>MAX_FILE){await reader.cancel();throw Error('El archivo supera el límite de descarga.');}chunks.push(value);if(Date.now()-last>250){status('Descargando '+bytes(received)+(length?' de '+bytes(length):'')+'…');last=Date.now();}}}else{const buf=await r.arrayBuffer();received=buf.byteLength;chunks=[new Uint8Array(buf)];}if(length&&received!==length)throw Error('La transferencia quedó incompleta. Vuelve a intentar la descarga.');if(received<256||received>MAX_FILE)throw Error('El archivo está vacío o incompleto. Inténtalo más tarde.');const blob=new Blob(chunks,{type:'text/html;charset=utf-8'}),begin=await blob.slice(0,8192).text();if(!/<(?:!doctype\s+html|html\b)/i.test(begin))throw Error('El servidor no devolvió una aplicación HTML.');const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=app.file;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);status('Archivo entregado al navegador. Descarga directa, sin registro global.');toast('Guarda '+app.file+' y ábrelo con tu navegador.');}finally{clearTimeout(timer);}}
+async function downloadApp(id){const app=byId.get(id);if(!app||busyDownloads.has(id))return;const status=message=>{const el=$('#download-'+id);if(el)el.textContent=message;if($('#detailDialog').open&&detailApp?.id===id){const detail=$('#detailDownloadStatus');if(detail)detail.textContent=message;}};busyDownloads.add(id);for(const button of $$(`[data-download="${id}"]`)){button.disabled=true;button.querySelector('span').textContent='Preparando…';}try{if(statsBusy){status('Buscando la versión publicada…');await statsBusy;}const asset=stats.get(id)?.latest;if(asset){const a=document.createElement('a');a.href=asset.url;a.rel='noopener noreferrer';a.download=app.file;document.body.appendChild(a);a.click();a.remove();status('Descarga solicitada a GitHub. El contador se actualiza después de su registro.');}else{if(!health.get(id).available)throw Error('Esta herramienta está en actualización.');await directDownload(app,status);}}catch(e){status(e.name==='AbortError'?'La descarga tardó demasiado. Puedes volver a intentarlo.':e.message);toast('No se pudo descargar '+app.name+'. '+(e.name==='AbortError'?'Revisa tu conexión.':e.message));}finally{busyDownloads.delete(id);for(const b of $$(`[data-download="${id}"]`)){b.disabled=!(health.get(id).available||stats.has(id));b.querySelector('span').textContent=b.disabled?'No disponible':'Descargar gratis';}}}
+function showDialog(id){const dialog=$('#'+id);for(const d of $$('dialog[open]'))d.close();modalOpener=document.activeElement;dialog.showModal();}
+for(const dialog of $$('dialog')){dialog.addEventListener('click',e=>{if(e.target.closest('[data-close]'))dialog.close();if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});dialog.addEventListener('close',()=>{if(modalOpener?.isConnected)modalOpener.focus({preventScroll:true});});}
+function renderDetail(app){const s=stats.get(app.id),h=health.get(app.id),available=h.available||!!s;$('#detailTitle').textContent=app.name;$('#detailCategory').textContent=app.categoryLabel+' · Gratis';$('#detailBody').innerHTML=`<p>${esc(app.description)}</p><ul class="app-features">${app.features.map(f=>'<li>'+esc(f)+'</li>').join('')}</ul><div class="notice">${!available?'El archivo publicado no está listo para descargarse. Se mantiene visible el proyecto para que puedas conocerlo. ':''}${esc(app.requirements)}</div><dl class="detail-meta"><div><dt>Uso sin conexión</dt><dd>${app.offline?'Recursos principales incluidos':'Necesita internet'}</dd></div><div><dt>Tamaño del HTML</dt><dd>${bytes(s?.latest.size||h.size)}${app.offline?'':' + recursos externos'}</dd></div><div><dt>Descargas registradas</dt><dd>${metric(app)}</dd></div><div><dt>Archivo</dt><dd>${esc(app.file)}</dd></div></dl><div class="actions"><button class="btn primary" data-download="${app.id}" ${available?'':'disabled'}>${icon('download')}<span>Descargar gratis</span></button><a class="btn secondary" href="${sourceURL(app)}" target="_blank" rel="noopener noreferrer">${icon('code')}Ver código</a><button class="btn ghost" data-custom="${app.id}">Personalizar</button></div><p id="detailDownloadStatus" class="download-status" role="status"></p><p class="form-note">${s?'Se descargará la versión publicada en GitHub Releases; la demo puede tener cambios posteriores.':'La descarga directa funciona cuando el archivo está disponible. Su uso no se suma a un contador global.'}</p>`;}
+function openDetail(id){const app=byId.get(id);if(!app)return;detailApp=app;renderDetail(app);showDialog('detailDialog');}
+function setRequestType(){const kind=$('#requestType').value;$('#appField').hidden=kind==='new';$('#requestTitle').textContent=kind==='new'?'Construyamos tu aplicación.':kind==='feedback'?'Ayúdame a mejorar la app.':'Adaptemos una herramienta.';$('#needLabel').textContent=kind==='feedback'?'¿Qué ocurrió y cómo podemos reproducirlo?':'¿Qué necesitas resolver?';}
+function openRequest(kind='new',id){$('#requestForm').hidden=false;$('#requestReview').hidden=true;$('#requestError').textContent='';$('#requestType').value=['new','custom','feedback'].includes(kind)?kind:'new';if(id&&byId.has(id))$('#requestApp').value=id;setRequestType();showDialog('requestDialog');}
+function whatsapp(message){const phone=String(CONFIG.whatsapp).replace(/\D/g,'');if(!/^\d{10,15}$/.test(phone))throw Error('Contacto no configurado.');return 'https://wa.me/'+phone+'?text='+encodeURIComponent(message);}
+$('#requestApp').innerHTML=APPS.map(a=>'<option value="'+a.id+'">'+esc(a.name)+'</option>').join('');
+$('#requestType').addEventListener('change',setRequestType);
+$('#requestForm').addEventListener('submit',e=>{e.preventDefault();const need=$('#requestNeed').value.trim();if(need.length<12){$('#requestError').textContent='Describe un poco más tu necesidad, al menos 12 caracteres.';$('#requestNeed').focus();return;}const kind=$('#requestType').value,name=$('#requestName').value.trim(),app=byId.get($('#requestApp').value);const label=kind==='new'?'una aplicación nueva':kind==='custom'?'una personalización':'reportar un error o una sugerencia';const lines=['Hola Rubén. Te contacto desde VibeCoding Lab para '+label+'.',name?'Nombre / organización: '+name:'',kind!=='new'?'Aplicación: '+app.name:'','Necesidad: '+need,'Equipo: '+$('#requestDevice').value,'Conexión: '+$('#requestConnection').value,kind==='feedback'?'Gracias por revisar el caso.':'Me gustaría revisar contigo el alcance, el presupuesto y la fecha de entrega.'].filter(Boolean);const text=lines.join('\n\n');$('#requestSummary').textContent=text;$('#requestSend').href=whatsapp(text);$('#requestForm').hidden=true;$('#requestReview').hidden=false;$('#requestSend').focus();});
+async function copyText(text){try{await navigator.clipboard.writeText(text);toast('Texto copiado.');return true;}catch{const t=document.createElement('textarea');t.value=text;t.style.cssText='position:fixed;left:-9999px;top:0';document.body.appendChild(t);t.select();let ok=false;try{ok=document.execCommand('copy');}catch{}t.remove();toast(ok?'Texto copiado.':'No se pudo copiar automáticamente. Selecciona el texto del mensaje.');return ok;}}
+$('#copyRequest').onclick=()=>copyText($('#requestSummary').textContent);
+$('#editRequest').onclick=()=>{$('#requestForm').hidden=false;$('#requestReview').hidden=true;$('#requestNeed').focus();};
+$('#supportButton').onclick=()=>showDialog('supportDialog');
+$('#donationLink').href=whatsapp('Hola Rubén. Me gustaría hacer un aporte voluntario para apoyar VibeCoding Lab. ¿Me compartes los medios disponibles y los datos del destinatario?');
+$('#feedbackButton').onclick=()=>openRequest('feedback');
+$('#privacyButton').onclick=()=>showDialog('privacyDialog');
+$('#clearCache').onclick=()=>{try{localStorage.removeItem(cacheKey);localStorage.removeItem(catalogKey);}catch{}toast('Caché del catálogo borrada. Los datos de las apps no se han modificado.');};
+function renderStats(){$('#statsExplanation').textContent=stats.size?'Totales públicos de los archivos descargables, sumados entre las versiones que siguen publicadas.':statsState==='empty'||statsState==='cached'?'Todavía no hay archivos publicados como Releases para medir sus descargas. Las descargas directas siguen disponibles.':'No pudimos consultar los contadores. No mostramos ceros inventados; vuelve a intentarlo más tarde.';$('#statsRows').innerHTML=APPS.map(a=>{const s=stats.get(a.id);return `<tr><th scope="row">${esc(a.name)}</th><td>${s?(statsComplete?'':'≥ ')+s.count.toLocaleString('es-CO'):'—'}</td><td>${s?s.versions:'—'}</td></tr>`;}).join('');$('#statsUpdated').textContent=statsTime?'Consulta: '+new Date(statsTime).toLocaleString('es-CO')+(statsComplete?'':' · Resultado parcial, hay más versiones.'):'Sin consulta completada.';$('#refreshStats').disabled=!!statsBusy;}
+$('#showStats').onclick=()=>{renderStats();showDialog('statsDialog');};$('#refreshStats').onclick=async()=>{$('#refreshStats').disabled=true;await loadStats(true);renderStats();};
+function csvCell(v){let s=String(v??'');if(/^[=+@\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
+$('#exportStats').onclick=()=>{const rows=[['Aplicación','Archivo','Descargas GitHub','Versiones medidas','Consulta UTC','Cobertura'],...APPS.map(a=>{const s=stats.get(a.id);return[a.name,a.file,s?s.count:'Sin datos',s?s.versions:'Sin datos',statsTime?new Date(statsTime).toISOString():'',statsComplete?'Completa':'Parcial'];})];const blob=new Blob(['\uFEFF'+rows.map(r=>r.map(csvCell).join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='descargas-vibecoding.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);};
+$('#search').addEventListener('input',()=>renderApps());$('#sort').addEventListener('change',()=>renderApps());$('#offlineOnly').addEventListener('change',()=>renderApps());
+function resetFilters(){category='all';$('#search').value='';$('#offlineOnly').checked=false;$('#sort').value='recommended';$$('[data-category]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.category==='all')));renderApps();}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-category],[data-download],[data-detail],[data-custom],[data-request],[data-feature],#resetFilters');if(!b)return;if(b.dataset.category){category=b.dataset.category;$$('[data-category]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderApps();}else if(b.dataset.download){downloadApp(b.dataset.download);}else if(b.dataset.detail)openDetail(b.dataset.detail);else if(b.dataset.custom)openRequest('custom',b.dataset.custom);else if(b.dataset.request)openRequest(b.dataset.request);else if(b.dataset.feature){resetFilters();$('#search').value=byId.get(b.dataset.feature).name;renderApps();}else resetFilters();});
+$('#menuToggle').onclick=()=>{const open=$('#mainNav').classList.toggle('open');$('#menuToggle').setAttribute('aria-expanded',String(open));$('#menuToggle').setAttribute('aria-label',open?'Cerrar menú':'Abrir menú');};
+$('#mainNav').addEventListener('click',e=>{if(e.target.closest('a')){$('#mainNav').classList.remove('open');$('#menuToggle').setAttribute('aria-expanded','false');$('#menuToggle').setAttribute('aria-label','Abrir menú');}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#mainNav').classList.remove('open');$('#menuToggle').setAttribute('aria-expanded','false');$('#menuToggle').setAttribute('aria-label','Abrir menú');}});
+applyCachedStats(storageRead(cacheKey));renderApps(false);updateMetrics();loadStats();loadCatalogHealth();
+</script>
+</body></html>
 
-    function _enc(str) {
-      return Array.from(str).map(ch => ch.charCodeAt(0) ^ _K);
-    }
+<!--
+MIT License — código original de este catálogo (index.html).
+Copyright (c) 2026 Rubén Sierra.
+No modifica las licencias de las aplicaciones enlazadas ni de sus componentes.
 
-    let currentCategory = "all";
-    let currentAppForImprove = "";
-    let currentDonationMethod = "Nequi";
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
-    function toggleCreatorPanel() {
-      document.getElementById("creator-panel").classList.toggle("active");
-    }
-
-    function filterCatalog(cat, btn) {
-      currentCategory = cat;
-      document.querySelectorAll("#filter-btns .btn").forEach(b => b.classList.remove("btn-free"));
-      if (btn) btn.classList.add("btn-free");
-      renderFreeApps();
-    }
-
-    function renderFreeApps() {
-      document.getElementById("ui-brand-title").textContent = PLATFORM_CFG.title;
-      const q = (document.getElementById("search-input").value || "").toLowerCase();
-      const grid = document.getElementById("free-apps-grid");
-      grid.innerHTML = "";
-
-      PLATFORM_CFG.apps
-        .filter(a => currentCategory === "all" || a.cat === currentCategory)
-        .filter(a => a.name.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q))
-        .forEach(app => {
-          const card = document.createElement("div");
-          card.className = "app-card";
-          const safeName = app.name.replace(/'/g, "\'");
-          card.innerHTML = `
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:0.72rem; color:var(--muted); font-weight:700;">${app.cat}</span>
-                <span class="badge-free">GRATIS • VIBE CODING</span>
-              </div>
-              <h3>${app.name}</h3>
-              <p>${app.desc}</p>
-            </div>
-            <div class="app-card-actions">
-              <a href="${app.file}" class="btn btn-free btn-sm" style="width:100%;">
-                ⬇️ Abrir / Descargar Gratis
-              </a>
-              <button class="btn btn-improve btn-sm" style="width:100%;" onclick="openImproveModal('${safeName}')">
-                🛠️ Pedir Mejora o Personalizar esta App
-              </button>
-            </div>
-          `;
-          grid.appendChild(card);
-        });
-    }
-
-    // --- 1. BOTÓN DE MEJORA / PERSONALIZACIÓN DE UNA APP ESPECÍFICA (CON REDIRECCIÓN OFUSCADA) ---
-    function openImproveModal(appName) {
-      currentAppForImprove = appName;
-      document.getElementById("modal-app-title").textContent = appName;
-      document.getElementById("modal-improve-notes").value = "";
-      document.getElementById("improve-modal").classList.add("active");
-    }
-
-    function closeImproveModal() {
-      document.getElementById("improve-modal").classList.remove("active");
-    }
-
-    function sendSpecificAppImproveWhatsApp() {
-      const type = document.getElementById("modal-improve-type").value;
-      const notes = document.getElementById("modal-improve-notes").value.trim() || "Deseo cotizar el valor de esta adaptación.";
-      const dest = _dec(PLATFORM_CFG.waXor);
-
-      const msg = `¡Hola Ing. Rubén Sierra! Estoy usando la plataforma *${PLATFORM_CFG.title}* y quiero solicitar una *MEJORA / PERSONALIZACIÓN* para esta aplicación específica:\n\n` +
-                  `📌 *App a personalizar:* ${currentAppForImprove}\n` +
-                  `🛠️ *Ajuste requerido:* ${type}\n` +
-                  `📝 *Detalles específicos:* ${notes}\n\n` +
-                  `Quedo atento para cuadrar internamente el precio de esta personalización.`;
-
-      window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, "_blank");
-      closeImproveModal();
-    }
-
-    // --- 2. BOTÓN INDEPENDIENTE PARA CREACIÓN DE TU PROPIA APP DESDE CERO ---
-    function scrollToCustomApp() {
-      document.getElementById("seccion-crear-app").scrollIntoView({ behavior: "smooth" });
-      document.getElementById("newapp-idea").focus();
-    }
-
-    function sendCustomNewAppWhatsApp() {
-      const client = document.getElementById("newapp-client").value.trim() || "Interesado";
-      const useType = document.getElementById("newapp-type").value;
-      const idea = document.getElementById("newapp-idea").value.trim();
-
-      if (!idea) {
-        alert("Por favor describe brevemente qué quieres que haga tu propia app antes de enviar.");
-        return;
-      }
-
-      const dest = _dec(PLATFORM_CFG.waXor);
-      const msg = `¡Hola Ing. Rubén Sierra! Quiero cotizar la *CREACIÓN DE MI PROPIA APP A MEDIDA* bajo la filosofía Vibe Coding:\n\n` +
-                  `👤 *Cliente / Negocio:* ${client}\n` +
-                  `🎯 *Modalidad:* ${useType}\n` +
-                  `💡 *Idea / Necesidad:* ${idea}\n\n` +
-                  `Quedo atento para acordar el presupuesto y alcance.`;
-
-      window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, "_blank");
-    }
-
-    // --- 3. DONACIONES OPCIONALES PARA SOSTENER LOS LLMs PRO ---
-    function selectDonationMethod(method, btn) {
-      currentDonationMethod = method;
-      document.querySelectorAll(".pay-chip").forEach(c => c.classList.remove("active"));
-      if (btn) btn.classList.add("active");
-
-      const lbl = document.getElementById("don-method-label");
-      const val = document.getElementById("don-method-value");
-      const lnk = document.getElementById("don-ext-link");
-
-      lbl.textContent = "APOYAR MENSUALIDAD DE LLMs VÍA " + method.toUpperCase() + ":";
-      lnk.style.display = "none";
-
-      if (["Bold", "Mercado Pago"].includes(method)) {
-        val.textContent = `Pasarela en línea (${method}): Haz clic en "Abrir Pasarela de Pago"`;
-        lnk.href = PLATFORM_CFG.linkPago;
-        lnk.style.display = "inline-flex";
-      } else {
-        val.textContent = `Cuenta protegida contra spam para ${method}. Pulsa "Revelar y Copiar Número de Cuenta".`;
-      }
-    }
-
-    function revealAndCopyWallet() {
-      const numLocal = _dec(PLATFORM_CFG.localXor);
-      const val = document.getElementById("don-method-value");
-      val.textContent = `${currentDonationMethod}: ${numLocal} (Titular: Ing. Rubén Sierra)`;
-      navigator.clipboard.writeText(numLocal.replace(/\s+/g, ""));
-      alert(`Número copiado al portapapeles para tu donación en ${currentDonationMethod}: ${numLocal}`);
-    }
-
-    function notifyDonationWhatsApp() {
-      const dest = _dec(PLATFORM_CFG.waXor);
-      const msg = `¡Hola Ing. Rubén Sierra! Acabo de realizar una donación voluntaria por *${currentDonationMethod}* para apoyar el pago de las mensualidades de los modelos IA Pro y que se sigan creando más herramientas gratuitas. Adjunto mi comprobante:`;
-      window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, "_blank");
-    }
-
-    // --- MODO CREADOR ---
-    function syncAdminSettings() {
-      PLATFORM_CFG.title = document.getElementById("adm-title").value.trim() || PLATFORM_CFG.title;
-      PLATFORM_CFG.linkPago = document.getElementById("adm-linkpago").value.trim() || PLATFORM_CFG.linkPago;
-      const newWa = document.getElementById("adm-wa-plain").value.replace(/\D/g, "");
-      if (newWa.length >= 10) {
-        const fullWa = newWa.startsWith("57") ? newWa : "57" + newWa;
-        const localOnly = fullWa.startsWith("57") ? fullWa.substring(2) : fullWa;
-        PLATFORM_CFG.waXor = _enc(fullWa);
-        PLATFORM_CFG.localXor = _enc(localOnly);
-      }
-      renderFreeApps();
-    }
-
-    function addNewFreeApp() {
-      syncAdminSettings();
-      const name = document.getElementById("adm-app-name").value.trim();
-      const cat = document.getElementById("adm-app-cat").value;
-      const file = document.getElementById("adm-app-file").value.trim() || "./00_lanzador_maestro_drive.html";
-      const desc = document.getElementById("adm-app-desc").value.trim();
-      if (!name) return alert("Escribe el nombre de la aplicación.");
-
-      PLATFORM_CFG.apps.push({
-        id: Date.now(),
-        name,
-        cat,
-        file,
-        desc: desc || "Aplicación HTML offline co-creada con IA Pro."
-      });
-      document.getElementById("adm-app-name").value = "";
-      document.getElementById("adm-app-file").value = "";
-      document.getElementById("adm-app-desc").value = "";
-      renderFreeApps();
-    }
-
-    function exportCleanPublicHTML() {
-      syncAdminSettings();
-      const cleanCfg = { ...PLATFORM_CFG, lockedMode: true };
-      const raw = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-      const updated = raw.replace(
-        /\/\*__FREE_CFG_START__\*\/[\s\S]*?\/\*__FREE_CFG_END__\*\//,
-        "/*__FREE_CFG_START__*/ " + JSON.stringify(cleanCfg, null, 2) + " /*__FREE_CFG_END__*/"
-      );
-      const blob = new Blob([updated], { type: "text/html;charset=utf-8" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "index.html";
-      a.click();
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      if (PLATFORM_CFG.lockedMode) {
-        const btnAdm = document.getElementById("btn-admin-mode");
-        if (btnAdm) btnAdm.style.display = "none";
-        document.getElementById("creator-panel").style.display = "none";
-      }
-      renderFreeApps();
-      selectDonationMethod("Nequi", document.querySelector(".pay-chip.active"));
-    });
-  </script>
-</body>
-</html>
+PUBLICACIÓN: guardar como index.html en la raíz, junto a los cinco HTML del
+catálogo. Las estadísticas provienen de los assets de GitHub Releases con
+los mismos nombres que los archivos del catálogo. Las descargas directas no
+se suman a esos contadores. No borrar las Releases si se desea conservar
+el historial. No se requieren claves privadas en este documento.
+-->
