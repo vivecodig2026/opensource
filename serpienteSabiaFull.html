@@ -1,0 +1,3767 @@
+<!--
+================================================================================
+  PROYECTO: Súper Serpiente Sabia - Edición Maestra Gamificada (Open Source)
+  VERSIÓN: 3.0.0 (Suite Pedagógica Multitemática Offline)
+  LICENCIA: MIT License (Open Source)
+
+  Copyright (c) 2026 Comunidad Educativa Libre & Desarrolladores Open Source
+
+  Por la presente se concede permiso, libre de cargos, a cualquier persona que
+  obtenga una copia de este software y de los archivos de documentación asociados
+  (el "Software"), a utilizar el Software sin restricción, incluyendo sin
+  limitación los derechos a usar, copiar, modificar, fusionar, publicar,
+  distribuir, sublicenciar, y/o vender copias del Software, y a permitir a las
+  personas a las que se les proporcione el Software a hacer lo mismo, sujeto a
+  las siguientes condiciones:
+
+  El aviso de copyright anterior y este aviso de permiso se incluirán en todas
+  las copias o partes sustanciales del Software.
+
+  EL SOFTWARE SE PROPORCIONA "COMO ESTÁ", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O
+  IMPLÍCITA, INCLUYENDO PERO NO LIMITADO A GARANTÍAS DE COMERCIALIZACIÓN,
+  IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN.
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🐍 Súper Serpiente Sabia 3.0 - Suite Educativa Open Source</title>
+    <style>
+        :root {
+            --bg-top: #140b29;
+            --bg-mid: #1b365d;
+            --bg-bottom: #0f4c5c;
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --accent: #ff0844;
+            --gold: #ffd700;
+            --amber: #ff9a00;
+            --success: #00e676;
+            --purple: #b388ff;
+            --card-bg: rgba(18, 25, 54, 0.94);
+            --glass-bg: rgba(255, 255, 255, 0.11);
+            --glass-border: rgba(255, 255, 255, 0.24);
+            --font-main: 'Segoe UI', 'Comic Sans MS', 'Chalkboard SE', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 10%, #2a1b54 0%, var(--bg-top) 45%, #091526 100%);
+            font-family: var(--font-main);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+        }
+
+        /* Contenedor principal optimizado para formato vertical móvil */
+        #app-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 100dvh;
+            max-height: 960px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 8px 10px;
+            z-index: 2;
+        }
+
+        @media (min-width: 520px) {
+            #app-wrapper {
+                height: 97dvh;
+                border-radius: 28px;
+                box-shadow: 0 22px 70px rgba(0, 0, 0, 0.75), 0 0 0 3px rgba(0, 242, 254, 0.28);
+                background: linear-gradient(180deg, rgba(19, 14, 49, 0.92), rgba(11, 39, 56, 0.95));
+                backdrop-filter: blur(14px);
+            }
+        }
+
+        /* Cabecera Superior de Estadísticas y Herramientas */
+        .hud-header {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            background: rgba(8, 13, 31, 0.65);
+            padding: 7px 10px;
+            border-radius: 18px;
+            border: 1.5px solid var(--glass-border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+            flex-shrink: 0;
+        }
+
+        .hud-row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .hud-stats-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .hud-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 800;
+            font-size: 0.84rem;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 3px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .hud-stat.coin-stat {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 140, 0, 0.25));
+            border-color: rgba(255, 215, 0, 0.5);
+            color: #fff59d;
+        }
+
+        .hud-lives {
+            display: flex;
+            gap: 2px;
+            font-size: 1rem;
+            align-items: center;
+        }
+
+        .heart-icon {
+            display: inline-block;
+            animation: pulseHeart 1.5s infinite ease-in-out;
+            filter: drop-shadow(0 2px 4px rgba(255, 0, 85, 0.45));
+        }
+
+        @keyframes pulseHeart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.16); }
+        }
+
+        .hud-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1.5px solid rgba(255, 255, 255, 0.28);
+            color: white;
+            width: 33px;
+            height: 33px;
+            border-radius: 10px;
+            font-size: 0.98rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.12s, background 0.2s, border-color 0.2s;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: rgba(0, 242, 254, 0.28);
+            border-color: var(--primary);
+        }
+
+        .icon-btn:active {
+            transform: scale(0.88);
+        }
+
+        /* Barra de Experiencia y Progreso de Nivel */
+        .hud-row-bottom {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #b3e5fc;
+        }
+
+        .xp-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: 99px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            width: 20%;
+            background: linear-gradient(90deg, #00e676, #00f2fe, #ffd700);
+            border-radius: 99px;
+            transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .active-powerups-bar {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .powerup-pill {
+            font-size: 0.68rem;
+            background: rgba(0, 242, 254, 0.22);
+            border: 1px solid var(--primary);
+            padding: 1px 6px;
+            border-radius: 8px;
+            color: #e0f7fa;
+            font-weight: 800;
+            animation: blinkGlow 1s infinite alternate;
+        }
+
+        @keyframes blinkGlow {
+            from { box-shadow: 0 0 4px var(--primary); }
+            to { box-shadow: 0 0 10px var(--gold); }
+        }
+
+        /* Tarjeta de Misión Pedagógica con Narrador Voz Offline */
+        .mission-banner {
+            margin: 6px 0;
+            background: linear-gradient(135deg, #ff8008 0%, #ffc837 52%, #ff416c 100%);
+            border-radius: 18px;
+            padding: 8px 12px;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(255, 65, 108, 0.35), inset 0 2px 3px rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.65);
+            position: relative;
+            flex-shrink: 0;
+            transition: transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .mission-banner.boss-mode {
+            background: linear-gradient(135deg, #7f00ff 0%, #e100ff 55%, #ffd700 100%);
+            border-color: #ffd700;
+            box-shadow: 0 0 24px rgba(255, 215, 0, 0.6);
+        }
+
+        .mission-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .mission-badge {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            background: rgba(0, 0, 0, 0.38);
+            padding: 2px 9px;
+            border-radius: 10px;
+            font-weight: 900;
+            color: #fff9c4;
+        }
+
+        .speak-mission-btn {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            color: #fff;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .speak-mission-btn:active {
+            transform: scale(0.92);
+        }
+
+        .mission-prompt {
+            font-size: 1.22rem;
+            font-weight: 900;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.42);
+            line-height: 1.15;
+            color: #ffffff;
+        }
+
+        .mission-hint {
+            font-size: 0.75rem;
+            margin-top: 3px;
+            color: #1a103c;
+            background: rgba(255, 255, 255, 0.88);
+            padding: 2px 10px;
+            border-radius: 99px;
+            display: inline-block;
+            font-weight: 800;
+        }
+
+        /* Área del Lienzo de Juego (Más amplia y limpia) */
+        .canvas-wrapper {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            min-height: 250px;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), inset 0 0 22px rgba(0, 242, 254, 0.18);
+            border: 2.5px solid rgba(0, 242, 254, 0.55);
+            background: #07162c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Indicador de Despegue Seguro (Evita que la serpiente se mueva sin que el niño esté listo) */
+        #launch-ready-pill {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 20, 48, 0.92);
+            border: 2px solid var(--primary);
+            color: #ffffff;
+            padding: 7px 16px;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            letter-spacing: 0.3px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65), 0 0 15px rgba(0, 242, 254, 0.35);
+            pointer-events: none;
+            z-index: 12;
+            white-space: nowrap;
+            animation: pulseLaunch 1.4s infinite ease-in-out;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        #launch-ready-pill.hidden-pill {
+            opacity: 0;
+            transform: translateX(-50%) translateY(10px);
+        }
+
+        @keyframes pulseLaunch {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+        }
+
+        /* Mensaje Flotante Pedagógico Compacto */
+        #toast-feedback {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.85);
+            background: rgba(10, 18, 42, 0.94);
+            border: 2px solid var(--gold);
+            color: #fff;
+            padding: 7px 14px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.82rem;
+            text-align: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 15;
+            max-width: 92%;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+        }
+
+        #toast-feedback.show {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        /* Banner de Logro Desbloqueado */
+        #achievement-popup {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%) translateY(40px);
+            background: linear-gradient(135deg, #1a103c, #283593);
+            border: 2px solid #ffd700;
+            border-radius: 16px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 800;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 18;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+            width: 88%;
+        }
+
+        #achievement-popup.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Barra Inferior Táctil Minimalista y Ergonómica ("Menos es más") */
+        .touch-controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 4px 2px 4px;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .left-assist-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .quick-skills-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .skill-btn {
+            background: rgba(14, 29, 62, 0.85);
+            border: 1.5px solid rgba(0, 242, 254, 0.45);
+            color: #fff;
+            border-radius: 14px;
+            padding: 8px 8px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: transform 0.12s, background 0.2s, opacity 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .skill-btn:active {
+            transform: scale(0.94);
+        }
+
+        .skill-btn.disabled {
+            opacity: 0.42;
+            border-color: rgba(255, 255, 255, 0.15);
+            pointer-events: none;
+        }
+
+        /* Botón Turbo Horizontal Integrado */
+        .speed-boost-btn {
+            width: 100%;
+            height: 40px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border: 2px solid #fff;
+            color: #1a103c;
+            font-weight: 900;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 14px rgba(255, 140, 0, 0.4);
+            cursor: pointer;
+            touch-action: none;
+            transition: transform 0.1s;
+        }
+
+        .speed-boost-btn:active, .speed-boost-btn.active {
+            transform: scale(0.95);
+            background: linear-gradient(135deg, #00e676, #00b0ff);
+            color: #fff;
+        }
+
+        /* Joystick Virtual 360° */
+        .joystick-zone {
+            position: relative;
+            width: 92px;
+            height: 92px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 70%);
+            border: 2.5px solid rgba(0, 242, 254, 0.55);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(0, 242, 254, 0.22);
+            touch-action: none;
+            flex-shrink: 0;
+        }
+
+        .joystick-arrows {
+            position: absolute;
+            inset: 4px;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.45);
+            text-align: center;
+        }
+
+        .joystick-knob {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #00f2fe, #4facfe 70%, #0072ff);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.7);
+            border: 2px solid #ffffff;
+            position: absolute;
+            pointer-events: none;
+            transition: transform 0.05s linear;
+        }
+
+        /* Modales del Ecosistema (Inicio, Tienda, Enciclopedia, Laboratorio Docente, Licencia) */
+        .modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(8, 10, 28, 0.9);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            z-index: 30;
+        }
+
+        .modal-card {
+            width: 100%;
+            max-width: 460px;
+            background: linear-gradient(165deg, rgba(31, 24, 72, 0.97), rgba(14, 39, 66, 0.98));
+            border: 2.5px solid rgba(0, 242, 254, 0.55);
+            border-radius: 24px;
+            padding: 16px 14px;
+            text-align: center;
+            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.75);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 94dvh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) rgba(0,0,0,0.3);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.88); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-title {
+            font-size: 1.48rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #ffd700, #00f2fe, #ff9a44);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .modal-subtitle {
+            font-size: 0.82rem;
+            color: #d1e8ff;
+            margin-bottom: 10px;
+        }
+
+        /* Pestañas de Navegación en Modales */
+        .tabs-bar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 12px;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 4px;
+            border-radius: 14px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #b3e5fc;
+            padding: 7px 8px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(0, 114, 255, 0.45);
+        }
+
+        /* Selector de Modos de Juego */
+        .modes-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .mode-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.18);
+            border-radius: 14px;
+            padding: 7px 5px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-weight: 800;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            transition: all 0.2s;
+        }
+
+        .mode-pill.selected {
+            background: rgba(0, 230, 118, 0.22);
+            border-color: var(--success);
+            box-shadow: 0 0 12px rgba(0, 230, 118, 0.35);
+        }
+
+        /* Cuadrícula de los 12 Mundos Educativos */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+            margin-bottom: 12px;
+            max-height: 270px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+
+        .topic-btn {
+            background: rgba(255, 255, 255, 0.09);
+            border: 2px solid rgba(255, 255, 255, 0.18);
+            border-radius: 15px;
+            padding: 8px 7px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            text-align: center;
+        }
+
+        .topic-btn .t-icon {
+            font-size: 1.35rem;
+        }
+
+        .topic-btn .t-name {
+            font-weight: 800;
+            font-size: 0.8rem;
+            line-height: 1.15;
+        }
+
+        .topic-btn .t-desc {
+            font-size: 0.65rem;
+            color: #b3e5fc;
+        }
+
+        .topic-btn.selected {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.32), rgba(79, 172, 254, 0.45));
+            border-color: #ffd700;
+            box-shadow: 0 0 14px rgba(255, 215, 0, 0.45);
+            transform: translateY(-1px);
+        }
+
+        /* Tienda de Skins y Sombreros */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin: 10px 0;
+            max-height: 290px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+
+        .shop-item {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.18);
+            border-radius: 15px;
+            padding: 9px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .shop-item.equipped {
+            border-color: var(--success);
+            background: rgba(0, 230, 118, 0.16);
+        }
+
+        .shop-badge {
+            font-size: 0.68rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 800;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Tarjetas de Lecciones y Licencia */
+        .lesson-box {
+            background: rgba(0, 0, 0, 0.38);
+            border-left: 4px solid var(--gold);
+            padding: 9px 11px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.79rem;
+            margin: 8px 0;
+            line-height: 1.38;
+        }
+
+        .license-pre {
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(0, 242, 254, 0.35);
+            border-radius: 12px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.7rem;
+            text-align: left;
+            color: #e0f7fa;
+            max-height: 220px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin: 8px 0;
+        }
+
+        /* Formulario para Crear Preguntas Propias (Modo Profesor/Padres) */
+        .custom-form {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 0.8rem;
+            font-family: inherit;
+        }
+
+        .custom-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .cta-btn {
+            width: 100%;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 18px;
+            background: linear-gradient(90deg, #00e676, #00b0ff);
+            color: #ffffff;
+            font-size: 1.08rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 230, 118, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.65);
+            transition: transform 0.14s;
+            margin-top: 4px;
+        }
+
+        .cta-btn:active {
+            transform: scale(0.96);
+        }
+
+        .secondary-btn {
+            width: 100%;
+            padding: 9px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.13);
+            color: #fff;
+            border: 1.5px solid rgba(255, 255, 255, 0.28);
+            font-weight: 800;
+            font-size: 0.86rem;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-wrapper">
+    <!-- Barra Superior de Estadísticas y Accesos Rápidos -->
+    <div class="hud-header">
+        <div class="hud-row-top">
+            <div class="hud-stats-group">
+                <div class="hud-stat" title="Puntuación Total">
+                    <span>🏆</span>
+                    <span id="score-val">0</span>
+                </div>
+                <div class="hud-stat coin-stat" title="Monedas Sabias (Úsalas en la Tienda)">
+                    <span>🪙</span>
+                    <span id="coins-val">50</span>
+                </div>
+                <div class="hud-stat" title="Racha de Aciertos">
+                    <span>🔥</span>
+                    <span id="streak-val">0</span>
+                </div>
+                <div class="hud-stat hidden" id="timer-stat" title="Tiempo Restante">
+                    <span>⏱️</span>
+                    <span id="timer-val">90s</span>
+                </div>
+            </div>
+
+            <div class="hud-lives" id="lives-container" title="Vidas o Modo Zen">
+                <span class="heart-icon">❤️</span>
+                <span class="heart-icon">❤️</span>
+                <span class="heart-icon">❤️</span>
+            </div>
+
+            <div class="hud-actions">
+                <button class="icon-btn" id="sound-btn" title="Efectos de Sonido y Música">🔊</button>
+                <button class="icon-btn" id="shop-btn" title="Tienda de Skins y Sombreros">🛍️</button>
+                <button class="icon-btn" id="guide-btn" title="Enciclopedia y Logros">📖</button>
+                <button class="icon-btn" id="menu-btn" title="Menú Principal y Mundos">⚙️</button>
+            </div>
+        </div>
+
+        <div class="hud-row-bottom">
+            <span id="level-label">NV. 1</span>
+            <div class="xp-bar-bg">
+                <div class="xp-bar-fill" id="xp-bar-fill"></div>
+            </div>
+            <div class="active-powerups-bar" id="active-powerups-bar"></div>
+        </div>
+    </div>
+
+    <!-- Cartel de Misión Pedagógica con Lectura por Voz Offline -->
+    <div class="mission-banner" id="mission-banner">
+        <div class="mission-top-bar">
+            <div class="mission-badge" id="topic-badge">MUNDO EDUCATIVO</div>
+            <button class="speak-mission-btn" id="speak-btn" title="Escuchar pregunta en voz alta">🗣️ Escuchar</button>
+        </div>
+        <div class="mission-prompt" id="question-text">¡Elige tu mundo educativo!</div>
+        <div class="mission-hint" id="question-hint">Desliza en la pantalla o usa el joystick para guiar a la serpiente</div>
+    </div>
+
+    <!-- Lienzo del Juego con Renderizado Fluido a 60 FPS -->
+    <div class="canvas-wrapper" id="canvas-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="launch-ready-pill">👆 Toca o mueve el joystick para despegar</div>
+        <div id="toast-feedback">¡Excelente respuesta!</div>
+        <div id="achievement-popup">
+            <span style="font-size: 1.8rem;" id="ach-icon">🏅</span>
+            <div style="text-align: left;">
+                <div style="color: #ffd700; font-size: 0.7rem; text-transform: uppercase;">¡Logro Desbloqueado!</div>
+                <div id="ach-title">Explorador Sabio</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra Inferior Táctil Despejada y Ergonómica -->
+    <div class="touch-controls-bar">
+        <div class="left-assist-column">
+            <div class="quick-skills-row">
+                <button class="skill-btn" id="skill-clue-btn" title="Descarta 1 burbuja incorrecta (10 monedas)">
+                    <span>🔍 Lupa</span>
+                    <span style="color:#ffd700;">10🪙</span>
+                </button>
+                <button class="skill-btn" id="skill-magnet-btn" title="Atrae la respuesta correcta (15 monedas)">
+                    <span>🧲 Imán</span>
+                    <span style="color:#ffd700;">15🪙</span>
+                </button>
+            </div>
+            <button class="speed-boost-btn" id="turbo-btn">
+                <span>⚡</span>
+                <span>MANTÉN PARA TURBO</span>
+            </button>
+        </div>
+
+        <div class="joystick-zone" id="joystick-zone">
+            <div class="joystick-arrows">▲<br>◄ &nbsp;&nbsp;&nbsp; ►<br>▼</div>
+            <div class="joystick-knob" id="joystick-knob"></div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: MENÚ PRINCIPAL, 13 MUNDOS EDUCATIVOS Y MODOS DE JUEGO -->
+
+    <!-- MODAL 1: MENÚ PRINCIPAL, 12 MUNDOS EDUCATIVOS Y MODOS DE JUEGO -->
+    <div class="modal-overlay" id="start-modal">
+        <div class="modal-card">
+            <div class="modal-title">🐍 Súper Serpiente Sabia 3.0</div>
+            <div class="modal-subtitle">Plataforma Educativa Gamificada • 100% Offline & Open Source</div>
+
+            <div style="font-size: 0.76rem; font-weight: 800; color: #ffe082; margin-bottom: 5px;">
+                🎮 1. Elige la Dinámica y Tamaño del Mundo:
+            </div>
+            <div class="modes-row" id="modes-row">
+                <button class="mode-pill selected" data-mode="aventura">
+                    <span style="font-size:1.15rem;">❤️</span>
+                    <span>Aventura</span>
+                    <span style="font-size:0.58rem; color:#b3e5fc;">3 Vidas + Jefes</span>
+                </button>
+                <button class="mode-pill" data-mode="contrarreloj">
+                    <span style="font-size:1.15rem;">⏱️</span>
+                    <span>Fiebre 90s</span>
+                    <span style="font-size:0.58rem; color:#b3e5fc;">Contra el reloj</span>
+                </button>
+                <button class="mode-pill" data-mode="zen">
+                    <span style="font-size:1.15rem;">🧘</span>
+                    <span>Modo Zen</span>
+                    <span style="font-size:0.58rem; color:#b3e5fc;">Sin perder vidas</span>
+                </button>
+            </div>
+
+            <!-- Selector de Mapa: Arena Clásica vs Mundo Expandido tipo Slither.io -->
+            <div class="modes-row" id="worldsize-row" style="grid-template-columns: 1fr 1fr; margin-top: -4px;">
+                <button class="mode-pill selected" data-world="clasico">
+                    <span style="font-size:1.1rem;">🔲 Arena Clásica</span>
+                    <span style="font-size:0.6rem; color:#b3e5fc;">Mapa compacto en pantalla</span>
+                </button>
+                <button class="mode-pill" data-world="expandido">
+                    <span style="font-size:1.1rem;">🌌 Mundo Slither.io</span>
+                    <span style="font-size:0.6rem; color:#ffd700;">Mapa gigante + Radar + Cámara</span>
+                </button>
+            </div>
+
+            <div style="font-size: 0.76rem; font-weight: 800; color: #ffe082; margin-bottom: 5px;">
+                🌍 2. Elige el Mundo del Conocimiento (13 Temas):
+            </div>
+            <div class="topics-grid" id="topics-grid">
+                <button class="topic-btn selected" data-topic="cartesiano">
+                    <span class="t-icon">📍</span>
+                    <span class="t-name">Plano Cartesiano (X, Y)</span>
+                    <span class="t-desc">Coordenadas, ejes y cuadrantes</span>
+                </button>
+                <button class="topic-btn" data-topic="vocales">
+                    <span class="t-icon">🅰️</span>
+                    <span class="t-name">Vocales y Consonantes</span>
+                    <span class="t-desc">Abiertas, cerradas y letras</span>
+                </button>
+                <button class="topic-btn" data-topic="diptongos">
+                    <span class="t-icon">📚</span>
+                    <span class="t-name">Diptongos e Hiatos</span>
+                    <span class="t-desc">Unión y separación silábica</span>
+                </button>
+                <button class="topic-btn" data-topic="acentuacion">
+                    <span class="t-icon">🎵</span>
+                    <span class="t-name">Agudas, Graves y Esdrújulas</span>
+                    <span class="t-desc">Domina las tildes y el acento</span>
+                </button>
+                <button class="topic-btn" data-topic="sinonimos">
+                    <span class="t-icon">🔄</span>
+                    <span class="t-name">Sinónimos y Antónimos</span>
+                    <span class="t-desc">Palabras iguales u opuestas</span>
+                </button>
+                <button class="topic-btn" data-topic="sumas_restas">
+                    <span class="t-icon">➕</span>
+                    <span class="t-name">Sumas y Restas</span>
+                    <span class="t-desc">Agilidad mental numérica</span>
+                </button>
+                <button class="topic-btn" data-topic="multiplicaciones">
+                    <span class="t-icon">✖️</span>
+                    <span class="t-name">Multiplicar y Dividir</span>
+                    <span class="t-desc">Tablas y repartos exactos</span>
+                </button>
+                <button class="topic-btn" data-topic="fracciones_geo">
+                    <span class="t-icon">🍕</span>
+                    <span class="t-name">Fracciones y Geometría</span>
+                    <span class="t-desc">Mitades, polígonos y romanos</span>
+                </button>
+                <button class="topic-btn" data-topic="ciencias">
+                    <span class="t-icon">🌿</span>
+                    <span class="t-name">Ciencias y Naturaleza</span>
+                    <span class="t-desc">Animales, plantas y planetas</span>
+                </button>
+                <button class="topic-btn" data-topic="geografia">
+                    <span class="t-icon">🌎</span>
+                    <span class="t-name">Geografía y Capitales</span>
+                    <span class="t-desc">Países, continentes y cultura</span>
+                </button>
+                <button class="topic-btn" data-topic="ingles">
+                    <span class="t-icon">🇬🇧</span>
+                    <span class="t-name">English Fun (Inglés)</span>
+                    <span class="t-desc">Colores, animales y números</span>
+                </button>
+                <button class="topic-btn" data-topic="personalizado">
+                    <span class="t-icon">👩‍🏫</span>
+                    <span class="t-name">Retos del Profe / Casa</span>
+                    <span class="t-desc">Tus propias preguntas creadas</span>
+                </button>
+                <button class="topic-btn" data-topic="todo">
+                    <span class="t-icon">🌟</span>
+                    <span class="t-name">Desafío Omnisciente</span>
+                    <span class="t-desc">¡Todos los 12 mundos mezclados!</span>
+                </button>
+            </div>
+
+            <button class="cta-btn" id="start-game-btn">🚀 ¡INICIAR AVENTURA SABIA!</button>
+            <div style="display: flex; gap: 6px; margin-top: 6px;">
+                <button class="secondary-btn" id="open-shop-from-start" style="margin-top:0;">🛍️ Tienda y Skins</button>
+                <button class="secondary-btn" id="open-lab-from-start" style="margin-top:0;">👩‍🏫 Crear Preguntas</button>
+                <button class="secondary-btn" id="open-license-btn" style="margin-top:0;">⚖️ Licencia MIT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: TIENDA DE SKINS Y SOMBREROS PARA LA SERPIENTE -->
+    <div class="modal-overlay hidden" id="shop-modal">
+        <div class="modal-card">
+            <div class="modal-title">🛍️ Taller de la Serpiente</div>
+            <div class="modal-subtitle">Gana monedas 🪙 comiendo respuestas correctas y personaliza tu personaje</div>
+
+            <div style="background: rgba(255,215,0,0.18); border: 1.5px solid var(--gold); border-radius: 12px; padding: 6px 12px; display: inline-block; font-weight: 900; color: #fff59d; margin-bottom: 10px;">
+                🪙 Tus Monedas Sabias: <span id="shop-coins-display">50</span>
+            </div>
+
+            <div class="tabs-bar">
+                <button class="tab-btn active" data-shoptab="skins">🎨 Escamas Mágicas (8)</button>
+                <button class="tab-btn" data-shoptab="hats">👑 Sombreros y Accesorios (8)</button>
+            </div>
+
+            <div class="shop-grid" id="shop-items-container"></div>
+
+            <button class="cta-btn" id="close-shop-btn">✅ ¡LISTO, VOLVER AL JUEGO!</button>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ENCICLOPEDIA SABIA, LOGROS, LABORATORIO DOCENTE Y LICENCIA MIT -->
+    <div class="modal-overlay hidden" id="guide-modal">
+        <div class="modal-card">
+            <div class="modal-title">📖 Centro del Conocimiento</div>
+            <div class="modal-subtitle">Aprende las reglas, revisa tus trofeos o agrega tus propias preguntas</div>
+
+            <div class="tabs-bar">
+                <button class="tab-btn active" data-guidetab="enciclopedia">📚 Mini-Guía</button>
+                <button class="tab-btn" data-guidetab="logros">🏅 Trofeos</button>
+                <button class="tab-btn" data-guidetab="profesor">👩‍🏫 Modo Profe</button>
+                <button class="tab-btn" data-guidetab="licencia">⚖️ Open Source</button>
+            </div>
+
+            <!-- Pestaña 1: Enciclopedia -->
+            <div id="tab-content-enciclopedia">
+                <div class="lesson-box">
+                    <strong>🅰️ Vocales Abiertas y Cerradas + Sílabas:</strong><br>
+                    • <b>Vocales Abiertas (Fuertes):</b> A, E, O.<br>
+                    • <b>Vocales Cerradas (Débiles):</b> I, U.<br>
+                    • <b>Diptongo:</b> Dos vocales que se pronuncian en la <i>misma sílaba</i> (ej. <b>CIE</b>-LO, <b>AU</b>-TO, <b>CUA</b>-TRO).<br>
+                    • <b>Hiato:</b> Dos vocales seguidas que se separan en <i>sílabas distintas</i> (ej. <b>TE-A</b>-TRO, <b>MA-ÍZ</b>, <b>RÍ-O</b>).
+                </div>
+                <div class="lesson-box">
+                    <strong>🎵 Palabras Agudas, Graves y Esdrújulas:</strong><br>
+                    • <b>Agudas:</b> Llevan la fuerza en la última sílaba (<i>CA-FÉ, CA-MIÓN, RE-LOJ</i>).<br>
+                    • <b>Graves (Llanas):</b> Fuerza en la penúltima sílaba (<i>ÁR-BOL, LÁ-PIZ, CA-SA</i>).<br>
+                    • <b>Esdrújulas:</b> Fuerza en la antepenúltima sílaba. ¡Siempre llevan tilde! (<i>MÚ-SI-CA, PÁ-JA-RO, BRÚ-JU-LA</i>).
+                </div>
+                <div class="lesson-box">
+                    <strong>🍕 Fracciones, Geometría y Ciencias:</strong><br>
+                    • <b>1/2 (Un medio):</b> La mitad de un todo. <b>1/4:</b> Un cuarto.<br>
+                    • <b>Polígonos:</b> Triángulo (3 lados), Cuadrado (4), Pentágono (5), Hexágono (6), Octágono (8).<br>
+                    • <b>Animales:</b> Herbívoros (comen plantas), Carnívoros (carne), Omnívoros (ambos).
+                </div>
+                <div class="lesson-box" style="border-left-color: #00f2fe;">
+                    <strong>📍 Plano Cartesiano y Coordenadas (X, Y):</strong><br>
+                    • Toda coordenada se escribe como <b>(X, Y)</b>.<br>
+                    • <b>Primero la X (Horizontal):</b> Si es positivo (+) vas a la <i>derecha</i> del centro (0,0); si es negativo (-) vas a la <i>izquierda</i>.<br>
+                    • <b>Segundo la Y (Vertical):</b> Si es positivo (+) subes hacia <i>arriba</i>; si es negativo (-) bajas hacia <i>abajo</i>.<br>
+                    • <b>Cuadrantes:</b> <b>I</b> (+,+), <b>II</b> (-,+), <b>III</b> (-,-) y <b>IV</b> (+,-).
+                </div>
+            </div>
+
+            <!-- Pestaña 2: Álbum de Trofeos y Analíticas -->
+            <div id="tab-content-logros" class="hidden">
+                <div class="lesson-box" id="analytics-summary-box" style="border-left-color: var(--primary);"></div>
+                <div class="shop-grid" id="achievements-grid"></div>
+            </div>
+
+            <!-- Pestaña 3: Creador de Preguntas para Profesores y Padres -->
+            <div id="tab-content-profesor" class="hidden">
+                <div class="lesson-box">
+                    <strong>👩‍🏫 Crea tus propias preguntas educativas:</strong><br>
+                    Agrega preguntas personalizadas para tu clase o repaso en casa. Luego selecciona el mundo <b>"Retos del Profe / Casa"</b> en el menú.
+                </div>
+                <div class="custom-form">
+                    <input type="text" id="custom-q-prompt" class="custom-input" placeholder="Pregunta (Ej: ¿Cuál es el río más largo de Colombia?)">
+                    <input type="text" id="custom-q-correct" class="custom-input" placeholder="Respuesta Correcta (Ej: Río Magdalena)">
+                    <input type="text" id="custom-q-wrong1" class="custom-input" placeholder="Distractor Incorrecto 1 (Ej: Río Nilo)">
+                    <input type="text" id="custom-q-wrong2" class="custom-input" placeholder="Distractor Incorrecto 2 (Ej: Río Danubio)">
+                    <input type="text" id="custom-q-explain" class="custom-input" placeholder="Explicación pedagógica al responder">
+                    <button class="cta-btn" id="add-custom-q-btn" style="padding: 9px; font-size: 0.9rem;">➕ Guardar Pregunta en el Banco</button>
+                </div>
+                <div id="custom-questions-list" style="max-height: 120px; overflow-y: auto; text-align: left; font-size: 0.75rem;"></div>
+            </div>
+
+            <!-- Pestaña 4: Licencia Open Source MIT -->
+            <div id="tab-content-licencia" class="hidden">
+                <div class="lesson-box" style="border-left-color: var(--success);">
+                    <strong>⚖️ Software Libre y Educativo (Open Source):</strong><br>
+                    Este videojuego está liberado bajo la licencia internacional <b>MIT License</b>. Cualquier escuela, docente, estudiante o desarrollador puede usarlo, estudiarlo, modificarlo y compartirlo libremente sin conexión a internet.
+                </div>
+                <div class="license-pre">MIT License
+
+Copyright (c) 2026 Súper Serpiente Sabia - Proyecto Educativo Abierto
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</div>
+                <button class="secondary-btn" id="copy-license-btn">📋 Copiar Texto de Licencia MIT</button>
+            </div>
+
+            <button class="cta-btn" id="close-guide-btn">👍 ¡VOLVER A LA AVENTURA!</button>
+        </div>
+    </div>
+
+    <!-- MODAL 4: FIN DE LA PARTIDA Y REPORTE PEDAGÓGICO -->
+    <div class="modal-overlay hidden" id="gameover-modal">
+        <div class="modal-card">
+            <div style="font-size: 3.2rem; margin-bottom: 2px;" id="medal-icon">🏆</div>
+            <div class="modal-title" id="gameover-title">¡Gran Aventura!</div>
+            <div class="modal-subtitle" id="gameover-stats"></div>
+
+            <div class="lesson-box" id="last-review-box">
+                <strong>🧠 Repaso de Sabiduría:</strong><br>
+                <span id="review-detail">¡Cada partida hace crecer tu mente!</span>
+            </div>
+
+            <button class="cta-btn" id="retry-btn">🔄 Jugar Otra Vez</button>
+            <button class="secondary-btn" id="change-topic-btn">🌍 Cambiar de Mundo o Modo</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(() => {
+    /* =========================================================================
+       1. SINTETIZADOR MUSICAL WEB AUDIO API + NARRADOR DE VOZ OFFLINE
+       ========================================================================= */
+    class SoundAndVoiceEngine {
+        constructor() {
+            this.enabled = true;
+            this.ctx = null;
+        }
+
+        init() {
+            if (!this.ctx) {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) this.ctx = new AudioCtx();
+            }
+            if (this.ctx && this.ctx.state === 'suspended') {
+                this.ctx.resume();
+            }
+        }
+
+        playTone(freq, duration, type = 'sine', delay = 0, vol = 0.14) {
+            if (!this.enabled) return;
+            this.init();
+            if (!this.ctx) return;
+
+            const start = this.ctx.currentTime + delay;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, start);
+
+            gain.gain.setValueAtTime(vol, start);
+            gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.start(start);
+            osc.stop(start + duration);
+        }
+
+        eatGood() {
+            this.playTone(523.25, 0.11, 'triangle', 0, 0.18);
+            this.playTone(659.25, 0.11, 'triangle', 0.07, 0.18);
+            this.playTone(783.99, 0.18, 'sine', 0.14, 0.2);
+            this.playTone(1046.50, 0.22, 'sine', 0.22, 0.16);
+        }
+
+        eatWrong() {
+            this.playTone(230, 0.18, 'sawtooth', 0, 0.14);
+            this.playTone(165, 0.28, 'sawtooth', 0.14, 0.14);
+        }
+
+        powerUp() {
+            [440, 554.37, 659.25, 880].forEach((f, i) => {
+                this.playTone(f, 0.12, 'sine', i * 0.06, 0.16);
+            });
+        }
+
+        bounceWall() {
+            this.playTone(330, 0.08, 'sine', 0, 0.1);
+            this.playTone(440, 0.09, 'sine', 0.05, 0.09);
+        }
+
+        levelUp() {
+            [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, idx) => {
+                this.playTone(f, 0.16, 'triangle', idx * 0.08, 0.19);
+            });
+        }
+
+        speak(text) {
+            if (!this.enabled) return;
+            if ('speechSynthesis' in window) {
+                try {
+                    window.speechSynthesis.cancel();
+                    const cleanText = text.replace(/[^\w\sáéíóúÁÉÍÓÚñÑ¿?¡!+\-×÷=,.:]/g, '');
+                    const utter = new SpeechSynthesisUtterance(cleanText);
+                    utter.lang = 'es-ES';
+                    utter.rate = 1.02;
+                    utter.pitch = 1.12;
+                    window.speechSynthesis.speak(utter);
+                } catch (e) {
+                    // Fallback silencioso si el navegador restringe TTS
+                }
+            }
+        }
+    }
+
+    const sfx = new SoundAndVoiceEngine();
+
+    /* =========================================================================
+       2. BASES DE DATOS PEDAGÓGICAS OFFLINE (12 MUNDOS EDUCATIVOS)
+       ========================================================================= */
+    const VOCALES_ABIERTAS = ["A", "E", "O"];
+    const VOCALES_CERRADAS = ["I", "U"];
+    const TODAS_VOCALES = ["A", "E", "I", "O", "U"];
+    const CONSONANTES = ["B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "R", "S", "T", "V", "Z"];
+
+    const DIPTONGOS_DB = [
+        { word: "CIE-LO", explain: "'IE' une vocal cerrada (I) + abierta (E) en una misma sílaba." },
+        { word: "AU-TO", explain: "'AU' une vocal abierta (A) + cerrada (U) en un solo golpe de voz." },
+        { word: "PEI-NE", explain: "'EI' suena unido en la primera sílaba (PEI)." },
+        { word: "HUE-VO", explain: "'UE' forma un diptongo inseparable en HUE-VO." },
+        { word: "PIA-NO", explain: "'IA' se pronuncia junto en la sílaba PIA." },
+        { word: "FUE-GO", explain: "'UE' une la U y la E en la misma sílaba: FUE-GO." },
+        { word: "VIEN-TO", explain: "'IE' permanece unido en la sílaba VIEN." },
+        { word: "CIU-DAD", explain: "'IU' une dos vocales cerradas distintas en CIU." },
+        { word: "CUI-DAR", explain: "'UI' une dos vocales cerradas en la misma sílaba." },
+        { word: "REI-NA", explain: "'EI' une vocal abierta y cerrada en REI-NA." },
+        { word: "CUA-TRO", explain: "'UA' forma diptongo en la sílaba CUA." },
+        { word: "AI-RE", explain: "'AI' une la A y la I en una sola sílaba: AI-RE." },
+        { word: "JAULA", display: "JAU-LA", explain: "'AU' se pronuncia unido en la sílaba JAU." },
+        { word: "BOI-NA", explain: "'OI' forma diptongo en la sílaba BOI." }
+    ];
+
+    const HIATOS_DB = [
+        { word: "MA-ÍZ", explain: "La 'Í' lleva tilde, cobra fuerza y se separa de la A: MA-ÍZ." },
+        { word: "PA-ÍS", explain: "La 'Í' con tilde rompe el diptongo y forma hiato: PA-ÍS." },
+        { word: "TE-A-TRO", explain: "E y A son dos vocales abiertas fuertes, ¡van en sílabas separadas!" },
+        { word: "PO-E-TA", explain: "O y E son vocales abiertas fuertes y se separan: PO-E-TA." },
+        { word: "BA-ÚL", explain: "La 'Ú' tiene tilde y se separa de la A: BA-ÚL." },
+        { word: "BÚ-HO", explain: "La H muda no impide el hiato entre Ú con tilde y O: BÚ-HO." },
+        { word: "RÍ-O", explain: "La 'Í' tónica lleva tilde y se separa de la O: RÍ-O." },
+        { word: "CA-NO-A", explain: "O y A son dos vocales abiertas fuertes, se separan: CA-NO-A." },
+        { word: "LE-ÓN", explain: "E y Ó son vocales abiertas y van en sílabas distintas: LE-ÓN." },
+        { word: "GRÚ-A", explain: "La 'Ú' con tilde se separa de la A: GRÚ-A." },
+        { word: "TO-A-LLA", explain: "O y A son vocales abiertas y se separan: TO-A-LLA." },
+        { word: "SAN-DÍ-A", explain: "La 'Í' con tilde se separa de la vocal abierta A: SAN-DÍ-A." },
+        { word: "A-É-RE-O", explain: "Las vocales abiertas A, É, E, O se separan en sílabas." },
+        { word: "O-CÉ-A-NO", explain: "É y A son vocales abiertas y se separan en sílabas distintas." }
+    ];
+
+    const ACENTUACION_DB = [
+        { word: "CA-FÉ", type: "AGUDA", explain: "CA-FÉ es AGUDA porque su sílaba tónica es la última (FÉ) y termina en vocal." },
+        { word: "CA-MIÓN", type: "AGUDA", explain: "CA-MIÓN es AGUDA: lleva la fuerza en la última sílaba y termina en N." },
+        { word: "CO-RA-ZÓN", type: "AGUDA", explain: "CO-RA-ZÓN es AGUDA porque suena más fuerte en la última sílaba (ZÓN)." },
+        { word: "RE-LOJ", type: "AGUDA", explain: "RE-LOJ es AGUDA sin tilde porque suena fuerte al final y termina en J." },
+        { word: "ÁR-BOL", type: "GRAVE", explain: "ÁR-BOL es GRAVE: lleva la fuerza en la penúltima sílaba (ÁR)." },
+        { word: "LÁ-PIZ", type: "GRAVE", explain: "LÁ-PIZ es GRAVE porque su sílaba tónica es la penúltima (LÁ) y termina en Z." },
+        { word: "AZÚ-CAR", type: "GRAVE", explain: "A-ZÚ-CAR es GRAVE: la fuerza está en la penúltima sílaba (ZÚ)." },
+        { word: "ME-SA", type: "GRAVE", explain: "ME-SA es GRAVE sin tilde porque la fuerza va en ME y termina en vocal." },
+        { word: "MÚ-SI-CA", type: "ESDRÚJULA", explain: "MÚ-SI-CA es ESDRÚJULA: lleva el acento en la antepenúltima sílaba." },
+        { word: "PÁ-JA-RO", type: "ESDRÚJULA", explain: "PÁ-JA-RO es ESDRÚJULA. ¡Todas las esdrújulas llevan tilde!" },
+        { word: "BRÚ-JU-LA", type: "ESDRÚJULA", explain: "BRÚ-JU-LA es ESDRÚJULA porque la fuerza recae en la antepenúltima sílaba." },
+        { word: "PLÁ-TA-NO", type: "ESDRÚJULA", explain: "PLÁ-TA-NO es ESDRÚJULA con acento en la antepenúltima sílaba (PLÁ)." }
+    ];
+
+    const SINONIMOS_ANTONIMOS_DB = [
+        { mode: "SINÓNIMO", base: "ALEGRE", good: "FELIZ", bads: ["TRISTE", "ENOJADO"], explain: "FELIZ y ALEGRE son sinónimos porque significan lo mismo." },
+        { mode: "SINÓNIMO", base: "VELOZ", good: "RÁPIDO", bads: ["LENTO", "PESADO"], explain: "RÁPIDO es sinónimo de VELOZ." },
+        { mode: "SINÓNIMO", base: "BONITO", good: "HERMOSO", bads: ["FEO", "OSCURO"], explain: "HERMOSO y BONITO tienen significados iguales." },
+        { mode: "SINÓNIMO", base: "HABLAR", good: "DIALOGAR", bads: ["CALLAR", "DORMIR"], explain: "DIALOGAR es sinónimo de HABLAR." },
+        { mode: "SINÓNIMO", base: "GIGANTE", good: "ENORME", bads: ["PEQUEÑO", "DIMINUTO"], explain: "ENORME es sinónimo de GIGANTE." },
+        { mode: "ANTÓNIMO", base: "DÍA", good: "NOCHE", bads: ["SOL", "LUZ"], explain: "NOCHE es el antónimo (opuesto) de DÍA." },
+        { mode: "ANTÓNIMO", base: "FRÍO", good: "CALIENTE", bads: ["HELADO", "FRESCO"], explain: "CALIENTE es lo opuesto (antónimo) de FRÍO." },
+        { mode: "ANTÓNIMO", base: "SUBIR", good: "BAJAR", bads: ["ESCALAR", "TREPAR"], explain: "BAJAR es la acción contraria (antónimo) a SUBIR." },
+        { mode: "ANTÓNIMO", base: "VALIENTE", good: "MIEDOSO", bads: ["AUDAZ", "FUERTE"], explain: "MIEDOSO es el antónimo de VALIENTE." },
+        { mode: "ANTÓNIMO", base: "LLENO", good: "VACÍO", bads: ["COMPLETO", "REPLETO"], explain: "VACÍO es el opuesto de LLENO." }
+    ];
+
+    const FRACCIONES_GEO_DB = [
+        { q: "🍕 ¿Qué fracción representa LA MITAD?", good: "1/2", bads: ["1/4", "3/4"], explain: "1/2 (un medio) divide una unidad en 2 partes iguales." },
+        { q: "🍕 ¿Qué fracción es UN CUARTO?", good: "1/4", bads: ["1/2", "2/3"], explain: "1/4 representa una de cuatro partes iguales." },
+        { q: "📐 ¿Cuántos lados tiene un PENTÁGONO?", good: "5 LADOS", bads: ["6 LADOS", "4 LADOS"], explain: "'Penta' significa cinco: el pentágono tiene 5 lados." },
+        { q: "📐 ¿Cuántos lados tiene un HEXÁGONO?", good: "6 LADOS", bads: ["5 LADOS", "8 LADOS"], explain: "El hexágono es un polígono de 6 lados." },
+        { q: "📐 ¿Cuántos lados tiene un TRIÁNGULO?", good: "3 LADOS", bads: ["4 LADOS", "5 LADOS"], explain: "Todo triángulo tiene exactamente 3 lados y 3 vértices." },
+        { q: "📐 ¿Cuántos lados tiene un OCTÁGONO?", good: "8 LADOS", bads: ["6 LADOS", "10 LADOS"], explain: "Un octágono tiene 8 lados iguales." },
+        { q: "🏛️ ¿Cuánto vale el número romano X?", good: "10", bads: ["5", "50"], explain: "En números romanos: I=1, V=5, X=10, L=50, C=100." },
+        { q: "🏛️ ¿Cuánto vale el número romano V?", good: "5", bads: ["10", "4"], explain: "La letra romana V representa el número 5." },
+        { q: "🏛️ ¿Cómo se escribe 15 en romano?", good: "XV", bads: ["VX", "XII"], explain: "X (10) + V (5) = XV (15)." },
+        { q: "🔢 ¡Come el número PAR!", good: "24", bads: ["17", "31"], explain: "24 termina en 4, por lo tanto se puede dividir exactamente entre 2 (es PAR)." },
+        { q: "🔢 ¡Come el número IMPAR!", good: "27", bads: ["18", "40"], explain: "27 termina en 7, por lo que es un número IMPAR." }
+    ];
+
+    const CIENCIAS_DB = [
+        { q: "🦁 El león se alimenta de carne, es...", good: "CARNÍVORO", bads: ["HERBÍVORO", "ANFIBIO"], explain: "Los animales que comen carne se llaman carnívoros." },
+        { q: "🐮 La vaca come hierba y plantas, es...", good: "HERBÍVORO", bads: ["CARNÍVORO", "INSECTO"], explain: "Los herbívoros se alimentan exclusivamente de vegetales." },
+        { q: "🐸 ¿Qué animal es un ANFIBIO?", good: "RANA", bads: ["ÁGUILA", "PERRO"], explain: "La rana es un anfibio: sufre metamorfosis y vive en agua y tierra." },
+        { q: "🦴 ¿Cuál de estos es un VERTEBRADO?", good: "DELFÍN", bads: ["MEDUSA", "GUSANO"], explain: "El delfín es un mamífero vertebrado porque tiene columna vertebral." },
+        { q: "🦋 ¿Cuál es un animal INVERTEBRADO?", good: "ABEJA", bads: ["CABALLO", "TIBURÓN"], explain: "La abeja es un insecto invertebrado (no tiene esqueleto interno)." },
+        { q: "🪐 ¿Cuál es el 'Planeta Rojo'?", good: "MARTE", bads: ["JÚPITER", "VENUS"], explain: "Marte es llamado el Planeta Rojo por el óxido de hierro en su superficie." },
+        { q: "🪐 ¿Cuál es el planeta más GRANDE?", good: "JÚPITER", bads: ["MERCURIO", "MARTE"], explain: "Júpiter es el gigante gaseoso más grande de nuestro Sistema Solar." },
+        { q: "💧 El hielo es agua en estado...", good: "SÓLIDO", bads: ["GASEOSO", "LÍQUIDO"], explain: "Al congelarse a 0°C, el agua pasa a estado sólido (hielo)." },
+        { q: "🌱 ¿Por dónde absorben agua las plantas?", good: "RAÍZ", bads: ["FLOR", "SEMILLA"], explain: "Las raíces fijan la planta al suelo y absorben agua y minerales." },
+        { q: "☀️ ¿Cuál es la estrella de nuestro sistema?", good: "EL SOL", bads: ["LA LUNA", "SATURNO"], explain: "El Sol es la única estrella de nuestro Sistema Solar." }
+    ];
+
+    const GEOGRAFIA_DB = [
+        { q: "🇨🇴 ¿Cuál es la capital de COLOMBIA?", good: "BOGOTÁ", bads: ["LIMA", "QUITO"], explain: "Bogotá es la capital de la República de Colombia." },
+        { q: "🇲🇽 ¿Cuál es la capital de MÉXICO?", good: "CD. DE MÉXICO", bads: ["MADRID", "SANTIAGO"], explain: "Ciudad de México es la capital de México." },
+        { q: "🇦🇷 ¿Cuál es la capital de ARGENTINA?", good: "BUENOS AIRES", bads: ["MONTEVIDEO", "LA PAZ"], explain: "Buenos Aires es la capital de Argentina." },
+        { q: "🇪🇸 ¿Cuál es la capital de ESPAÑA?", good: "MADRID", bads: ["PARÍS", "ROMA"], explain: "Madrid es la capital de España, en Europa." },
+        { q: "🇵🇪 ¿Cuál es la capital de PERÚ?", good: "LIMA", bads: ["BOGOTÁ", "CARACAS"], explain: "Lima es la capital histórica del Perú." },
+        { q: "🇫🇷 ¿Cuál es la capital de FRANCIA?", good: "PARÍS", bads: ["LONDRES", "BERLÍN"], explain: "París, famosa por la Torre Eiffel, es la capital de Francia." },
+        { q: "🌊 ¿Cuál es el océano más GRANDE?", good: "PACÍFICO", bads: ["ÁRTICO", "ÍNDICO"], explain: "El Océano Pacífico es el más extenso y profundo de la Tierra." },
+        { q: "🗺️ ¿En qué continente está EGIPTO?", good: "ÁFRICA", bads: ["AMÉRICA", "OCEANÍA"], explain: "Egipto y el río Nilo se encuentran en el noreste de África." },
+        { q: "🏔️ ¿Dónde está la cordillera de los ANDES?", good: "SURAMÉRICA", bads: ["EUROPA", "ASIA"], explain: "Los Andes recorren toda América del Sur." }
+    ];
+
+    const INGLES_DB = [
+        { q: "🇬🇧 ¿Cómo se dice ROJO en inglés?", good: "RED", bads: ["BLUE", "GREEN"], explain: "RED significa Rojo (Blue = Azul, Green = Verde)." },
+        { q: "🇬🇧 ¿Cómo se dice AMARILLO en inglés?", good: "YELLOW", bads: ["BLACK", "WHITE"], explain: "YELLOW significa Amarillo en inglés." },
+        { q: "🇬🇧 ¿Qué animal es 'DOG'?", good: "PERRO", bads: ["GATO", "PÁJARO"], explain: "DOG significa Perro (Cat = Gato, Bird = Pájaro)." },
+        { q: "🇬🇧 ¿Cómo se dice GATO en inglés?", good: "CAT", bads: ["FISH", "LION"], explain: "CAT significa Gato en inglés." },
+        { q: "🇬🇧 ¿Qué número es 'TWELVE'?", good: "12", bads: ["20", "2"], explain: "TWELVE es el número 12 (Twenty = 20, Two = 2)." },
+        { q: "🇬🇧 ¿Cómo se dice MANZANA en inglés?", good: "APPLE", bads: ["ORANGE", "MILK"], explain: "APPLE significa Manzana en inglés." },
+        { q: "🇬🇧 ¿Qué significa 'WATER'?", good: "AGUA", bads: ["FUEGO", "TIERRA"], explain: "WATER significa Agua en inglés." },
+        { q: "🇬🇧 ¿Cómo se dice SOL en inglés?", good: "SUN", bads: ["MOON", "STAR"], explain: "SUN es Sol (Moon = Luna, Star = Estrella)." },
+        { q: "🇬🇧 ¿Qué número es 'SEVEN'?", good: "7", bads: ["6", "11"], explain: "SEVEN es el número 7 en inglés." }
+    ];
+
+    /* Banco de preguntas personalizables por el docente o padres */
+    const customQuestionsBank = [
+        {
+            prompt: "👩‍🏫 ¿Cuántos minutos tiene 1 hora?",
+            correctValue: "60 MIN",
+            wrongValues: ["30 MIN", "100 MIN"],
+            explanation: "¡Muy bien! Una hora completa equivale exactamente a 60 minutos."
+        },
+        {
+            prompt: "👩‍🏫 ¿Cuántos días tiene una semana?",
+            correctValue: "7 DÍAS",
+            wrongValues: ["5 DÍAS", "10 DÍAS"],
+            explanation: "De lunes a domingo hay 7 días en una semana."
+        }
+    ];
+
+    function pickRandom(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function pickMultipleUnique(arr, count, excludeVal) {
+        const filtered = arr.filter(item => item !== excludeVal);
+        const copy = [...filtered];
+        const out = [];
+        while (out.length < count && copy.length > 0) {
+            const idx = Math.floor(Math.random() * copy.length);
+            out.push(copy.splice(idx, 1)[0]);
+        }
+        return out;
+    }
+
+    /* =========================================================================
+       3. GENERADOR INTELIGENTE DE DESAFÍOS (13 MUNDOS + PLANO CARTESIANO)
+       ========================================================================= */
+    function generateEducationalChallenge(topicMode, level, isBoss = false) {
+        // Sistema Inteligente de Repaso Espaciado: si hay preguntas falladas pendientes y no es jefe, 25% de probabilidad de repasarlas
+        if (!isBoss && state.missedQuestions.length > 0 && Math.random() < 0.28) {
+            const reviewItem = state.missedQuestions.shift();
+            return {
+                ...reviewItem,
+                badge: "🧠 REPASO INTELIGENTE",
+                hint: "💡 ¡Oportunidad de revancha! " + (reviewItem.hint || "")
+            };
+        }
+
+        let activeTopic = topicMode;
+        if (topicMode === 'todo') {
+            activeTopic = pickRandom([
+                'cartesiano', 'vocales', 'diptongos', 'acentuacion', 'sinonimos',
+                'sumas_restas', 'multiplicaciones', 'fracciones_geo',
+                'ciencias', 'geografia', 'ingles'
+            ]);
+        }
+
+        const bossPrefix = isBoss ? "👑 RETO JEFE • " : "";
+
+        // MUNDO ESPECIAL: PLANO CARTESIANO INTERACTIVO (X, Y) CON PROTECCIÓN DE COLISIÓN
+        if (activeTopic === 'cartesiano') {
+            const maxCoord = state.worldType === 'expandido' ? 6 : 4;
+            const snakeCart = worldToCartesian(state.head.x, state.head.y);
+            const possibleCoords = [];
+
+            for (let cx = -maxCoord; cx <= maxCoord; cx++) {
+                for (let cy = -maxCoord; cy <= maxCoord; cy++) {
+                    if (cx === 0 && cy === 0) continue; // Evitar tapar el origen (0,0)
+                    // Evitar que una coordenada aparezca encima o muy cerca de la cabeza actual de la serpiente
+                    if (Math.hypot(cx - snakeCart.x, cy - snakeCart.y) < 1.8) continue;
+                    possibleCoords.push({ x: cx, y: cy });
+                }
+            }
+
+            const chosen = [];
+            let safetyTries = 0;
+            while (chosen.length < 3 && safetyTries < 200) {
+                safetyTries++;
+                const candidate = pickRandom(possibleCoords);
+                if (!candidate) break;
+                const minSep = safetyTries < 100 ? 2.6 : 1.6;
+                if (chosen.every(c => Math.hypot(c.x - candidate.x, c.y - candidate.y) >= minSep)) {
+                    chosen.push(candidate);
+                }
+            }
+
+            // Respaldo garantizado en caso extremo
+            while (chosen.length < 3) {
+                chosen.push({ x: chosen.length + 1, y: chosen.length === 1 ? -2 : 2 });
+            }
+
+            const target = chosen[0];
+            const wrong1 = chosen[1];
+            const wrong2 = chosen[2];
+
+            const getQuadrantName = (x, y) => {
+                if (x > 0 && y > 0) return "Cuadrante I (+, +)";
+                if (x < 0 && y > 0) return "Cuadrante II (-, +)";
+                if (x < 0 && y < 0) return "Cuadrante III (-, -)";
+                if (x > 0 && y < 0) return "Cuadrante IV (+, -)";
+                if (x === 0) return "Sobre el Eje Vertical Y";
+                return "Sobre el Eje Horizontal X";
+            };
+
+            const dirX = target.x > 0 ? `${target.x} a la DERECHA` : target.x < 0 ? `${Math.abs(target.x)} a la IZQUIERDA` : `0 en X (Centro)`;
+            const dirY = target.y > 0 ? `${target.y} hacia ARRIBA` : target.y < 0 ? `${Math.abs(target.y)} hacia ABAJO` : `0 en Y (Centro)`;
+
+            const icons = ["💎", "⭐", "🍎"];
+
+            return {
+                isCartesian: true,
+                badge: bossPrefix + `PLANO CARTESIANO • ${getQuadrantName(target.x, target.y)}`,
+                prompt: `📍 ¡Come el objeto en (${target.x}, ${target.y})!`,
+                hint: `Desde (0,0): ve ${dirX} en X, y ${dirY} en Y`,
+                correctValue: `(${target.x}, ${target.y})`,
+                wrongValues: [`(${wrong1.x}, ${wrong1.y})`, `(${wrong2.x}, ${wrong2.y})`],
+                cartesianPoints: [
+                    { coordX: target.x, coordY: target.y, isCorrect: true, icon: icons[0], label: `(${target.x},${target.y})` },
+                    { coordX: wrong1.x, coordY: wrong1.y, isCorrect: false, icon: icons[1], label: `(${wrong1.x},${wrong1.y})` },
+                    { coordX: wrong2.x, coordY: wrong2.y, isCorrect: false, icon: icons[2], label: `(${wrong2.x},${wrong2.y})` }
+                ],
+                explanation: `¡Exacto! El punto (${target.x}, ${target.y}) se ubica moviéndose ${dirX} en el eje X y ${dirY} en el eje Y.`
+            };
+        }
+
+        // MUNDO 1: VOCALES Y CONSONANTES
+        if (activeTopic === 'vocales') {
+            const subMode = Math.floor(Math.random() * 4);
+            if (subMode === 0) {
+                const good = pickRandom(TODAS_VOCALES);
+                const bads = pickMultipleUnique(CONSONANTES, 2, good);
+                return {
+                    badge: bossPrefix + "LENGUAJE • VOCALES",
+                    prompt: "🐍 ¡Come una VOCAL!",
+                    hint: "Las vocales son A, E, I, O, U",
+                    correctValue: good,
+                    wrongValues: bads,
+                    explanation: `¡Sí! La "${good}" es una vocal. Las consonantes eran ${bads.join(" y ")}.`
+                };
+            } else if (subMode === 1) {
+                const good = pickRandom(CONSONANTES);
+                const bads = pickMultipleUnique(TODAS_VOCALES, 2, good);
+                return {
+                    badge: bossPrefix + "LENGUAJE • CONSONANTES",
+                    prompt: "🐍 ¡Come una CONSONANTE!",
+                    hint: "Evita las vocales (A, E, I, O, U)",
+                    correctValue: good,
+                    wrongValues: bads,
+                    explanation: `¡Genial! "${good}" es una consonante.`
+                };
+            } else if (subMode === 2) {
+                const good = pickRandom(VOCALES_ABIERTAS);
+                const bads = [...VOCALES_CERRADAS];
+                return {
+                    badge: bossPrefix + "FONÉTICA • VOCAL ABIERTA",
+                    prompt: "🐍 ¡Come una VOCAL ABIERTA!",
+                    hint: "Las vocales abiertas (fuertes) son A, E, O",
+                    correctValue: good,
+                    wrongValues: bads,
+                    explanation: `¡Bravo! "${good}" es una vocal abierta (fuerte). I, U son cerradas.`
+                };
+            } else {
+                const good = pickRandom(VOCALES_CERRADAS);
+                const bads = pickMultipleUnique(VOCALES_ABIERTAS, 2, good);
+                return {
+                    badge: bossPrefix + "FONÉTICA • VOCAL CERRADA",
+                    prompt: "🐍 ¡Come una VOCAL CERRADA!",
+                    hint: "Las vocales cerradas (débiles) son I, U",
+                    correctValue: good,
+                    wrongValues: bads,
+                    explanation: `¡Excelente! "${good}" es una vocal cerrada (débil).`
+                };
+            }
+        }
+
+        // MUNDO 2: DIPTONGOS E HIATOS
+        if (activeTopic === 'diptongos') {
+            const askDiptongo = Math.random() < 0.5;
+            if (askDiptongo) {
+                const goodObj = pickRandom(DIPTONGOS_DB);
+                const badObjs = pickMultipleUnique(HIATOS_DB, 2, null);
+                const goodLabel = goodObj.display || goodObj.word;
+                return {
+                    badge: bossPrefix + "SÍLABAS • DIPTONGO",
+                    prompt: "🔗 ¡Come la palabra con DIPTONGO!",
+                    hint: "Dos vocales que suenan unidas en la misma sílaba",
+                    correctValue: goodLabel,
+                    wrongValues: badObjs.map(b => b.display || b.word),
+                    explanation: `¡Correcto! En ${goodLabel}, ${goodObj.explain}`
+                };
+            } else {
+                const goodObj = pickRandom(HIATOS_DB);
+                const badObjs = pickMultipleUnique(DIPTONGOS_DB, 2, null);
+                const goodLabel = goodObj.display || goodObj.word;
+                return {
+                    badge: bossPrefix + "SÍLABAS • HIATO",
+                    prompt: "✂️ ¡Come la palabra con HIATO!",
+                    hint: "Dos vocales seguidas que se separan en sílabas distintas",
+                    correctValue: goodLabel,
+                    wrongValues: badObjs.map(b => b.display || b.word),
+                    explanation: `¡Súper! En ${goodLabel}, ${goodObj.explain}`
+                };
+            }
+        }
+
+        // MUNDO 3: AGUDAS, GRAVES Y ESDRÚJULAS
+        if (activeTopic === 'acentuacion') {
+            const targetType = pickRandom(["AGUDA", "GRAVE", "ESDRÚJULA"]);
+            const matching = ACENTUACION_DB.filter(item => item.type === targetType);
+            const others = ACENTUACION_DB.filter(item => item.type !== targetType);
+            const goodObj = pickRandom(matching);
+            const badObjs = pickMultipleUnique(others, 2, null);
+            const hintsMap = {
+                "AGUDA": "Fuerza de voz en la ÚLTIMA sílaba",
+                "GRAVE": "Fuerza de voz en la PENÚLTIMA sílaba",
+                "ESDRÚJULA": "Fuerza en la ANTEPENÚLTIMA sílaba (siempre con tilde)"
+            };
+            return {
+                badge: bossPrefix + `ACENTUACIÓN • ${targetType}`,
+                prompt: `🎵 ¡Come la palabra ${targetType}!`,
+                hint: hintsMap[targetType],
+                correctValue: goodObj.word,
+                wrongValues: badObjs.map(b => b.word),
+                explanation: goodObj.explain
+            };
+        }
+
+        // MUNDO 4: SINÓNIMOS Y ANTÓNIMOS
+        if (activeTopic === 'sinonimos') {
+            const item = pickRandom(SINONIMOS_ANTONIMOS_DB);
+            return {
+                badge: bossPrefix + `VOCABULARIO • ${item.mode}`,
+                prompt: `🔄 ¿Cuál es el ${item.mode} de "${item.base}"?`,
+                hint: item.mode === "SINÓNIMO" ? "Busca la palabra que significa lo MISMO" : "Busca la palabra que significa lo OPUESTO",
+                correctValue: item.good,
+                wrongValues: item.bads,
+                explanation: item.explain
+            };
+        }
+
+        // MUNDO 5: SUMAS Y RESTAS
+        if (activeTopic === 'sumas_restas') {
+            const isAddition = Math.random() < 0.55;
+            const maxNum = Math.min(40, 10 + level * 4 + (isBoss ? 12 : 0));
+            let a, b, ans, opSymbol;
+            if (isAddition) {
+                a = Math.floor(Math.random() * maxNum) + 3;
+                b = Math.floor(Math.random() * maxNum) + 2;
+                ans = a + b;
+                opSymbol = "+";
+            } else {
+                a = Math.floor(Math.random() * maxNum) + 8;
+                b = Math.floor(Math.random() * (a - 2)) + 1;
+                ans = a - b;
+                opSymbol = "-";
+            }
+
+            const wrongs = new Set();
+            while (wrongs.size < 2) {
+                const delta = (Math.floor(Math.random() * 5) + 1) * (Math.random() < 0.5 ? 1 : -1);
+                const candidate = ans + delta;
+                if (candidate >= 0 && candidate !== ans) wrongs.add(String(candidate));
+            }
+
+            return {
+                badge: bossPrefix + (isAddition ? "MATEMÁTICAS • SUMA" : "MATEMÁTICAS • RESTA"),
+                prompt: `🧮 ¿Cuánto es ${a} ${opSymbol} ${b}?`,
+                hint: isAddition ? `Suma ${a} más ${b}` : `A ${a} réstale ${b}`,
+                correctValue: String(ans),
+                wrongValues: Array.from(wrongs),
+                explanation: `¡Cálculo perfecto! ${a} ${opSymbol} ${b} = ${ans}.`
+            };
+        }
+
+        // MUNDO 6: MULTIPLICACIONES Y DIVISIONES EXACTAS
+        if (activeTopic === 'multiplicaciones') {
+            const isDivision = level >= 2 && Math.random() < 0.35;
+            const maxFactor = Math.min(11, 5 + Math.floor(level / 2));
+            const f1 = Math.floor(Math.random() * (maxFactor - 1)) + 2;
+            const f2 = Math.floor(Math.random() * 8) + 2;
+            const prod = f1 * f2;
+
+            if (!isDivision) {
+                const wrongProds = new Set();
+                while (wrongProds.size < 2) {
+                    const offset = pickRandom([-f1, f1, -f2, f2, 2, -2, 3, -3]);
+                    const candidate = prod + offset;
+                    if (candidate > 0 && candidate !== prod) wrongProds.add(String(candidate));
+                }
+                return {
+                    badge: bossPrefix + "MATEMÁTICAS • MULTIPLICACIÓN",
+                    prompt: `✖️ ¿Cuánto es ${f1} × ${f2}?`,
+                    hint: `Equivale a sumar ${f1} veces el número ${f2}`,
+                    correctValue: String(prod),
+                    wrongValues: Array.from(wrongProds),
+                    explanation: `¡Brillante! ${f1} × ${f2} = ${prod}.`
+                };
+            } else {
+                const wrongQuots = new Set();
+                while (wrongQuots.size < 2) {
+                    const candidate = f2 + pickRandom([-2, -1, 1, 2, 3]);
+                    if (candidate > 0 && candidate !== f2) wrongQuots.add(String(candidate));
+                }
+                return {
+                    badge: bossPrefix + "MATEMÁTICAS • DIVISIÓN",
+                    prompt: `➗ ¿Cuánto es ${prod} ÷ ${f1}?`,
+                    hint: `¿Qué número multiplicado por ${f1} da ${prod}?`,
+                    correctValue: String(f2),
+                    wrongValues: Array.from(wrongQuots),
+                    explanation: `¡Exacto! ${prod} ÷ ${f1} = ${f2} porque ${f1} × ${f2} = ${prod}.`
+                };
+            }
+        }
+
+        // MUNDO 7: FRACCIONES, GEOMETRÍA Y ROMANOS
+        if (activeTopic === 'fracciones_geo') {
+            const item = pickRandom(FRACCIONES_GEO_DB);
+            return {
+                badge: bossPrefix + "GEOMETRÍA Y FRACCIONES",
+                prompt: item.q,
+                hint: "Observa con atención la pista geométrica o numérica",
+                correctValue: item.good,
+                wrongValues: item.bads,
+                explanation: item.explain
+            };
+        }
+
+        // MUNDO 8: CIENCIAS Y NATURALEZA
+        if (activeTopic === 'ciencias') {
+            const item = pickRandom(CIENCIAS_DB);
+            return {
+                badge: bossPrefix + "CIENCIAS NATURALES",
+                prompt: item.q,
+                hint: "Piensa en la naturaleza, los animales y el universo",
+                correctValue: item.good,
+                wrongValues: item.bads,
+                explanation: item.explain
+            };
+        }
+
+        // MUNDO 9: GEOGRAFÍA Y CAPITALES
+        if (activeTopic === 'geografia') {
+            const item = pickRandom(GEOGRAFIA_DB);
+            return {
+                badge: bossPrefix + "GEOGRAFÍA Y CULTURA",
+                prompt: item.q,
+                hint: "Viaja por los países, capitales y continentes",
+                correctValue: item.good,
+                wrongValues: item.bads,
+                explanation: item.explain
+            };
+        }
+
+        // MUNDO 10: ENGLISH FUN
+        if (activeTopic === 'ingles') {
+            const item = pickRandom(INGLES_DB);
+            return {
+                badge: bossPrefix + "ENGLISH FUN • BILINGÜE",
+                prompt: item.q,
+                hint: "Practice your English vocabulary!",
+                correctValue: item.good,
+                wrongValues: item.bads,
+                explanation: item.explain
+            };
+        }
+
+        // MUNDO 11: RETOS PERSONALIZADOS DEL PROFE / CASA
+        if (activeTopic === 'personalizado') {
+            const customItem = pickRandom(customQuestionsBank);
+            return {
+                badge: bossPrefix + "RETOS DEL PROFE",
+                prompt: customItem.prompt,
+                hint: "Pregunta personalizada de tu lista de estudio",
+                correctValue: customItem.correctValue,
+                wrongValues: customItem.wrongValues,
+                explanation: customItem.explanation
+            };
+        }
+    }
+
+    /* =========================================================================
+       4. CATÁLOGO DE SKINS, SOMBREROS Y LOGROS GAMIFICADOS
+       ========================================================================= */
+    const SKINS = {
+        emerald: {
+            name: "🐲 Esmeralda Real", price: 0,
+            headGrad: ['#00ff87', '#00b09b'], bodyPrimary: '#2ecc71', bodySecondary: '#a8ff78', outline: '#0b5345'
+        },
+        cosmic: {
+            name: "🌌 Nebulosa Cósmica", price: 0,
+            headGrad: ['#00f2fe', '#4facfe'], bodyPrimary: '#00c6ff', bodySecondary: '#92fe9d', outline: '#003c8f'
+        },
+        candy: {
+            name: "🍓 Fresa Caramelo", price: 0,
+            headGrad: ['#ff5e62', '#ff9966'], bodyPrimary: '#ff4b82', bodySecondary: '#ffd86f', outline: '#880e4f'
+        },
+        solar: {
+            name: "☀️ Dragón Solar", price: 40,
+            headGrad: ['#ffd700', '#ff6f00'], bodyPrimary: '#ff8f00', bodySecondary: '#ffff8d', outline: '#bf360c'
+        },
+        amethyst: {
+            name: "🔮 Magia Amatista", price: 60,
+            headGrad: ['#e040fb', '#7c4dff'], bodyPrimary: '#9c27b0', bodySecondary: '#ea80fc', outline: '#311b92'
+        },
+        cyber: {
+            name: "🤖 Cyber Neón", price: 80,
+            headGrad: ['#18ffff', '#00e676'], bodyPrimary: '#00b0ff', bodySecondary: '#76ff03', outline: '#004d40'
+        },
+        lava: {
+            name: "🌋 Volcán de Fuego", price: 100,
+            headGrad: ['#ff1744', '#ff9100'], bodyPrimary: '#d50000', bodySecondary: '#ffd600', outline: '#3e2723'
+        },
+        rainbow: {
+            name: "🌈 Serpiente Arcoíris", price: 140,
+            headGrad: ['#ff4081', '#00e5ff'], bodyPrimary: '#7c4dff', bodySecondary: '#ffd740', outline: '#1a237e',
+            isRainbow: true
+        }
+    };
+
+    const HATS = {
+        none: { name: "Sin Accesorio", icon: "✨", price: 0 },
+        crown: { name: "Corona de Rey", icon: "👑", price: 30 },
+        grad: { name: "Birrete Sabio", icon: "🎓", price: 45 },
+        wizard: { name: "Sombrero Mago", icon: "🧙", price: 65 },
+        astro: { name: "Casco Astral", icon: "👩‍🚀", price: 85 },
+        glasses: { name: "Gafas Genio", icon: "🤓", price: 50 },
+        halo: { name: "Halo Celestial", icon: "😇", price: 90 },
+        party: { name: "Gorro Fiesta", icon: "🥳", price: 40 }
+    };
+
+    const ACHIEVEMENTS_LIST = [
+        { id: "first_eat", icon: "🍎", title: "Primer Bocado Sabio", desc: "Responde tu primera pregunta correctamente", unlocked: false },
+        { id: "streak_5", icon: "🔥", title: "Racha Imparable (x5)", desc: "Consigue 5 aciertos seguidos sin fallar", unlocked: false },
+        { id: "streak_10", icon: "⚡", title: "Mente Relámpago (x10)", desc: "Consigue 10 aciertos seguidos", unlocked: false },
+        { id: "boss_slayer", icon: "👑", title: "Vencedor del Guardián", desc: "Supera un Reto de Jefe Dorado", unlocked: false },
+        { id: "score_200", icon: "🏆", title: "Maestro de 200 Puntos", desc: "Alcanza 200 puntos en una partida", unlocked: false },
+        { id: "collector", icon: "🛍️", title: "Coleccionista Real", desc: "Desbloquea un estilo o sombrero en la tienda", unlocked: false },
+        { id: "polyglot", icon: "🇬🇧", title: "Explorador Bilingüe", desc: "Acierta preguntas en el mundo de Inglés", unlocked: false },
+        { id: "scientist", icon: "🔬", title: "Joven Científico", desc: "Acierta preguntas en Ciencias Naturales", unlocked: false },
+        { id: "cartesian_pro", icon: "📍", title: "Navegante Cartesiano", desc: "Ubica coordenadas exactas (X, Y) en el Plano Cartesiano", unlocked: false }
+    ];
+
+    const BUBBLE_PALETTES = [
+        { fill1: '#ff9a44', fill2: '#fc6076', border: '#fff59d' },
+        { fill1: '#00c6ff', fill2: '#0072ff', border: '#e0f7fa' },
+        { fill1: '#a18cd1', fill2: '#fbc2eb', border: '#ffffff' }
+    ];
+
+    /* Estado central de la aplicación en memoria de sesión */
+    const state = {
+        running: false,
+        awaitingLaunch: true, // Impide que la serpiente se mueva antes de que aparezcan los objetos y el jugador esté listo
+        spawnGraceTimer: 0,   // Escudo temporal al aparecer nuevas preguntas para evitar choques involuntarios
+        lastFrameTime: 0,     // Control de Delta-Time para velocidad idéntica en pantallas de 60Hz, 90Hz y 120Hz
+        mode: 'aventura',     // 'aventura', 'contrarreloj', 'zen'
+        worldType: 'clasico', // 'clasico' (pantalla fija) o 'expandido' (estilo Slither.io)
+        topic: 'cartesiano',
+        skin: 'emerald',
+        hat: 'none',
+        unlockedSkins: new Set(['emerald', 'cosmic', 'candy']),
+        unlockedHats: new Set(['none']),
+
+        // Dimensiones del mundo virtual y cámara (para modo Slither.io y Plano Cartesiano)
+        worldWidth: 400,
+        worldHeight: 400,
+        camera: { x: 0, y: 0 },
+
+        score: 0,
+        coins: 50,
+        streak: 0,
+        bestStreak: 0,
+        lives: 3,
+        level: 1,
+        xp: 0,
+        xpToNext: 4,
+        timeLeft: 90,
+        turbo: false,
+        isBossRound: false,
+        lastExplanation: "¡Cada pregunta te hace más sabio!",
+
+        // Estadísticas Pedagógicas y Cofre de Repaso
+        totalAnswered: 0,
+        totalCorrect: 0,
+        missedQuestions: [],
+
+        // Power-ups activos (en fotogramas normalizados)
+        magnetTimer: 0,
+        shieldActive: false,
+        slowTimer: 0,
+
+        // Serpiente con cinemática continua
+        head: { x: 180, y: 220, angle: -Math.PI / 2, targetAngle: -Math.PI / 2, radius: 17 },
+        trail: [],
+        segmentCount: 10,
+        segmentSpacing: 11,
+        waveTime: 0,
+        mouthOpen: 0,
+        expression: 'neutral',
+        expressionTimer: 0,
+        blinkTimer: 0,
+
+        // Elementos en el mapa
+        foods: [],
+        powerOrb: null,
+        particles: [],
+        floatingTexts: [],
+        bgFireflies: []
+    };
+
+    /* =========================================================================
+       5. CONFIGURACIÓN DEL LIENZO Y SISTEMAS DE LOGROS / TIENDA
+       ========================================================================= */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    /* Helper compatible con todos los navegadores para rectángulos redondeados en Canvas */
+    function drawRoundRectPath(context, x, y, w, h, r) {
+        if (typeof context.roundRect === 'function') {
+            context.beginPath();
+            context.roundRect(x, y, w, h, r);
+            return;
+        }
+        const radius = Math.min(r, w / 2, h / 2);
+        context.beginPath();
+        context.moveTo(x + radius, y);
+        context.arcTo(x + w, y, x + w, y + h, radius);
+        context.arcTo(x + w, y + h, x, y + h, radius);
+        context.arcTo(x, y + h, x, y, radius);
+        context.arcTo(x, y, x + w, y, radius);
+        context.closePath();
+    }
+
+    function setAwaitingLaunch(val) {
+        state.awaitingLaunch = val;
+        const pill = document.getElementById('launch-ready-pill');
+        if (pill) {
+            pill.classList.toggle('hidden-pill', !val);
+        }
+    }
+
+    function unlockAchievement(id) {
+        const ach = ACHIEVEMENTS_LIST.find(a => a.id === id);
+        if (!ach || ach.unlocked) return;
+        ach.unlocked = true;
+        state.coins += 20; // Premio de monedas por logro
+        updateHUD();
+
+        const popup = document.getElementById('achievement-popup');
+        document.getElementById('ach-icon').textContent = ach.icon;
+        document.getElementById('ach-title').textContent = `${ach.title} (+20🪙)`;
+        popup.classList.add('show');
+        sfx.levelUp();
+
+        setTimeout(() => {
+            popup.classList.remove('show');
+        }, 3200);
+    }
+
+    function initFireflies() {
+        state.bgFireflies = [];
+        const count = state.worldType === 'expandido' ? 95 : 28;
+        const w = state.worldWidth || canvas.width || 360;
+        const h = state.worldHeight || canvas.height || 480;
+        for (let i = 0; i < count; i++) {
+            state.bgFireflies.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: Math.random() * 2.8 + 1,
+                speedY: -(Math.random() * 0.38 + 0.1),
+                phase: Math.random() * Math.PI * 2
+            });
+        }
+    }
+
+    function updateWorldDimensions() {
+        if (state.worldType === 'expandido') {
+            state.worldWidth = Math.max(1500, Math.floor(canvas.width * 3.4));
+            state.worldHeight = Math.max(1500, Math.floor(canvas.height * 3.0));
+        } else {
+            state.worldWidth = canvas.width;
+            state.worldHeight = canvas.height;
+        }
+    }
+
+    /* Conversión entre Coordenadas del Plano Cartesiano (X,Y) y Píxeles del Mundo */
+    function getCartesianMetrics() {
+        const originX = state.worldWidth / 2;
+        const originY = state.worldHeight / 2;
+        const maxUnits = state.worldType === 'expandido' ? 6 : 4;
+        const minDim = Math.min(state.worldWidth, state.worldHeight);
+        const step = (minDim * 0.41) / maxUnits;
+        return { originX, originY, maxUnits, step };
+    }
+
+    function cartesianToWorld(cx, cy) {
+        const { originX, originY, step } = getCartesianMetrics();
+        return {
+            x: originX + cx * step,
+            y: originY - cy * step // En pantalla Y crece hacia abajo, en matemáticas hacia arriba
+        };
+    }
+
+    function worldToCartesian(wx, wy) {
+        const { originX, originY, step } = getCartesianMetrics();
+        return {
+            x: Math.round((wx - originX) / step),
+            y: Math.round((originY - wy) / step)
+        };
+    }
+
+    function resizeCanvas() {
+        const wrapper = document.getElementById('canvas-container');
+        const rect = wrapper.getBoundingClientRect();
+        canvas.width = Math.max(280, Math.floor(rect.width));
+        canvas.height = Math.max(230, Math.floor(rect.height));
+
+        updateWorldDimensions();
+
+        const margin = 44;
+        state.foods.forEach(f => {
+            if (f.isCartesian && f.coordX !== undefined) {
+                const pos = cartesianToWorld(f.coordX, f.coordY);
+                f.x = pos.x;
+                f.y = pos.y;
+            } else {
+                f.x = Math.max(margin, Math.min(state.worldWidth - margin, f.x));
+                f.y = Math.max(margin, Math.min(state.worldHeight - margin, f.y));
+            }
+        });
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    function resetSnakePosition() {
+        const startX = state.worldWidth * 0.5;
+        const startY = state.worldHeight * 0.5;
+        state.head.x = startX;
+        state.head.y = startY;
+        state.head.angle = -Math.PI / 2;
+        state.head.targetAngle = -Math.PI / 2;
+
+        state.camera.x = Math.max(0, Math.min(state.worldWidth - canvas.width, startX - canvas.width / 2));
+        state.camera.y = Math.max(0, Math.min(state.worldHeight - canvas.height, startY - canvas.height / 2));
+
+        state.trail = [];
+        const totalTrailPoints = (state.segmentCount + 6) * state.segmentSpacing;
+        for (let i = 0; i < totalTrailPoints; i++) {
+            state.trail.push({
+                x: startX,
+                y: startY + i * 1.5
+            });
+        }
+    }
+
+    /* Verifica que una coordenada (x, y) no choque ni con la cabeza ni con el cuerpo de la serpiente */
+    function isSafeFromSnake(x, y, minHeadDist = 115, minBodyDist = 55) {
+        const dHead = Math.hypot(x - state.head.x, y - state.head.y);
+        if (dHead < minHeadDist) return false;
+
+        // Revisar puntos muestreados de la estela del cuerpo
+        for (let i = 0; i < state.trail.length; i += 4) {
+            const pt = state.trail[i];
+            if (Math.hypot(x - pt.x, y - pt.y) < minBodyDist) return false;
+        }
+        return true;
+    }
+
+    /* Genera una estrella de poder opcional en el mapa verificando que no se superponga con nada */
+    function maybeSpawnPowerOrb() {
+        if (Math.random() > 0.45) {
+            state.powerOrb = null;
+            return;
+        }
+        const types = [
+            { type: 'magnet', icon: '🧲', label: '¡Imán Sabio!', color: '#00f2fe' },
+            { type: 'shield', icon: '🛡️', label: '¡Escudo Protector!', color: '#ffd700' },
+            { type: 'slow', icon: '❄️', label: '¡Calma Congelada!', color: '#b388ff' }
+        ];
+        const chosen = pickRandom(types);
+        const margin = 65;
+
+        let x = margin, y = margin, valid = false;
+        for (let tries = 0; tries < 60; tries++) {
+            x = margin + Math.random() * (state.worldWidth - margin * 2);
+            y = margin + Math.random() * (state.worldHeight - margin * 2);
+            const farFromFoods = state.foods.every(f => Math.hypot(x - f.x, y - f.y) > f.radius + 48);
+            if (farFromFoods && isSafeFromSnake(x, y, 105, 45)) {
+                valid = true;
+                break;
+            }
+        }
+
+        if (!valid) {
+            state.powerOrb = null;
+            return;
+        }
+
+        state.powerOrb = {
+            x,
+            y,
+            radius: 18,
+            ...chosen,
+            phase: 0
+        };
+    }
+
+    /* Coloca las 3 burbujas de respuesta garantizando 0 colisiones con la serpiente al aparecer */
+    function spawnQuestionAndFoods() {
+        state.isBossRound = (state.xp === state.xpToNext - 1);
+        const challenge = generateEducationalChallenge(state.topic, state.level, state.isBossRound);
+        state.currentChallenge = challenge;
+        // Periodo de gracia (45 fotogramas ~ 0.75s) donde las nuevas burbujas aparecen suavemente sin dañar por sorpresa
+        state.spawnGraceTimer = 45;
+
+        const banner = document.getElementById('mission-banner');
+        banner.classList.toggle('boss-mode', state.isBossRound);
+
+        document.getElementById('topic-badge').textContent = `${challenge.badge} • NIVEL ${state.level}`;
+        document.getElementById('question-text').textContent = challenge.prompt;
+        document.getElementById('question-hint').textContent = challenge.hint;
+
+        banner.style.transform = 'scale(1.03)';
+        setTimeout(() => { banner.style.transform = 'scale(1)'; }, 180);
+
+        const shuffledPalettes = [...BUBBLE_PALETTES].sort(() => Math.random() - 0.5);
+        const placed = [];
+
+        // Si el reto es del Plano Cartesiano, colocamos cada objeto en su coordenada (X, Y) exacta y fija
+        if (challenge.isCartesian && challenge.cartesianPoints) {
+            challenge.cartesianPoints.forEach((pt, idx) => {
+                const worldPos = cartesianToWorld(pt.coordX, pt.coordY);
+                placed.push({
+                    x: worldPos.x,
+                    y: worldPos.y,
+                    coordX: pt.coordX,
+                    coordY: pt.coordY,
+                    isCartesian: true,
+                    radius: state.isBossRound ? 24 : 21,
+                    text: pt.icon,
+                    coordLabel: pt.label,
+                    isCorrect: pt.isCorrect,
+                    palette: shuffledPalettes[idx % shuffledPalettes.length],
+                    bobPhase: Math.random() * Math.PI * 2,
+                    spawnScale: 0.2,
+                    vx: 0,
+                    vy: 0
+                });
+            });
+            state.foods = placed;
+            maybeSpawnPowerOrb();
+            return;
+        }
+
+        // Mundos temáticos tradicionales (burbujas flotantes con distancia segura garantizada)
+        const allOptions = [
+            { text: challenge.correctValue, isCorrect: true },
+            { text: challenge.wrongValues[0], isCorrect: false },
+            { text: challenge.wrongValues[1], isCorrect: false }
+        ];
+
+        const margin = 56;
+        const spawnRadiusMax = state.worldType === 'expandido'
+            ? Math.min(state.worldWidth, state.worldHeight) * 0.36
+            : Math.min(canvas.width, canvas.height) * 0.45;
+
+        allOptions.forEach((opt, idx) => {
+            let x = margin, y = margin, valid = false;
+            const radius = opt.text.length > 5 ? 33 : opt.text.length > 3 ? 29 : 25;
+
+            for (let tries = 0; tries < 140; tries++) {
+                if (state.worldType === 'expandido') {
+                    const randAngle = Math.random() * Math.PI * 2;
+                    const randDist = 145 + Math.random() * spawnRadiusMax;
+                    x = Math.max(margin, Math.min(state.worldWidth - margin, state.head.x + Math.cos(randAngle) * randDist));
+                    y = Math.max(margin, Math.min(state.worldHeight - margin, state.head.y + Math.sin(randAngle) * randDist));
+                } else {
+                    x = margin + Math.random() * (state.worldWidth - margin * 2);
+                    y = margin + Math.random() * (state.worldHeight - margin * 2);
+                }
+
+                // Relajar levemente la distancia si la pantalla es muy pequeña tras muchos intentos, pero NUNCA sobre la cabeza
+                const requiredHeadDist = tries < 90 ? 120 : 88;
+                const requiredBodyDist = tries < 90 ? 52 : 30;
+                const requiredBubbleGap = tries < 90 ? 24 : 10;
+
+                const safeSnake = isSafeFromSnake(x, y, requiredHeadDist, requiredBodyDist);
+                const farFromOthers = placed.every(p => Math.hypot(x - p.x, y - p.y) > (radius + p.radius + requiredBubbleGap));
+
+                if (safeSnake && farFromOthers) {
+                    valid = true;
+                    break;
+                }
+            }
+
+            placed.push({
+                x,
+                y,
+                isCartesian: false,
+                radius: state.isBossRound ? radius + 3 : radius,
+                text: opt.text,
+                isCorrect: opt.isCorrect,
+                palette: shuffledPalettes[idx % shuffledPalettes.length],
+                bobPhase: Math.random() * Math.PI * 2,
+                spawnScale: 0.2,
+                vx: (Math.random() - 0.5) * (0.36 + state.level * 0.035),
+                vy: (Math.random() - 0.5) * (0.36 + state.level * 0.035)
+            });
+        });
+
+        state.foods = placed;
+        maybeSpawnPowerOrb();
+    }
+
+    function spawnParticles(x, y, color, count = 18) {
+        for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
+            const speed = 1.5 + Math.random() * 4;
+            state.particles.push({
+                x,
+                y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                radius: 3 + Math.random() * 4,
+                color,
+                alpha: 1
+            });
+        }
+    }
+
+    function spawnFloatingText(x, y, text, color) {
+        state.floatingTexts.push({
+            x,
+            y,
+            text,
+            color,
+            alpha: 1,
+            vy: -1.35
+        });
+    }
+
+    let toastTimeout = null;
+    function showToast(message, borderColor = '#ffd700') {
+        const toast = document.getElementById('toast-feedback');
+        toast.textContent = message;
+        toast.style.borderColor = borderColor;
+        toast.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2500);
+    }
+
+    function updateHUD() {
+        document.getElementById('score-val').textContent = state.score;
+        document.getElementById('coins-val').textContent = state.coins;
+        document.getElementById('streak-val').textContent = state.streak;
+        document.getElementById('level-label').textContent = state.isBossRound ? `👑 JEFE NV.${state.level}` : `NV. ${state.level}`;
+
+        const xpPct = Math.min(100, Math.round((state.xp / state.xpToNext) * 100));
+        document.getElementById('xp-bar-fill').style.width = `${xpPct}%`;
+
+        // Estado de botones de habilidades rápidas
+        document.getElementById('skill-clue-btn').classList.toggle('disabled', state.coins < 10 || state.foods.length <= 1);
+        document.getElementById('skill-magnet-btn').classList.toggle('disabled', state.coins < 15 || state.magnetTimer > 0);
+
+        // Vidas según el modo
+        const livesEl = document.getElementById('lives-container');
+        livesEl.innerHTML = '';
+        if (state.mode === 'zen') {
+            const span = document.createElement('span');
+            span.style.fontSize = '0.78rem';
+            span.style.fontWeight = '900';
+            span.style.color = '#00e676';
+            span.textContent = '🧘 ZEN ∞';
+            livesEl.appendChild(span);
+        } else {
+            for (let i = 0; i < 3; i++) {
+                const span = document.createElement('span');
+                span.className = 'heart-icon';
+                span.textContent = i < state.lives ? '❤️' : '🖤';
+                livesEl.appendChild(span);
+            }
+        }
+
+        // Indicadores de Power-Ups activos
+        const pBar = document.getElementById('active-powerups-bar');
+        pBar.innerHTML = '';
+        if (state.shieldActive) {
+            const pill = document.createElement('span');
+            pill.className = 'powerup-pill';
+            pill.textContent = '🛡️ Escudo';
+            pBar.appendChild(pill);
+        }
+        if (state.magnetTimer > 0) {
+            const pill = document.createElement('span');
+            pill.className = 'powerup-pill';
+            pill.textContent = '🧲 Imán';
+            pBar.appendChild(pill);
+        }
+        if (state.slowTimer > 0) {
+            const pill = document.createElement('span');
+            pill.className = 'powerup-pill';
+            pill.textContent = '❄️ Lento';
+            pBar.appendChild(pill);
+        }
+    }
+
+    /* =========================================================================
+       6. FÍSICA DELTA-TIME, PODERES Y MOVIMIENTO ORGÁNICO DE LA SERPIENTE
+       ========================================================================= */
+    function normalizeAngle(a) {
+        while (a > Math.PI) a -= Math.PI * 2;
+        while (a < -Math.PI) a += Math.PI * 2;
+        return a;
+    }
+
+    function updateGamePhysics(dt) {
+        // Animación suave de aparición de las burbujas incluso mientras espera el despegue
+        state.foods.forEach(f => {
+            if (f.spawnScale < 1) {
+                f.spawnScale = Math.min(1, f.spawnScale + 0.08 * dt);
+            }
+        });
+
+        if (!state.running) return;
+
+        // Si las burbujas aún no se han generado o el jugador aún no ha dado el primer toque para despegar, la serpiente espera quieta respirando suavemente
+        if (state.foods.length === 0 || state.awaitingLaunch) {
+            state.waveTime += 0.06 * dt;
+            state.blinkTimer += dt;
+            return;
+        }
+
+        state.waveTime += 0.16 * dt;
+        state.blinkTimer += dt;
+
+        if (state.spawnGraceTimer > 0) {
+            state.spawnGraceTimer = Math.max(0, state.spawnGraceTimer - dt);
+        }
+
+        if (state.expressionTimer > 0) {
+            state.expressionTimer = Math.max(0, state.expressionTimer - dt);
+            if (state.expressionTimer === 0) state.expression = 'neutral';
+        }
+        if (state.magnetTimer > 0) {
+            state.magnetTimer = Math.max(0, state.magnetTimer - dt);
+            if (state.magnetTimer === 0) updateHUD();
+        }
+        if (state.slowTimer > 0) {
+            state.slowTimer = Math.max(0, state.slowTimer - dt);
+            if (state.slowTimer === 0) updateHUD();
+        }
+
+        // 1. Giro suave hacia el ángulo objetivo
+        const diff = normalizeAngle(state.head.targetAngle - state.head.angle);
+        state.head.angle += diff * Math.min(1, 0.18 * dt);
+
+        // 2. Velocidad adaptable + oscilación sinusoidal natural normalizada con dt
+        const baseSpeed = (2.12 + Math.min(1.1, state.level * 0.1)) * (state.turbo ? 1.55 : 1) * dt;
+        const slitherSway = Math.sin(state.waveTime) * 0.045;
+        const moveAngle = state.head.angle + slitherSway;
+
+        state.head.x += Math.cos(moveAngle) * baseSpeed;
+        state.head.y += Math.sin(moveAngle) * baseSpeed;
+
+        // 3. Bordes elásticos amigables del Mundo (Arena Clásica o Mundo Expandido Slither.io)
+        const pad = state.head.radius + 6;
+        let bounced = false;
+        if (state.head.x < pad) {
+            state.head.x = pad;
+            state.head.angle = Math.PI - state.head.angle;
+            state.head.targetAngle = state.head.angle;
+            bounced = true;
+        } else if (state.head.x > state.worldWidth - pad) {
+            state.head.x = state.worldWidth - pad;
+            state.head.angle = Math.PI - state.head.angle;
+            state.head.targetAngle = state.head.angle;
+            bounced = true;
+        }
+        if (state.head.y < pad) {
+            state.head.y = pad;
+            state.head.angle = -state.head.angle;
+            state.head.targetAngle = state.head.angle;
+            bounced = true;
+        } else if (state.head.y > state.worldHeight - pad) {
+            state.head.y = state.worldHeight - pad;
+            state.head.angle = -state.head.angle;
+            state.head.targetAngle = state.head.angle;
+            bounced = true;
+        }
+
+        if (bounced) {
+            sfx.bounceWall();
+            spawnParticles(state.head.x, state.head.y, '#00f2fe', 6);
+        }
+
+        // 3.5 Actualizar Cámara Suave (Interpolación tipo Slither.io)
+        if (state.worldType === 'expandido') {
+            const targetCamX = Math.max(0, Math.min(state.worldWidth - canvas.width, state.head.x - canvas.width / 2));
+            const targetCamY = Math.max(0, Math.min(state.worldHeight - canvas.height, state.head.y - canvas.height / 2));
+            state.camera.x += (targetCamX - state.camera.x) * Math.min(1, 0.14 * dt);
+            state.camera.y += (targetCamY - state.camera.y) * Math.min(1, 0.14 * dt);
+        } else {
+            state.camera.x = 0;
+            state.camera.y = 0;
+        }
+
+        // 4. Registrar posición en la estela continua
+        state.trail.unshift({ x: state.head.x, y: state.head.y });
+        const maxTrailLength = (state.segmentCount + 6) * state.segmentSpacing;
+        if (state.trail.length > maxTrailLength) {
+            state.trail.length = maxTrailLength;
+        }
+
+        // 5. Actualizar burbujas y efecto Imán Sabio
+        const speedMult = (state.slowTimer > 0 ? 0.25 : 1) * dt;
+        let minDistToFood = 999;
+
+        state.foods.forEach(f => {
+            f.bobPhase += 0.05 * speedMult;
+
+            if (!f.isCartesian) {
+                f.x += f.vx * speedMult;
+                f.y += f.vy * speedMult;
+            }
+
+            // Si el Imán Sabio está activo, la respuesta correcta se acerca suavemente a la cabeza
+            if (state.magnetTimer > 0 && f.isCorrect) {
+                const dx = state.head.x - f.x;
+                const dy = state.head.y - f.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist > 5) {
+                    f.x += (dx / dist) * 2.1 * dt;
+                    f.y += (dy / dist) * 2.1 * dt;
+                }
+            }
+
+            if (!f.isCartesian) {
+                if (f.x < f.radius + 12) { f.x = f.radius + 12; f.vx = Math.abs(f.vx); }
+                if (f.x > state.worldWidth - f.radius - 12) { f.x = state.worldWidth - f.radius - 12; f.vx = -Math.abs(f.vx); }
+                if (f.y < f.radius + 12) { f.y = f.radius + 12; f.vy = Math.abs(f.vy); }
+                if (f.y > state.worldHeight - f.radius - 12) { f.y = state.worldHeight - f.radius - 12; f.vy = -Math.abs(f.vy); }
+            }
+
+            const d = Math.hypot(f.x - state.head.x, f.y - state.head.y);
+            if (d < minDistToFood) minDistToFood = d;
+        });
+
+        const targetMouth = minDistToFood < 88 ? Math.min(1, (88 - minDistToFood) / 45) : 0;
+        state.mouthOpen += (targetMouth - state.mouthOpen) * Math.min(1, 0.25 * dt);
+
+        // 6. Colisión con Power-Up Orb
+        if (state.powerOrb) {
+            state.powerOrb.phase += 0.08 * dt;
+            const dOrb = Math.hypot(state.powerOrb.x - state.head.x, state.powerOrb.y - state.head.y);
+            if (dOrb < state.head.radius + state.powerOrb.radius) {
+                sfx.powerUp();
+                spawnParticles(state.powerOrb.x, state.powerOrb.y, state.powerOrb.color, 20);
+                spawnFloatingText(state.powerOrb.x, state.powerOrb.y, state.powerOrb.label, state.powerOrb.color);
+                if (state.powerOrb.type === 'magnet') state.magnetTimer = 360;
+                if (state.powerOrb.type === 'shield') state.shieldActive = true;
+                if (state.powerOrb.type === 'slow') state.slowTimer = 380;
+                state.powerOrb = null;
+                updateHUD();
+            }
+        }
+
+        // 7. Detectar si la serpiente come alguna burbuja educativa (respetando el periodo de gracia ante errores involuntarios de spawn)
+        for (let i = 0; i < state.foods.length; i++) {
+            const food = state.foods[i];
+            if (!food.isCorrect && state.spawnGraceTimer > 0) continue;
+
+            const dist = Math.hypot(food.x - state.head.x, food.y - state.head.y);
+            if (dist < state.head.radius + food.radius - 4) {
+                onEatFood(food);
+                break;
+            }
+        }
+
+        // 8. Actualizar partículas y textos flotantes
+        for (let i = state.particles.length - 1; i >= 0; i--) {
+            const p = state.particles[i];
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.alpha -= 0.028 * dt;
+            if (p.alpha <= 0) state.particles.splice(i, 1);
+        }
+
+        for (let i = state.floatingTexts.length - 1; i >= 0; i--) {
+            const ft = state.floatingTexts[i];
+            ft.y += ft.vy * dt;
+            ft.alpha -= 0.022 * dt;
+            if (ft.alpha <= 0) state.floatingTexts.splice(i, 1);
+        }
+    }
+
+    function onEatFood(food) {
+        const challenge = state.currentChallenge;
+        state.lastExplanation = challenge.explanation;
+        state.totalAnswered++;
+
+        if (food.isCorrect) {
+            sfx.eatGood();
+            state.totalCorrect++;
+            state.streak++;
+            if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+
+            const bossBonus = state.isBossRound ? 25 : 0;
+            const gainedScore = 10 + state.streak * 2 + bossBonus;
+            const gainedCoins = (state.isBossRound ? 15 : 5) + Math.min(10, state.streak);
+
+            state.score += gainedScore;
+            state.coins += gainedCoins;
+            state.xp++;
+            state.segmentCount = Math.min(30, state.segmentCount + 1);
+            state.expression = 'happy';
+            state.expressionTimer = 75;
+
+            if (state.mode === 'contrarreloj') {
+                state.timeLeft = Math.min(120, state.timeLeft + 4);
+            }
+
+            spawnParticles(food.x, food.y, '#00e676', 24);
+            spawnFloatingText(food.x, food.y, `+${gainedScore} pts • +${gainedCoins}🪙`, '#00e676');
+            showToast(`🌟 ${challenge.explanation}`, '#00e676');
+
+            // Verificar logros
+            unlockAchievement('first_eat');
+            if (state.streak >= 5) unlockAchievement('streak_5');
+            if (state.streak >= 10) unlockAchievement('streak_10');
+            if (state.score >= 200) unlockAchievement('score_200');
+            if (state.isBossRound) unlockAchievement('boss_slayer');
+            if (state.topic === 'ingles') unlockAchievement('polyglot');
+            if (state.topic === 'ciencias') unlockAchievement('scientist');
+            if (challenge.isCartesian) unlockAchievement('cartesian_pro');
+
+            // Subida de nivel al completar barra XP (Coordenadas del mundo sobre la cabeza de la serpiente)
+            if (state.xp >= state.xpToNext) {
+                state.level++;
+                state.xp = 0;
+                state.xpToNext = Math.min(7, 4 + Math.floor(state.level / 2));
+                sfx.levelUp();
+                spawnFloatingText(state.head.x, state.head.y - 28, `¡NIVEL ${state.level} SUPERADO! 🎉`, '#ffd700');
+            }
+
+            updateHUD();
+            spawnQuestionAndFoods();
+        } else {
+            // Verificar si tiene Escudo Protector activo
+            if (state.shieldActive) {
+                state.shieldActive = false;
+                sfx.bounceWall();
+                spawnParticles(food.x, food.y, '#ffd700', 18);
+                spawnFloatingText(food.x, food.y, `🛡️ ¡Escudo te salvó!`, '#ffd700');
+                showToast(`🛡️ ¡Tu escudo bloqueó el error! ${challenge.explanation}`, '#ffd700');
+                state.foods = state.foods.filter(f => f !== food);
+                updateHUD();
+                return;
+            }
+
+            sfx.eatWrong();
+            state.streak = 0;
+            state.expression = 'sad';
+            state.expressionTimer = 80;
+
+            // Guardar en el Cofre de Repaso Inteligente si no es Cartesiano
+            if (!challenge.isCartesian && state.missedQuestions.length < 6) {
+                state.missedQuestions.push({ ...challenge });
+            }
+
+            if (state.mode !== 'zen') {
+                state.lives--;
+                state.segmentCount = Math.max(6, state.segmentCount - 1);
+            }
+
+            spawnParticles(food.x, food.y, '#ff1744', 18);
+            spawnFloatingText(food.x, food.y, `¡Ups! Era ${challenge.correctValue}`, '#ff5252');
+            showToast(`💡 Aprende: ${challenge.explanation}`, '#ff5252');
+
+            updateHUD();
+
+            if (state.mode !== 'zen' && state.lives <= 0) {
+                triggerGameOver();
+            } else {
+                state.foods = state.foods.filter(f => f !== food);
+            }
+        }
+    }
+
+    /* =========================================================================
+       7. RENDERIZADO ESTILIZADO 2.5D (ESCAMAS, SOMBREROS, BURBUJAS Y EFECTOS)
+       ========================================================================= */
+    function getBodySegments() {
+        const segments = [];
+        for (let i = 1; i <= state.segmentCount; i++) {
+            const idx = Math.min(state.trail.length - 1, i * 4);
+            const pt = state.trail[idx] || state.head;
+            const prevPt = state.trail[Math.max(0, idx - 3)] || state.head;
+
+            const segAngle = Math.atan2(prevPt.y - pt.y, prevPt.x - pt.x);
+            const perpAngle = segAngle + Math.PI / 2;
+            const waveAmp = Math.sin(state.waveTime - i * 0.45) * 4.2;
+
+            const taper = Math.max(0.32, 1 - (i / (state.segmentCount + 3)) * 0.68);
+            segments.push({
+                x: pt.x + Math.cos(perpAngle) * waveAmp,
+                y: pt.y + Math.sin(perpAngle) * waveAmp,
+                radius: state.head.radius * taper,
+                angle: segAngle,
+                index: i
+            });
+        }
+        return segments;
+    }
+
+    function drawBackground() {
+        const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        if (state.isBossRound) {
+            grad.addColorStop(0, '#240b36');
+            grad.addColorStop(0.5, '#3b1254');
+            grad.addColorStop(1, '#1a0933');
+        } else {
+            grad.addColorStop(0, '#0a192f');
+            grad.addColorStop(0.5, '#0f3156');
+            grad.addColorStop(1, '#09203f');
+        }
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.save();
+        ctx.translate(-state.camera.x, -state.camera.y);
+
+        // Si estamos en un reto del Plano Cartesiano, dibujamos el Plano Cartesiano pedagógico completo
+        if (state.currentChallenge && state.currentChallenge.isCartesian) {
+            drawCartesianPlane();
+        } else {
+            // Cuadrícula espacial estilo Slither.io
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            const step = 42;
+            const startX = Math.floor(state.camera.x / step) * step;
+            const endX = Math.min(state.worldWidth, state.camera.x + canvas.width + step);
+            const startY = Math.floor(state.camera.y / step) * step;
+            const endY = Math.min(state.worldHeight, state.camera.y + canvas.height + step);
+
+            for (let x = startX; x <= endX; x += step) {
+                ctx.beginPath();
+                ctx.moveTo(x, Math.max(0, state.camera.y));
+                ctx.lineTo(x, Math.min(state.worldHeight, state.camera.y + canvas.height));
+                ctx.stroke();
+            }
+            for (let y = startY; y <= endY; y += step) {
+                ctx.beginPath();
+                ctx.moveTo(Math.max(0, state.camera.x), y);
+                ctx.lineTo(Math.min(state.worldWidth, state.camera.x + canvas.width), y);
+                ctx.stroke();
+            }
+        }
+
+        // Borde luminoso del Mundo (Especialmente útil en modo Slither.io expandido)
+        ctx.strokeStyle = 'rgba(0, 242, 254, 0.45)';
+        ctx.lineWidth = 5;
+        ctx.strokeRect(2, 2, state.worldWidth - 4, state.worldHeight - 4);
+
+        // Luciérnagas mágicas en coordenadas del mundo
+        state.bgFireflies.forEach(ff => {
+            ff.y += ff.speedY;
+            ff.phase += 0.04;
+            if (ff.y < 5) {
+                ff.y = state.worldHeight - 5;
+                ff.x = Math.random() * state.worldWidth;
+            }
+            if (
+                ff.x >= state.camera.x - 10 &&
+                ff.x <= state.camera.x + canvas.width + 10 &&
+                ff.y >= state.camera.y - 10 &&
+                ff.y <= state.camera.y + canvas.height + 10
+            ) {
+                const alpha = (Math.sin(ff.phase) + 1) * 0.25 + 0.15;
+                ctx.fillStyle = state.isBossRound ? `rgba(255, 215, 0, ${alpha})` : `rgba(168, 255, 120, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(ff.x, ff.y, ff.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        });
+
+        ctx.restore();
+    }
+
+    /* Dibuja el Plano Cartesiano interactivo con Ejes X/Y, Cuadrantes, Numeración y Líneas Punteadas */
+    function drawCartesianPlane() {
+        const { originX, originY, maxUnits, step } = getCartesianMetrics();
+        const planeHalfSpan = maxUnits * step;
+
+        ctx.save();
+
+        // 1. Fondos suaves para identificar los 4 Cuadrantes
+        ctx.fillStyle = 'rgba(0, 230, 118, 0.045)'; // Cuadrante I (+,+)
+        ctx.fillRect(originX, originY - planeHalfSpan, planeHalfSpan, planeHalfSpan);
+
+        ctx.fillStyle = 'rgba(0, 242, 254, 0.045)'; // Cuadrante II (-,+)
+        ctx.fillRect(originX - planeHalfSpan, originY - planeHalfSpan, planeHalfSpan, planeHalfSpan);
+
+        ctx.fillStyle = 'rgba(255, 154, 0, 0.045)'; // Cuadrante III (-,-)
+        ctx.fillRect(originX - planeHalfSpan, originY, planeHalfSpan, planeHalfSpan);
+
+        ctx.fillStyle = 'rgba(224, 64, 251, 0.045)'; // Cuadrante IV (+,-)
+        ctx.fillRect(originX, originY, planeHalfSpan, planeHalfSpan);
+
+        // 2. Líneas de la cuadrícula cartesiana
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.13)';
+        for (let u = -maxUnits; u <= maxUnits; u++) {
+            const px = originX + u * step;
+            const py = originY - u * step;
+
+            // Línea vertical X = u
+            ctx.beginPath();
+            ctx.moveTo(px, originY - planeHalfSpan);
+            ctx.lineTo(px, originY + planeHalfSpan);
+            ctx.stroke();
+
+            // Línea horizontal Y = u
+            ctx.beginPath();
+            ctx.moveTo(originX - planeHalfSpan, py);
+            ctx.lineTo(originX + planeHalfSpan, py);
+            ctx.stroke();
+        }
+
+        // 3. Ejes Principales X (Horizontal) e Y (Vertical)
+        ctx.strokeStyle = '#00f2fe';
+        ctx.lineWidth = 2.8;
+        ctx.beginPath();
+        // Eje X
+        ctx.moveTo(originX - planeHalfSpan - 14, originY);
+        ctx.lineTo(originX + planeHalfSpan + 14, originY);
+        // Eje Y
+        ctx.moveTo(originX, originY - planeHalfSpan - 14);
+        ctx.lineTo(originX, originY + planeHalfSpan + 14);
+        ctx.stroke();
+
+        // 4. Etiquetas de números en los ejes X e Y
+        ctx.font = '900 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        for (let u = -maxUnits; u <= maxUnits; u++) {
+            if (u === 0) continue;
+            const px = originX + u * step;
+            const py = originY - u * step;
+
+            // Marcas en Eje X
+            ctx.fillStyle = '#fff59d';
+            ctx.fillText(String(u), px, originY + 13);
+
+            // Marcas en Eje Y
+            ctx.fillStyle = '#80d8ff';
+            ctx.fillText(String(u), originX - 14, py);
+        }
+
+        // Punto Origen (0,0) y nombres de los ejes
+        ctx.fillStyle = '#ffd700';
+        ctx.beginPath();
+        ctx.arc(originX, originY, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = '900 11px sans-serif';
+        ctx.fillText('(0,0)', originX + 16, originY + 13);
+
+        ctx.fillStyle = '#00f2fe';
+        ctx.font = '900 13px sans-serif';
+        ctx.fillText('+X', originX + planeHalfSpan + 24, originY);
+        ctx.fillText('-X', originX - planeHalfSpan - 24, originY);
+        ctx.fillText('+Y', originX, originY - planeHalfSpan - 22);
+        ctx.fillText('-Y', originX, originY + planeHalfSpan + 22);
+
+        // Etiquetas de los 4 Cuadrantes en las esquinas
+        ctx.font = '800 11px sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.fillText('CUADRANTE I (+,+)', originX + planeHalfSpan * 0.55, originY - planeHalfSpan + 14);
+        ctx.fillText('CUADRANTE II (-,+)', originX - planeHalfSpan * 0.55, originY - planeHalfSpan + 14);
+        ctx.fillText('CUADRANTE III (-,-)', originX - planeHalfSpan * 0.55, originY + planeHalfSpan - 12);
+        ctx.fillText('CUADRANTE IV (+,-)', originX + planeHalfSpan * 0.55, originY + planeHalfSpan - 12);
+
+        // 5. Líneas guía punteadas desde cada objeto hasta su valor en el eje X y en el eje Y
+        state.foods.forEach(f => {
+            if (!f.isCartesian) return;
+            ctx.save();
+            ctx.setLineDash([4, 4]);
+            ctx.lineWidth = 1.6;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.38)';
+            ctx.beginPath();
+            // Proyección hacia el eje X
+            ctx.moveTo(f.x, f.y);
+            ctx.lineTo(f.x, originY);
+            // Proyección hacia el eje Y
+            ctx.moveTo(f.x, f.y);
+            ctx.lineTo(originX, f.y);
+            ctx.stroke();
+            ctx.restore();
+        });
+
+        ctx.restore();
+    }
+
+    function drawPowerOrb() {
+        if (!state.powerOrb) return;
+        const orb = state.powerOrb;
+        const bobY = orb.y + Math.sin(orb.phase) * 5;
+        const pulseRadius = orb.radius + Math.sin(orb.phase * 1.8) * 2.5;
+
+        ctx.save();
+        ctx.shadowColor = orb.color;
+        ctx.shadowBlur = 18;
+
+        // Aura exterior brillante del Power-Up
+        const grad = ctx.createRadialGradient(orb.x, bobY, 2, orb.x, bobY, pulseRadius);
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.55, orb.color);
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.25)');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(orb.x, bobY, pulseRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.lineWidth = 2.2;
+        ctx.strokeStyle = '#ffffff';
+        ctx.stroke();
+
+        // Ícono central del Power-Up
+        ctx.shadowBlur = 0;
+        ctx.font = '16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(orb.icon, orb.x, bobY + 1);
+        ctx.restore();
+    }
+
+    function drawFoods() {
+        state.foods.forEach(food => {
+            const scale = food.spawnScale !== undefined ? food.spawnScale : 1;
+            const r = Math.max(2, food.radius * scale);
+            const bobY = food.y + Math.sin(food.bobPhase) * 4;
+            ctx.save();
+
+            ctx.shadowColor = state.isBossRound ? '#ffd700' : food.palette.fill1;
+            ctx.shadowBlur = state.isBossRound ? 22 : 15;
+
+            const grad = ctx.createRadialGradient(
+                food.x - r * 0.3,
+                bobY - r * 0.3,
+                r * 0.1,
+                food.x,
+                bobY,
+                r
+            );
+            grad.addColorStop(0, food.palette.fill1);
+            grad.addColorStop(1, food.palette.fill2);
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(food.x, bobY, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.lineWidth = state.isBossRound ? 3.5 : 2.6;
+            ctx.strokeStyle = state.isBossRound ? '#ffd700' : food.palette.border;
+            ctx.stroke();
+
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.36)';
+            ctx.beginPath();
+            ctx.ellipse(
+                food.x - r * 0.28,
+                bobY - r * 0.32,
+                r * 0.34,
+                r * 0.17,
+                -Math.PI / 5,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+
+            if (scale > 0.55) {
+                ctx.fillStyle = '#ffffff';
+                const len = food.text.length;
+                const fontSize = (len > 9 ? 11.5 : len > 6 ? 13 : len > 3 ? 15 : 20) * scale;
+                ctx.font = `900 ${fontSize}px ${getComputedStyle(document.body).fontFamily}`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.72)';
+                ctx.shadowBlur = 4;
+                ctx.fillText(food.text, food.x, bobY + 1);
+            }
+
+            ctx.restore();
+        });
+    }
+
+    function drawStylizedSnake() {
+        const skin = SKINS[state.skin] || SKINS.emerald;
+        const segments = getBodySegments();
+
+        // Halo de Escudo Protector si está activo
+        if (state.shieldActive) {
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.75)';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([6, 4]);
+            ctx.beginPath();
+            ctx.arc(state.head.x, state.head.y, state.head.radius + 11, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // Dibujar segmentos del cuerpo desde la cola hasta el cuello
+        for (let i = segments.length - 1; i >= 0; i--) {
+            const seg = segments[i];
+            ctx.save();
+            ctx.translate(seg.x, seg.y);
+            ctx.rotate(seg.angle);
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.24)';
+            ctx.beginPath();
+            ctx.arc(2, 4, seg.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (skin.isRainbow) {
+                const hue = (seg.index * 24 + state.waveTime * 15) % 360;
+                ctx.fillStyle = `hsl(${hue}, 90%, 58%)`;
+            } else {
+                const isStripe = seg.index % 2 === 0;
+                const segGrad = ctx.createRadialGradient(
+                    -seg.radius * 0.25, -seg.radius * 0.25, seg.radius * 0.1,
+                    0, 0, seg.radius
+                );
+                segGrad.addColorStop(0, isStripe ? skin.bodySecondary : skin.headGrad[0]);
+                segGrad.addColorStop(1, isStripe ? skin.bodyPrimary : skin.headGrad[1]);
+                ctx.fillStyle = segGrad;
+            }
+
+            ctx.strokeStyle = skin.outline;
+            ctx.lineWidth = 1.6;
+            ctx.beginPath();
+            ctx.arc(0, 0, seg.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.24)';
+            ctx.beginPath();
+            ctx.ellipse(0, -seg.radius * 0.35, seg.radius * 0.45, seg.radius * 0.2, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        // DIBUJAR CABEZA EXPRESIVA DE LA SERPIENTE
+        ctx.save();
+        ctx.translate(state.head.x, state.head.y);
+        ctx.rotate(state.head.angle);
+
+        const r = state.head.radius;
+
+        // 1. Lengüita bífida animada
+        const tongueCycle = Math.sin(state.waveTime * 0.9);
+        if (tongueCycle > 0.1 || state.mouthOpen > 0.2) {
+            const tongueLen = r + 6 + Math.max(0, tongueCycle * 8) + state.mouthOpen * 5;
+            ctx.strokeStyle = '#ff1744';
+            ctx.lineWidth = 2.4;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(r * 0.6, 0);
+            ctx.lineTo(tongueLen, 0);
+            ctx.moveTo(tongueLen, 0);
+            ctx.lineTo(tongueLen + 4, -3.5);
+            ctx.moveTo(tongueLen, 0);
+            ctx.lineTo(tongueLen + 4, 3.5);
+            ctx.stroke();
+        }
+
+        // 2. Boca abierta al acercarse a una burbuja
+        if (state.mouthOpen > 0.08) {
+            ctx.fillStyle = '#b71c1c';
+            ctx.strokeStyle = skin.outline;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(r * 0.45, 0, r * 0.65 * state.mouthOpen, -Math.PI * 0.55, Math.PI * 0.55);
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        // 3. Base de la cabeza
+        const headGrad = ctx.createRadialGradient(-r * 0.2, -r * 0.2, 2, 0, 0, r * 1.25);
+        headGrad.addColorStop(0, skin.headGrad[0]);
+        headGrad.addColorStop(1, skin.headGrad[1]);
+
+        ctx.fillStyle = headGrad;
+        ctx.strokeStyle = skin.outline;
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.ellipse(2, 0, r * 1.15, r * 0.98, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // 4. Mejillas
+        ctx.fillStyle = 'rgba(255, 105, 180, 0.45)';
+        ctx.beginPath();
+        ctx.arc(2, -r * 0.65, 3.8, 0, Math.PI * 2);
+        ctx.arc(2, r * 0.65, 3.8, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 5. Ojos grandes expresivos con parpadeo
+        const isBlinking = (state.blinkTimer % 190) > 182;
+        const eyeX = r * 0.22;
+        const eyeY = r * 0.44;
+        const eyeRadius = 5.4;
+
+        [-eyeY, eyeY].forEach(offsetY => {
+            if (isBlinking) {
+                ctx.strokeStyle = '#111';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(eyeX - 3, offsetY);
+                ctx.lineTo(eyeX + 3, offsetY);
+                ctx.stroke();
+            } else {
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(eyeX, offsetY, eyeRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#111';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                ctx.fillStyle = state.expression === 'happy' ? '#004d40' : '#111111';
+                ctx.beginPath();
+                ctx.arc(eyeX + 1.4, offsetY, 2.8, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(eyeX + 2.2, offsetY - 1.2, 1.1, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        });
+
+        ctx.restore();
+
+        // 6. Dibujar Sombrero Equipado o Corona de Racha encima de la cabeza
+        const hatObj = HATS[state.hat];
+        if ((hatObj && state.hat !== 'none') || state.streak >= 3) {
+            ctx.save();
+            const badgeIcon = (hatObj && state.hat !== 'none') ? hatObj.icon : '👑';
+            ctx.font = '18px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            const backX = state.head.x - Math.cos(state.head.angle) * 6;
+            const backY = state.head.y - Math.sin(state.head.angle) * 6 - 10;
+            ctx.fillText(badgeIcon, backX, backY);
+            ctx.restore();
+        }
+    }
+
+    function drawEffects() {
+        state.particles.forEach(p => {
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.fillStyle = p.color;
+            ctx.shadowColor = p.color;
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        });
+
+        state.floatingTexts.forEach(ft => {
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, ft.alpha);
+            ctx.font = '900 16.5px sans-serif';
+            ctx.fillStyle = ft.color;
+            ctx.strokeStyle = 'rgba(0,0,0,0.8)';
+            ctx.lineWidth = 3;
+            ctx.textAlign = 'center';
+            ctx.strokeText(ft.text, ft.x, ft.y);
+            ctx.fillText(ft.text, ft.x, ft.y);
+            ctx.restore();
+        });
+    }
+
+    /* Indicadores en el borde de la pantalla (Brújula Slither.io) y Minimapa Radar + GPS Cartesiano */
+    function drawScreenSpaceOverlays() {
+        // 1. Indicadores de dirección cuando una burbuja está fuera de la vista en el Mundo Expandido
+        if (state.worldType === 'expandido') {
+            state.foods.forEach(food => {
+                const screenX = food.x - state.camera.x;
+                const screenY = food.y - state.camera.y;
+                const margin = 26;
+
+                if (
+                    screenX < -food.radius ||
+                    screenX > canvas.width + food.radius ||
+                    screenY < -food.radius ||
+                    screenY > canvas.height + food.radius
+                ) {
+                    const angle = Math.atan2(food.y - state.head.y, food.x - state.head.x);
+                    const indicatorX = Math.max(margin, Math.min(canvas.width - margin, canvas.width / 2 + Math.cos(angle) * (canvas.width / 2 - margin)));
+                    const indicatorY = Math.max(margin, Math.min(canvas.height - margin, canvas.height / 2 + Math.sin(angle) * (canvas.height / 2 - margin)));
+
+                    ctx.save();
+                    ctx.translate(indicatorX, indicatorY);
+
+                    // Burbuja guía en el borde
+                    ctx.fillStyle = 'rgba(12, 22, 54, 0.9)';
+                    ctx.strokeStyle = food.palette.fill1;
+                    ctx.lineWidth = 2.2;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 17, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Flechita apuntando hacia la ubicación real
+                    ctx.save();
+                    ctx.rotate(angle);
+                    ctx.fillStyle = '#ffd700';
+                    ctx.beginPath();
+                    ctx.moveTo(22, 0);
+                    ctx.lineTo(15, -5);
+                    ctx.lineTo(15, 5);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+
+                    // Texto abreviado del objeto
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '900 9px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    const shortLabel = food.isCartesian ? food.text : food.text.slice(0, 4);
+                    ctx.fillText(shortLabel, 0, 1);
+
+                    ctx.restore();
+                }
+            });
+
+            // 2. Minimapa Radar estilo Slither.io en la esquina superior derecha
+            const mapW = 70;
+            const mapH = 70;
+            const mapX = canvas.width - mapW - 8;
+            const mapY = 8;
+
+            ctx.save();
+            ctx.fillStyle = 'rgba(8, 14, 34, 0.76)';
+            ctx.strokeStyle = 'rgba(0, 242, 254, 0.55)';
+            ctx.lineWidth = 1.6;
+            drawRoundRectPath(ctx, mapX, mapY, mapW, mapH, 10);
+            ctx.fill();
+            ctx.stroke();
+
+            // Ejes en el minimapa
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(mapX + mapW / 2, mapY);
+            ctx.lineTo(mapX + mapW / 2, mapY + mapH);
+            ctx.moveTo(mapX, mapY + mapH / 2);
+            ctx.lineTo(mapX + mapW, mapY + mapH / 2);
+            ctx.stroke();
+
+            // Rectángulo del área visible de cámara
+            const camRectX = mapX + (state.camera.x / state.worldWidth) * mapW;
+            const camRectY = mapY + (state.camera.y / state.worldHeight) * mapH;
+            const camRectW = (canvas.width / state.worldWidth) * mapW;
+            const camRectH = (canvas.height / state.worldHeight) * mapH;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.38)';
+            ctx.strokeRect(camRectX, camRectY, camRectW, camRectH);
+
+            // Puntos de comida en el radar
+            state.foods.forEach(f => {
+                const fx = mapX + (f.x / state.worldWidth) * mapW;
+                const fy = mapY + (f.y / state.worldHeight) * mapH;
+                ctx.fillStyle = f.palette.fill1;
+                ctx.beginPath();
+                ctx.arc(fx, fy, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Punto de Power-Orb en el radar si existe
+            if (state.powerOrb) {
+                const ox = mapX + (state.powerOrb.x / state.worldWidth) * mapW;
+                const oy = mapY + (state.powerOrb.y / state.worldHeight) * mapH;
+                ctx.fillStyle = '#ffd700';
+                ctx.beginPath();
+                ctx.arc(ox, oy, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Posición de la serpiente en el radar
+            const sx = mapX + (state.head.x / state.worldWidth) * mapW;
+            const sy = mapY + (state.head.y / state.worldHeight) * mapH;
+            ctx.fillStyle = '#00e676';
+            ctx.beginPath();
+            ctx.arc(sx, sy, 3.6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // 3. Visor GPS Cartesiano Minimalista en Vivo
+        if (state.currentChallenge && state.currentChallenge.isCartesian) {
+            const snakeCoord = worldToCartesian(state.head.x, state.head.y);
+            ctx.save();
+            ctx.fillStyle = 'rgba(10, 20, 48, 0.82)';
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.75)';
+            ctx.lineWidth = 1.5;
+            drawRoundRectPath(ctx, 8, 8, 108, 24, 8);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#fff59d';
+            ctx.font = '900 11px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`🧭 X:${snakeCoord.x} , Y:${snakeCoord.y}`, 62, 20);
+            ctx.restore();
+        }
+    }
+
+    function renderLoop(timestamp) {
+        if (!state.lastFrameTime) state.lastFrameTime = timestamp || performance.now();
+        const rawDelta = (timestamp || performance.now()) - state.lastFrameTime;
+        state.lastFrameTime = timestamp || performance.now();
+        // Normalizar dt a 60 FPS (16.67ms) y acotar entre 0.4 y 2.2 para evitar saltos tras cambiar de pestaña
+        const dt = Math.max(0.4, Math.min(2.2, rawDelta / 16.667));
+
+        updateGamePhysics(dt);
+        drawBackground();
+
+        // Aplicamos la transformación de la cámara para dibujar el mundo
+        ctx.save();
+        ctx.translate(-state.camera.x, -state.camera.y);
+        drawPowerOrb();
+        drawFoods();
+        drawStylizedSnake();
+        drawEffects();
+        ctx.restore();
+
+        // Superposiciones en espacio de pantalla (Radar Slither.io, flechas guía y GPS Cartesiano)
+        drawScreenSpaceOverlays();
+
+        requestAnimationFrame(renderLoop);
+    }
+
+    /* =========================================================================
+       8. CONTROLES TÁCTILES, HABILIDADES RÁPIDAS Y TIENDA INTERACTIVA
+       ========================================================================= */
+    const joystickZone = document.getElementById('joystick-zone');
+    const joystickKnob = document.getElementById('joystick-knob');
+    let joystickActive = false;
+
+    function handleJoystickMove(clientX, clientY) {
+        const rect = joystickZone.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const dx = clientX - centerX;
+        const dy = clientY - centerY;
+        const dist = Math.hypot(dx, dy);
+        const maxDist = rect.width / 2 - 16;
+
+        if (dist > 4) {
+            state.head.targetAngle = Math.atan2(dy, dx);
+            if (state.running && state.awaitingLaunch && state.foods.length > 0) {
+                setAwaitingLaunch(false);
+            }
+        }
+
+        const clampedDist = Math.min(dist, maxDist);
+        const angle = Math.atan2(dy, dx);
+        const knobX = Math.cos(angle) * clampedDist;
+        const knobY = Math.sin(angle) * clampedDist;
+        joystickKnob.style.transform = `translate(${knobX}px, ${knobY}px)`;
+    }
+
+    function resetJoystick() {
+        joystickActive = false;
+        joystickKnob.style.transform = 'translate(0px, 0px)';
+    }
+
+    joystickZone.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        joystickActive = true;
+        handleJoystickMove(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('pointermove', e => {
+        if (!joystickActive) return;
+        handleJoystickMove(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('pointerup', () => {
+        if (joystickActive) resetJoystick();
+    });
+
+    // Control directo tocando o deslizando en el Canvas
+    let canvasTouchActive = false;
+    canvas.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        canvasTouchActive = true;
+        steerTowardsCanvasPoint(e.clientX, e.clientY);
+    });
+
+    canvas.addEventListener('pointermove', e => {
+        if (!canvasTouchActive) return;
+        steerTowardsCanvasPoint(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('pointerup', () => {
+        canvasTouchActive = false;
+    });
+
+    function steerTowardsCanvasPoint(clientX, clientY) {
+        if (state.running && state.awaitingLaunch && state.foods.length > 0) {
+            setAwaitingLaunch(false);
+        }
+        const rect = canvas.getBoundingClientRect();
+        // Convertir el toque en pantalla a coordenada real del mundo sumando la cámara
+        const targetX = (clientX - rect.left) + state.camera.x;
+        const targetY = (clientY - rect.top) + state.camera.y;
+        const dx = targetX - state.head.x;
+        const dy = targetY - state.head.y;
+        if (Math.hypot(dx, dy) > 12) {
+            state.head.targetAngle = Math.atan2(dy, dx);
+        }
+    }
+
+    // Botón Turbo
+    const turboBtn = document.getElementById('turbo-btn');
+    const setTurbo = val => {
+        if (val && state.running && state.awaitingLaunch && state.foods.length > 0) {
+            setAwaitingLaunch(false);
+        }
+        state.turbo = val;
+        turboBtn.classList.toggle('active', val);
+    };
+    turboBtn.addEventListener('pointerdown', e => { e.preventDefault(); setTurbo(true); });
+    window.addEventListener('pointerup', () => setTurbo(false));
+
+    // Habilidades Rápidas (Lupa Sabia e Imán)
+    document.getElementById('skill-clue-btn').addEventListener('click', () => {
+        if (!state.running || state.coins < 10) return;
+        const wrongFoods = state.foods.filter(f => !f.isCorrect);
+        if (wrongFoods.length === 0) return;
+        state.coins -= 10;
+        const removed = wrongFoods[0];
+        spawnParticles(removed.x, removed.y, '#ffd700', 15);
+        state.foods = state.foods.filter(f => f !== removed);
+        sfx.powerUp();
+        showToast('🔍 ¡Lupa Sabia descartó una opción falsa!', '#00f2fe');
+        updateHUD();
+    });
+
+    document.getElementById('skill-magnet-btn').addEventListener('click', () => {
+        if (!state.running || state.coins < 15 || state.magnetTimer > 0) return;
+        state.coins -= 15;
+        state.magnetTimer = 360;
+        sfx.powerUp();
+        showToast('🧲 ¡Imán Sabio activado! La respuesta correcta viene hacia ti.', '#00f2fe');
+        updateHUD();
+    });
+
+    // Botón Narrador de Voz
+    document.getElementById('speak-btn').addEventListener('click', () => {
+        if (!state.currentChallenge) return;
+        sfx.speak(`${state.currentChallenge.prompt}. Pista: ${state.currentChallenge.hint}`);
+    });
+
+    // Teclado para PC
+    window.addEventListener('keydown', e => {
+        if (!state.running) return;
+        const key = e.key.toLowerCase();
+        if (['arrowup', 'w', 'arrowdown', 's', 'arrowleft', 'a', 'arrowright', 'd', ' '].includes(key)) {
+            if (state.awaitingLaunch && state.foods.length > 0) {
+                setAwaitingLaunch(false);
+            }
+        }
+        if (key === 'arrowup' || key === 'w') state.head.targetAngle = -Math.PI / 2;
+        if (key === 'arrowdown' || key === 's') state.head.targetAngle = Math.PI / 2;
+        if (key === 'arrowleft' || key === 'a') state.head.targetAngle = Math.PI;
+        if (key === 'arrowright' || key === 'd') state.head.targetAngle = 0;
+        if (key === ' ') setTurbo(true);
+    });
+
+    window.addEventListener('keyup', e => {
+        if (e.key === ' ') setTurbo(false);
+    });
+
+    /* Temporizador para modo Contrarreloj (Fiebre 90s) - No descuenta tiempo mientras espera el despegue */
+    setInterval(() => {
+        if (!state.running || state.awaitingLaunch || state.mode !== 'contrarreloj') return;
+        state.timeLeft--;
+        document.getElementById('timer-val').textContent = `${state.timeLeft}s`;
+        if (state.timeLeft <= 0) {
+            triggerGameOver();
+        }
+    }, 1000);
+
+    /* Renderizado dinámico de la Tienda */
+    let currentShopTab = 'skins';
+    function renderShop() {
+        document.getElementById('shop-coins-display').textContent = state.coins;
+        const container = document.getElementById('shop-items-container');
+        container.innerHTML = '';
+
+        if (currentShopTab === 'skins') {
+            Object.entries(SKINS).forEach(([key, skin]) => {
+                const isUnlocked = state.unlockedSkins.has(key);
+                const isEquipped = state.skin === key;
+                const card = document.createElement('div');
+                card.className = `shop-item ${isEquipped ? 'equipped' : ''}`;
+                card.innerHTML = `
+                    <div style="width:46px; height:24px; border-radius:12px; background:linear-gradient(90deg, ${skin.headGrad[0]}, ${skin.bodyPrimary}); border:2px solid #fff;"></div>
+                    <div style="font-weight:800; font-size:0.78rem;">${skin.name}</div>
+                    <div class="shop-badge" style="color:${isEquipped ? '#00e676' : isUnlocked ? '#b3e5fc' : '#ffd700'}">
+                        ${isEquipped ? '✅ EQUIPADO' : isUnlocked ? 'USAR' : `🪙 ${skin.price}`}
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    if (isUnlocked) {
+                        state.skin = key;
+                        sfx.bounceWall();
+                        renderShop();
+                    } else if (state.coins >= skin.price) {
+                        state.coins -= skin.price;
+                        state.unlockedSkins.add(key);
+                        state.skin = key;
+                        sfx.levelUp();
+                        unlockAchievement('collector');
+                        updateHUD();
+                        renderShop();
+                    } else {
+                        sfx.eatWrong();
+                    }
+                });
+                container.appendChild(card);
+            });
+        } else {
+            Object.entries(HATS).forEach(([key, hat]) => {
+                const isUnlocked = state.unlockedHats.has(key);
+                const isEquipped = state.hat === key;
+                const card = document.createElement('div');
+                card.className = `shop-item ${isEquipped ? 'equipped' : ''}`;
+                card.innerHTML = `
+                    <div style="font-size:1.7rem;">${hat.icon}</div>
+                    <div style="font-weight:800; font-size:0.78rem;">${hat.name}</div>
+                    <div class="shop-badge" style="color:${isEquipped ? '#00e676' : isUnlocked ? '#b3e5fc' : '#ffd700'}">
+                        ${isEquipped ? '✅ EQUIPADO' : isUnlocked ? 'USAR' : `🪙 ${hat.price}`}
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    if (isUnlocked) {
+                        state.hat = key;
+                        sfx.bounceWall();
+                        renderShop();
+                    } else if (state.coins >= hat.price) {
+                        state.coins -= hat.price;
+                        state.unlockedHats.add(key);
+                        state.hat = key;
+                        sfx.levelUp();
+                        unlockAchievement('collector');
+                        updateHUD();
+                        renderShop();
+                    } else {
+                        sfx.eatWrong();
+                    }
+                });
+                container.appendChild(card);
+            });
+        }
+    }
+
+    function renderAchievementsAndAnalytics() {
+        const accuracy = state.totalAnswered > 0 ? Math.round((state.totalCorrect / state.totalAnswered) * 100) : 100;
+        document.getElementById('analytics-summary-box').innerHTML = `
+            <strong>📊 Estadísticas de Aprendizaje en Sesión:</strong><br>
+            • Respuestas Correctas: <b>${state.totalCorrect} de ${state.totalAnswered}</b> (${accuracy}% precisión)<br>
+            • Mejor Racha Alcanzada: <b>${state.bestStreak} 🔥</b> &nbsp;|&nbsp; Monedas Sabias: <b>${state.coins} 🪙</b><br>
+            • Cofre de Repaso Inteligente: <b>${state.missedQuestions.length} retos pendientes de refuerzo</b>
+        `;
+
+        const grid = document.getElementById('achievements-grid');
+        grid.innerHTML = '';
+        ACHIEVEMENTS_LIST.forEach(ach => {
+            const item = document.createElement('div');
+            item.className = `shop-item ${ach.unlocked ? 'equipped' : ''}`;
+            item.style.opacity = ach.unlocked ? '1' : '0.45';
+            item.innerHTML = `
+                <div style="font-size:1.6rem;">${ach.icon}</div>
+                <div style="font-weight:800; font-size:0.76rem;">${ach.title}</div>
+                <div style="font-size:0.65rem; color:#d1e8ff;">${ach.desc}</div>
+            `;
+            grid.appendChild(item);
+        });
+    }
+
+    function renderCustomQuestionsList() {
+        const listEl = document.getElementById('custom-questions-list');
+        listEl.innerHTML = `<strong>📋 Preguntas activas en "Retos del Profe" (${customQuestionsBank.length}):</strong><br>`;
+        customQuestionsBank.forEach((q, idx) => {
+            const row = document.createElement('div');
+            row.style.padding = '3px 0';
+            row.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+            row.textContent = `${idx + 1}. ${q.prompt} ➔ ✅ ${q.correctValue}`;
+            listEl.appendChild(row);
+        });
+    }
+
+    /* =========================================================================
+       9. FLUJO DE PARTIDA Y EVENTOS DE INTERFAZ
+       ========================================================================= */
+    function startNewGame() {
+        sfx.init();
+        resizeCanvas();
+        initFireflies();
+        state.score = 0;
+        state.streak = 0;
+        state.lives = 3;
+        state.level = 1;
+        state.xp = 0;
+        state.xpToNext = 4;
+        state.timeLeft = 90;
+        state.segmentCount = 10;
+        state.magnetTimer = 0;
+        state.slowTimer = 0;
+        state.shieldActive = false;
+        state.particles = [];
+        state.floatingTexts = [];
+
+        document.getElementById('timer-stat').classList.toggle('hidden', state.mode !== 'contrarreloj');
+        document.getElementById('timer-val').textContent = `${state.timeLeft}s`;
+
+        // 1. Primero posicionamos la serpiente en el centro seguro
+        resetSnakePosition();
+        // 2. Generamos y verificamos todas las burbujas lejos de la serpiente ANTES de activar el movimiento
+        spawnQuestionAndFoods();
+        updateHUD();
+
+        // 3. Activamos el modo "Despegue Seguro": la serpiente espera a que el niño vea las opciones y toque el control
+        setAwaitingLaunch(true);
+
+        document.getElementById('start-modal').classList.add('hidden');
+        document.getElementById('gameover-modal').classList.add('hidden');
+        document.getElementById('guide-modal').classList.add('hidden');
+        document.getElementById('shop-modal').classList.add('hidden');
+        state.running = true;
+    }
+
+    function triggerGameOver() {
+        state.running = false;
+        const medalEl = document.getElementById('medal-icon');
+        const titleEl = document.getElementById('gameover-title');
+
+        if (state.score >= 180) {
+            medalEl.textContent = '🏆';
+            titleEl.textContent = '¡Gran Maestro Omnisciente!';
+        } else if (state.score >= 80) {
+            medalEl.textContent = '🥇';
+            titleEl.textContent = '¡Explorador Brillante!';
+        } else {
+            medalEl.textContent = '🌟';
+            titleEl.textContent = '¡Buen Entrenamiento Sabio!';
+        }
+
+        document.getElementById('gameover-stats').innerHTML =
+            `Puntos: <b>${state.score}</b> &nbsp;|&nbsp; Monedas: <b>${state.coins} 🪙</b> &nbsp;|&nbsp; Mejor Racha: <b>${state.bestStreak} 🔥</b>`;
+        document.getElementById('review-detail').textContent = state.lastExplanation;
+        document.getElementById('gameover-modal').classList.remove('hidden');
+    }
+
+    // Selección de Modo de Juego
+    document.querySelectorAll('#modes-row .mode-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#modes-row .mode-pill').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            state.mode = btn.dataset.mode;
+            sfx.bounceWall();
+        });
+    });
+
+    // Selección de Tamaño del Mundo (Arena Clásica vs Mundo Expandido Slither.io)
+    document.querySelectorAll('#worldsize-row .mode-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#worldsize-row .mode-pill').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            state.worldType = btn.dataset.world;
+            updateWorldDimensions();
+            resetSnakePosition();
+            sfx.bounceWall();
+        });
+    });
+
+    // Selección de Mundo Educativo
+    document.querySelectorAll('.topic-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            state.topic = btn.dataset.topic;
+            sfx.bounceWall();
+        });
+    });
+
+    // Pestañas de la Tienda
+    document.querySelectorAll('[data-shoptab]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-shoptab]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentShopTab = btn.dataset.shoptab;
+            renderShop();
+        });
+    });
+
+    // Pestañas del Centro de Conocimiento (Guía, Logros, Modo Profe, Licencia)
+    function switchGuideTab(tabName) {
+        document.querySelectorAll('[data-guidetab]').forEach(b => {
+            b.classList.toggle('active', b.dataset.guidetab === tabName);
+        });
+        ['enciclopedia', 'logros', 'profesor', 'licencia'].forEach(t => {
+            document.getElementById(`tab-content-${t}`).classList.toggle('hidden', t !== tabName);
+        });
+        if (tabName === 'logros') renderAchievementsAndAnalytics();
+        if (tabName === 'profesor') renderCustomQuestionsList();
+    }
+
+    document.querySelectorAll('[data-guidetab]').forEach(btn => {
+        btn.addEventListener('click', () => switchGuideTab(btn.dataset.guidetab));
+    });
+
+    // Guardar pregunta personalizada en el Modo Profesor
+    document.getElementById('add-custom-q-btn').addEventListener('click', () => {
+        const prompt = document.getElementById('custom-q-prompt').value.trim();
+        const correct = document.getElementById('custom-q-correct').value.trim();
+        const wrong1 = document.getElementById('custom-q-wrong1').value.trim();
+        const wrong2 = document.getElementById('custom-q-wrong2').value.trim();
+        const explain = document.getElementById('custom-q-explain').value.trim() || `¡Correcto! La respuesta es ${correct}.`;
+
+        if (!prompt || !correct || !wrong1 || !wrong2) {
+            sfx.eatWrong();
+            return;
+        }
+
+        customQuestionsBank.push({
+            prompt: `👩‍🏫 ${prompt}`,
+            correctValue: correct.toUpperCase(),
+            wrongValues: [wrong1.toUpperCase(), wrong2.toUpperCase()],
+            explanation: explain
+        });
+
+        document.getElementById('custom-q-prompt').value = '';
+        document.getElementById('custom-q-correct').value = '';
+        document.getElementById('custom-q-wrong1').value = '';
+        document.getElementById('custom-q-wrong2').value = '';
+        document.getElementById('custom-q-explain').value = '';
+
+        sfx.levelUp();
+        renderCustomQuestionsList();
+    });
+
+    // Copiar Licencia MIT al portapapeles compatible con iFrame
+    document.getElementById('copy-license-btn').addEventListener('click', () => {
+        const licenseText = document.querySelector('.license-pre').textContent;
+        const tempArea = document.createElement('textarea');
+        tempArea.value = licenseText;
+        document.body.appendChild(tempArea);
+        tempArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempArea);
+        document.getElementById('copy-license-btn').textContent = '✅ ¡Licencia MIT Copiada!';
+        setTimeout(() => {
+            document.getElementById('copy-license-btn').textContent = '📋 Copiar Texto de Licencia MIT';
+        }, 2000);
+    });
+
+    // Botones de navegación entre Modales
+    document.getElementById('start-game-btn').addEventListener('click', startNewGame);
+    document.getElementById('retry-btn').addEventListener('click', startNewGame);
+
+    document.getElementById('change-topic-btn').addEventListener('click', () => {
+        document.getElementById('gameover-modal').classList.add('hidden');
+        document.getElementById('start-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('menu-btn').addEventListener('click', () => {
+        state.running = false;
+        document.getElementById('start-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('shop-btn').addEventListener('click', () => {
+        state.running = false;
+        renderShop();
+        document.getElementById('shop-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('open-shop-from-start').addEventListener('click', () => {
+        document.getElementById('start-modal').classList.add('hidden');
+        renderShop();
+        document.getElementById('shop-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('close-shop-btn').addEventListener('click', () => {
+        document.getElementById('shop-modal').classList.add('hidden');
+        if (state.foods.length > 0) {
+            setAwaitingLaunch(true);
+            state.running = true;
+        } else {
+            document.getElementById('start-modal').classList.remove('hidden');
+        }
+    });
+
+    document.getElementById('guide-btn').addEventListener('click', () => {
+        state.running = false;
+        switchGuideTab('enciclopedia');
+        document.getElementById('guide-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('open-lab-from-start').addEventListener('click', () => {
+        document.getElementById('start-modal').classList.add('hidden');
+        switchGuideTab('profesor');
+        document.getElementById('guide-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('open-license-btn').addEventListener('click', () => {
+        document.getElementById('start-modal').classList.add('hidden');
+        switchGuideTab('licencia');
+        document.getElementById('guide-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('close-guide-btn').addEventListener('click', () => {
+        document.getElementById('guide-modal').classList.add('hidden');
+        if (state.foods.length > 0) {
+            setAwaitingLaunch(true);
+            state.running = true;
+        } else {
+            document.getElementById('start-modal').classList.remove('hidden');
+        }
+    });
+
+    document.getElementById('guide-btn').addEventListener('click', () => {
+        state.running = false;
+        switchGuideTab('enciclopedia');
+        document.getElementById('guide-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('open-lab-from-start').addEventListener('click', () => {
+        document.getElementById('start-modal').classList.add('hidden');
+        switchGuideTab('profesor');
+        document.getElementById('guide-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('open-license-btn').addEventListener('click', () => {
+        document.getElementById('start-modal').classList.add('hidden');
+        switchGuideTab('licencia');
+        document.getElementById('guide-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('close-guide-btn').addEventListener('click', () => {
+        document.getElementById('guide-modal').classList.add('hidden');
+        if (state.foods.length > 0) {
+            state.running = true;
+        } else {
+            document.getElementById('start-modal').classList.remove('hidden');
+        }
+    });
+
+    const soundBtn = document.getElementById('sound-btn');
+    soundBtn.addEventListener('click', () => {
+        sfx.enabled = !sfx.enabled;
+        soundBtn.textContent = sfx.enabled ? '🔊' : '🔇';
+    });
+
+    window.addEventListener('load', () => {
+        resizeCanvas();
+        initFireflies();
+        resetSnakePosition();
+        requestAnimationFrame(renderLoop);
+    });
+})();
+</script>
+</body>
+</html>
