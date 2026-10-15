@@ -1,0 +1,2909 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>EduBingo Pro Studio | Multigenerador Pedagógico y Tómbola Interactiva</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Fredoka (Títulos amigables y legibles para niños) & Plus Jakarta Sans (UI técnica limpia) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- jsPDF para generación vectorial matemática perfecta sin desbordamientos -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Fredoka"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --card-primary: #4f46e5;
+            --card-secondary: #eef2ff;
+            --card-border: #312e81;
+            --card-accent: #f59e0b;
+            --card-text: #1e1b4b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-display {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* Scrollbars personalizados */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Diseño de Cartón de Bingo con Protección Total Anti-Desbordamiento */
+        .bingo-card-wrapper {
+            background: #ffffff;
+            border: 3px solid var(--card-border);
+            border-radius: 18px;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .bingo-card-header {
+            background: var(--card-primary);
+            color: #ffffff;
+            padding: 10px 14px;
+            border-bottom: 3px solid var(--card-border);
+        }
+
+        .bingo-card-meta {
+            background: var(--card-secondary);
+            color: var(--card-text);
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            border-bottom: 2px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bingo-grid {
+            display: grid;
+            gap: 6px;
+            padding: 10px;
+            background: #ffffff;
+            flex: 1;
+        }
+
+        .bingo-grid.grid-3x3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .bingo-grid.grid-4x4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .bingo-grid.grid-5x5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+        .bingo-cell {
+            aspect-ratio: 1 / 0.88;
+            border: 2px solid var(--card-border);
+            border-radius: 10px;
+            background-color: #ffffff;
+            color: var(--card-text);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4px;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 -2px 0 rgba(0,0,0,0.06);
+        }
+
+        .bingo-cell:hover {
+            background-color: var(--card-secondary);
+            transform: translateY(-1px);
+        }
+
+        .bingo-cell:active {
+            transform: scale(0.96);
+        }
+
+        .bingo-cell.marked {
+            background-color: #dcfce7 !important;
+            border-color: #15803d !important;
+            color: #14532d !important;
+        }
+
+        .bingo-cell.marked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 3px;
+            right: 5px;
+            font-size: 0.65rem;
+            color: #16a34a;
+            background: #ffffff;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
+
+        .bingo-cell.free-space {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-style: dashed;
+        }
+
+        .bingo-cell-text {
+            width: 100%;
+            max-width: 100%;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            line-height: 1.12;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: none;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Animación de la Balotera / Tómbola */
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.04); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-pop {
+            animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+            50% { box-shadow: 0 0 0 12px rgba(79, 70, 229, 0); }
+        }
+
+        .tombola-ball-active {
+            animation: pulseGlow 2s infinite;
+        }
+
+        /* Fichas circulares recortables (Inspiradas en Palabras.html mejorado) */
+        .token-circle {
+            aspect-ratio: 1 / 1;
+            border: 3px dashed #334155;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #f1f5f9);
+            text-align: center;
+            position: relative;
+            page-break-inside: avoid;
+        }
+
+        .token-circle-inner {
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--card-primary);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            background: #ffffff;
+        }
+
+        /* Reglas de Impresión Nativa Limpia */
+        @media print {
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            #mainContentArea {
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+            }
+            #cardsPreviewGrid {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 14px !important;
+                padding: 10px !important;
+            }
+            .bingo-card-wrapper {
+                box-shadow: none !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-20 lg:pb-6">
+
+    <!-- BARRA SUPERIOR (STICKY HEADER) -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
+            <!-- Logo y Nombre -->
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-indigo-200 shrink-0">
+                    <i class="fa-solid fa-shapes text-lg"></i>
+                </div>
+                <div class="truncate">
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-display font-bold text-lg sm:text-xl text-slate-900 tracking-tight truncate">EduBingo Pro Studio</h1>
+                        <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-700 border border-indigo-200">
+                            v3.0 Vector PDF
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 truncate" id="headerActiveTopicBadge">
+                        Tema activo: Cargando...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Navegación Desktop (Oculta en móvil porque móvil tiene barra inferior ergonómica) -->
+            <nav class="hidden lg:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+                <button onclick="switchTab('studio')" id="nav-desk-studio" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 bg-white text-indigo-600 shadow-sm">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>1. Estudio y Cartones</span>
+                </button>
+                <button onclick="switchTab('tombola')" id="nav-desk-tombola" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span>2. Tómbola en Vivo</span>
+                    <span id="liveBadgeDesk" class="hidden w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                </button>
+                <button onclick="switchTab('tokens')" id="nav-desk-tokens" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-scissors"></i>
+                    <span>3. Fichas y Hoja Docente</span>
+                </button>
+                <button onclick="switchTab('database')" id="nav-desk-database" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-database"></i>
+                    <span>4. Banco Pedagógico</span>
+                </button>
+            </nav>
+
+            <!-- Botones de Acción Rápida -->
+            <div class="flex items-center gap-2 shrink-0">
+                <button onclick="openAuditModal()" class="px-2.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold flex items-center gap-1.5 transition" title="Ver Auditoría de tus programas anteriores">
+                    <i class="fa-solid fa-magnifying-glass-chart text-amber-600"></i>
+                    <span class="hidden md:inline">Auditoría IA</span>
+                </button>
+                <button onclick="exportVectorPDF('cards')" id="topPdfBtn" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-200 flex items-center gap-2 transition">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>Descargar PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main id="mainContentArea" class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-5">
+
+        <!-- ===================================================================
+             PESTAÑA 1: ESTUDIO DE DISEÑO Y GENERADOR DE CARTONES
+             =================================================================== -->
+        <section id="tab-studio" class="space-y-6">
+            
+            <!-- Banner Pedagógico Rápido -->
+            <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-violet-900 rounded-2xl p-4 sm:p-5 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 no-print">
+                <div class="space-y-1">
+                    <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/15 text-indigo-100 text-xs font-semibold">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+                        <span>Motor de Geometría Exacta (Cero palabras cortadas o fuera de margen)</span>
+                    </div>
+                    <h2 class="font-display text-xl sm:text-2xl font-bold">Diseña, Personaliza e Imprime Cartones Perfectos</h2>
+                    <p class="text-xs sm:text-sm text-indigo-100 max-w-2xl">
+                        Elige entre <strong>10 áreas curriculares</strong>, ajusta el tamaño de la cuadrícula y alterna entre el <strong>Modo Directo</strong> (identificación) o el <strong>Modo Cognitivo</strong> (asociar sinónimos, antónimos, definiciones o cálculos).
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto shrink-0">
+                    <button onclick="generateAllCards(true)" class="flex-1 md:flex-initial justify-center px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm shadow-md flex items-center gap-2 transition">
+                        <i class="fa-solid fa-shuffle"></i>
+                        <span>Re-Mezclar Cartones</span>
+                    </button>
+                    <button onclick="switchTab('tombola')" class="flex-1 md:flex-initial justify-center px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-sm border border-white/20 flex items-center gap-2 transition">
+                        <i class="fa-solid fa-play text-emerald-300"></i>
+                        <span>Ir a Tómbola</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Layout Principal del Estudio: Panel de Control (Izquierda) + Vista Previa (Derecha) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- PANEL DE CONFIGURACIÓN (4 Columnas en Desktop) -->
+                <aside class="lg:col-span-4 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-5 no-print">
+                    
+                    <!-- 1. Selección de Tema y Nivel Didáctico -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
+                                <i class="fa-solid fa-book-open"></i> 1. Tema y Didáctica
+                            </label>
+                            <button onclick="switchTab('database')" class="text-xs font-semibold text-indigo-600 hover:underline">
+                                + Editar palabras
+                            </button>
+                        </div>
+
+                        <div>
+                            <label for="selectCategory" class="block text-xs font-semibold text-slate-700 mb-1">Base de Datos Curricular:</label>
+                            <select id="selectCategory" onchange="onCategoryChange()" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm font-semibold text-slate-800 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none transition">
+                                <!-- Poblado dinámicamente -->
+                            </select>
+                        </div>
+
+                        <!-- Sub-filtro especial cuando se elige Bingo Silábico -->
+                        <div id="syllableMixContainer" class="hidden p-3 rounded-xl bg-indigo-50/80 border border-indigo-200 space-y-2">
+                            <label class="block text-xs font-bold text-indigo-900">
+                                <i class="fa-solid fa-Sliders mr-1"></i> Filtro Fonético de Sílabas:
+                            </label>
+                            <select id="selectSyllableFilter" onchange="generateAllCards(false)" class="w-full rounded-lg border border-indigo-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-800">
+                                <option value="balanced">Equilibrado 50% Directas + 50% Trabadas (Mezcladas)</option>
+                                <option value="direct">Solo Sílabas Simples / Directas (ma, pe, li, to...)</option>
+                                <option value="trabadas">Solo Sílabas Trabadas / Compuestas (bla, тре, pri...)</option>
+                                <option value="all">Todas las 70 Sílabas Aleatorias</option>
+                            </select>
+                            <p class="text-[11px] text-indigo-700 leading-tight">
+                                <i class="fa-solid fa-circle-check text-emerald-600"></i> Corrige el fallo antiguo: ahora las sílabas simples y trabadas se barajan en todo el cartón.
+                            </p>
+                        </div>
+
+                        <!-- Modo Pedagógico -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Modo Cognitivo de Juego:</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" onclick="setPedagogicalMode('cognitive')" id="btnModeCognitive" class="p-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50/70 text-left transition">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-indigo-950">Reto Asociativo</span>
+                                        <i class="fa-solid fa-brain text-indigo-600 text-xs"></i>
+                                    </div>
+                                    <p class="text-[11px] text-slate-600 mt-0.5 leading-tight">Cantas la pista/sinónimo y buscan la respuesta.</p>
+                                </button>
+                                <button type="button" onclick="setPedagogicalMode('direct')" id="btnModeDirect" class="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-slate-800">Modo Directo</span>
+                                        <i class="fa-solid fa-eye text-slate-400 text-xs"></i>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500 mt-0.5 leading-tight">Cantas la misma palabra escrita en el cartón.</p>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <!-- 2. Estructura de la Cuadrícula y Cantidad -->
+                    <div class="space-y-3">
+                        <label class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
+                            <i class="fa-solid fa-table-cells"></i> 2. Geometría y Cantidad
+                        </label>
+
+                        <div class="grid grid-cols-3 gap-2">
+                            <button type="button" onclick="setGridSize(3)" id="btnGrid3" class="py-2 px-3 rounded-xl border border-slate-200 font-bold text-xs flex flex-col items-center gap-0.5 hover:bg-slate-50 transition">
+                                <span class="text-base font-display">3 × 3</span>
+                                <span class="text-[10px] text-slate-500">9 Celdas</span>
+                            </button>
+                            <button type="button" onclick="setGridSize(4)" id="btnGrid4" class="py-2 px-3 rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-900 font-bold text-xs flex flex-col items-center gap-0.5 transition">
+                                <span class="text-base font-display">4 × 4</span>
+                                <span class="text-[10px] text-indigo-600">16 Celdas</span>
+                            </button>
+                            <button type="button" onclick="setGridSize(5)" id="btnGrid5" class="py-2 px-3 rounded-xl border border-slate-200 font-bold text-xs flex flex-col items-center gap-0.5 hover:bg-slate-50 transition">
+                                <span class="text-base font-display">5 × 5</span>
+                                <span class="text-[10px] text-slate-500">25 Celdas</span>
+                            </button>
+                        </div>
+
+                        <!-- Opciones visuales de celda -->
+                        <div class="flex flex-col gap-2 pt-1">
+                            <label class="flex items-center justify-between text-xs font-medium text-slate-700 cursor-pointer bg-slate-50 px-3 py-2 rounded-lg border border-slate-200/80">
+                                <span>Casilla Central "LIBRE ⭐" (en 3×3 y 5×5)</span>
+                                <input type="checkbox" id="chkFreeCenter" onchange="generateAllCards(false)" checked class="w-4 h-4 accent-indigo-600 rounded cursor-pointer">
+                            </label>
+                            <label class="flex items-center justify-between text-xs font-medium text-slate-700 cursor-pointer bg-slate-50 px-3 py-2 rounded-lg border border-slate-200/80">
+                                <span>Mostrar Emojis / Iconos Pedagógicos</span>
+                                <input type="checkbox" id="chkShowIcons" onchange="renderCardsPreview()" checked class="w-4 h-4 accent-indigo-600 rounded cursor-pointer">
+                            </label>
+                            <label class="flex items-center justify-between text-xs font-medium text-slate-700 cursor-pointer bg-slate-50 px-3 py-2 rounded-lg border border-slate-200/80">
+                                <span>Subtítulo de apoyo en cada celda</span>
+                                <input type="checkbox" id="chkShowSubtext" onchange="renderCardsPreview()" class="w-4 h-4 accent-indigo-600 rounded cursor-pointer">
+                            </label>
+                        </div>
+
+                        <!-- Cantidad de Cartones y Grado -->
+                        <div class="grid grid-cols-2 gap-3 pt-1">
+                            <div>
+                                <label for="inputCardCount" class="block text-xs font-semibold text-slate-700 mb-1">Nº de Cartones (1-60):</label>
+                                <input type="number" id="inputCardCount" min="1" max="60" value="6" onchange="generateAllCards(false)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 focus:border-indigo-600 outline-none">
+                            </div>
+                            <div>
+                                <label for="inputGrade" class="block text-xs font-semibold text-slate-700 mb-1">Grado / Curso:</label>
+                                <input type="text" id="inputGrade" value="4° Primaria" oninput="updateCardHeadersInDOM()" placeholder="Ej: 5A" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-900 focus:border-indigo-600 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <!-- 3. Personalización Institucional y Lista de Estudiantes -->
+                    <div class="space-y-3">
+                        <label class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-graduate"></i> 3. Encabezado y Estudiantes
+                        </label>
+
+                        <div>
+                            <label for="inputCustomTitle" class="block text-xs font-semibold text-slate-700 mb-1">Título del Cartón:</label>
+                            <input type="text" id="inputCustomTitle" value="BINGO DE EMOCIONES" oninput="updateCardHeadersInDOM()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-800 focus:border-indigo-600 outline-none">
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label for="textareaStudentList" class="text-xs font-semibold text-slate-700">Lista de Nombres (Opcional):</label>
+                                <span class="text-[10px] text-slate-400">1 por línea</span>
+                            </div>
+                            <textarea id="textareaStudentList" rows="2" oninput="updateCardHeadersInDOM()" placeholder="Deja vacío para línea en blanco o pega los nombres de tus alumnos (uno por línea)..." class="w-full rounded-xl border border-slate-300 p-2.5 text-xs text-slate-700 focus:border-indigo-600 outline-none resize-y"></textarea>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <!-- 4. Estilo Visual y Configuración de Impresión PDF -->
+                    <div class="space-y-3">
+                        <label class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
+                            <i class="fa-solid fa-palette"></i> 4. Tema Visual y Formato PDF
+                        </label>
+
+                        <!-- Selector de Paleta -->
+                        <div class="grid grid-cols-5 gap-1.5">
+                            <button onclick="setCardTheme('indigo')" title="Clásico Escolar" class="theme-swatch h-9 rounded-lg bg-indigo-600 border-2 border-slate-900 flex items-center justify-center text-white text-xs shadow-sm">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button onclick="setCardTheme('amber')" title="Socioemocional Cálido" class="theme-swatch h-9 rounded-lg bg-amber-500 border border-amber-700 flex items-center justify-center text-white text-xs"></button>
+                            <button onclick="setCardTheme('emerald')" title="Ciencias y Naturaleza" class="theme-swatch h-9 rounded-lg bg-emerald-600 border border-emerald-800 flex items-center justify-center text-white text-xs"></button>
+                            <button onclick="setCardTheme('rose')" title="Creativo Coral" class="theme-swatch h-9 rounded-lg bg-rose-600 border border-rose-800 flex items-center justify-center text-white text-xs"></button>
+                            <button onclick="setCardTheme('inksave')" title="Ahorro de Tinta (B/N Fotocopia)" class="theme-swatch h-9 rounded-lg bg-white border-2 border-slate-900 flex items-center justify-center text-slate-900 text-[10px] font-extrabold">
+                                B/N
+                            </button>
+                        </div>
+
+                        <!-- Cartones por página en el PDF -->
+                        <div>
+                            <label for="selectPdfLayout" class="block text-xs font-semibold text-slate-700 mb-1">Diseño de Página al Exportar PDF:</label>
+                            <select id="selectPdfLayout" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-800 outline-none">
+                                <option value="4">4 Cartones por Hoja (Cuadrícula 2×2 - Recomendado)</option>
+                                <option value="2">2 Cartones por Hoja (Media Carta Grande)</option>
+                                <option value="1">1 Cartón por Hoja (Tamaño Gigante Inclusivo)</option>
+                            </select>
+                        </div>
+
+                        <label class="flex items-center justify-between text-xs font-medium text-slate-700 cursor-pointer bg-indigo-50/60 px-3 py-2 rounded-lg border border-indigo-200">
+                            <span>Incluir Hoja de Control Docente al final del PDF</span>
+                            <input type="checkbox" id="chkAppendTeacherSheet" checked class="w-4 h-4 accent-indigo-600 rounded cursor-pointer">
+                        </label>
+
+                        <div class="pt-2 flex flex-col gap-2">
+                            <button onclick="exportVectorPDF('cards')" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-file-pdf text-base"></i>
+                                <span>Generar PDF Vectorial Perfecto</span>
+                            </button>
+                            <button onclick="window.print()" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-print"></i>
+                                <span>Impresión Directa del Navegador</span>
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- VISTA PREVIA INTERACTIVA DE CARTONES (8 Columnas en Desktop) -->
+                <div class="lg:col-span-8 space-y-4">
+                    
+                    <!-- Barra de estado de la vista previa -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-3 sm:px-5 flex flex-wrap items-center justify-between gap-3 shadow-sm no-print">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm" id="badgeTotalCards">6</span>
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800">Vista Previa Interactiva y Jugable</h3>
+                                <p class="text-xs text-slate-500">Haz clic o toca cualquier casilla para marcarla en pantalla. Cero solapamientos.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button onclick="clearAllMarks()" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-xs font-semibold text-slate-600 flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-eraser"></i>
+                                <span>Limpiar Marcas</span>
+                            </button>
+                            <button onclick="generateAllCards(true)" class="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-xs font-bold text-indigo-700 flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-rotate"></i>
+                                <span>Nuevas Combinaciones</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Contenedor Grid de Cartones -->
+                    <div id="cardsPreviewGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Cartones generados dinámicamente aquí -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===================================================================
+             PESTAÑA 2: TÓMBOLA DIGITAL EN VIVO (MODO DOCENTE / PROYECTOR / CELULAR)
+             =================================================================== -->
+        <section id="tab-tombola" class="hidden space-y-6 no-print">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Escenario Principal de la Balotera (7 Columnas) -->
+                <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden">
+                    
+                    <!-- Cabecera de la Tómbola -->
+                    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-4 sm:p-6 text-white flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <span class="text-[11px] font-extrabold uppercase tracking-widest text-amber-400 flex items-center gap-1.5">
+                                <i class="fa-solid fa-tower-broadcast animate-pulse"></i> Modo Aula Interactiva
+                            </span>
+                            <h2 class="font-display text-xl sm:text-2xl font-bold mt-0.5" id="tombolaCategoryTitle">Tómbola Pedagógica</h2>
+                        </div>
+
+                        <!-- Controles de Audio y Locutor IA -->
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleSpeech()" id="btnToggleSpeech" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-2 border border-white/15 transition">
+                                <i class="fa-solid fa-volume-high text-emerald-400" id="iconSpeech"></i>
+                                <span id="labelSpeech">Locutor Voz: ON</span>
+                            </button>
+                            <button onclick="repeatCurrentBallSpeech()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs border border-white/15 transition" title="Repetir lectura en voz alta">
+                                <i class="fa-solid fa-repeat"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cuerpo de la Balota Actual -->
+                    <div class="p-5 sm:p-8 flex flex-col items-center text-center space-y-6">
+                        
+                        <!-- Barra de Progreso de Balotas -->
+                        <div class="w-full flex items-center justify-between text-xs font-bold text-slate-500 gap-4">
+                            <span id="tombolaProgressText">Balota 0 de 30</span>
+                            <div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+                                <div id="tombolaProgressBar" class="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <span id="tombolaRemainingText">Quedan: 30</span>
+                        </div>
+
+                        <!-- Pantalla Gigante de Pista / Balota -->
+                        <div id="tombolaDisplayBox" class="w-full min-h-[230px] sm:min-h-[260px] rounded-3xl bg-gradient-to-b from-indigo-50/70 to-white border-2 border-indigo-200 p-6 flex flex-col items-center justify-center relative shadow-inner">
+                            
+                            <!-- Estado Inicial -->
+                            <div id="tombolaEmptyState" class="space-y-3 max-w-md">
+                                <div class="w-16 h-16 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-3xl mx-auto shadow-sm">
+                                    <i class="fa-solid fa-dice"></i>
+                                </div>
+                                <h3 class="font-display text-xl font-bold text-slate-800">¡Todo listo para jugar!</h3>
+                                <p class="text-xs sm:text-sm text-slate-500">
+                                    Presiona <strong>"Sacar Siguiente Balota"</strong>. El sistema baraja sin repetir y lee la definición, sinónimo o sílaba en voz alta.
+                                </p>
+                            </div>
+
+                            <!-- Estado Activo (Cuando hay balota en juego) -->
+                            <div id="tombolaActiveState" class="hidden w-full space-y-4">
+                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider shadow-sm">
+                                    <span id="tombolaBallNumber">#1</span>
+                                    <span>•</span>
+                                    <span id="tombolaModeLabel">Pista Cognitiva</span>
+                                </div>
+
+                                <!-- Pista o Pregunta Principal (Lo que se canta) -->
+                                <div class="space-y-2 px-2">
+                                    <div id="tombolaEmoji" class="text-4xl sm:text-5xl mb-1">🎯</div>
+                                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Escucha y busca en tu cartón:</p>
+                                    <h3 id="tombolaMainCall" class="font-display text-2xl sm:text-4xl font-bold text-slate-900 leading-tight break-words">
+                                        Sentimiento de satisfacción por los logros propios.
+                                    </h3>
+                                </div>
+
+                                <!-- Respuesta en el Cartón (Se puede ocultar/revelar para dar suspenso pedagógico) -->
+                                <div class="pt-2">
+                                    <div id="tombolaAnswerBadge" class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-emerald-900 font-bold text-sm sm:text-base shadow-sm">
+                                        <i class="fa-solid fa-check-circle text-emerald-600"></i>
+                                        <span>En el cartón dice: <strong id="tombolaCardAnswer" class="underline decoration-2">Orgullo</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interruptor Pedagógico: ¿Ocultar la respuesta para que los niños piensen? -->
+                        <div class="w-full flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs">
+                            <label class="flex items-center gap-2 font-semibold text-slate-700 cursor-pointer">
+                                <input type="checkbox" id="chkHideAnswerInTombola" onchange="updateTombolaAnswerVisibility()" class="w-4 h-4 accent-indigo-600 rounded">
+                                <span>Modo Suspenso (Ocultar la palabra respuesta en pantalla hasta hacer clic)</span>
+                            </label>
+                            <button onclick="revealAnswerTemporary()" id="btnRevealAnswer" class="hidden px-3 py-1 rounded-lg bg-amber-100 text-amber-900 font-bold hover:bg-amber-200 transition">
+                                <i class="fa-solid fa-eye mr-1"></i> Revelar Respuesta
+                            </button>
+                        </div>
+
+                        <!-- Botonera Gigante Táctil (Ideal para Celular Vertical y PC) -->
+                        <div class="w-full grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="drawNextBall()" id="btnDrawBall" class="sm:col-span-2 py-4 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 active:scale-[0.99] text-white font-display font-bold text-lg shadow-xl shadow-indigo-200 flex items-center justify-center gap-3 transition">
+                                <i class="fa-solid fa-forward-step text-xl"></i>
+                                <span>Sacar Siguiente Balota</span>
+                            </button>
+                            <button onclick="resetTombola()" class="py-4 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                <span>Reiniciar Juego</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel Derecho: Verificador de Ganadores + Historial de Balotas Cantadas (5 Columnas) -->
+                <div class="lg:col-span-5 space-y-5">
+                    
+                    <!-- Verificador Inteligente de ¡BINGO! -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-trophy text-amber-500"></i>
+                                <span>Juez y Verificador de ¡BINGO!</span>
+                            </h3>
+                            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                Automático
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">Meta para Ganar:</label>
+                                <select id="selectWinPattern" onchange="checkLiveCardsForBingo()" class="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs font-bold text-slate-800">
+                                    <option value="full">Cartón Pleno (Todas las celdas)</option>
+                                    <option value="line">1 Línea (Horizontal, Vertical o Diagonal)</option>
+                                    <option value="corners">Las 4 Esquinas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">Marcado en Cartones Digitales:</label>
+                                <select id="selectAutoMarkMode" class="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs font-bold text-slate-800">
+                                    <option value="manual">Manual (El alumno busca y toca)</option>
+                                    <option value="auto">Automático al sacar balota</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Alerta en vivo cuando algún cartón generado ya cumplió el patrón con las balotas sacadas -->
+                        <div id="liveWinnerRadar" class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center gap-2.5">
+                            <i class="fa-solid fa-satellite-dish text-slate-400 text-base"></i>
+                            <span>Radar de aula: Ningún cartón ha completado el patrón aún con las balotas cantadas.</span>
+                        </div>
+
+                        <button onclick="verifyBingoClaim()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-100 flex items-center justify-center gap-2 transition">
+                            <i class="fa-solid fa-award text-base"></i>
+                            <span>¡Alguien cantó BINGO! Verificar Cartones</span>
+                        </button>
+                    </div>
+
+                    <!-- Historial de Balotas Cantadas -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i>
+                                <span>Tablero de Balotas Cantadas</span>
+                            </h3>
+                            <span id="badgeHistoryCount" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">0</span>
+                        </div>
+
+                        <div id="drawnHistoryContainer" class="max-h-72 overflow-y-auto pr-1 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            <p class="col-span-full text-xs text-slate-400 text-center py-6">
+                                Aún no se han sacado balotas en esta partida.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================
+             PESTAÑA 3: FICHAS RECORTABLES Y HOJA DE CONTROL DOCENTE
+             =================================================================== -->
+        <section id="tab-tokens" class="hidden space-y-6 no-print">
+            
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Material Imprimible Complementario</span>
+                    <h2 class="font-display text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">Fichas Recortables para Bolsa y Guía Docente</h2>
+                    <p class="text-xs sm:text-sm text-slate-500">
+                        Evolución de tu archivo <code>Palabras.html</code>: genera fichas circulares perfectamente diagramadas para recortar y meter en una bolsa física, junto con la tabla oficial de definiciones.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full md:w-auto shrink-0">
+                    <button onclick="exportVectorPDF('tokens')" class="flex-1 md:flex-initial justify-center px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md flex items-center gap-2 transition">
+                        <i class="fa-solid fa-Scissors"></i>
+                        <span>Descargar PDF de Fichas Redondas</span>
+                    </button>
+                    <button onclick="exportVectorPDF('teachersheet')" class="flex-1 md:flex-initial justify-center px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md flex items-center gap-2 transition">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span>Descargar Hoja Docente PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vista de Fichas Circulares + Tabla de Control -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Vista Previa de Fichas Recortables (7 Columnas) -->
+                <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-display font-bold text-base text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-dot text-indigo-600"></i>
+                            <span>Vista Previa de Balotas / Fichas Recortables</span>
+                        </h3>
+                        <span class="text-xs text-slate-500" id="tokensTotalLabel">30 fichas</span>
+                    </div>
+                    <div id="tokensPreviewGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 max-h-[540px] overflow-y-auto p-2">
+                        <!-- Fichas circulares renderizadas aquí -->
+                    </div>
+                </div>
+
+                <!-- Hoja de Control del Profesor (5 Columnas) -->
+                <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-display font-bold text-base text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-emerald-600"></i>
+                            <span>Guía de Lectura del Docente</span>
+                        </h3>
+                        <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Respuesta ↔ Pista</span>
+                    </div>
+                    <div class="max-h-[540px] overflow-y-auto border border-slate-200 rounded-xl">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-slate-100 text-slate-700 sticky top-0">
+                                <tr>
+                                    <th class="p-2.5 border-b font-bold">#</th>
+                                    <th class="p-2.5 border-b font-bold">En el Cartón</th>
+                                    <th class="p-2.5 border-b font-bold">Pista / Definición a Cantar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacherChecklistTableBody" class="divide-y divide-slate-100">
+                                <!-- Filas dinámicas -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===================================================================
+             PESTAÑA 4: BANCO PEDAGÓGICO Y CREADOR PERSONALIZADO
+             =================================================================== -->
+        <section id="tab-database" class="hidden space-y-6 no-print">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Formulario de Creación / Importación Rápida (5 Columnas) -->
+                <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-base text-slate-900">Agregar o Crear Banco Propio</h3>
+                            <p class="text-xs text-slate-500">Añade nuevos pares al tema actual o crea tu lista personalizada.</p>
+                        </div>
+                    </div>
+
+                    <!-- Agregar un ítem individual -->
+                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Añadir Nuevo Concepto al Tema Actual</h4>
+                        <div class="grid grid-cols-4 gap-2">
+                            <div class="col-span-3">
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Texto en la Casilla del Cartón:</label>
+                                <input type="text" id="newItemCardText" placeholder="Ej: Empatía" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Emoji:</label>
+                                <input type="text" id="newItemIcon" placeholder="🤝" value="⭐" class="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-xs text-center">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Pista / Sinónimo / Definición para la Tómbola:</label>
+                            <input type="text" id="newItemCallText" placeholder="Ej: Ponerse en el lugar de otra persona y comprender lo que siente." class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-xs">
+                        </div>
+                        <button onclick="addSingleItemToCurrentCategory()" class="w-full py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition">
+                            <i class="fa-solid fa-circle-plus"></i>
+                            <span>Insertar en la Base de Datos Activa</span>
+                        </button>
+                    </div>
+
+                    <!-- Importación Masiva para el Tema Personalizado -->
+                    <div class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-amber-950 uppercase tracking-wider">Importador Masivo Rápido</h4>
+                            <span class="text-[10px] font-bold bg-amber-200/70 text-amber-900 px-2 py-0.5 rounded">Formato: Cartón | Pista</span>
+                        </div>
+                        <p class="text-[11px] text-amber-900 leading-relaxed">
+                            Escribe una palabra por línea. Si quieres incluir definición o par asociativo, sepáralos con <code>|</code> o <code>:</code>.
+                        </p>
+                        <textarea id="bulkImportTextarea" rows="5" placeholder="Efímero | Antónimo de Eterno&#10;Ocultar | Sinónimo de Esconder&#10;Mitocondria | Orgánulo encargado de la respiración celular&#10;8 × 9 | 72" class="w-full rounded-lg border border-amber-300 p-2.5 text-xs font-mono text-slate-800 bg-white outline-none"></textarea>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="bulkImportItems(false)" class="py-2 px-3 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition">
+                                Añadir al Tema Actual
+                            </button>
+                            <button onclick="bulkImportItems(true)" class="py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs transition">
+                                Reemplazar "Mi Bingo Propio"
+                            </button>
+                        </div>
+                    </div>
+
+                    <button onclick="restoreFactoryDatabase()" class="w-full py-2 rounded-xl border border-rose-200 hover:bg-rose-50 text-rose-700 font-semibold text-xs flex items-center justify-center gap-2 transition">
+                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                        <span>Restaurar Base de Datos Original de Fábrica</span>
+                    </button>
+                </div>
+
+                <!-- Explorador de la Base de Datos Activa (7 Columnas) -->
+                <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-slate-900" id="dbExplorerTitle">Explorador de Contenidos</h3>
+                            <p class="text-xs text-slate-500">Todos los ítems tienen ajuste automático de fuente para evitar solapamientos.</p>
+                        </div>
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                            <input type="text" id="dbSearchInput" oninput="renderDatabaseExplorer()" placeholder="Buscar palabra o pista..." class="pl-8 pr-3 py-1.5 rounded-xl border border-slate-300 text-xs outline-none focus:border-indigo-600">
+                        </div>
+                    </div>
+
+                    <div id="dbItemsList" class="divide-y divide-slate-100 max-h-[520px] overflow-y-auto border border-slate-200 rounded-xl">
+                        <!-- Lista de ítems editables/eliminables -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- BARRA DE NAVEGACIÓN INFERIOR PARA CELULARES (MOBILE PORTRAIT ERGONOMICS) -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] px-2 py-1.5 grid grid-cols-4 gap-1 no-print">
+        <button onclick="switchTab('studio')" id="nav-mob-studio" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-indigo-600 bg-indigo-50/80 font-bold text-[11px] transition">
+            <i class="fa-solid fa-table-cells text-base mb-0.5"></i>
+            <span>Cartones</span>
+        </button>
+        <button onclick="switchTab('tombola')" id="nav-mob-tombola" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-500 font-semibold text-[11px] transition relative">
+            <i class="fa-solid fa-bullhorn text-base mb-0.5"></i>
+            <span>Tómbola</span>
+            <span id="liveBadgeMob" class="hidden absolute top-1.5 right-6 w-2 h-2 rounded-full bg-emerald-500"></span>
+        </button>
+        <button onclick="switchTab('tokens')" id="nav-mob-tokens" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-500 font-semibold text-[11px] transition">
+            <i class="fa-solid fa-scissors text-base mb-0.5"></i>
+            <span>Fichas</span>
+        </button>
+        <button onclick="switchTab('database')" id="nav-mob-database" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-500 font-semibold text-[11px] transition">
+            <i class="fa-solid fa-database text-base mb-0.5"></i>
+            <span>Temas (10)</span>
+        </button>
+    </nav>
+
+    <!-- MODAL DE AUDITORÍA DE INGENIERÍA DE SOFTWARE Y DIDÁCTICA -->
+    <div id="auditModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[88vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden animate-pop">
+            <div class="bg-gradient-to-r from-indigo-900 to-slate-900 px-6 py-4 text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-microscope text-amber-400 text-xl"></i>
+                    <div>
+                        <h3 class="font-display font-bold text-lg">Auditoría Técnica y Pedagógica de tus 6 Prototipos</h3>
+                        <p class="text-xs text-indigo-200">Qué fallaba en los primeros códigos con IA y cómo lo resolvimos en EduBingo Pro Studio</p>
+                    </div>
+                </div>
+                <button onclick="closeAuditModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 space-y-1.5">
+                        <span class="px-2 py-0.5 rounded bg-rose-200 text-rose-900 font-bold text-[11px]">HALLAZGO 1: PDF Y CAJAS ROTA</span>
+                        <h4 class="font-bold text-rose-950">Desbordamiento de Palabras y Ruptura del Grid</h4>
+                        <p class="text-xs text-rose-900">
+                            En <code>Bingo Silabico2.html</code> insertaste <code>.carton-header</code> dentro del contenedor <code>.carton</code> que tenía <code>display: grid</code>. ¡Eso hacía que el nombre del alumno ocupara la primera celda de sílabas! Además, en <code>bingo.html</code> palabras como <em>"frustración"</em> tenían tamaño fijo y se salían del borde al pasar a PDF.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-1.5">
+                        <span class="px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 font-bold text-[11px]">SOLUCIÓN INGENIERIL</span>
+                        <h4 class="font-bold text-emerald-950">Motor Vectorial jsPDF con Medición Matemática</h4>
+                        <p class="text-xs text-emerald-900">
+                            Separamos semánticamente la cabecera (Título, Nombre, Grado, Serial) de la cuadrícula de juego. Al exportar a PDF, nuestro algoritmo mide en milímetros/puntos el ancho real de cada palabra (<code>pdf.getTextWidth</code>), reduce la fuente dinámicamente o divide en líneas sin cortar jamás una sílaba.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 space-y-1.5">
+                        <span class="px-2 py-0.5 rounded bg-amber-200 text-amber-900 font-bold text-[11px]">HALLAZGO 2: SESGO SILÁBICO</span>
+                        <h4 class="font-bold text-amber-950">Sílabas Simples Arriba y Trabadas Abajo</h4>
+                        <p class="text-xs text-amber-900">
+                            En <code>generadorBingoSilabico.html</code>, la función llenaba primero 12 sílabas de 2 letras y luego 13 de 3 letras, pero olvidaba barajar el cartón resultante. Las primeras dos filas eran siempre fáciles y las últimas siempre difíciles.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-200 space-y-1.5">
+                        <span class="px-2 py-0.5 rounded bg-indigo-200 text-indigo-900 font-bold text-[11px]">SOLUCIÓN DIDÁCTICA</span>
+                        <h4 class="font-bold text-indigo-950">Barajado Fisher-Yates + Doble Nivel Cognitivo</h4>
+                        <p class="text-xs text-indigo-900">
+                            Ahora seleccionamos la proporción exacta (50% simples y 50% trabadas) y aplicamos una permutación completa Fisher-Yates sobre las celdas. Además, integramos 10 áreas curriculares con <strong>Modo Asociativo</strong> (cantar el sinónimo, antónimo, operación o definición).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-end">
+                <button onclick="closeAuditModal()" class="px-5 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs sm:text-sm">
+                    Entendido, volver al Estudio
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CELEBRACIÓN Y VERIFICACIÓN DE BINGO -->
+    <div id="winnerModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 text-center space-y-4 shadow-2xl border-2 border-amber-400 animate-pop">
+            <div class="w-20 h-20 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center text-4xl mx-auto shadow-inner">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+            <h3 id="winnerModalTitle" class="font-display font-bold text-2xl sm:text-3xl text-slate-900">¡BINGO VERIFICADO!</h3>
+            <p id="winnerModalBody" class="text-sm text-slate-600 leading-relaxed"></p>
+            <div id="winnerCardsBadges" class="flex flex-wrap justify-center gap-2 py-2"></div>
+            <button onclick="closeWinnerModal()" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-lg">
+                Continuar Jugando
+            </button>
+        </div>
+    </div>
+
+    <!-- NOTIFICACIÓN TOAST FLOTANTE (SIN USAR ALERT NUNCA) -->
+    <div id="toastNotification" class="fixed top-20 right-4 z-50 hidden max-w-sm bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-3 text-xs sm:text-sm font-medium no-print">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMessage">Acción completada</span>
+    </div>
+
+    <!-- =======================================================================
+         MOTOR JAVASCRIPT: BASE DE DATOS PEDAGÓGICA + LÓGICA + RENDER VECTORIAL PDF
+         ======================================================================= -->
+    <script>
+        /***********************************************************************
+         * 1. GRAN BASE DE DATOS PEDAGÓGICA INTEGRADA (10 CATEGORÍAS COMPLETAS)
+         * Incluye tus temas originales (Emociones, Sinónimos, Antónimos,
+         * Sílabas Simples y Trabadas) ampliados + 5 áreas curriculares nuevas.
+         ***********************************************************************/
+        const FACTORY_DATABASE = {
+            emociones: {
+                id: 'emociones',
+                name: '1. Emociones y Educación Socioemocional (30)',
+                defaultTitle: 'BINGO DE LAS EMOCIONES',
+                recommendedGrid: 3,
+                theme: 'amber',
+                description: 'Reconocimiento emocional a través de definiciones y situaciones cotidianas.',
+                items: [
+                    { cardText: 'Felicidad', callText: 'Sentimiento de plenitud y satisfacción cuando algo nos hace sentir muy bien.', icon: '😊', sub: 'Bienestar' },
+                    { cardText: 'Tristeza', callText: 'Estado emocional de pena, desánimo o ganas de llorar ante una pérdida o decepción.', icon: '😢', sub: 'Melancolía' },
+                    { cardText: 'Ansiedad', callText: 'Sensación de preocupación intensa, nerviosismo o inquietud por lo que pueda pasar.', icon: '😰', sub: 'Inquietud' },
+                    { cardText: 'Alegría', callText: 'Emoción luminosa de placer, risa y entusiasmo que queremos compartir.', icon: '😄', sub: 'Júbilo' },
+                    { cardText: 'Ira', callText: 'Fuerte reacción de enojo o furia cuando sentimos que algo es injusto.', icon: '😡', sub: 'Furia' },
+                    { cardText: 'Serenidad', callText: 'Estado de paz interior, tranquilidad y mente en calma.', icon: '🧘', sub: 'Paz mental' },
+                    { cardText: 'Enfado', callText: 'Molestia o disgusto pasajero hacia una situación o acción.', icon: '😠', sub: 'Disgusto' },
+                    { cardText: 'Orgullo', callText: 'Satisfacción sana por los logros propios o el esfuerzo realizado.', icon: '🦁', sub: 'Logro' },
+                    { cardText: 'Amor', callText: 'Sentimiento profundo de afecto, cuidado y cariño hacia alguien o algo.', icon: '❤️', sub: 'Afecto' },
+                    { cardText: 'Frustración', callText: 'Desánimo o impotencia que sentimos cuando un intento no sale como esperábamos.', icon: '😣', sub: 'Obstáculo' },
+                    { cardText: 'Esperanza', callText: 'Confianza optimista en que sucederá algo bueno o mejorará una situación.', icon: '🌱', sub: 'Ilusión' },
+                    { cardText: 'Vergüenza', callText: 'Incomodidad o rubor en el rostro tras vivir un momento embarazoso en público.', icon: '😳', sub: 'Timidez' },
+                    { cardText: 'Miedo', callText: 'Emoción de alerta causada por la percepción de un peligro real o imaginario.', icon: '😨', sub: 'Temor' },
+                    { cardText: 'Compasión', callText: 'Preocupación tierna por el sufrimiento de otros con deseo de ayudarlos.', icon: '🤲', sub: 'Cuidado' },
+                    { cardText: 'Culpa', callText: 'Inquietud en la conciencia al reconocer que cometimos un error o herimos a alguien.', icon: '😔', sub: 'Remordimiento' },
+                    { cardText: 'Gratitud', callText: 'Sentimiento cálido de agradecimiento y valoración por lo que recibimos.', icon: '🙏', sub: 'Dar gracias' },
+                    { cardText: 'Sorpresa', callText: 'Asombro breve causado por un evento totalmente inesperado.', icon: '😮', sub: 'Imprevisto' },
+                    { cardText: 'Euforia', callText: 'Estado de alegría desbordante, celebración y energía máxima.', icon: '🥳', sub: 'Exaltación' },
+                    { cardText: 'Nostalgia', callText: 'Recuerdo cariñoso y un poco triste de momentos bonitos del pasado.', icon: '🕰️', sub: 'Añoranza' },
+                    { cardText: 'Confianza', callText: 'Seguridad firme en uno mismo o en la honestidad de otra persona.', icon: '🤝', sub: 'Seguridad' },
+                    { cardText: 'Empatía', callText: 'Capacidad de ponerse en los zapatos del otro y comprender sus sentimientos.', icon: '🫂', sub: 'Conexión' },
+                    { cardText: 'Asombro', callText: 'Maravilla y admiración ante algo extraordinario de la naturaleza o el arte.', icon: '🤩', sub: 'Maravilla' },
+                    { cardText: 'Paciencia', callText: 'Capacidad de esperar con calma sin perder el control ni desesperarse.', icon: '⏳', sub: 'Calma' },
+                    { cardText: 'Curiosidad', callText: 'Deseo intenso de explorar, hacer preguntas y aprender cosas nuevas.', icon: '🔍', sub: 'Explorar' },
+                    { cardText: 'Entusiasmo', callText: 'Motivación encendida que nos impulsa a realizar un proyecto con ganas.', icon: '🚀', sub: 'Motivación' },
+                    { cardText: 'Alivio', callText: 'Tranquilidad que sentimos cuando termina un problema o pasa un susto.', icon: '😮‍💨', sub: 'Descanso' },
+                    { cardText: 'Celos', callText: 'Temor de perder el cariño o la atención de alguien importante para nosotros.', icon: '😒', sub: 'Inseguridad' },
+                    { cardText: 'Ternura', callText: 'Cariño suave, protector y delicado ante alguien pequeño o vulnerable.', icon: '🐣', sub: 'Dulzura' },
+                    { cardText: 'Aburrimiento', callText: 'Falta de interés o cansancio cuando nada nos divierte ni llama la atención.', icon: '🥱', sub: 'Tedio' },
+                    { cardText: 'Valentía', callText: 'Fuerza interior para actuar correctamente a pesar de sentir miedo.', icon: '🛡️', sub: 'Coraje' }
+                ]
+            },
+
+            sinonimos: {
+                id: 'sinonimos',
+                name: '2. Sinónimos y Riqueza Léxica (36)',
+                defaultTitle: 'BINGO DE SINÓNIMOS',
+                recommendedGrid: 4,
+                theme: 'indigo',
+                description: 'El docente canta una palabra y el estudiante busca su SINÓNIMO en el cartón.',
+                items: [
+                    { cardText: 'Veloz', callText: 'Busca el SINÓNIMO de: RÁPIDO', icon: '⚡', sub: '= Rápido' },
+                    { cardText: 'Hermoso', callText: 'Busca el SINÓNIMO de: BELLO / BONITO', icon: '✨', sub: '= Bello' },
+                    { cardText: 'Audaz', callText: 'Busca el SINÓNIMO de: VALIENTE / ATREVIDO', icon: '🦁', sub: '= Valiente' },
+                    { cardText: 'Jovial', callText: 'Busca el SINÓNIMO de: ALEGRE / FESTIVO', icon: '😄', sub: '= Alegre' },
+                    { cardText: 'Conversar', callText: 'Busca el SINÓNIMO de: HABLAR / DIALOGAR', icon: '💬', sub: '= Hablar' },
+                    { cardText: 'Observar', callText: 'Busca el SINÓNIMO de: MIRAR / CONTEMPLAR', icon: '👁️', sub: '= Mirar' },
+                    { cardText: 'Sendero', callText: 'Busca el SINÓNIMO de: CAMINO / RUTA', icon: '🛤️', sub: '= Camino' },
+                    { cardText: 'Sencillo', callText: 'Busca el SINÓNIMO de: FÁCIL / SIMPLE', icon: '👌', sub: '= Fácil' },
+                    { cardText: 'Complejo', callText: 'Busca el SINÓNIMO de: DIFÍCIL / COMPLICADO', icon: '🧩', sub: '= Difícil' },
+                    { cardText: 'Docente', callText: 'Busca el SINÓNIMO de: PROFESOR / MAESTRO', icon: '👩‍🏫', sub: '= Maestro' },
+                    { cardText: 'Estudiante', callText: 'Busca el SINÓNIMO de: ALUMNO / DISCÍPULO', icon: '🎒', sub: '= Alumno' },
+                    { cardText: 'Hogar', callText: 'Busca el SINÓNIMO de: CASA / VIVIENDA', icon: '🏡', sub: '= Casa' },
+                    { cardText: 'Famoso', callText: 'Busca el SINÓNIMO de: CÉLEBRE / CONOCIDO', icon: '🌟', sub: '= Célebre' },
+                    { cardText: 'Ocultar', callText: 'Busca el SINÓNIMO de: ESCONDER / TAPAR', icon: '🙈', sub: '= Esconder' },
+                    { cardText: 'Comenzar', callText: 'Busca el SINÓNIMO de: EMPEZAR / INICIAR', icon: '🏁', sub: '= Empezar' },
+                    { cardText: 'Finalizar', callText: 'Busca el SINÓNIMO de: TERMINAR / CONCLUIR', icon: '🛑', sub: '= Terminar' },
+                    { cardText: 'Aroma', callText: 'Busca el SINÓNIMO de: PERFUME / FRAGANCIA', icon: '🌸', sub: '= Fragancia' },
+                    { cardText: 'Obsequio', callText: 'Busca el SINÓNIMO de: REGALO / PRESENTE', icon: '🎁', sub: '= Regalo' },
+                    { cardText: 'Cima', callText: 'Busca el SINÓNIMO de: CUMBRE / CÚSPIDE', icon: '🏔️', sub: '= Cumbre' },
+                    { cardText: 'Sabio', callText: 'Busca el SINÓNIMO de: ERUDITO / INTELIGENTE', icon: '🦉', sub: '= Erudito' },
+                    { cardText: 'gigante', callText: 'Busca el SINÓNIMO de: ENORME / COLOSAL', icon: '🐘', sub: '= Enorme' },
+                    { cardText: 'Diminuto', callText: 'Busca el SINÓNIMO de: PEQUEÑO / CHICO', icon: '🐜', sub: '= Pequeño' },
+                    { cardText: 'Escuchar', callText: 'Busca el SINÓNIMO de: OÍR / ATENDER', icon: '👂', sub: '= Oír' },
+                    { cardText: 'Brillar', callText: 'Busca el SINÓNIMO de: RESPLANDECER / ILUMINAR', icon: '☀️', sub: '= Relucir' },
+                    { cardText: 'Saltar', callText: 'Busca el SINÓNIMO de: BRINCAR', icon: '🦘', sub: '= Brincar' },
+                    { cardText: 'Enojo', callText: 'Busca el SINÓNIMO de: ENFADO / FURIA', icon: '💢', sub: '= Enfado' },
+                    { cardText: 'Calma', callText: 'Busca el SINÓNIMO de: TRANQUILIDAD / PAZ', icon: '🌊', sub: '= Quietud' },
+                    { cardText: 'Veraz', callText: 'Busca el SINÓNIMO de: SINCERO / VERDADERO', icon: '⚖️', sub: '= Sincero' },
+                    { cardText: 'Afable', callText: 'Busca el SINÓNIMO de: AMABLE / CORDIAL', icon: '🌷', sub: '= Amable' },
+                    { cardText: 'Velar', callText: 'Busca el SINÓNIMO de: CUIDAR / PROTEGER', icon: '🛡️', sub: '= Cuidar' },
+                    { cardText: 'Victoria', callText: 'Busca el SINÓNIMO de: TRIUNFO / ÉXITO', icon: '🏆', sub: '= Triunfo' },
+                    { cardText: 'Alimento', callText: 'Busca el SINÓNIMO de: COMIDA / SUSTENTO', icon: '🍎', sub: '= Comida' },
+                    { cardText: 'Rostro', callText: 'Busca el SINÓNIMO de: CARA / FAZ', icon: '🙂', sub: '= Cara' },
+                    { cardText: 'Cabello', callText: 'Busca el SINÓNIMO de: PELO / MELENA', icon: '💇', sub: '= Pelo' },
+                    { cardText: 'Anciano', callText: 'Busca el SINÓNIMO de: LONGEVO / ABUELO', icon: '👴', sub: '= Longevo' },
+                    { cardText: 'Velero', callText: 'Busca el SINÓNIMO de: BARCO / EMBARCACIÓN', icon: '⛵', sub: '= Barco' }
+                ]
+            },
+
+            antonimos: {
+                id: 'antonimos',
+                name: '3. Antónimos y Contraste Semántico (36)',
+                defaultTitle: 'BINGO DE ANTÓNIMOS',
+                recommendedGrid: 4,
+                theme: 'rose',
+                description: 'El docente canta un concepto y el estudiante debe hallar su OPUESTO o ANTÓNIMO.',
+                items: [
+                    { cardText: 'Generoso', callText: 'Busca el ANTÓNIMO (opuesto) de: TACAÑO / EGOÍSTA', icon: '🤲', sub: '≠ Tacaño' },
+                    { cardText: 'Claridad', callText: 'Busca el ANTÓNIMO (opuesto) de: OSCURIDAD', icon: '☀️', sub: '≠ Oscuridad' },
+                    { cardText: 'Construir', callText: 'Busca el ANTÓNIMO (opuesto) de: DESTRUIR / DERRIBAR', icon: '🏗️', sub: '≠ Destruir' },
+                    { cardText: 'Valiente', callText: 'Busca el ANTÓNIMO (opuesto) de: COBARDE / TEMEROSO', icon: '🦁', sub: '≠ Cobarde' },
+                    { cardText: 'Abundancia', callText: 'Busca el ANTÓNIMO (opuesto) de: ESCASEZ', icon: '🌽', sub: '≠ Escasez' },
+                    { cardText: 'Eterno', callText: 'Busca el ANTÓNIMO (opuesto) de: EFÍMERO / PASAJERO', icon: '♾️', sub: '≠ Efímero' },
+                    { cardText: 'Silencio', callText: 'Busca el ANTÓNIMO (opuesto) de: RUIDO / ESCÁNDALO', icon: '🤫', sub: '≠ Ruido' },
+                    { cardText: 'Triunfo', callText: 'Busca el ANTÓNIMO (opuesto) de: DERROTA / FRACASO', icon: '🏅', sub: '≠ Derrota' },
+                    { cardText: 'Recordar', callText: 'Busca el ANTÓNIMO (opuesto) de: OLVIDAR', icon: '💡', sub: '≠ Olvidar' },
+                    { cardText: 'Ahorrar', callText: 'Busca el ANTÓNIMO (opuesto) de: DERROCHAR / MALGASTAR', icon: '🐷', sub: '≠ Gastar' },
+                    { cardText: 'Dulce', callText: 'Busca el ANTÓNIMO (opuesto) de: AMARGO / AGRIO', icon: '🍯', sub: '≠ Amargo' },
+                    { cardText: 'Suave', callText: 'Busca el ANTÓNIMO (opuesto) de: ÁSPERO / RUGOSO', icon: '🪶', sub: '≠ Áspero' },
+                    { cardText: 'Temprano', callText: 'Busca el ANTÓNIMO (opuesto) de: TARDE', icon: '🌅', sub: '≠ Tarde' },
+                    { cardText: 'Verdad', callText: 'Busca el ANTÓNIMO (opuesto) de: MENTIRA / ENGAÑO', icon: '⚖️', sub: '≠ Mentira' },
+                    { cardText: 'Paz', callText: 'Busca el ANTÓNIMO (opuesto) de: GUERRA / CONFLICTO', icon: '🕊️', sub: '≠ Guerra' },
+                    { cardText: 'Amor', callText: 'Busca el ANTÓNIMO (opuesto) de: ODIO / RENCOR', icon: '❤️', sub: '≠ Odio' },
+                    { cardText: 'Lleno', callText: 'Busca el ANTÓNIMO (opuesto) de: VACÍO', icon: '🥛', sub: '≠ Vacío' },
+                    { cardText: 'Subir', callText: 'Busca el ANTÓNIMO (opuesto) de: BAJAR / DESCENDER', icon: '⬆️', sub: '≠ Bajar' },
+                    { cardText: 'Entrar', callText: 'Busca el ANTÓNIMO (opuesto) de: SALIR', icon: '🚪', sub: '≠ Salir' },
+                    { cardText: 'Reír', callText: 'Busca el ANTÓNIMO (opuesto) de: LLORAR', icon: '😂', sub: '≠ Llorar' },
+                    { cardText: 'Fuerte', callText: 'Busca el ANTÓNIMO (opuesto) de: DÉBIL / FRÁGIL', icon: '💪', sub: '≠ Débil' },
+                    { cardText: 'Limpio', callText: 'Busca el ANTÓNIMO (opuesto) de: SUCIO / MANCHADO', icon: '🧼', sub: '≠ Sucio' },
+                    { cardText: 'Seco', callText: 'Busca el ANTÓNIMO (opuesto) de: MOJADO / HÚMEDO', icon: '🌵', sub: '≠ Mojado' },
+                    { cardText: 'Cerca', callText: 'Busca el ANTÓNIMO (opuesto) de: LEJOS / DISTANTE', icon: '📍', sub: '≠ Lejos' },
+                    { cardText: 'Ancho', callText: 'Busca el ANTÓNIMO (opuesto) de: ESTRECHO / ANGOSTO', icon: '↔️', sub: '≠ Estrecho' },
+                    { cardText: 'Liviano', callText: 'Busca el ANTÓNIMO (opuesto) de: PESADO', icon: '🎈', sub: '≠ Pesado' },
+                    { cardText: 'Joven', callText: 'Busca el ANTÓNIMO (opuesto) de: VIEJO / ANTIGUO', icon: '🌱', sub: '≠ Antiguo' },
+                    { cardText: 'Encender', callText: 'Busca el ANTÓNIMO (opuesto) de: APAGAR', icon: '🔦', sub: '≠ Apagar' },
+                    { cardText: 'Unir', callText: 'Busca el ANTÓNIMO (opuesto) de: SEPARAR / DIVIDIR', icon: '🔗', sub: '≠ Separar' },
+                    { cardText: 'Aceptar', callText: 'Busca el ANTÓNIMO (opuesto) de: RECHAZAR / NEGAR', icon: '✅', sub: '≠ Rechazar' },
+                    { cardText: 'Principio', callText: 'Busca el ANTÓNIMO (opuesto) de: FINAL / TÉRMINO', icon: '🎬', sub: '≠ Final' },
+                    { cardText: 'Valioso', callText: 'Busca el ANTÓNIMO (opuesto) de: INÚTIL / INSIGNIFICANTE', icon: '💎', sub: '≠ Inútil' },
+                    { cardText: 'Culpable', callText: 'Busca el ANTÓNIMO (opuesto) de: INOCENTE', icon: '🧑‍⚖️', sub: '≠ Inocente' },
+                    { cardText: 'Orden', callText: 'Busca el ANTÓNIMO (opuesto) de: CAOS / DESORDEN', icon: '📚', sub: '≠ Desorden' },
+                    { cardText: 'Público', callText: 'Busca el ANTÓNIMO (opuesto) de: PRIVADO / SECRETO', icon: '📢', sub: '≠ Privado' },
+                    { cardText: 'Despierto', callText: 'Busca el ANTÓNIMO (opuesto) de: DORMIDO', icon: '👀', sub: '≠ Dormido' }
+                ]
+            },
+
+            silabico: {
+                id: 'silabico',
+                name: '4. Bingo Silábico Completo: Directas y Trabadas (70)',
+                defaultTitle: 'BINGO SILÁBICO',
+                recommendedGrid: 5,
+                theme: 'indigo',
+                description: 'Fusión mejorada de tus 3 programas silábicos con mezcla equilibrada real.',
+                items: [
+                    // 30 Sílabas Directas (2 letras / fonemas básicos)
+                    { cardText: 'ma', callText: 'Sílaba inicial de: MANO, MAMÁ, MARIPOSA', icon: '✋', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'pe', callText: 'Sílaba inicial de: PELOTA, PERRO, PERA', icon: '🐶', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'li', callText: 'Sílaba inicial de: LIBRO, LIMÓN, LINTERNA', icon: '🍋', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'to', callText: 'Sílaba inicial de: TOMATE, TORO, TORTUGA', icon: '🐢', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'su', callText: 'Sílaba inicial de: SUMA, SUELO, SUEÑO', icon: '➕', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'ra', callText: 'Sílaba inicial de: RANA, RATÓN, RAMA', icon: '🐸', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'me', callText: 'Sílaba inicial de: MESA, MELÓN, MEDALLA', icon: '🏅', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'ca', callText: 'Sílaba inicial de: CASA, CABALLO, CAMISA', icon: '🐴', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'pi', callText: 'Sílaba inicial de: PIÑA, PINO, PIRATA', icon: '🍍', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'lo', callText: 'Sílaba inicial de: LORO, LOBO, LOMA', icon: '🦜', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'ta', callText: 'Sílaba inicial de: TAZA, TAMBOR, TABLA', icon: '🥁', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'bu', callText: 'Sílaba inicial de: BÚHO, BURRO, BUFANDA', icon: '🦉', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'sa', callText: 'Sílaba inicial de: SAPO, SANDÍA, SALERO', icon: '🍉', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'lu', callText: 'Sílaba inicial de: LUNA, LUPA, LUCERO', icon: '🌙', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'ro', callText: 'Sílaba inicial de: ROSA, ROCA, ROBOT', icon: '🌹', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 're', callText: 'Sílaba inicial de: RELOJ, REGLA, REGALO', icon: '⌚', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'ri', callText: 'Sílaba inicial de: RÍO, RISA, RINOCERONTE', icon: '🦏', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'fa', callText: 'Sílaba inicial de: FARO, FAMILIA, FALDA', icon: '🗼', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 've', callText: 'Sílaba inicial de: VELA, VENADO, VENTANA', icon: '🕯️', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'pa', callText: 'Sílaba inicial de: PATO, PALOMA, PARAGUAS', icon: '🦆', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'po', callText: 'Sílaba inicial de: POLLO, POZO, POLICÍA', icon: '🐥', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'ba', callText: 'Sílaba inicial de: BALLENA, BARCO, BANANO', icon: '🐋', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'mo', callText: 'Sílaba inicial de: MONO, MOTO, MOCHILA', icon: '🐒', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'la', callText: 'Sílaba inicial de: LÁPIZ, LAGO, LANA', icon: '✏️', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'te', callText: 'Sílaba inicial de: TELÉFONO, TESORO, TELA', icon: '☎️', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'de', callText: 'Sílaba inicial de: DEDO, DELFÍN, DADO', icon: '🐬', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'si', callText: 'Sílaba inicial de: SILLA, SIRENA, SILBATO', icon: '🪑', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'le', callText: 'Sílaba inicial de: LEÓN, LECHE, LECHUGA', icon: '🦁', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'fu', callText: 'Sílaba inicial de: FUEGO, FUENTE, FÚTBOL', icon: '🔥', sub: 'Directa', syllableType: 'direct' },
+                    { cardText: 'mi', callText: 'Sílaba inicial de: MIEL, MINA, MICRÓFONO', icon: '🍯', sub: 'Directa', syllableType: 'direct' },
+
+                    // 40 Sílabas Trabadas / Compuestas (3 letras)
+                    { cardText: 'bla', callText: 'Sílaba trabada en: BLANCO, BLUSA, HABLAR', icon: '👕', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'ble', callText: 'Sílaba trabada en: CABLE, ROBLE, AMABLE', icon: '🔌', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'blo', callText: 'Sílaba trabada en: BLOQUE, PUEBLO, DIABLO', icon: '🧱', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'bra', callText: 'Sílaba trabada en: BRAZO, CEBRA, SOMBRA', icon: '🦓', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'bre', callText: 'Sílaba trabada en: SOBRE, LIEBRE, SOMBRERO', icon: '🎩', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'bri', callText: 'Sílaba trabada en: BRISA, BRILLANTE, COLIBRÍ', icon: '✨', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'bro', callText: 'Sílaba trabada en: BROCHA, LIBRO, HOMBRO', icon: '🖌️', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'bru', callText: 'Sílaba trabada en: BRÚJULA, BRUJA, BRUMA', icon: '🧭', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'cla', callText: 'Sílaba trabada en: CLAVO, CLASE, ANCLA', icon: '⚓', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'cle', callText: 'Sílaba trabada en: BICICLETA, CHICLE, CLERO', icon: '🚲', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'cli', callText: 'Sílaba trabada en: CLIMA, CLÍNICA, CICLISTA', icon: '🌦️', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'clo', callText: 'Sílaba trabada en: CLORO, TRICICLO, CHOCLO', icon: '🌽', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'cra', callText: 'Sílaba trabada en: CRÁTER, CRAYOLA, CRÁNEO', icon: '🖍️', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'cre', callText: 'Sílaba trabada en: CREMA, SECRETO, CRECER', icon: '🍦', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'cri', callText: 'Sílaba trabada en: CRISTAL, ESCRIBIR, CRÍA', icon: '💎', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'cro', callText: 'Sílaba trabada en: CRONÓMETRO, MICROBIO, CROAR', icon: '⏱️', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'cru', callText: 'Sílaba trabada en: CRUZ, CRUCERO, CRUDO', icon: '🚢', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'dra', callText: 'Sílaba trabada en: DRAGÓN, ALMENDRA, PIEDRA', icon: '🐉', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'dre', callText: 'Sílaba trabada en: MADRE, PADRE, AJEDREZ', icon: '♟️', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'dri', callText: 'Sílaba trabada en: COCODRILO, LADRILLO, MADRINA', icon: '🐊', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'dro', callText: 'Sílaba trabada en: CUADRO, DROMEDARIO, CEDRO', icon: '🖼️', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'fra', callText: 'Sílaba trabada en: FRASCO, FRANELA, DISFRAZ', icon: '🎭', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'fre', callText: 'Sílaba trabada en: FRESA, FRENTE, COFRE', icon: '🍓', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'fri', callText: 'Sílaba trabada en: FRÍO, FRIJOL, ÁFRICA', icon: '❄️', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'fro', callText: 'Sílaba trabada en: FROTAR, FRONDOSO, FRONTERA', icon: '🌳', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'fru', callText: 'Sílaba trabada en: FRUTA, FRUTERO, DISFRUTAR', icon: '🍇', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'gla', callText: 'Sílaba trabada en: GLACIAR, REGLA, JUNGLA', icon: '📏', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'glo', callText: 'Sílaba trabada en: GLOBO, GLORIETA, SIGLO', icon: '🎈', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'glu', callText: 'Sílaba trabada en: IGLÚ, GLUCOSA, GLOTÓN', icon: '🏔️', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'gra', callText: 'Sílaba trabada en: GRANJA, GRANO, CANGREJO', icon: '🦀', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'gre', callText: 'Sílaba trabada en: TIGRE, ALEGRE, VINAGRE', icon: '🐯', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'gri', callText: 'Sílaba trabada en: GRILLO, GRIFO, LÁGRIMA', icon: '🦗', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'gru', callText: 'Sílaba trabada en: GRÚA, GRUPO, GRUTA', icon: '🏗️', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'pla', callText: 'Sílaba trabada en: PLATO, PLAYA, PLANETA', icon: '🪐', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'ple', callText: 'Sílaba trabada en: CUMPLEAÑOS, COMPLETO, PLEGAR', icon: '🎂', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'pli', callText: 'Sílaba trabada en: PLIEGO, MULTIPLICAR, APLICADO', icon: '📄', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'plo', callText: 'Sílaba trabada en: PLOMO, TEMPLO, DIPLOMA', icon: '📜', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'plu', callText: 'Sílaba trabada en: PLUMA, PLUMERO, PLUTÓN', icon: '🪶', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'pra', callText: 'Sílaba trabada en: PRADO, PRADERA, TEMPRANO', icon: '🌼', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'pre', callText: 'Sílaba trabada en: PREMIO, PREGUNTA, SIEMPRE', icon: '🏆', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'pri', callText: 'Sílaba trabada en: PRIMAVERA, PRIMO, PRINCESA', icon: '👑', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'tra', callText: 'Sílaba trabada en: TRACTOR, TRABAJO, TRAJE', icon: '🚜', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'tre', callText: 'Sílaba trabada en: TREN, ESTRELLA, TRÉBOL', icon: '🚂', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'tri', callText: 'Sílaba trabada en: TRIGO, TRIÁNGULO, TRICICLO', icon: '📐', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'tro', callText: 'Sílaba trabada en: TROMPO, TROFEO, TRONCO', icon: '🪵', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'tru', callText: 'Sílaba trabada en: TRUENO, TRUCHA, PATRULLA', icon: '⛈️', sub: 'Trabada', syllableType: 'trabadas' },
+                    { cardText: 'chi', callText: 'Dígrafo en: CHIVO, CHIMENEA, MOCHILA', icon: '🐐', sub: 'Compuesta', syllableType: 'trabadas' },
+                    { cardText: 'cho', callText: 'Dígrafo en: CHOCOLATE, CHOZA, OCHO', icon: '🍫', sub: 'Compuesta', syllableType: 'trabadas' },
+                    { cardText: 'chu', callText: 'Dígrafo en: CHUPETE, LECHUGA, CHURRO', icon: '🥬', sub: 'Compuesta', syllableType: 'trabadas' }
+                ]
+            },
+
+            matematicas: {
+                id: 'matematicas',
+                name: '5. Cálculo Mental y Tablas de Multiplicar (36)',
+                defaultTitle: 'BINGO MATEMÁTICO',
+                recommendedGrid: 4,
+                theme: 'emerald',
+                description: 'En el cartón aparece el resultado numérico y el docente canta la operación.',
+                items: [
+                    { cardText: '12', callText: 'Operación mental: ¿Cuánto es 3 × 4?', icon: '🔢', sub: '3 × 4' },
+                    { cardText: '15', callText: 'Operación mental: ¿Cuánto es 3 × 5?', icon: '🔢', sub: '3 × 5' },
+                    { cardText: '16', callText: 'Operación mental: ¿Cuánto es 4 × 4?', icon: '🔢', sub: '4 × 4' },
+                    { cardText: '18', callText: 'Operación mental: ¿Cuánto es 2 × 9?', icon: '🔢', sub: '2 × 9' },
+                    { cardText: '20', callText: 'Operación mental: ¿Cuánto es 4 × 5?', icon: '🔢', sub: '4 × 5' },
+                    { cardText: '21', callText: 'Operación mental: ¿Cuánto es 3 × 7?', icon: '🔢', sub: '3 × 7' },
+                    { cardText: '24', callText: 'Operación mental: ¿Cuánto es 6 × 4?', icon: '🔢', sub: '6 × 4' },
+                    { cardText: '25', callText: 'Operación mental: ¿Cuánto es 5 × 5?', icon: '🔢', sub: '5 × 5' },
+                    { cardText: '27', callText: 'Operación mental: ¿Cuánto es 3 × 9?', icon: '🔢', sub: '3 × 9' },
+                    { cardText: '28', callText: 'Operación mental: ¿Cuánto es 4 × 7?', icon: '🔢', sub: '4 × 7' },
+                    { cardText: '30', callText: 'Operación mental: ¿Cuánto es 5 × 6?', icon: '🔢', sub: '5 × 6' },
+                    { cardText: '32', callText: 'Operación mental: ¿Cuánto es 4 × 8?', icon: '🔢', sub: '4 × 8' },
+                    { cardText: '35', callText: 'Operación mental: ¿Cuánto es 5 × 7?', icon: '🔢', sub: '5 × 7' },
+                    { cardText: '36', callText: 'Operación mental: ¿Cuánto es 6 × 6?', icon: '🔢', sub: '6 × 6' },
+                    { cardText: '40', callText: 'Operación mental: ¿Cuánto es 5 × 8?', icon: '🔢', sub: '5 × 8' },
+                    { cardText: '42', callText: 'Operación mental: ¿Cuánto es 6 × 7?', icon: '🔢', sub: '6 × 7' },
+                    { cardText: '45', callText: 'Operación mental: ¿Cuánto es 5 × 9?', icon: '🔢', sub: '5 × 9' },
+                    { cardText: '48', callText: 'Operación mental: ¿Cuánto es 6 × 8?', icon: '🔢', sub: '6 × 8' },
+                    { cardText: '49', callText: 'Operación mental: ¿Cuánto es 7 × 7?', icon: '🔢', sub: '7 × 7' },
+                    { cardText: '50', callText: 'Operación mental: ¿Cuánto es 5 × 10?', icon: '🔢', sub: '5 × 10' },
+                    { cardText: '54', callText: 'Operación mental: ¿Cuánto es 6 × 9?', icon: '🔢', sub: '6 × 9' },
+                    { cardText: '56', callText: 'Operación mental: ¿Cuánto es 7 × 8?', icon: '🔢', sub: '7 × 8' },
+                    { cardText: '60', callText: 'Operación mental: ¿Cuánto es 6 × 10?', icon: '🔢', sub: '6 × 10' },
+                    { cardText: '63', callText: 'Operación mental: ¿Cuánto es 7 × 9?', icon: '🔢', sub: '7 × 9' },
+                    { cardText: '64', callText: 'Operación mental: ¿Cuánto es 8 × 8?', icon: '🔢', sub: '8 × 8' },
+                    { cardText: '70', callText: 'Operación mental: ¿Cuánto es 7 × 10?', icon: '🔢', sub: '7 × 10' },
+                    { cardText: '72', callText: 'Operación mental: ¿Cuánto es 8 × 9?', icon: '🔢', sub: '8 × 9' },
+                    { cardText: '80', callText: 'Operación mental: ¿Cuánto es 8 × 10?', icon: '🔢', sub: '8 × 10' },
+                    { cardText: '81', callText: 'Operación mental: ¿Cuánto es 9 × 9?', icon: '🔢', sub: '9 × 9' },
+                    { cardText: '90', callText: 'Operación mental: ¿Cuánto es 9 × 10?', icon: '🔢', sub: '9 × 10' },
+                    { cardText: '100', callText: 'Operación mental: ¿Cuánto es 10 × 10?', icon: '💯', sub: '10 × 10' },
+                    { cardText: '14', callText: 'Operación mental: ¿Cuánto es 2 × 7?', icon: '🔢', sub: '2 × 7' },
+                    { cardText: '11', callText: 'Suma rápida: ¿Cuánto es 25 menos 14?', icon: '➕', sub: '25 - 14' },
+                    { cardText: '19', callText: 'Suma rápida: ¿Cuánto es 12 más 7?', icon: '➕', sub: '12 + 7' },
+                    { cardText: '33', callText: 'Operación mental: ¿Cuánto es 3 × 11?', icon: '🔢', sub: '3 × 11' },
+                    { cardText: '44', callText: 'Operación mental: ¿Cuánto es 4 × 11?', icon: '🔢', sub: '4 × 11' }
+                ]
+            },
+
+            ingles: {
+                id: 'ingles',
+                name: '6. Inglés - Español: Vocabulario Activo (35)',
+                defaultTitle: 'ENGLISH VOCABULARY BINGO',
+                recommendedGrid: 4,
+                theme: 'indigo',
+                description: 'El cartón tiene palabras en INGLÉS y el profesor canta el significado en ESPAÑOL.',
+                items: [
+                    { cardText: 'Butterfly', callText: 'Busca en inglés la palabra para: MARIPOSA', icon: '🦋', sub: 'Mariposa' },
+                    { cardText: 'Rainbow', callText: 'Busca en inglés la palabra para: ARCOÍRIS', icon: '🌈', sub: 'Arcoíris' },
+                    { cardText: 'Library', callText: 'Busca en inglés la palabra para: BIBLIOTECA', icon: '📚', sub: 'Biblioteca' },
+                    { cardText: 'Breakfast', callText: 'Busca en inglés la palabra para: DESAYUNO', icon: '🥞', sub: 'Desayuno' },
+                    { cardText: 'Friendship', callText: 'Busca en inglés la palabra para: AMISTAD', icon: '🤝', sub: 'Amistad' },
+                    { cardText: 'Mountain', callText: 'Busca en inglés la palabra para: MONTAÑA', icon: '⛰️', sub: 'Montaña' },
+                    { cardText: 'Sunshine', callText: 'Busca en inglés la palabra para: LUZ DEL SOL', icon: '☀️', sub: 'Luz solar' },
+                    { cardText: 'Umbrella', callText: 'Busca en inglés la palabra para: PARAGUAS / SOMBRILLA', icon: '☂️', sub: 'Paraguas' },
+                    { cardText: 'Notebook', callText: 'Busca en inglés la palabra para: CUADERNO', icon: '📓', sub: 'Cuaderno' },
+                    { cardText: 'Backpack', callText: 'Busca en inglés la palabra para: MOCHILA / MORRAL', icon: '🎒', sub: 'Mochila' },
+                    { cardText: 'Strawberry', callText: 'Busca en inglés la palabra para: FRESA', icon: '🍓', sub: 'Fresa' },
+                    { cardText: 'Pineapple', callText: 'Busca en inglés la palabra para: PIÑA', icon: '🍍', sub: 'Piña' },
+                    { cardText: 'Watermelon', callText: 'Busca en inglés la palabra para: SANDÍA', icon: '🍉', sub: 'Sandía' },
+                    { cardText: 'Elephant', callText: 'Busca en inglés la palabra para: ELEFANTE', icon: '🐘', sub: 'Elefante' },
+                    { cardText: 'Dolphin', callText: 'Busca en inglés la palabra para: DELFÍN', icon: '🐬', sub: 'Delfín' },
+                    { cardText: 'Keyboard', callText: 'Busca en inglés la palabra para: TECLADO', icon: '⌨️', sub: 'Teclado' },
+                    { cardText: 'Window', callText: 'Busca en inglés la palabra para: VENTANA', icon: '🪟', sub: 'Ventana' },
+                    { cardText: 'Kitchen', callText: 'Busca en inglés la palabra para: COCINA', icon: '🍳', sub: 'Cocina' },
+                    { cardText: 'Garden', callText: 'Busca en inglés la palabra para: JARDÍN', icon: '🌻', sub: 'Jardín' },
+                    { cardText: 'Airplane', callText: 'Busca en inglés la palabra para: AVIÓN', icon: '✈️', sub: 'Avión' },
+                    { cardText: 'Bicycle', callText: 'Busca en inglés la palabra para: BICICLETA', icon: '🚲', sub: 'Bicicleta' },
+                    { cardText: 'Firefighter', callText: 'Busca en inglés la palabra para: BOMBERO', icon: '🚒', sub: 'Bombero' },
+                    { cardText: 'Scientist', callText: 'Busca en inglés la palabra para: CIENTÍFICO', icon: '🔬', sub: 'Científico' },
+                    { cardText: 'Yesterday', callText: 'Busca en inglés la palabra para: AYER', icon: '⏪', sub: 'Ayer' },
+                    { cardText: 'Tomorrow', callText: 'Busca en inglés la palabra para: MAÑANA (futuro)', icon: '⏩', sub: 'Mañana' },
+                    { cardText: 'Knowledge', callText: 'Busca en inglés la palabra para: CONOCIMIENTO', icon: '🧠', sub: 'Conocimiento' },
+                    { cardText: 'Cloudy', callText: 'Busca en inglés la palabra para: NUBLADO', icon: '☁️', sub: 'Nublado' },
+                    { cardText: 'Thunder', callText: 'Busca en inglés la palabra para: TRUENO', icon: '⚡', sub: 'Trueno' },
+                    { cardText: 'Blanket', callText: 'Busca en inglés la palabra para: COBIJA / MANTA', icon: '🛏️', sub: 'Cobija' },
+                    { cardText: 'Mirror', callText: 'Busca en inglés la palabra para: ESPEJO', icon: '🪞', sub: 'Espejo' },
+                    { cardText: 'Bridge', callText: 'Busca en inglés la palabra para: PUENTE', icon: '🌉', sub: 'Puente' },
+                    { cardText: 'River', callText: 'Busca en inglés la palabra para: RÍO', icon: '🏞️', sub: 'Río' },
+                    { cardText: 'Forest', callText: 'Busca en inglés la palabra para: BOSQUE', icon: '🌲', sub: 'Bosque' },
+                    { cardText: 'Island', callText: 'Busca en inglés la palabra para: ISLA', icon: '🏝️', sub: 'Isla' },
+                    { cardText: 'Treasure', callText: 'Busca en inglés la palabra para: TESORO', icon: '👑', sub: 'Tesoro' }
+                ]
+            },
+
+            ciencias: {
+                id: 'ciencias',
+                name: '7. Ciencias Naturales y Medio Ambiente (30)',
+                defaultTitle: 'BINGO DE CIENCIAS NATURALES',
+                recommendedGrid: 3,
+                theme: 'emerald',
+                description: 'Conceptos clave de biología, ecología, cuerpo humano y física para primaria y secundaria.',
+                items: [
+                    { cardText: 'Fotosíntesis', callText: 'Proceso mediante el cual las plantas fabrican su propio alimento usando la luz del sol.', icon: '🌿', sub: 'Plantas' },
+                    { cardText: 'Célula', callText: 'Unidad anatómica y funcional más pequeña de todos los seres vivos.', icon: '🔬', sub: 'Biología' },
+                    { cardText: 'Metamorfosis', callText: 'Transformación biológica profunda, como la de una oruga al convertirse en mariposa.', icon: '🦋', sub: 'Ciclo vital' },
+                    { cardText: 'Ecosistema', callText: 'Comunidad de seres vivos que interactúan entre sí y con el medio físico que habitan.', icon: '🌍', sub: 'Ecología' },
+                    { cardText: 'Clorofila', callText: 'Pigmento de color verde presente en las hojas que capta la energía luminosa.', icon: '🍃', sub: 'Pigmento' },
+                    { cardText: 'Polinización', callText: 'Transporte del polen desde los estambres hasta el pistilo, realizado por abejas y aves.', icon: '🐝', sub: 'Flores' },
+                    { cardText: 'Evaporación', callText: 'Paso del agua de estado líquido a estado gaseoso por acción del calor solar.', icon: '♨️', sub: 'Ciclo del agua' },
+                    { cardText: 'Condensación', callText: 'Proceso en que el vapor de agua sube a la atmósfera, se enfría y forma las nubes.', icon: '☁️', sub: 'Nubes' },
+                    { cardText: 'Herbívoro', callText: 'Animal cuya dieta se basa exclusivamente en plantas, hojas, frutos o semillas.', icon: '🦌', sub: 'Nutrición' },
+                    { cardText: 'Carnívoro', callText: 'Animal que obtiene sus nutrientes alimentándose de la carne de otros animales.', icon: '🦁', sub: 'Depredador' },
+                    { cardText: 'Omnívoro', callText: 'Ser vivo que se alimenta tanto de plantas como de otros animales.', icon: '🐻', sub: 'Dieta mixta' },
+                    { cardText: 'Vertebrado', callText: 'Animal que posee esqueleto interno articulado y columna vertebral.', icon: '🦴', sub: 'Esqueleto' },
+                    { cardText: 'Invertebrado', callText: 'Animal que carece de columna vertebral, como los insectos, moluscos o arácnidos.', icon: '🐙', sub: 'Sin huesos' },
+                    { cardText: 'Mamífero', callText: 'Vertebrado de sangre caliente cuyas crías se alimentan de leche materna.', icon: '🐋', sub: 'Zoología' },
+                    { cardText: 'Anfibio', callText: 'Animal de piel húmeda que vive en el agua al nacer y en la tierra de adulto, como la rana.', icon: '🐸', sub: 'Doble vida' },
+                    { cardText: 'Gravedad', callText: 'Fuerza invisible que atrae los cuerpos hacia el centro de la Tierra.', icon: '🍎', sub: 'Física' },
+                    { cardText: 'Oxígeno', callText: 'Gas indispensable de la atmósfera que inhalamos para poder respirar y vivir.', icon: '🫁', sub: 'Respiración' },
+                    { cardText: 'Corazón', callText: 'Órgano muscular encargado de bombear la sangre a todo el cuerpo.', icon: '🫀', sub: 'Circulación' },
+                    { cardText: 'Cerebro', callText: 'Órgano principal del sistema nervioso que coordina pensamientos, memoria y movimientos.', icon: '🧠', sub: 'Nervioso' },
+                    { cardText: 'Reciclaje', callText: 'Proceso de transformar materiales usados en nuevos productos para cuidar el planeta.', icon: '♻️', sub: 'Sostenibilidad' },
+                    { cardText: 'Biodiversidad', callText: 'Gran variedad de especies de plantas, animales, hongos y microorganismos de una región.', icon: '🦜', sub: 'Riqueza viva' },
+                    { cardText: 'Hábitat', callText: 'Lugar físico natural que reúne las condiciones adecuadas para que viva una especie.', icon: '🏞️', sub: 'Hogar natural' },
+                    { cardText: 'Rotación', callText: 'Movimiento de la Tierra al girar sobre su propio eje, el cual origina el día y la noche.', icon: '🌐', sub: '24 horas' },
+                    { cardText: 'Traslación', callText: 'Viaje de la Tierra alrededor del Sol que dura 365 días, es decir, un año.', icon: '☀️', sub: '365 días' },
+                    { cardText: 'Semilla', callText: 'Grano contenido en el interior del fruto que al germinar da origen a una nueva planta.', icon: '🌱', sub: 'Germinación' },
+                    { cardText: 'Raíz', callText: 'Parte de la planta que crece bajo tierra, la sostiene y absorbe agua y minerales.', icon: '🥕', sub: 'Absorción' },
+                    { cardText: 'Atmósfera', callText: 'Capa gaseosa que rodea y protege a la Tierra de los rayos solares dañinos.', icon: '🛡️', sub: 'Aire' },
+                    { cardText: 'Fósil', callText: 'Resto o huella petrificada de un ser vivo que existió hace millones de años.', icon: '🦖', sub: 'Paleontología' },
+                    { cardText: 'Imán', callText: 'Mineral o cuerpo capaz de atraer metales como el hierro o el acero.', icon: '🧲', sub: 'Magnetismo' },
+                    { cardText: 'Sonido', callText: 'Onda mecánica producida por la vibración de un cuerpo que viaja por el aire.', icon: '🔊', sub: 'Acústica' }
+                ]
+            },
+
+            geografia: {
+                id: 'geografia',
+                name: '8. Colombia, Geografía y Biodiversidad (30)',
+                defaultTitle: 'BINGO DE GEOGRAFÍA Y CULTURA',
+                recommendedGrid: 4,
+                theme: 'amber',
+                description: 'Ríos, regiones, relieve, capitales y símbolos naturales de Colombia y América Latina.',
+                items: [
+                    { cardText: 'Bogotá', callText: 'Capital de Colombia situada en el altiplano cundiboyacense a 2.600 metros de altitud.', icon: '🏙️', sub: 'Capital' },
+                    { cardText: 'Río Magdalena', callText: 'Principal arteria fluvial de Colombia que nace en el Macizo Colombiano y desemboca en Bocas de Ceniza.', icon: '🌊', sub: 'Hidrografía' },
+                    { cardText: 'Amazonía', callText: 'Región selvática al sur del país considerada el pulmón vegetal más biodiverso del mundo.', icon: '🌳', sub: 'Región' },
+                    { cardText: 'Cóndor', callText: 'Ave majestuosa de los Andes que corona el Escudo Nacional como símbolo de libertad.', icon: '🦅', sub: 'Símbolo' },
+                    { cardText: 'Orquídea', callText: 'Flor nacional de Colombia famosa por su belleza, especialmente la variedad Cattleya trianae.', icon: '🌺', sub: 'Flor nacional' },
+                    { cardText: 'Palma de Cera', callText: 'Árbol nacional de Colombia que crece en el Valle de Cocora a gran altura.', icon: '🌴', sub: 'Árbol nacional' },
+                    { cardText: 'Páramo', callText: 'Ecosistema de alta montaña con frailejones que actúa como fábrica natural de agua dulce.', icon: '🏔️', sub: 'Frailejones' },
+                    { cardText: 'Cordillera', callText: 'Cadena extensa de montañas entrelazadas; en Colombia los Andes se dividen en tres.', icon: '⛰️', sub: 'Relieve' },
+                    { cardText: 'Región Caribe', callText: 'Región del norte de Colombia bañada por el mar Caribe, tierra de cumbia y vallenato.', icon: '🏖️', sub: 'Norte' },
+                    { cardText: 'Región Pacífica', callText: 'Región del occidente colombiano de alta pluviosidad donde llegan las ballenas jorobadas.', icon: '🐋', sub: 'Occidente' },
+                    { cardText: 'Orinoquía', callText: 'Región de los Llanos Orientales caracterizada por extensas sabanas, ríos y música de arpa.', icon: '🐎', sub: 'Llanos' },
+                    { cardText: 'Región Insular', callText: 'Conjunto de islas marinas de Colombia como San Andrés, Providencia, Gorgona y Malpelo.', icon: '🏝️', sub: 'Islas' },
+                    { cardText: 'Medellín', callText: 'Capital del departamento de Antioquia, conocida como la Ciudad de la Eterna Primavera.', icon: '🌸', sub: 'Antioquia' },
+                    { cardText: 'Cali', callText: 'Capital del Valle del Cauca, conocida como la Sucursal del Cielo y capital de la salsa.', icon: '🎺', sub: 'Valle' },
+                    { cardText: 'Cartagena', callText: 'Ciudad amurallada histórica a orillas del mar Caribe, capital del departamento de Bolívar.', icon: '🏰', sub: 'Bolívar' },
+                    { cardText: 'Barranquilla', callText: 'Puerta de Oro de Colombia donde el río Magdalena se encuentra con el mar Caribe.', icon: '🎭', sub: 'Atlántico' },
+                    { cardText: 'Río Cauca', callText: 'Segundo río más importante de Colombia que recorre el occidente entre dos cordilleras.', icon: '🏞️', sub: 'Río' },
+                    { cardText: 'Volcán', callText: 'Abertura de la corteza terrestre por donde puede ascender magma, ceniza o gases.', icon: '🌋', sub: 'Geología' },
+                    { cardText: 'Península', callText: 'Extensión de tierra rodeada de mar por todas partes excepto por una llamada istmo, como La Guajira.', icon: '🏜️', sub: 'Guajira' },
+                    { cardText: 'Brújula', callText: 'Instrumento de orientación con aguja imantada que señala siempre el Norte magnético.', icon: '🧭', sub: 'Orientación' },
+                    { cardText: 'Eje Cafetero', callText: 'Paisaje cultural montañoso famoso por el cultivo del café más suave del mundo.', icon: '☕', sub: 'Cultura' },
+                    { cardText: 'Sierra Nevada', callText: 'Montaña costera más alta del mundo ubicada en Santa Marta, hogar de pueblos indígenas ancestrales.', icon: '❄️', sub: 'Santa Marta' },
+                    { cardText: 'Caño Cristales', callText: 'Río de la Serranía de la Macarena llamado el río de los cinco colores por sus plantas acuáticas.', icon: '🌈', sub: 'Meta' },
+                    { cardText: 'Oso de Anteojos', callText: 'Único oso nativo de Sudamérica que habita en los bosques andinos y páramos.', icon: '🐻', sub: 'Fauna' },
+                    { cardText: 'Delfín Rosado', callText: 'Mamífero acuático inteligente que habita en las aguas dulces de los ríos Amazonas y Orinoco.', icon: '🐬', sub: 'Amazonas' },
+                    { cardText: 'Manglar', callText: 'Ecosistema costero de árboles resistentes a la sal que protege las playas y cría peces.', icon: '🦀', sub: 'Costas' },
+                    { cardText: 'Paralelo', callText: 'Línea imaginaria horizontal que rodea la Tierra; el más importante es el Ecuador.', icon: '🌐', sub: 'Cartografía' },
+                    { cardText: 'Meridiano', callText: 'Semicírculo imaginario que va del Polo Norte al Polo Sur y sirve para medir los husos horarios.', icon: '🕰️', sub: 'Longitud' },
+                    { cardText: 'Archipiélago', callText: 'Conjunto de islas agrupadas en una zona del mar cercanas entre sí.', icon: '🗺️', sub: 'Geografía' },
+                    { cardText: 'Llanura', callText: 'Gran extensión de tierra plana o con ligeras ondulaciones a baja altitud.', icon: '🌾', sub: 'Planicie' }
+                ]
+            },
+
+            valores: {
+                id: 'valores',
+                name: '9. Valores, Ciudadanía y Convivencia Escolar (30)',
+                defaultTitle: 'BINGO DE VALORES Y CONVIVENCIA',
+                recommendedGrid: 3,
+                theme: 'indigo',
+                description: 'Situaciones del aula para reflexionar sobre ética, convivencia pacífica y ciudadanía.',
+                items: [
+                    { cardText: 'Respeto', callText: 'Tratar a los compañeros, docentes y al entorno con consideración, reconociendo su dignidad.', icon: '🙌', sub: 'Convivencia' },
+                    { cardText: 'Tolerancia', callText: 'Aceptar y valorar las opiniones, culturas y formas de ser diferentes a las nuestras.', icon: '🌍', sub: 'Diversidad' },
+                    { cardText: 'Solidaridad', callText: 'Apoyar desinteresadamente a un compañero cuando pasa por una dificultad o necesita ayuda.', icon: '🤝', sub: 'Ayuda mutua' },
+                    { cardText: 'Honestidad', callText: 'Hablar siempre con la verdad, no hacer trampa y devolver lo que no nos pertenece.', icon: '💎', sub: 'Sinceridad' },
+                    { cardText: 'Justicia', callText: 'Dar a cada persona lo que le corresponde de manera imparcial y respetando las normas.', icon: '⚖️', sub: 'Equidad' },
+                    { cardText: 'Responsabilidad', callText: 'Cumplir con nuestros deberes escolares y asumir las consecuencias de nuestros actos.', icon: '📋', sub: 'Compromiso' },
+                    { cardText: 'Equidad', callText: 'Brindar a cada persona las oportunidades que necesita según su realidad para que nadie quede atrás.', icon: '🌱', sub: 'Igualdad' },
+                    { cardText: 'Humildad', callText: 'Reconocer nuestras fortalezas sin presumir y aceptar que todos podemos aprender de los demás.', icon: '🌾', sub: 'Sencillez' },
+                    { cardText: 'Lealtad', callText: 'Cuidar la amistad, no traicionar la confianza y estar presentes en los buenos y malos momentos.', icon: '🛡️', sub: 'Fidelidad' },
+                    { cardText: 'Perseverancia', callText: 'Seguir intentando y esforzándonos con constancia hasta alcanzar una meta difícil.', icon: '🧗', sub: 'Constancia' },
+                    { cardText: 'Diálogo', callText: 'Conversar escuchando con atención para resolver desacuerdos sin gritos ni violencia.', icon: '💬', sub: 'Comunicación' },
+                    { cardText: 'Perdón', callText: 'Decidir soltar el rencor cuando alguien nos pide disculpas sinceras para sanar la convivencia.', icon: '🕊️', sub: 'Reconciliación' },
+                    { cardText: 'Puntualidad', callText: 'Llegar a tiempo a clase y entregar los compromisos en el momento acordado por respeto al tiempo ajeno.', icon: '⏰', sub: 'Tiempo' },
+                    { cardText: 'Cooperación', callText: 'Trabajar en equipo sumando los talentos de todos para lograr un propósito común.', icon: '🐝', sub: 'Trabajo grupal' },
+                    { cardText: 'Inclusión', callText: 'Integrar a todos los compañeros en los juegos y grupos sin discriminar ni excluir a nadie.', icon: '🌈', sub: 'Todos cuentan' },
+                    { cardText: 'Autocontrol', callText: 'Respirar profundo y regular nuestros impulsos antes de reaccionar con enojo.', icon: '🧘', sub: 'Dominio propio' },
+                    { cardText: 'Amabilidad', callText: 'Saludar, pedir el favor, dar las gracias y tratar con calidez a todas las personas.', icon: '🌻', sub: 'Cortesía' },
+                    { cardText: 'Gratitud', callText: 'Valorar el esfuerzo de nuestras familias y maestros reconociendo lo que hacen por nosotros.', icon: '🙏', sub: 'Agradecer' },
+                    { cardText: 'Cuidado Ambiental', callText: 'Proteger el agua, las plantas, los animales y depositar la basura en su lugar.', icon: '🌳', sub: 'Planeta' },
+                    { cardText: 'Escucha Activa', callText: 'Prestar atención real cuando alguien habla, sin interrumpir ni burlarse.', icon: '👂', sub: 'Atención' },
+                    { cardText: 'Autonomía', callText: 'Tomar decisiones propias con criterio y realizar nuestras tareas por iniciativa personal.', icon: '🧭', sub: 'Independencia' },
+                    { cardText: 'Fraternidad', callText: 'Lazo de hermandad y afecto que une a los miembros de una comunidad escolar.', icon: '🫂', sub: 'Hermandad' },
+                    { cardText: 'Generosidad', callText: 'Compartir con alegría nuestros materiales, tiempo o conocimientos con quien los necesita.', icon: '🎁', sub: 'Compartir' },
+                    { cardText: 'Integridad', callText: 'Hacer lo correcto incluso cuando nadie nos está mirando.', icon: '🌟', sub: 'Rectitud' },
+                    { cardText: 'Prudencia', callText: 'Pensar antes de actuar o hablar para evitar causar daño o ponernos en riesgo.', icon: '🦉', sub: 'Sabiduría' },
+                    { cardText: 'Optimismo', callText: 'Ver el lado positivo de las situaciones y buscar soluciones constructivas.', icon: '☀️', sub: 'Actitud' },
+                    { cardText: 'Civismo', callText: 'Cuidar los pupitres, baños, biblioteca y bienes públicos que son de toda la comunidad.', icon: '🏫', sub: 'Ciudadanía' },
+                    { cardText: 'Compañerismo', callText: 'Acompañar, animar y celebrar los logros de nuestros amigos del salón.', icon: '🎉', sub: 'Unión' },
+                    { cardText: 'Discreción', callText: 'Guardar con respeto un secreto o confidencia que un amigo nos ha confiado.', icon: '🔒', sub: 'Confianza' },
+                    { cardText: 'Resiliencia', callText: 'Capacidad de levantarse, aprender y salir fortalecido después de una dificultad.', icon: '🔥', sub: 'Superación' }
+                ]
+            },
+
+            personalizado: {
+                id: 'personalizado',
+                name: '10. Mi Bingo Propio Personalizado (Editable)',
+                defaultTitle: 'MI BINGO EDUCATIVO',
+                recommendedGrid: 3,
+                theme: 'indigo',
+                description: 'Lista 100% personalizable por el docente en la pestaña Banco Pedagógico.',
+                items: [
+                    { cardText: 'Creatividad', callText: 'Capacidad de inventar nuevas ideas o soluciones originales.', icon: '🎨', sub: 'Personalizado' },
+                    { cardText: 'Lectura', callText: 'Hábito maravilloso de viajar por mundos a través de los libros.', icon: '📖', sub: 'Personalizado' },
+                    { cardText: 'Investigación', callText: 'Búsqueda ordenada de respuestas mediante el método científico.', icon: '🔎', sub: 'Personalizado' },
+                    { cardText: 'Arte', callText: 'Expresión estética de emociones mediante pintura, música o danza.', icon: '🎭', sub: 'Personalizado' },
+                    { cardText: 'Tecnología', callText: 'Conjunto de herramientas e inventos que facilitan la vida humana.', icon: '💻', sub: 'Personalizado' },
+                    { cardText: 'Deporte', callText: 'Actividad física que fortalece la salud, la disciplina y el trabajo en equipo.', icon: '⚽', sub: 'Personalizado' },
+                    { cardText: 'Música', callText: 'Arte de combinar los sonidos y el ritmo en el tiempo.', icon: '🎵', sub: 'Personalizado' },
+                    { cardText: 'Historia', callText: 'Ciencia que estudia los acontecimientos del pasado de la humanidad.', icon: '🏛️', sub: 'Personalizado' },
+                    { cardText: 'Astronomía', callText: 'Ciencia que estudia las estrellas, planetas, galaxias y el universo.', icon: '🔭', sub: 'Personalizado' },
+                    { cardText: 'Robótica', callText: 'Diseño y programación de máquinas automáticas inteligentes.', icon: '🤖', sub: 'Personalizado' },
+                    { cardText: 'Poesía', callText: 'Género literario que expresa sentimientos mediante versos y rimas.', icon: '🪶', sub: 'Personalizado' },
+                    { cardText: 'Ajedrez', callText: 'Juego de estrategia sobre un tablero de 64 casillas blancas y negras.', icon: '♟️', sub: 'Personalizado' },
+                    { cardText: 'Teatro', callText: 'Representación de historias frente al público usando actuación y diálogo.', icon: '🎬', sub: 'Personalizado' },
+                    { cardText: 'Ecología', callText: 'Defensa y estudio de la relación entre los seres vivos y la Tierra.', icon: '🌱', sub: 'Personalizado' },
+                    { cardText: 'Nutrición', callText: 'Alimentación balanceada para que nuestro cuerpo crezca sano y fuerte.', icon: '🥗', sub: 'Personalizado' },
+                    { cardText: 'Geometría', callText: 'Rama de las matemáticas que estudia las figuras, ángulos y volúmenes.', icon: '📐', sub: 'Personalizado' }
+                ]
+            }
+        };
+
+        /***********************************************************************
+         * 2. ESTADO GLOBAL DE LA APLICACIÓN
+         ***********************************************************************/
+        let appDB = {};
+        let state = {
+            activeTab: 'studio',
+            currentCategory: 'emociones',
+            pedagogicalMode: 'cognitive', // 'cognitive' (pista/sinónimo/definición) o 'direct' (palabra exacta)
+            gridSize: 4,                  // 3 (3x3), 4 (4x4), 5 (5x5)
+            cardCount: 6,
+            theme: 'indigo',
+            generatedCards: [],           // Array de objetos cartón { id, serial, cells: [] }
+            tombolaDeck: [],              // Mazo barajado para cantar
+            tombolaDrawn: [],             // Historial de balotas cantadas
+            speechEnabled: true,
+            tempRevealAnswer: false
+        };
+
+        // Configuración de Paletas de Colores (CSS y RGB para PDF Vectorial)
+        const THEMES = {
+            indigo: {
+                name: 'Clásico Escolar',
+                primaryHex: '#4f46e5', secondaryHex: '#eef2ff', borderHex: '#312e81', textHex: '#1e1b4b',
+                primaryRGB: [79, 70, 229], secondaryRGB: [238, 242, 255], borderRGB: [49, 46, 129], textRGB: [30, 27, 75]
+            },
+            amber: {
+                name: 'Socioemocional Cálido',
+                primaryHex: '#d97706', secondaryHex: '#fef3c7', borderHex: '#78350f', textHex: '#451a03',
+                primaryRGB: [217, 119, 6], secondaryRGB: [254, 243, 199], borderRGB: [120, 53, 15], textRGB: [69, 26, 3]
+            },
+            emerald: {
+                name: 'Ciencias y Naturaleza',
+                primaryHex: '#059669', secondaryHex: '#d1fae5', borderHex: '#064e3b', textHex: '#064e3b',
+                primaryRGB: [5, 150, 105], secondaryRGB: [209, 250, 229], borderRGB: [6, 78, 59], textRGB: [6, 78, 59]
+            },
+            rose: {
+                name: 'Creativo Coral',
+                primaryHex: '#e11d48', secondaryHex: '#ffe4e6', borderHex: '#881337', textHex: '#4c0519',
+                primaryRGB: [225, 29, 72], secondaryRGB: [255, 228, 230], borderRGB: [136, 19, 55], textRGB: [76, 5, 25]
+            },
+            inksave: {
+                name: 'Ahorro de Tinta (B/N)',
+                primaryHex: '#1e293b', secondaryHex: '#f8fafc', borderHex: '#0f172a', textHex: '#000000',
+                primaryRGB: [255, 255, 255], secondaryRGB: [245, 245, 245], borderRGB: [0, 0, 0], textRGB: [0, 0, 0],
+                isInkSave: true
+            }
+        };
+
+        /***********************************************************************
+         * 3. INICIALIZACIÓN Y GESTIÓN DE BASE DE DATOS LOCAL
+         ***********************************************************************/
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDatabase();
+            populateCategorySelector();
+            onCategoryChange();
+        });
+
+        function loadDatabase() {
+            try {
+                const saved = localStorage.getItem('edubingo_pro_db_v3');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    appDB = { ... JSON.parse(JSON.stringify(FACTORY_DATABASE)), ...parsed };
+                } else {
+                    appDB = JSON.parse(JSON.stringify(FACTORY_DATABASE));
+                }
+            } catch (e) {
+                appDB = JSON.parse(JSON.stringify(FACTORY_DATABASE));
+            }
+        }
+
+        function saveDatabase() {
+            try {
+                localStorage.setItem('edubingo_pro_db_v3', JSON.stringify(appDB));
+            } catch (e) {
+                console.warn('No se pudo guardar en localStorage:', e);
+            }
+        }
+
+        function restoreFactoryDatabase() {
+            appDB = JSON.parse(JSON.stringify(FACTORY_DATABASE));
+            saveDatabase();
+            populateCategorySelector();
+            onCategoryChange();
+            showToast('Base de datos original restaurada con éxito', 'fa-rotate-left');
+        }
+
+        function populateCategorySelector() {
+            const select = document.getElementById('selectCategory');
+            select.innerHTML = '';
+            Object.values(appDB).forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = `${cat.name} [${cat.items.length} ítems]`;
+                if (cat.id === state.currentCategory) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        /***********************************************************************
+         * 4. MOTOR DE SONIDO SINTETIZADO (WEB AUDIO API - CERO ARCHIVOS EXTERNOS)
+         ***********************************************************************/
+        let audioCtx = null;
+        function playUiSound(type = 'tap') {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+                if (type === 'tap') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(520, now);
+                    osc.frequency.exponentialRampToValueAtTime(780, now + 0.08);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+                    osc.start(now);
+                    osc.stop(now + 0.09);
+                } else if (type === 'ball') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(340, now);
+                    osc.frequency.exponentialRampToValueAtTime(680, now + 0.18);
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'win') {
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.type = 'triangle';
+                        o.frequency.setValueAtTime(freq, now + idx * 0.1);
+                        g.gain.setValueAtTime(0.16, now + idx * 0.1);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.25);
+                        o.start(now + idx * 0.1);
+                        o.stop(now + idx * 0.1 + 0.25);
+                    });
+                }
+            } catch (e) {
+                // Audio silencioso si el navegador lo restringe
+            }
+        }
+
+        /***********************************************************************
+         * 5. LÓGICA DE SELECCIÓN DE TEMA, MODO PEDAGÓGICO Y BARAJADO SIN SESGO
+         ***********************************************************************/
+        function onCategoryChange() {
+            const select = document.getElementById('selectCategory');
+            state.currentCategory = select.value;
+            const cat = appDB[state.currentCategory];
+
+            // Mostrar u ocultar el filtro especial de sílabas directas/trabadas
+            const sylBox = document.getElementById('syllableMixContainer');
+            if (state.currentCategory === 'silabico') {
+                sylBox.classList.remove('hidden');
+            } else {
+                sylBox.classList.add('hidden');
+            }
+
+            // Actualizar título sugerido, tamaño de cuadrícula recomendado y paleta
+            document.getElementById('inputCustomTitle').value = cat.defaultTitle;
+            setCardTheme(cat.theme || 'indigo', false);
+            setGridSize(cat.recommendedGrid || 4, false);
+
+            // Actualizar badge superior
+            document.getElementById('headerActiveTopicBadge').textContent = `Tema activo: ${cat.name}`;
+            document.getElementById('tombolaCategoryTitle').textContent = cat.defaultTitle;
+
+            // Regenerar cartones, tómbola, fichas y explorador
+            generateAllCards(false);
+            resetTombola(false);
+            renderTokensAndTeacherSheet();
+            renderDatabaseExplorer();
+        }
+
+        function setPedagogicalMode(mode) {
+            state.pedagogicalMode = mode;
+            const btnCog = document.getElementById('btnModeCognitive');
+            const btnDir = document.getElementById('btnModeDirect');
+
+            if (mode === 'cognitive') {
+                btnCog.className = 'p-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50/70 text-left transition';
+                btnDir.className = 'p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition';
+                showToast('Modo Reto Asociativo: Cantarás definiciones, sinónimos u operaciones', 'fa-brain');
+            } else {
+                btnDir.className = 'p-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50/70 text-left transition';
+                btnCog.className = 'p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition';
+                showToast('Modo Directo: Cantarás la palabra exacta del cartón', 'fa-eye');
+            }
+
+            renderCardsPreview();
+            renderTokensAndTeacherSheet();
+            if (state.tombolaDrawn.length > 0) {
+                renderCurrentTombolaBall();
+            }
+        }
+
+        function setGridSize(size, regenerate = true) {
+            state.gridSize = size;
+            [3, 4, 5].forEach(n => {
+                const btn = document.getElementById(`btnGrid${n}`);
+                if (n === size) {
+                    btn.className = 'py-2 px-3 rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-900 font-bold text-xs flex flex-col items-center gap-0.5 transition';
+                } else {
+                    btn.className = 'py-2 px-3 rounded-xl border border-slate-200 font-bold text-xs flex flex-col items-center gap-0.5 hover:bg-slate-50 transition';
+                }
+            });
+            if (regenerate) generateAllCards(false);
+        }
+
+        function setCardTheme(themeKey, notify = true) {
+            state.theme = themeKey;
+            const t = THEMES[themeKey] || THEMES.indigo;
+            const root = document.documentElement;
+            root.style.setProperty('--card-primary', t.primaryHex);
+            root.style.setProperty('--card-secondary', t.secondaryHex);
+            root.style.setProperty('--card-border', t.borderHex);
+            root.style.setProperty('--card-text', t.textHex);
+
+            // Actualizar botones swatch
+            const keys = ['indigo', 'amber', 'emerald', 'rose', 'inksave'];
+            document.querySelectorAll('.theme-swatch').forEach((btn, idx) => {
+                const key = keys[idx];
+                if (key === themeKey) {
+                    btn.innerHTML = key === 'inksave' ? 'B/N ✓' : '<i class="fa-solid fa-check"></i>';
+                    btn.classList.add('ring-2', 'ring-offset-2', 'ring-indigo-600');
+                } else {
+                    btn.innerHTML = key === 'inksave' ? 'B/N' : '';
+                    btn.classList.remove('ring-2', 'ring-offset-2', 'ring-indigo-600');
+                }
+            });
+
+            if (notify) showToast(`Paleta aplicada: ${t.name}`, 'fa-palette');
+        }
+
+        // Algoritmo Fisher-Yates para barajado matemáticamente uniforme
+        function shuffleArray(array) {
+            const copy = [...array];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        // Obtiene los ítems filtrados según la categoría y el modo silábico
+        function getActivePoolForCategory() {
+            const cat = appDB[state.currentCategory];
+            if (!cat || !cat.items) return [];
+
+            if (state.currentCategory === 'silabico') {
+                const filter = document.getElementById('selectSyllableFilter').value;
+                if (filter === 'direct') {
+                    return cat.items.filter(it => it.syllableType === 'direct');
+                } else if (filter === 'trabadas') {
+                    return cat.items.filter(it => it.syllableType === 'trabadas');
+                }
+            }
+            return [...cat.items];
+        }
+
+        // Genera la combinación de celdas de 1 cartón garantizando equilibrio y barajado total
+        function generateSingleCardCells(totalCellsNeeded, hasFreeCenter) {
+            const cat = appDB[state.currentCategory];
+            const effectiveItemsNeeded = hasFreeCenter ? totalCellsNeeded - 1 : totalCellsNeeded;
+            let chosenItems = [];
+
+            // Caso especial pedagógico: Bingo Silábico en modo Equilibrado (Corrige el bug de generadorBingoSilabico.html)
+            const sylFilter = document.getElementById('selectSyllableFilter')?.value || 'balanced';
+            if (state.currentCategory === 'silabico' && sylFilter === 'balanced') {
+                const directas = shuffleArray(cat.items.filter(i => i.syllableType === 'direct'));
+                const trabadas = shuffleArray(cat.items.filter(i => i.syllableType === 'trabadas'));
+                const halfDirect = Math.floor(effectiveItemsNeeded / 2);
+                const halfTrabadas = effectiveItemsNeeded - halfDirect;
+
+                chosenItems = [
+                    ...directas.slice(0, halfDirect),
+                    ...trabadas.slice(0, halfTrabadas)
+                ];
+                // ¡BARAJADO FINAL CRÍTICO! Para que no queden todas las simples arriba y las trabadas abajo
+                chosenItems = shuffleArray(chosenItems);
+            } else {
+                let pool = getActivePoolForCategory();
+                // Si el usuario tiene menos ítems que el tamaño del cartón, rellenamos ciclando sin romper
+                while (pool.length < effectiveItemsNeeded && pool.length > 0) {
+                    pool = [...pool, ...pool];
+                }
+                chosenItems = shuffleArray(pool).slice(0, effectiveItemsNeeded);
+            }
+
+            // Construir las celdas finales e insertar la casilla central LIBRE si aplica
+            const cells = [];
+            const centerIndex = Math.floor(totalCellsNeeded / 2);
+            let itemCursor = 0;
+
+            for (let idx = 0; idx < totalCellsNeeded; idx++) {
+                if (hasFreeCenter && idx === centerIndex) {
+                    cells.push({
+                        isFree: true,
+                        cardText: 'LIBRE',
+                        callText: 'Casilla comodín gratuita',
+                        icon: '⭐',
+                        sub: 'Comodín',
+                        marked: true
+                    });
+                } else {
+                    const raw = chosenItems[itemCursor] || { cardText: 'BINGO', callText: 'Comodín', icon: '🎲' };
+                    itemCursor++;
+                    cells.push({
+                        isFree: false,
+                        cardText: raw.cardText,
+                        callText: raw.callText,
+                        icon: raw.icon || '🔹',
+                        sub: raw.sub || '',
+                        marked: false
+                    });
+                }
+            }
+            return cells;
+        }
+
+        function generateAllCards(showNotification = true) {
+            let count = parseInt(document.getElementById('inputCardCount').value, 10);
+            if (isNaN(count) || count < 1) count = 1;
+            if (count > 60) {
+                count = 60;
+                document.getElementById('inputCardCount').value = 60;
+            }
+            state.cardCount = count;
+            document.getElementById('badgeTotalCards').textContent = count;
+
+            const totalCells = state.gridSize * state.gridSize;
+            const wantsFreeCenter = document.getElementById('chkFreeCenter').checked;
+            // La casilla central exacta existe en cuadrículas impares (3x3 y 5x5)
+            const hasFreeCenter = wantsFreeCenter && (state.gridSize % 2 === 1);
+
+            const generated = [];
+            const signatures = new Set();
+
+            for (let i = 0; i < count; i++) {
+                let cells = generateSingleCardCells(totalCells, hasFreeCenter);
+                let attempts = 0;
+                let sig = cells.map(c => c.cardText).join('|');
+
+                // Evitar cartones idénticos
+                while (signatures.has(sig) && attempts < 25) {
+                    cells = generateSingleCardCells(totalCells, hasFreeCenter);
+                    sig = cells.map(c => c.cardText).join('|');
+                    attempts++;
+                }
+                signatures.add(sig);
+
+                generated.push({
+                    index: i + 1,
+                    serial: `#BINGO-${String(i + 1).padStart(3, '0')}`,
+                    cells: cells
+                });
+            }
+
+            state.generatedCards = generated;
+            renderCardsPreview();
+            checkLiveCardsForBingo();
+
+            if (showNotification) {
+                playUiSound('tap');
+                showToast(`${count} cartones únicos generados y barajados`, 'fa-wand-magic-sparkles');
+            }
+        }
+
+        /***********************************************************************
+         * 6. RENDERIZADO DE CARTONES EN PANTALLA CON ESCALADO DINÁMICO DE TEXTO
+         ***********************************************************************/
+        function getStudentNameForCard(cardIndexZeroBased) {
+            const rawList = document.getElementById('textareaStudentList').value.trim();
+            if (!rawList) return '';
+            const lines = rawList.split('\n').map(s => s.trim()).filter(Boolean);
+            return lines[cardIndexZeroBased] || '';
+        }
+
+        // Calcula el tamaño de fuente óptimo en pantalla según la longitud de la palabra y tamaño del grid
+        function getOptimalScreenFontSize(text, gridSize) {
+            const len = (text || '').length;
+            if (gridSize === 3) {
+                if (len <= 4) return '1.35rem';
+                if (len <= 8) return '1.1rem';
+                if (len <= 12) return '0.92rem';
+                return '0.78rem';
+            } else if (gridSize === 4) {
+                if (len <= 4) return '1.2rem';
+                if (len <= 8) return '0.95rem';
+                if (len <= 12) return '0.80rem';
+                return '0.68rem';
+            } else {
+                // 5x5
+                if (len <= 3) return '1.05rem';
+                if (len <= 7) return '0.82rem';
+                if (len <= 11) return '0.70rem';
+                return '0.60rem';
+            }
+        }
+
+        function renderCardsPreview() {
+            const container = document.getElementById('cardsPreviewGrid');
+            container.innerHTML = '';
+
+            const customTitle = document.getElementById('inputCustomTitle').value.trim() || 'BINGO EDUCATIVO';
+            const grade = document.getElementById('inputGrade').value.trim() || 'General';
+            const showIcons = document.getElementById('chkShowIcons').checked;
+            const showSub = document.getElementById('chkShowSubtext').checked;
+
+            state.generatedCards.forEach((card, cardIdx) => {
+                const studentName = getStudentNameForCard(cardIdx);
+                const wrapper = document.createElement('article');
+                wrapper.className = 'bingo-card-wrapper';
+
+                // 1. Cabecera separada fuera del CSS Grid (Corrige el fallo de Bingo Silabico2.html)
+                const header = document.createElement('div');
+                header.className = 'bingo-card-header flex items-center justify-between gap-2';
+                header.innerHTML = `
+                    <h4 class="font-display font-bold text-base sm:text-lg tracking-wide truncate card-dom-title">${escapeHtml(customTitle)}</h4>
+                    <span class="px-2 py-0.5 rounded bg-black/20 text-[11px] font-mono font-bold shrink-0">${card.serial}</span>
+                `;
+                wrapper.appendChild(header);
+
+                // 2. Franja de Metadatos (Estudiante y Grado)
+                const meta = document.createElement('div');
+                meta.className = 'bingo-card-meta font-semibold';
+                meta.innerHTML = `
+                    <div class="truncate flex-1 text-left">
+                        <span class="opacity-75">Nombre:</span>
+                        <strong class="card-dom-student ml-1 border-b border-current pb-0.5 inline-block min-w-[110px]">${studentName ? escapeHtml(studentName) : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</strong>
+                    </div>
+                    <div class="shrink-0 text-right">
+                        <span class="opacity-75">Grado:</span>
+                        <strong class="card-dom-grade ml-0.5">${escapeHtml(grade)}</strong>
+                    </div>
+                `;
+                wrapper.appendChild(meta);
+
+                // 3. Cuadrícula de Celdas con protección de desbordamiento
+                const grid = document.createElement('div');
+                grid.className = `bingo-grid grid-${state.gridSize}x${state.gridSize}`;
+
+                card.cells.forEach((cell, cellIdx) => {
+                    const cellDiv = document.createElement('div');
+                    cellDiv.className = `bingo-cell ${cell.marked ? 'marked' : ''} ${cell.isFree ? 'free-space' : ''}`;
+                    cellDiv.title = cell.callText ? `Pista: ${cell.callText}` : cell.cardText;
+
+                    const fontSize = getOptimalScreenFontSize(cell.cardText, state.gridSize);
+
+                    let iconHtml = '';
+                    if (showIcons && cell.icon) {
+                        const iconSize = state.gridSize === 5 ? 'text-xs' : (state.gridSize === 4 ? 'text-sm' : 'text-base');
+                        iconHtml = `<span class="${iconSize} leading-none mb-0.5 select-none">${cell.icon}</span>`;
+                    }
+
+                    let subHtml = '';
+                    if (showSub && cell.sub && !cell.isFree && state.gridSize <= 4) {
+                        subHtml = `<span class="text-[9px] font-sans font-semibold opacity-65 truncate w-full px-1 mt-0.5">${escapeHtml(cell.sub)}</span>`;
+                    }
+
+                    cellDiv.innerHTML = `
+                        ${iconHtml}
+                        <span class="bingo-cell-text" style="font-size: ${fontSize};">${escapeHtml(cell.cardText)}</span>
+                        ${subHtml}
+                    `;
+
+                    cellDiv.addEventListener('click', () => {
+                        toggleCellMark(cardIdx, cellIdx);
+                    });
+
+                    grid.appendChild(cellDiv);
+                });
+
+                wrapper.appendChild(grid);
+                container.appendChild(wrapper);
+            });
+        }
+
+        // Actualiza los encabezados en tiempo real sin perder las casillas marcadas
+        function updateCardHeadersInDOM() {
+            const customTitle = document.getElementById('inputCustomTitle').value.trim() || 'BINGO EDUCATIVO';
+            const grade = document.getElementById('inputGrade').value.trim() || 'General';
+
+            document.querySelectorAll('.card-dom-title').forEach(el => {
+                el.textContent = customTitle;
+            });
+            document.querySelectorAll('.card-dom-grade').forEach(el => {
+                el.textContent = grade;
+            });
+            document.querySelectorAll('.card-dom-student').forEach((el, idx) => {
+                const name = getStudentNameForCard(idx);
+                el.innerHTML = name ? escapeHtml(name) : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            });
+        }
+
+        function toggleCellMark(cardIdx, cellIdx) {
+            const cell = state.generatedCards[cardIdx].cells[cellIdx];
+            cell.marked = !cell.marked;
+            playUiSound('tap');
+            renderCardsPreview();
+            checkLiveCardsForBingo();
+        }
+
+        function clearAllMarks() {
+            state.generatedCards.forEach(card => {
+                card.cells.forEach(cell => {
+                    cell.marked = cell.isFree ? true : false;
+                });
+            });
+            renderCardsPreview();
+            checkLiveCardsForBingo();
+            showToast('Se limpiaron todas las marcas de los cartones', 'fa-eraser');
+        }
+
+        /***********************************************************************
+         * 7. MOTOR DE TÓMBOLA INTERACTIVA, LOCUTOR VOZ IA Y VERIFICADOR DE BINGO
+         ***********************************************************************/
+        function resetTombola(notify = true) {
+            const pool = getActivePoolForCategory();
+            state.tombolaDeck = shuffleArray(pool);
+            state.tombolaDrawn = [];
+            state.tempRevealAnswer = false;
+
+            document.getElementById('tombolaEmptyState').classList.remove('hidden');
+            document.getElementById('tombolaActiveState').classList.add('hidden');
+            document.getElementById('liveBadgeDesk').classList.add('hidden');
+            document.getElementById('liveBadgeMob').classList.add('hidden');
+
+            updateTombolaProgressUI();
+            renderTombolaHistory();
+            checkLiveCardsForBingo();
+
+            if (notify) {
+                showToast('Tómbola barajada y lista para una nueva partida', 'fa-rotate-left');
+            }
+        }
+
+        function drawNextBall() {
+            if (state.tombolaDeck.length === 0 && state.tombolaDrawn.length === 0) {
+                resetTombola(false);
+            }
+
+            if (state.tombolaDeck.length === 0) {
+                showToast('¡Ya se sacaron todas las balotas de este tema!', 'fa-flag-checkered');
+                return;
+            }
+
+            const nextBall = state.tombolaDeck.pop();
+            state.tombolaDrawn.unshift(nextBall); // El más reciente primero
+            state.tempRevealAnswer = false;
+
+            playUiSound('ball');
+            document.getElementById('liveBadgeDesk').classList.remove('hidden');
+            document.getElementById('liveBadgeMob').classList.remove('hidden');
+
+            // Si el modo automático está activo, marcar en los cartones generados
+            const markMode = document.getElementById('selectAutoMarkMode').value;
+            if (markMode === 'auto') {
+                state.generatedCards.forEach(card => {
+                    card.cells.forEach(cell => {
+                        if (cell.cardText.toLowerCase() === nextBall.cardText.toLowerCase()) {
+                            cell.marked = true;
+                        }
+                    });
+                });
+                renderCardsPreview();
+            }
+
+            renderCurrentTombolaBall();
+            updateTombolaProgressUI();
+            renderTombolaHistory();
+            checkLiveCardsForBingo();
+            speakCurrentBall();
+        }
+
+        function renderCurrentTombolaBall() {
+            if (state.tombolaDrawn.length === 0) return;
+            const current = state.tombolaDrawn[0];
+            const drawnCount = state.tombolaDrawn.length;
+
+            document.getElementById('tombolaEmptyState').classList.add('hidden');
+            const activeBox = document.getElementById('tombolaActiveState');
+            activeBox.classList.remove('hidden');
+            activeBox.classList.remove('animate-pop');
+            void activeBox.offsetWidth; // Reflow para animar
+            activeBox.classList.add('animate-pop');
+
+            document.getElementById('tombolaBallNumber').textContent = `BALOTA #${drawnCount}`;
+            document.getElementById('tombolaEmoji').textContent = current.icon || '🎯';
+
+            if (state.pedagogicalMode === 'cognitive') {
+                document.getElementById('tombolaModeLabel').textContent = 'Reto Cognitivo / Pista';
+                document.getElementById('tombolaMainCall').textContent = current.callText;
+            } else {
+                document.getElementById('tombolaModeLabel').textContent = 'Modo Identificación Directa';
+                document.getElementById('tombolaMainCall').textContent = current.cardText;
+            }
+
+            document.getElementById('tombolaCardAnswer').textContent = current.cardText;
+            updateTombolaAnswerVisibility();
+        }
+
+        function updateTombolaAnswerVisibility() {
+            const hide = document.getElementById('chkHideAnswerInTombola').checked;
+            const badge = document.getElementById('tombolaAnswerBadge');
+            const btnReveal = document.getElementById('btnRevealAnswer');
+
+            if (hide && !state.tempRevealAnswer && state.pedagogicalMode === 'cognitive') {
+                badge.classList.add('hidden');
+                btnReveal.classList.remove('hidden');
+            } else {
+                badge.classList.remove('hidden');
+                btnReveal.classList.add('hidden');
+            }
+        }
+
+        function revealAnswerTemporary() {
+            state.tempRevealAnswer = true;
+            updateTombolaAnswerVisibility();
+        }
+
+        function updateTombolaProgressUI() {
+            const drawn = state.tombolaDrawn.length;
+            const remaining = state.tombolaDeck.length;
+            const total = drawn + remaining;
+            const pct = total > 0 ? Math.round((drawn / total) * 100) : 0;
+
+            document.getElementById('tombolaProgressText').textContent = `Cantadas: ${drawn} de ${total}`;
+            document.getElementById('tombolaRemainingText').textContent = `Quedan: ${remaining}`;
+            document.getElementById('tombolaProgressBar').style.width = `${pct}%`;
+            document.getElementById('badgeHistoryCount').textContent = drawn;
+        }
+
+        function renderTombolaHistory() {
+            const container = document.getElementById('drawnHistoryContainer');
+            if (state.tombolaDrawn.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6">Aún no se han sacado balotas en esta partida.</p>`;
+                return;
+            }
+
+            container.innerHTML = state.tombolaDrawn.map((item, idx) => {
+                const num = state.tombolaDrawn.length - idx;
+                return `
+                    <div class="p-2.5 rounded-xl border ${idx === 0 ? 'bg-indigo-50 border-indigo-400 ring-2 ring-indigo-100' : 'bg-slate-50 border-slate-200'} flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg ${idx === 0 ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700'} text-[11px] font-bold flex items-center justify-center shrink-0">
+                            ${num}
+                        </span>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xs font-bold text-slate-900 truncate">${escapeHtml(item.cardText)}</p>
+                            <p class="text-[10px] text-slate-500 truncate" title="${escapeHtml(item.callText)}">${escapeHtml(item.callText)}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Síntesis de Voz del Navegador (Web Speech API)
+        function toggleSpeech() {
+            state.speechEnabled = !state.speechEnabled;
+            const icon = document.getElementById('iconSpeech');
+            const label = document.getElementById('labelSpeech');
+            if (state.speechEnabled) {
+                icon.className = 'fa-solid fa-volume-high text-emerald-400';
+                label.textContent = 'Locutor Voz: ON';
+                showToast('Locutor de voz activado', 'fa-volume-high');
+            } else {
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+                icon.className = 'fa-solid fa-volume-xmark text-rose-400';
+                label.textContent = 'Locutor Voz: OFF';
+                showToast('Locutor de voz silenciado', 'fa-volume-xmark');
+            }
+        }
+
+        function speakCurrentBall() {
+            if (!state.speechEnabled || state.tombolaDrawn.length === 0) return;
+            repeatCurrentBallSpeech();
+        }
+
+        function repeatCurrentBallSpeech() {
+            if (!('speechSynthesis' in window) || state.tombolaDrawn.length === 0) return;
+            try {
+                window.speechSynthesis.cancel();
+                const current = state.tombolaDrawn[0];
+                const textToRead = state.pedagogicalMode === 'cognitive'
+                    ? current.callText
+                    : `Busca en tu cartón: ${current.cardText}`;
+
+                const utterance = new SpeechSynthesisUtterance(textToRead);
+                utterance.lang = 'es-CO';
+                utterance.rate = 0.96;
+                window.speechSynthesis.speak(utterance);
+            } catch (e) {
+                console.warn('Error en síntesis de voz:', e);
+            }
+        }
+
+        // Verificador Matemático de Patrones de Bingo (Pleno, Línea, 4 Esquinas)
+        function evaluateCardForPattern(card, pattern, checkAgainstDrawnPool = false) {
+            const N = state.gridSize;
+            const drawnSet = new Set(state.tombolaDrawn.map(d => d.cardText.toLowerCase()));
+
+            const isCellValid = (cell) => {
+                if (cell.isFree) return true;
+                if (checkAgainstDrawnPool) {
+                    return drawnSet.has(cell.cardText.toLowerCase());
+                }
+                return cell.marked;
+            };
+
+            if (pattern === 'full') {
+                return card.cells.every(isCellValid);
+            }
+
+            if (pattern === 'corners') {
+                const corners = [0, N - 1, N * (N - 1), N * N - 1];
+                return corners.every(idx => isCellValid(card.cells[idx]));
+            }
+
+            if (pattern === 'line') {
+                // Filas horizontales
+                for (let r = 0; r < N; r++) {
+                    let rowOk = true;
+                    for (let c = 0; c < N; c++) {
+                        if (!isCellValid(card.cells[r * N + c])) rowOk = false;
+                    }
+                    if (rowOk) return true;
+                }
+                // Columnas verticales
+                for (let c = 0; c < N; c++) {
+                    let colOk = true;
+                    for (let r = 0; r < N; r++) {
+                        if (!isCellValid(card.cells[r * N + c])) colOk = false;
+                    }
+                    if (colOk) return true;
+                }
+                // Diagonal principal
+                let d1Ok = true;
+                let d2Ok = true;
+                for (let i = 0; i < N; i++) {
+                    if (!isCellValid(card.cells[i * N + i])) d1Ok = false;
+                    if (!isCellValid(card.cells[i * N + (N - 1 - i)])) d2Ok = false;
+                }
+                return d1Ok || d2Ok;
+            }
+            return false;
+        }
+
+        function checkLiveCardsForBingo() {
+            const pattern = document.getElementById('selectWinPattern')?.value || 'full';
+            const radar = document.getElementById('liveWinnerRadar');
+            if (!radar) return;
+
+            // Verificar qué cartones ya tienen BINGO válido según las balotas cantadas en la tómbola
+            const validByTombola = state.generatedCards.filter(c => evaluateCardForPattern(c, pattern, true));
+            const validByManualMarks = state.generatedCards.filter(c => evaluateCardForPattern(c, pattern, false));
+
+            if (state.tombolaDrawn.length > 0 && validByTombola.length > 0) {
+                const serials = validByTombola.map(c => c.serial).join(', ');
+                radar.className = 'p-3 rounded-xl bg-amber-50 border-2 border-amber-400 text-xs text-amber-950 flex items-center gap-2.5 font-semibold';
+                radar.innerHTML = `
+                    <i class="fa-solid fa-bell text-amber-600 text-base animate-bounce"></i>
+                    <span>¡Atención Docente! Con las balotas cantadas, ya hay BINGO en: <strong>${serials}</strong></span>
+                `;
+            } else if (validByManualMarks.length > 0) {
+                const serials = validByManualMarks.map(c => c.serial).join(', ');
+                radar.className = 'p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 flex items-center gap-2.5 font-semibold';
+                radar.innerHTML = `
+                    <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+                    <span>Cartones marcados manualmente listos para cantar Bingo: <strong>${serials}</strong></span>
+                `;
+            } else {
+                radar.className = 'p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center gap-2.5';
+                radar.innerHTML = `
+                    <i class="fa-solid fa-satellite-dish text-slate-400 text-base"></i>
+                    <span>Radar de aula: Ningún cartón ha completado el patrón aún.</span>
+                `;
+            }
+        }
+
+        function verifyBingoClaim() {
+            const pattern = document.getElementById('selectWinPattern').value;
+            const winnersTombola = state.generatedCards.filter(c => state.tombolaDrawn.length > 0 && evaluateCardForPattern(c, pattern, true));
+            const winnersManual = state.generatedCards.filter(c => evaluateCardForPattern(c, pattern, false));
+
+            const combined = [...new Map([...winnersTombola, ...winnersManual].map(item => [item.serial, item])).values()];
+
+            const modal = document.getElementById('winnerModal');
+            const title = document.getElementById('winnerModalTitle');
+            const body = document.getElementById('winnerModalBody');
+            const badges = document.getElementById('winnerCardsBadges');
+
+            if (combined.length > 0) {
+                playUiSound('win');
+                title.textContent = '¡BINGO OFICIALMENTE GANADOR!';
+                body.textContent = `Se ha comprobado que ${combined.length === 1 ? 'el siguiente cartón cumplió' : 'los siguientes cartones cumplieron'} la meta seleccionada:`;
+                badges.innerHTML = combined.map(c => {
+                    const student = getStudentNameForCard(c.index - 1);
+                    return `<span class="px-3 py-1.5 rounded-xl bg-amber-100 border border-amber-400 text-amber-950 font-bold text-xs">${c.serial} ${student ? '• ' + escapeHtml(student) : ''}</span>`;
+                }).join('');
+            } else {
+                playUiSound('tap');
+                title.textContent = 'Aún falta por completar';
+                body.textContent = 'Ninguno de los cartones activos ha completado todavía las casillas requeridas para este patrón de victoria. ¡Sigan jugando!';
+                badges.innerHTML = '';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeWinnerModal() {
+            document.getElementById('winnerModal').classList.add('hidden');
+        }
+
+        /***********************************************************************
+         * 8. RENDERIZADO DE FICHAS RECORTABLES (PALABRAS.HTML MEJORADO) Y GUÍA
+         ***********************************************************************/
+        function renderTokensAndTeacherSheet() {
+            const pool = getActivePoolForCategory();
+            document.getElementById('tokensTotalLabel').textContent = `${pool.length} fichas redondas`;
+
+            // 1. Fichas Circulares
+            const tokensGrid = document.getElementById('tokensPreviewGrid');
+            tokensGrid.innerHTML = pool.map((item, idx) => {
+                const fontSize = item.cardText.length > 10 ? 'text-xs' : (item.cardText.length > 5 ? 'text-sm' : 'text-lg');
+                return `
+                    <div class="token-circle">
+                        <div class="token-circle-inner">
+                            <span class="text-[10px] font-bold text-slate-400">#${idx + 1}</span>
+                            <span class="text-base my-0.5">${item.icon || '🔹'}</span>
+                            <span class="font-display font-bold ${fontSize} text-slate-900 leading-tight break-words w-full px-1">${escapeHtml(item.cardText)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // 2. Tabla de Control del Profesor
+            const tbody = document.getElementById('teacherChecklistTableBody');
+            tbody.innerHTML = pool.map((item, idx) => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-mono font-bold text-slate-400">${idx + 1}</td>
+                    <td class="p-2.5 font-bold text-slate-900 whitespace-nowrap">${item.icon || ''} ${escapeHtml(item.cardText)}</td>
+                    <td class="p-2.5 text-slate-600 leading-snug">${escapeHtml(item.callText)}</td>
+                </tr>
+            `).join('');
+        }
+
+        /***********************************************************************
+         * 9. GESTOR DE BASE DE DATOS Y CREADOR PERSONALIZADO (PESTAÑA 4)
+         ***********************************************************************/
+        function renderDatabaseExplorer() {
+            const cat = appDB[state.currentCategory];
+            const query = (document.getElementById('dbSearchInput')?.value || '').toLowerCase().trim();
+            document.getElementById('dbExplorerTitle').textContent = `${cat.name}`;
+
+            const filtered = cat.items.filter(it =>
+                it.cardText.toLowerCase().includes(query) ||
+                it.callText.toLowerCase().includes(query)
+            );
+
+            const list = document.getElementById('dbItemsList');
+            if (filtered.length === 0) {
+                list.innerHTML = `<p class="p-6 text-center text-xs text-slate-400">No se encontraron términos que coincidan con tu búsqueda.</p>`;
+                return;
+            }
+
+            list.innerHTML = filtered.map((item, idx) => `
+                <div class="p-3 hover:bg-slate-50 flex items-center justify-between gap-3">
+                    <div class="flex items-start gap-3 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-base shrink-0">${item.icon || '🔹'}</span>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2">
+                                <span class="font-display font-bold text-sm text-slate-900">${escapeHtml(item.cardText)}</span>
+                                ${item.sub ? `<span class="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 text-[10px] font-bold">${escapeHtml(item.sub)}</span>` : ''}
+                            </div>
+                            <p class="text-xs text-slate-500 truncate sm:whitespace-normal">${escapeHtml(item.callText)}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteItemFromCurrentCategory('${escapeJs(item.cardText)}')" class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition shrink-0" title="Eliminar ítem">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addSingleItemToCurrentCategory() {
+            const cardText = document.getElementById('newItemCardText').value.trim();
+            const callText = document.getElementById('newItemCallText').value.trim();
+            const icon = document.getElementById('newItemIcon').value.trim() || '⭐';
+
+            if (!cardText) {
+                showToast('Escribe al menos el texto que irá en la casilla del cartón', 'fa-triangle-exclamation');
+                return;
+            }
+
+            const cat = appDB[state.currentCategory];
+            cat.items.unshift({
+                cardText: cardText,
+                callText: callText || `Busca en tu cartón: ${cardText}`,
+                icon: icon,
+                sub: 'Nuevo',
+                syllableType: cardText.length <= 2 ? 'direct' : 'trabadas'
+            });
+
+            saveDatabase();
+            document.getElementById('newItemCardText').value = '';
+            document.getElementById('newItemCallText').value = '';
+
+            populateCategorySelector();
+            generateAllCards(false);
+            renderTokensAndTeacherSheet();
+            renderDatabaseExplorer();
+            showToast(`"${cardText}" agregado al tema activo`, 'fa-circle-check');
+        }
+
+        function deleteItemFromCurrentCategory(cardTextToRemove) {
+            const cat = appDB[state.currentCategory];
+            if (cat.items.length <= 9) {
+                showToast('El tema debe conservar al menos 9 elementos para formar un cartón 3×3', 'fa-shield-halved');
+                return;
+            }
+            cat.items = cat.items.filter(i => i.cardText !== cardTextToRemove);
+            saveDatabase();
+            populateCategorySelector();
+            generateAllCards(false);
+            renderTokensAndTeacherSheet();
+            renderDatabaseExplorer();
+            showToast(`Elemento eliminado`, 'fa-trash-can');
+        }
+
+        function bulkImportItems(replaceCustomCategory) {
+            const raw = document.getElementById('bulkImportTextarea').value.trim();
+            if (!raw) {
+                showToast('Pega o escribe al menos una línea para importar', 'fa-triangle-exclamation');
+                return;
+            }
+
+            const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+            const parsedItems = lines.map(line => {
+                let parts = line.split('|');
+                if (parts.length < 2) parts = line.split(':');
+                const cardText = (parts[0] || '').trim();
+                const callText = (parts.slice(1).join(':') || '').trim() || `Busca en tu cartón: ${cardText}`;
+                return {
+                    cardText,
+                    callText,
+                    icon: '✨',
+                    sub: 'Importado',
+                    syllableType: cardText.length <= 2 ? 'direct' : 'trabadas'
+                };
+            }).filter(it => it.cardText.length > 0);
+
+            if (parsedItems.length === 0) return;
+
+            if (replaceCustomCategory) {
+                appDB.personalizado.items = parsedItems;
+                state.currentCategory = 'personalizado';
+            } else {
+                appDB[state.currentCategory].items = [...parsedItems, ...appDB[state.currentCategory].items];
+            }
+
+            saveDatabase();
+            document.getElementById('bulkImportTextarea').value = '';
+            populateCategorySelector();
+            onCategoryChange();
+            showToast(`Se importaron ${parsedItems.length} conceptos correctamente`, 'fa-file-import');
+        }
+
+        /***********************************************************************
+         * 10. MOTOR VECTORIAL DE EXPORTACIÓN PDF (jsPDF CON AUTO-ESCALADO EXACTO)
+         * Soluciona definitivamente el problema de textos que se salen de sus
+         * cajas o márgenes y cartones cortados entre páginas.
+         ***********************************************************************/
+        function exportVectorPDF(mode = 'cards') {
+            if (!window.jspdf || !window.jspdf.jsPDF) {
+                showToast('Cargando librería PDF, intenta en un segundo...', 'fa-spinner');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            // Formato Carta (Letter: 612 x 792 puntos tipográficos)
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'pt',
+                format: 'letter'
+            });
+
+            const pageWidth = pdf.internal.pageSize.getWidth();   // 612 pt
+            const pageHeight = pdf.internal.pageSize.getHeight(); // 792 pt
+            const theme = THEMES[state.theme] || THEMES.indigo;
+            const customTitle = (document.getElementById('inputCustomTitle').value.trim() || 'BINGO EDUCATIVO').toUpperCase();
+            const grade = document.getElementById('inputGrade').value.trim() || 'General';
+
+            if (mode === 'cards') {
+                const cardsPerPage = parseInt(document.getElementById('selectPdfLayout').value, 10) || 4;
+                const appendTeacher = document.getElementById('chkAppendTeacherSheet').checked;
+
+                drawVectorCardsPages(pdf, pageWidth, pageHeight, cardsPerPage, theme, customTitle, grade);
+
+                if (appendTeacher) {
+                    pdf.addPage();
+                    drawVectorTeacherSheet(pdf, pageWidth, pageHeight, theme, customTitle);
+                }
+
+                const cleanFilename = customTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                pdf.save(`${cleanFilename}_${state.generatedCards.length}_cartones.pdf`);
+                showToast('¡PDF Vectorial de Cartones descargado sin desbordamientos!', 'fa-file-pdf');
+
+            } else if (mode === 'tokens') {
+                drawVectorTokensPages(pdf, pageWidth, pageHeight, theme, customTitle);
+                pdf.save(`fichas_recortables_${state.currentCategory}.pdf`);
+                showToast('¡PDF de Fichas Circulares Recortables descargado!', 'fa-scissors');
+
+            } else if (mode === 'teachersheet') {
+                drawVectorTeacherSheet(pdf, pageWidth, pageHeight, theme, customTitle);
+                pdf.save(`guia_docente_${state.currentCategory}.pdf`);
+                showToast('¡Hoja de Control Docente descargada en PDF!', 'fa-clipboard-list');
+            }
+        }
+
+        // Función auxiliar que ajusta y envuelve cualquier texto dentro de una celda del PDF garantizando CERO desbordamiento
+        function fitTextInsidePdfBox(pdf, text, maxWidthPt, maxHeightPt, initialFontSize, minFontSize = 6.5) {
+            const cleanText = String(text || '').trim();
+            let fontSize = initialFontSize;
+
+            while (fontSize >= minFontSize) {
+                pdf.setFontSize(fontSize);
+                // Verificamos si alguna palabra individual es más ancha que la caja
+                const words = cleanText.split(/\s+/);
+                const longestWordWidth = Math.max(...words.map(w => pdf.getTextWidth(w)));
+
+                if (longestWordWidth <= maxWidthPt) {
+                    const lines = pdf.splitTextToSize(cleanText, maxWidthPt);
+                    const totalTextHeight = lines.length * (fontSize * 1.15);
+                    if (totalTextHeight <= maxHeightPt && lines.length <= 3) {
+                        return { fontSize, lines };
+                    }
+                }
+                fontSize -= 0.75;
+            }
+
+            // Si aún es muy largo en tamaño mínimo, forzamos partición limpia
+            pdf.setFontSize(minFontSize);
+            const fallbackLines = pdf.splitTextToSize(cleanText, maxWidthPt).slice(0, 3);
+            return { fontSize: minFontSize, lines: fallbackLines };
+        }
+
+        function drawVectorCardsPages(pdf, pageW, pageH, cardsPerPage, theme, title, grade) {
+            const margin = 26;
+            const gap = 18;
+            let cols = 2, rows = 2;
+
+            if (cardsPerPage === 1) { cols = 1; rows = 1; }
+            else if (cardsPerPage === 2) { cols = 1; rows = 2; }
+            else { cols = 2; rows = 2; }
+
+            const availW = pageW - margin * 2 - gap * (cols - 1);
+            const availH = pageH - margin * 2 - gap * (rows - 1);
+            const cardW = availW / cols;
+            const cardH = availH / rows;
+
+            const showSub = document.getElementById('chkShowSubtext').checked;
+
+            state.generatedCards.forEach((card, idx) => {
+                const posInPage = idx % cardsPerPage;
+                if (idx > 0 && posInPage === 0) {
+                    pdf.addPage();
+                }
+
+                const col = posInPage % cols;
+                const row = Math.floor(posInPage / cols);
+                const x = margin + col * (cardW + gap);
+                const y = margin + row * (cardH + gap);
+
+                drawSingleVectorCard(pdf, x, y, cardW, cardH, card, idx, theme, title, grade, showSub);
+            });
+        }
+
+        function drawSingleVectorCard(pdf, x, y, w, h, card, cardIdx, theme, title, grade, showSub) {
+            const N = state.gridSize;
+            const headerH = Math.max(28, h * 0.095);
+            const metaH = Math.max(20, h * 0.068);
+            const pad = Math.max(8, w * 0.032);
+
+            // 1. Fondo y Borde Exterior del Cartón
+            pdf.setFillColor(255, 255, 255);
+            pdf.setDrawColor(...theme.borderRGB);
+            pdf.setLineWidth(2);
+            pdf.roundedRect(x, y, w, h, 10, 10, 'FD');
+
+            // 2. Franja de Cabecera Superior
+            if (!theme.isInkSave) {
+                pdf.setFillColor(...theme.primaryRGB);
+                pdf.roundedRect(x, y, w, headerH + 6, 10, 10, 'F');
+                pdf.rect(x, y + headerH, w, 6, 'F'); // Esquinas inferiores rectas en el header
+                pdf.setTextColor(255, 255, 255);
+            } else {
+                pdf.setTextColor(0, 0, 0);
+            }
+
+            // Título auto-ajustado para que nunca choque con el serial
+            pdf.setFont('helvetica', 'bold');
+            const maxTitleW = w - 75;
+            const titleFit = fitTextInsidePdfBox(pdf, title, maxTitleW, headerH, h > 400 ? 15 : 11.5, 8);
+            pdf.setFontSize(titleFit.fontSize);
+            pdf.text(titleFit.lines[0], x + pad, y + headerH * 0.65);
+
+            // Serial a la derecha
+            pdf.setFontSize(h > 400 ? 10 : 8);
+            pdf.text(card.serial, x + w - pad, y + headerH * 0.65, { align: 'right' });
+
+            // 3. Franja de Nombre del Estudiante y Grado
+            const metaY = y + headerH;
+            pdf.setFillColor(...theme.secondaryRGB);
+            pdf.setDrawColor(...theme.borderRGB);
+            pdf.setLineWidth(1.2);
+            pdf.rect(x, metaY, w, metaH, 'FD');
+
+            pdf.setTextColor(...theme.textRGB);
+            pdf.setFontSize(h > 400 ? 10 : 8.2);
+            const studentName = getStudentNameForCard(cardIdx);
+            const studentLabel = studentName ? `Estudiante: ${studentName}` : 'Nombre: ________________________';
+            pdf.text(studentLabel, x + pad, metaY + metaH * 0.66);
+            pdf.text(`Grado: ${grade}`, x + w - pad, metaY + metaH * 0.66, { align: 'right' });
+
+            // 4. Cuadrícula Matemática de Celdas
+            const gridTop = metaY + metaH + pad;
+            const gridAvailW = w - pad * 2;
+            const gridAvailH = h - (headerH + metaH + pad * 2);
+            const cellGap = N === 5 ? 4 : 5.5;
+
+            const cellW = (gridAvailW - cellGap * (N - 1)) / N;
+            const cellH = (gridAvailH - cellGap * (N - 1)) / N;
+
+            const baseFontSize = h > 450 ? (N === 3 ? 20 : N === 4 ? 16 : 13) : (N === 3 ? 13.5 : N === 4 ? 11 : 9.2);
+
+            card.cells.forEach((cell, cIdx) => {
+                const cCol = cIdx % N;
+                const cRow = Math.floor(cIdx / N);
+                const cx = x + pad + cCol * (cellW + cellGap);
+                const cy = gridTop + cRow * (cellH + cellGap);
+
+                // Caja de la celda
+                if (cell.isFree && !theme.isInkSave) {
+                    pdf.setFillColor(254, 243, 199);
+                } else {
+                    pdf.setFillColor(255, 255, 255);
+                }
+                pdf.setDrawColor(...theme.borderRGB);
+                pdf.setLineWidth(1.1);
+                pdf.roundedRect(cx, cy, cellW, cellH, 5, 5, 'FD');
+
+                // Medición y centrado vertical + horizontal exacto del texto de la celda
+                pdf.setFont('helvetica', 'bold');
+                pdf.setTextColor(...theme.textRGB);
+
+                const innerPad = 6;
+                const maxTextW = cellW - innerPad * 2;
+                const maxTextH = showSub && cell.sub && !cell.isFree ? cellH * 0.65 : cellH * 0.82;
+
+                const fit = fitTextInsidePdfBox(pdf, cell.cardText, maxTextW, maxTextH, baseFontSize, 6.5);
+                pdf.setFontSize(fit.fontSize);
+
+                const lineHeight = fit.fontSize * 1.15;
+                const blockH = fit.lines.length * lineHeight;
+                let startY = cy + (cellH - blockH) / 2 + fit.fontSize * 0.82;
+
+                if (showSub && cell.sub && !cell.isFree && N <= 4) {
+                    startY -= 4;
+                }
+
+                fit.lines.forEach((line, lIdx) => {
+                    pdf.text(line, cx + cellW / 2, startY + lIdx * lineHeight, { align: 'center' });
+                });
+
+                // Subtítulo opcional dentro de la celda
+                if (showSub && cell.sub && !cell.isFree && N <= 4) {
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setFontSize(6.5);
+                    pdf.setTextColor(100, 116, 139);
+                    const subFit = pdf.splitTextToSize(String(cell.sub), maxTextW)[0] || '';
+                    pdf.text(subFit, cx + cellW / 2, cy + cellH - 4.5, { align: 'center' });
+                }
+            });
+        }
+
+        // Genera la Hoja de Control Docente con todas las palabras y definiciones
+        function drawVectorTeacherSheet(pdf, pageW, pageH, theme, title) {
+            const margin = 36;
+            const pool = getActivePoolForCategory();
+            let y = margin;
+
+            pdf.setFillColor(...(theme.isInkSave ? [240, 240, 240] : theme.primaryRGB));
+            pdf.roundedRect(margin, y, pageW - margin * 2, 42, 8, 8, 'F');
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(13);
+            pdf.setTextColor(...(theme.isInkSave ? [0, 0, 0] : [255, 255, 255]));
+            pdf.text(`HOJA DE CONTROL DOCENTE: ${title}`, margin + 14, y + 18);
+            pdf.setFontSize(9);
+            pdf.text(`Total de balotas: ${pool.length}  |  Marca la casilla [  ] a medida que cantes cada término en clase.`, margin + 14, y + 33);
+
+            y += 56;
+
+            // Cabecera de tabla
+            pdf.setFillColor(241, 245, 249);
+            pdf.setDrawColor(203, 213, 225);
+            pdf.rect(margin, y, pageW - margin * 2, 20, 'FD');
+            pdf.setTextColor(15, 23, 42);
+            pdf.setFontSize(8.5);
+            pdf.text('CONTROL', margin + 8, y + 13);
+            pdf.text('EN EL CARTÓN', margin + 62, y + 13);
+            pdf.text('PISTA / DEFINICIÓN / SINÓNIMO PARA CANTAR EN LA TÓMBOLA', margin + 180, y + 13);
+
+            y += 20;
+            pdf.setFont('helvetica', 'normal');
+
+            pool.forEach((item, idx) => {
+                const clueWidth = pageW - margin * 2 - 188;
+                pdf.setFontSize(8.5);
+                const clueLines = pdf.splitTextToSize(item.callText, clueWidth);
+                const rowH = Math.max(20, clueLines.length * 11 + 8);
+
+                if (y + rowH > pageH - margin) {
+                    pdf.addPage();
+                    y = margin;
+                }
+
+                if (idx % 2 === 1) {
+                    pdf.setFillColor(248, 250, 252);
+                    pdf.rect(margin, y, pageW - margin * 2, rowH, 'F');
+                }
+                pdf.setDrawColor(226, 232, 240);
+                pdf.rect(margin, y, pageW - margin * 2, rowH, 'S');
+
+                // Casilla de chequeo
+                pdf.rect(margin + 12, y + (rowH - 10) / 2, 10, 10, 'S');
+                pdf.setFont('helvetica', 'bold');
+                pdf.setTextColor(100, 116, 139);
+                pdf.text(`${idx + 1}`, margin + 28, y + rowH / 2 + 3);
+
+                // Palabra del cartón
+                pdf.setTextColor(15, 23, 42);
+                const wordFit = pdf.splitTextToSize(item.cardText, 110);
+                pdf.text(wordFit[0], margin + 62, y + rowH / 2 + 3);
+
+                // Pista completa
+                pdf.setFont('helvetica', 'normal');
+                pdf.setTextColor(51, 65, 85);
+                pdf.text(clueLines, margin + 180, y + 12);
+
+                y += rowH;
+            });
+        }
+
+        // Genera Fichas / Balotas Circulares Recortables en PDF (Inspiradas en Palabras.html)
+        function drawVectorTokensPages(pdf, pageW, pageH, theme, title) {
+            const margin = 32;
+            const pool = getActivePoolForCategory();
+            const cols = 4;
+            const rows = 5;
+            const perPage = cols * rows;
+
+            const gridW = pageW - margin * 2;
+            const gridH = pageH - margin * 2 - 40;
+            const cellW = gridW / cols;
+            const cellH = gridH / rows;
+            const radius = Math.min(cellW, cellH) * 0.43;
+
+            pool.forEach((item, idx) => {
+                const pos = idx % perPage;
+                if (idx > 0 && pos === 0) {
+                    pdf.addPage();
+                }
+
+                if (pos === 0) {
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setFontSize(12);
+                    pdf.setTextColor(15, 23, 42);
+                    pdf.text(`FICHAS / BALOTAS RECORTABLES PARA BOLSA: ${title}`, pageW / 2, margin + 12, { align: 'center' });
+                    pdf.setFontSize(8.5);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.text('Recorta por el borde circular exterior y mételas en una bolsa o tómbola física.', pageW / 2, margin + 25, { align: 'center' });
+                }
+
+                const c = pos % cols;
+                const r = Math.floor(pos / cols);
+                const cx = margin + c * cellW + cellW / 2;
+                const cy = margin + 38 + r * cellH + cellH / 2;
+
+                // Círculo exterior de recorte
+                pdf.setDrawColor(...theme.borderRGB);
+                pdf.setLineWidth(2);
+                pdf.circle(cx, cy, radius, 'S');
+
+                // Círculo interior decorativo
+                pdf.setDrawColor(...(theme.isInkSave ? [120, 120, 120] : theme.primaryRGB));
+                pdf.setLineWidth(0.8);
+                pdf.circle(cx, cy, radius - 4, 'S');
+
+                // Número de balota
+                pdf.setFont('helvetica', 'bold');
+                pdf.setFontSize(7.5);
+                pdf.setTextColor(120, 130, 145);
+                pdf.text(`#${idx + 1}`, cx, cy - radius + 14, { align: 'center' });
+
+                // Palabra auto-escalada dentro del círculo
+                pdf.setTextColor(15, 23, 42);
+                const fit = fitTextInsidePdfBox(pdf, item.cardText, radius * 1.55, radius * 1.1, 14, 7.5);
+                pdf.setFontSize(fit.fontSize);
+                const lh = fit.fontSize * 1.15;
+                const startY = cy - ((fit.lines.length - 1) * lh) / 2 + 3;
+                fit.lines.forEach((line, lIdx) => {
+                    pdf.text(line, cx, startY + lIdx * lh, { align: 'center' });
+                });
+            });
+        }
+
+        /***********************************************************************
+         * 11. NAVEGACIÓN ENTRE PESTAÑAS Y UTILIDADES DE INTERFAZ
+         ***********************************************************************/
+        function switchTab(tabId) {
+            state.activeTab = tabId;
+            const tabs = ['studio', 'tombola', 'tokens', 'database'];
+
+            tabs.forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                const btnDesk = document.getElementById(`nav-desk-${t}`);
+                const btnMob = document.getElementById(`nav-mob-${t}`);
+
+                if (t === tabId) {
+                    sec.classList.remove('hidden');
+                    if (btnDesk) {
+                        btnDesk.className = 'tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 bg-white text-indigo-600 shadow-sm';
+                    }
+                    if (btnMob) {
+                        btnMob.className = 'flex flex-col items-center justify-center py-1.5 rounded-xl text-indigo-600 bg-indigo-50/80 font-bold text-[11px] transition relative';
+                    }
+                } else {
+                    sec.classList.add('hidden');
+                    if (btnDesk) {
+                        btnDesk.className = 'tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900';
+                    }
+                    if (btnMob) {
+                        btnMob.className = 'flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-500 font-semibold text-[11px] transition relative';
+                    }
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openAuditModal() {
+            document.getElementById('auditModal').classList.remove('hidden');
+        }
+
+        function closeAuditModal() {
+            document.getElementById('auditModal').classList.add('hidden');
+        }
+
+        let toastTimer = null;
+        function showToast(message, iconClass = 'fa-circle-check') {
+            const toast = document.getElementById('toastNotification');
+            const msg = document.getElementById('toastMessage');
+            const icon = document.getElementById('toastIcon');
+
+            msg.textContent = message;
+            icon.className = `fa-solid ${iconClass} text-emerald-400 text-lg`;
+            toast.classList.remove('hidden');
+
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3200);
+        }
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function escapeJs(str) {
+            return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        }
+    </script>
+</body>
+</html>
