@@ -1,0 +1,2420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0f172a">
+    <title>Guardianes del Saber: Odisea Geomática 2D</title>
+    <style>
+        :root {
+            --bg-deep: #090d16;
+            --bg-panel: rgba(15, 23, 42, 0.88);
+            --bg-card: rgba(30, 41, 59, 0.92);
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.45);
+            --accent: #f59e0b;
+            --accent-glow: rgba(245, 158, 11, 0.45);
+            --success: #10b981;
+            --danger: #f43f5e;
+            --purple: #a855f7;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-game: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            --safe-bottom: env(safe-area-inset-bottom, 12px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-deep);
+            font-family: var(--font-game);
+            color: var(--text-main);
+        }
+
+        #app {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: block;
+        }
+
+        .hud-top {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: linear-gradient(180deg, rgba(9, 13, 22, 0.9) 0%, rgba(9, 13, 22, 0) 100%);
+            pointer-events: none;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .hud-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .stat-pill {
+            background: var(--bg-panel);
+            border: 1.5px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .stat-pill.pulse {
+            transform: scale(1.16);
+            border-color: var(--accent);
+        }
+
+        .mission-banner {
+            position: relative;
+            z-index: 10;
+            margin: 0 auto;
+            max-width: 92vw;
+            width: 580px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.92));
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 24px var(--primary-glow), 0 8px 20px rgba(0,0,0,0.5);
+            border-radius: 18px;
+            padding: 10px 18px;
+            text-align: center;
+            pointer-events: auto;
+            transition: all 0.25s ease;
+        }
+
+        .mission-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--primary);
+            font-weight: 800;
+            margin-bottom: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mission-question {
+            font-size: clamp(1.1rem, 3.8vw, 1.55rem);
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+            line-height: 1.2;
+        }
+
+        .mission-hint {
+            font-size: 0.8rem;
+            color: #fde047;
+            margin-top: 4px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .mission-hint.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .touch-controls {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            padding: 12px 16px calc(var(--safe-bottom) + 10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            pointer-events: none;
+            margin-top: auto;
+        }
+
+        .control-cluster {
+            display: flex;
+            gap: 12px;
+            pointer-events: auto;
+            align-items: center;
+        }
+
+        .btn-touch {
+            width: 68px;
+            height: 68px;
+            border-radius: 22px;
+            background: rgba(15, 23, 42, 0.82);
+            border: 2.5px solid rgba(56, 189, 248, 0.55);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: 800;
+            font-size: 0.72rem;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            cursor: pointer;
+            transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
+        }
+
+        .btn-touch svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+            margin-bottom: 2px;
+        }
+
+        .btn-touch:active, .btn-touch.active {
+            transform: scale(0.91) translateY(2px);
+            background: rgba(56, 189, 248, 0.35);
+            border-color: #fff;
+        }
+
+        .btn-touch.action-jump {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.88), rgba(5, 150, 105, 0.92));
+            border-color: #6ee7b7;
+            box-shadow: 0 6px 22px rgba(16, 185, 129, 0.45);
+        }
+
+        .btn-touch.action-special {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(217, 119, 6, 0.92));
+            border-color: #fde047;
+            box-shadow: 0 6px 22px rgba(245, 158, 11, 0.45);
+        }
+
+        .angle-choice-bar {
+            position: relative;
+            z-index: 12;
+            display: none;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 14px calc(var(--safe-bottom) + 12px);
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+            pointer-events: auto;
+        }
+
+        .btn-angle {
+            flex: 1;
+            padding: 12px 8px;
+            border-radius: 16px;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+            transition: transform 0.12s ease, border-color 0.2s;
+        }
+
+        .btn-angle:active {
+            transform: scale(0.94);
+        }
+
+        .btn-angle span.deg-hint {
+            font-size: 0.72rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .overlay-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 30;
+            background: radial-gradient(circle at 50% 20%, rgba(30, 41, 59, 0.94) 0%, rgba(9, 13, 22, 0.98) 100%);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px 16px 32px;
+            overflow-y: auto;
+            touch-action: pan-y;
+        }
+
+        .overlay-screen.hidden {
+            display: none !important;
+        }
+
+        .hub-container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .hero-header {
+            text-align: center;
+            padding: 8px 10px;
+        }
+
+        .game-title {
+            font-size: clamp(1.6rem, 5vw, 2.6rem);
+            font-weight: 900;
+            background: linear-gradient(90deg, #38bdf8, #fde047, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .game-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 620px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        .top-selectors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .selector-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 18px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .selector-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .hero-options, .diff-options {
+            display: flex;
+            gap: 8px;
+        }
+
+        .choice-chip {
+            flex: 1;
+            padding: 10px 8px;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(15, 23, 42, 0.7);
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.82rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .choice-chip.selected {
+            border-color: var(--accent);
+            background: rgba(245, 158, 11, 0.18);
+            box-shadow: 0 0 14px var(--accent-glow);
+        }
+
+        .worlds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 14px;
+        }
+
+        .world-card {
+            background: linear-gradient(160deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.96));
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .world-card:hover, .world-card:active {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 18px var(--primary-glow);
+        }
+
+        .world-card.featured {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.55), rgba(15, 23, 42, 0.95));
+            border-color: var(--purple);
+        }
+
+        .world-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 99px;
+            background: rgba(56, 189, 248, 0.18);
+            color: var(--primary);
+            width: fit-content;
+        }
+
+        .world-title {
+            font-size: 1.18rem;
+            font-weight: 800;
+            color: #fff;
+            margin-top: 4px;
+        }
+
+        .world-desc {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            line-height: 1.38;
+        }
+
+        .world-play-btn {
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: var(--primary);
+            color: #090d16;
+            font-weight: 900;
+            font-size: 0.85rem;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .feedback-toast {
+            position: fixed;
+            top: 132px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            z-index: 25;
+            background: rgba(15, 23, 42, 0.96);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 12px 20px;
+            max-width: 90vw;
+            width: 460px;
+            text-align: center;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.65);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .feedback-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .icon-btn {
+            background: var(--bg-panel);
+            border: 1.5px solid rgba(255,255,255,0.18);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            border-radius: 24px;
+            padding: 24px;
+            width: 100%;
+            max-width: 520px;
+            margin: auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.75);
+        }
+
+        .btn-primary {
+            padding: 13px 22px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            color: white;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4);
+        }
+
+        .btn-secondary {
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(255,255,255,0.2);
+            background: rgba(30, 41, 59, 0.8);
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .input-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
+        }
+
+        .input-row input {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(9, 13, 22, 0.85);
+            color: white;
+            font-size: 0.9rem;
+            user-select: text;
+            -webkit-user-select: text;
+            touch-action: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 640px) {
+            .btn-touch { width: 60px; height: 60px; }
+            .btn-touch.action-jump { width: 70px; height: 70px; }
+            .btn-touch.action-special { width: 64px; height: 64px; }
+            .hud-top { padding: 8px 10px; }
+            .stat-pill { padding: 4px 9px; font-size: 0.78rem; }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!-- Lienzo 2D de alta velocidad -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Barra Superior HUD -->
+    <div class="hud-top" id="hudTop">
+        <div class="hud-group">
+            <button class="icon-btn" id="btnHome" title="Menú Principal" aria-label="Menú">🏠</button>
+            <button class="icon-btn" id="btnSound" title="Sonido" aria-label="Sonido">🔊</button>
+            <button class="icon-btn" id="btnHintToggle" title="Andamiaje Pedagógico (Pista Visual)" aria-label="Pista">💡</button>
+        </div>
+
+        <div class="hud-group">
+            <div class="stat-pill" id="pillHearts" title="Escudos de Energía">❤️❤️❤️</div>
+            <div class="stat-pill" id="pillStreak" title="Racha de Sabiduría">🔥 x0</div>
+            <div class="stat-pill" id="pillScore" title="Cristales de Saber">💎 0</div>
+            <div class="stat-pill" id="pillProgress" title="Progreso de Fase">⭐ 0/5</div>
+        </div>
+    </div>
+
+    <!-- Banner Central de Misión Didáctica -->
+    <div class="mission-banner" id="missionBanner">
+        <div class="mission-tag">
+            <span id="missionWorldName">MUNDO 1</span>
+            <span>•</span>
+            <span id="missionMechanicTag">IMPULSO DE MÚLTIPLOS</span>
+        </div>
+        <div class="mission-question" id="missionQuestion">¡Prepárate para la aventura!</div>
+        <div class="mission-hint" id="missionHint">💡 Pista didáctica activa</div>
+    </div>
+
+    <!-- Toast de Retroalimentación Formativa (Andamiaje Pedagógico) -->
+    <div class="feedback-toast" id="feedbackToast">
+        <div style="font-weight:900; font-size:1rem; margin-bottom:3px;" id="toastTitle">¡Excelente razonamiento!</div>
+        <div style="font-size:0.86rem; color:#cbd5e1;" id="toastBody">Explicación paso a paso</div>
+    </div>
+
+    <!-- Controles Táctiles para Mundos 1 y 2 (Runner y Plataformas) -->
+    <div class="touch-controls" id="touchControls">
+        <div class="control-cluster" id="leftCluster">
+            <button class="btn-touch" id="btnLeft" aria-label="Izquierda">
+                <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+                IZQ
+            </button>
+            <button class="btn-touch" id="btnRight" aria-label="Derecha">
+                <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                DER
+            </button>
+        </div>
+
+        <div class="control-cluster" id="rightCluster">
+            <button class="btn-touch action-special" id="btnDash" aria-label="Impulso">
+                <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+                <span id="lblSpecial">IMPULSO</span>
+            </button>
+            <button class="btn-touch action-jump" id="btnJump" aria-label="Saltar">
+                <svg viewBox="0 0 24 24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg>
+                SALTAR
+            </button>
+        </div>
+    </div>
+
+    <!-- Barra Táctil de Clasificación de Ángulos (Mundo 4: Ascenso del Pozo) -->
+    <div class="angle-choice-bar" id="angleChoiceBar">
+        <button class="btn-angle" data-angle="agudo">
+            <span>📐 AGUDO</span>
+            <span class="deg-hint">Menor a 90°</span>
+        </button>
+        <button class="btn-angle" data-angle="recto">
+            <span>直角 RECTO</span>
+            <span class="deg-hint">Exacto 90°</span>
+        </button>
+        <button class="btn-angle" data-angle="obtuso">
+            <span>🔭 OBTUSO</span>
+            <span class="deg-hint">91° a 179°</span>
+        </button>
+        <button class="btn-angle" data-angle="llano">
+            <span>📏 LLANO</span>
+            <span class="deg-hint">Exacto 180°</span>
+        </button>
+    </div>
+
+    <div class="overlay-screen" id="hubScreen">
+        <div class="hub-container">
+            <div class="hero-header">
+                <div class="game-title">GUARDIANES DEL SABER</div>
+                <p class="game-subtitle">
+                    Videojuego educativo 2D 100 % Offline. Elige a tu Guardián, activa las pistas didácticas y domina múltiplos, tablas, división, geometría de ángulos y cultura general.
+                </p>
+            </div>
+
+            <div class="top-selectors">
+                <div class="selector-card">
+                    <div class="selector-title">1. Elige tu Guardián Animado 2D</div>
+                    <div class="hero-options" id="heroSelector">
+                        <div class="choice-chip selected" data-hero="kael">🦊 Kael<br><small style="color:#94a3b8">Zorro Astral</small></div>
+                        <div class="choice-chip" data-hero="nova">🤖 Nova<br><small style="color:#94a3b8">Tecno-Maga</small></div>
+                        <div class="choice-chip" data-hero="baku">🐸 Baku<br><small style="color:#94a3b8">Ninja Loto</small></div>
+                    </div>
+                </div>
+
+                <div class="selector-card">
+                    <div class="selector-title">2. Nivel Pedagógico (Andamiaje)</div>
+                    <div class="diff-options" id="diffSelector">
+                        <div class="choice-chip selected" data-diff="1">🌱 Explorador<br><small style="color:#94a3b8">Tablas 2-5 + Pistas</small></div>
+                        <div class="choice-chip" data-diff="2">⚔️ Aventurero<br><small style="color:#94a3b8">Tablas 2-9 y ÷</small></div>
+                        <div class="choice-chip" data-diff="3">👑 Maestro<br><small style="color:#94a3b8">Reto Completo</small></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="worlds-grid">
+                <!-- Modo Odisea Fusionada (Combina los 5 HTML en una aventura continua) -->
+                <div class="world-card featured" data-mode="odisea">
+                    <div>
+                        <span class="world-badge" style="background:rgba(168,85,247,0.25); color:#e9d5ff;">🌟 MODO ESTRELLA RECOMENDADO</span>
+                        <div class="world-title">Odisea Geomática: Los 4 Reinos Fusionados</div>
+                        <p class="world-desc">
+                            ¡Vive la fusión completa! Tu Guardián cambiará dinámicamente de mecánica cada 3 aciertos: Carrera de Múltiplos ➔ Plataformas y Gólems Geométricos ➔ Laguna de Nenúfares ➔ Ascenso con Gancho de Ángulos.
+                        </p>
+                    </div>
+                    <button class="world-play-btn" style="background:linear-gradient(90deg,#c084fc,#38bdf8);">¡INICIAR ODISEA FUSIONADA!</button>
+                </div>
+
+                <!-- Bioma 1: Rediseño de Dino.html -->
+                <div class="world-card" data-mode="runner">
+                    <div>
+                        <span class="world-badge">BIOMA 1 • VELOCIDAD</span>
+                        <div class="world-title">🦖 Valle del Impulso (Múltiplos)</div>
+                        <p class="world-desc">
+                            Corre a toda velocidad, haz doble salto sobre cristales distractores y usa tu Impulso Magnético para absorber los múltiplos correctos.
+                        </p>
+                    </div>
+                    <button class="world-play-btn">Jugar Bioma 1</button>
+                </div>
+
+                <!-- Bioma 2: Fusión de Math Quest + Plataformero de Ángulos -->
+                <div class="world-card" data-mode="platformer">
+                    <div>
+                        <span class="world-badge">BIOMA 2 • PLATAFORMAS 2D</span>
+                        <div class="world-title">🏛️ Templo de Orbes y Gólems</div>
+                        <p class="world-desc">
+                            Explora plataformas móviles, recolecta el Orbe de Multiplicación/División correcto o salta sobre el Gólem que porta el ángulo indicado.
+                        </p>
+                    </div>
+                    <button class="world-play-btn">Jugar Bioma 2</button>
+                </div>
+
+                <!-- Bioma 3: Rediseño de Rana.html -->
+                <div class="world-card" data-mode="lagoon">
+                    <div>
+                        <span class="world-badge">BIOMA 3 • PRECISIÓN TÁCTIL</span>
+                        <div class="world-title">🪷 Laguna de los Lotuses Sabios</div>
+                        <p class="world-desc">
+                            Toca directamente los nenúfares mágicos para cruzar el río con saltos parabólicos resolviendo multiplicaciones y desafíos personalizables.
+                        </p>
+                    </div>
+                    <button class="world-play-btn">Jugar Bioma 3</button>
+                </div>
+
+                <!-- Bioma 4: Rediseño de Angulos.html -->
+                <div class="world-card" data-mode="well">
+                    <div>
+                        <span class="world-badge">BIOMA 4 • GEOMETRÍA VISUAL</span>
+                        <div class="world-title">⚓ Ascenso del Pozo Astral</div>
+                        <p class="world-desc">
+                            Observa el láser transportador en tiempo real y dispara tu gancho a la cuerda Aguda, Recta, Obtusa o Llana antes de que suban las sombras.
+                        </p>
+                    </div>
+                    <button class="world-play-btn">Jugar Bioma 4</button>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+                <button class="btn-secondary" id="btnOpenEditor">🛠️ Laboratorio Docente (Editar Preguntas Offline)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay-screen hidden" id="resultScreen">
+        <div class="modal-card">
+            <div style="font-size:3.2rem;" id="resultEmoji">🏆</div>
+            <h2 style="font-size:1.7rem; font-weight:900;" id="resultTitle">¡Misión Completada!</h2>
+            <p style="color:var(--text-muted); font-size:0.95rem;" id="resultSubtitle">Has demostrado gran dominio matemático y geométrico.</p>
+            <div style="background:rgba(9,13,22,0.75); border-radius:16px; padding:14px; display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:center;">
+                <div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">PUNTUACIÓN</div>
+                    <div style="font-size:1.4rem; font-weight:900; color:var(--primary);" id="resScore">0</div>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">PRECISIÓN DIDÁCTICA</div>
+                    <div style="font-size:1.4rem; font-weight:900; color:var(--success);" id="resAccuracy">100%</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                <button class="btn-primary" id="btnPlayAgain">🔄 Jugar Otra Vez</button>
+                <button class="btn-secondary" id="btnBackHub">🗺️ Mapa de Mundos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editor Docente para agregar preguntas personalizadas (Herencia mejorada de rana.html) -->
+    <div class="overlay-screen hidden" id="editorScreen">
+        <div class="modal-card" style="max-width:600px;">
+            <h2 style="font-size:1.4rem; font-weight:900; color:var(--primary);">🛠️ Laboratorio Docente (Preguntas para Laguna y Templo)</h2>
+            <p style="font-size:0.84rem; color:var(--text-muted);">
+                Añade tus propias preguntas de matemáticas, ciencias o historia para que aparezcan en la Laguna de los Lotuses.
+            </p>
+            <div class="input-row">
+                <label style="font-size:0.78rem; font-weight:700;">Pregunta (Ej: ¿Capital de Colombia? o ¿Cuánto es 7 x 8?)</label>
+                <input type="text" id="inpQuestion" placeholder="Escribe la pregunta aquí...">
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+                <div class="input-row">
+                    <label style="font-size:0.75rem; color:var(--success); font-weight:700;">Respuesta Correcta</label>
+                    <input type="text" id="inpCorrect" placeholder="Ej: Bogotá">
+                </div>
+                <div class="input-row">
+                    <label style="font-size:0.75rem; color:var(--danger); font-weight:700;">Distractor 1</label>
+                    <input type="text" id="inpWrong1" placeholder="Ej: Lima">
+                </div>
+                <div class="input-row">
+                    <label style="font-size:0.75rem; color:var(--danger); font-weight:700;">Distractor 2</label>
+                    <input type="text" id="inpWrong2" placeholder="Ej: Quito">
+                </div>
+            </div>
+            <button class="btn-primary" id="btnAddCustomQ">➕ Agregar Pregunta al Banco Activo</button>
+            <div id="customQList" style="max-height:150px; overflow-y:auto; text-align:left; font-size:0.8rem; background:rgba(9,13,22,0.6); padding:10px; border-radius:10px;"></div>
+            <button class="btn-secondary" id="btnCloseEditor">✅ Guardar y Volver al Mapa</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/**
+ * MOTOR DE AUDIO SINTETIZADO 100% OFFLINE (Web Audio API)
+ * Genera efectos de sonido ricos sin depender de archivos MP3 externos.
+ */
+class SoundEngine {
+    constructor() {
+        this.ctx = null;
+        this.enabled = true;
+    }
+
+    init() {
+        if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+        }
+    }
+
+    playTone(freq, type = 'sine', duration = 0.15, vol = 0.15, slideTo = null) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+        if (slideTo) {
+            osc.frequency.exponentialRampToValueAtTime(slideTo, now + duration);
+        }
+        gain.gain.setValueAtTime(vol, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + duration);
+    }
+
+    jump() {
+        this.playTone(260, 'sine', 0.18, 0.16, 580);
+    }
+
+    doubleJump() {
+        this.playTone(420, 'triangle', 0.22, 0.18, 880);
+    }
+
+    dash() {
+        this.playTone(180, 'sawtooth', 0.15, 0.12, 620);
+    }
+
+    correct() {
+        this.playTone(523.25, 'triangle', 0.12, 0.18); // C5
+        setTimeout(() => this.playTone(659.25, 'triangle', 0.12, 0.18), 80); // E5
+        setTimeout(() => this.playTone(783.99, 'triangle', 0.22, 0.20), 160); // G5
+        setTimeout(() => this.playTone(1046.50, 'sine', 0.30, 0.22), 250); // C6
+    }
+
+    wrong() {
+        this.playTone(220, 'sawtooth', 0.2, 0.15, 130);
+        setTimeout(() => this.playTone(150, 'sawtooth', 0.28, 0.15, 95), 140);
+    }
+
+    grapple() {
+        this.playTone(300, 'sine', 0.25, 0.14, 920);
+    }
+}
+
+const sfx = new SoundEngine();
+
+/**
+ * MOTOR PEDAGÓGICO Y DIDÁCTICO
+ * Genera retos adaptativos con andamiaje visual y explicación formativa.
+ */
+class PedagogicalEngine {
+    constructor() {
+        this.difficulty = 1; // 1: Explorador, 2: Aventurero, 3: Maestro
+        this.showHints = true;
+        this.customQuestions = [
+            { question: "¿Cuál es la capital de Colombia?", options: ["Bogotá", "Lima", "Quito"], correctAnswer: "Bogotá", hint: "Está situada en la cordillera Oriental de los Andes." },
+            { question: "¿Cuántos grados suma un ángulo recto?", options: ["90°", "45°", "180°"], correctAnswer: "90°", hint: "Tiene la forma exacta de la esquina de un cuadrado." }
+        ];
+    }
+
+    // 1. Retos de Múltiplos (Valle del Impulso - Rediseño de Dino.html)
+    generateMultipleChallenge() {
+        const bases = this.difficulty === 1 ? [2, 3, 5, 10] : (this.difficulty === 2 ? [3, 4, 6, 7, 8] : [6, 7, 8, 9, 12]);
+        const base = bases[Math.floor(Math.random() * bases.length)];
+        return {
+            base,
+            title: `Absorbe o toca MÚLTIPLOS de ${base}`,
+            hint: `💡 Pista: Los múltiplos de ${base} terminan en la tabla del ${base} (${base}, ${base*2}, ${base*3}, ${base*4}, ${base*5}...).`,
+            explainCorrect: (val) => `¡Exacto! ${val} = ${base} × ${val / base}, por eso es múltiplo de ${base}.`,
+            explainWrong: (val) => `¡Cuidado! ${val} dividido entre ${base} sobra ${val % base}. Busca números exactos en la tabla del ${base}.`
+        };
+    }
+
+    // 2. Retos de Multiplicación, División y Ángulos en Gólems (Templo 2D)
+    generatePlatformerChallenge() {
+        const isAngleMode = Math.random() < 0.42;
+        if (isAngleMode) {
+            const types = [
+                { id: 'agudo', name: 'AGUDO (< 90°)', valid: [30, 45, 60], wrong: [90, 120, 150, 180], hint: '💡 Un ángulo AGUDO es más cerrado que una esquina de 90°.' },
+                { id: 'recto', name: 'RECTO (= 90°)', valid: [90], wrong: [45, 60, 120, 150], hint: '💡 Un ángulo RECTO forma una "L" perfecta de 90°.' },
+                { id: 'obtuso', name: 'OBTUSO (> 90° y < 180°)', valid: [120, 135, 150], wrong: [30, 45, 90, 180], hint: '💡 Un ángulo OBTUSO es más abierto que 90° pero no llega a ser plano.' }
+            ];
+            const picked = types[Math.floor(Math.random() * types.length)];
+            const correctVal = picked.valid[Math.floor(Math.random() * picked.valid.length)];
+            const shuffledWrong = [...picked.wrong].sort(() => 0.5 - Math.random()).slice(0, 2);
+            const allOptions = [correctVal, ...shuffledWrong].sort(() => 0.5 - Math.random());
+
+            return {
+                subType: 'angle',
+                question: `Salta sobre el Gólem con ángulo ${picked.name}`,
+                hint: picked.hint,
+                correctVal,
+                options: allOptions,
+                explainCorrect: `¡Gran ojo geométrico! ${correctVal}° es un ángulo ${picked.id.toUpperCase()}.`,
+                explainWrong: (val) => `${val}° no corresponde a ${picked.name}. ¡Observa el arco luminoso sobre cada Gólem!`
+            };
+        } else {
+            const maxFactor = this.difficulty === 1 ? 5 : (this.difficulty === 2 ? 9 : 12);
+            const a = Math.floor(Math.random() * (maxFactor - 1)) + 2;
+            const b = Math.floor(Math.random() * (maxFactor - 1)) + 2;
+            const useDivision = this.difficulty >= 2 && Math.random() < 0.35;
+
+            let questionText, correctVal, hintText, explainOk, explainErr;
+            if (useDivision) {
+                const product = a * b;
+                questionText = `¿Cuánto es ${product} ÷ ${a}?`;
+                correctVal = b;
+                hintText = `💡 Piensa al revés: ¿Qué número multiplicado por ${a} da ${product}?`;
+                explainOk = `¡Brillante! ${product} ÷ ${a} = ${b} porque ${a} × ${b} = ${product}.`;
+                explainErr = (v) => `Recuerda: buscamos cuántas veces cabe ${a} en ${product}. (${a} × ${b} = ${product}).`;
+            } else {
+                questionText = `¿Cuánto es ${a} × ${b}?`;
+                correctVal = a * b;
+                hintText = `💡 Suma ${a} veces el número ${b} (o ${b} × ${a}).`;
+                explainOk = `¡Correcto! ${a} grupos de ${b} suman ${correctVal}.`;
+                explainErr = (v) => `${v} no es correcto. Recuerda que ${a} × ${b} = ${correctVal}.`;
+            }
+
+            const wrongs = new Set();
+            while (wrongs.size < 2) {
+                const offset = (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
+                const candidate = correctVal + offset;
+                if (candidate > 0 && candidate !== correctVal) wrongs.add(candidate);
+            }
+            const options = [correctVal, ...wrongs].sort(() => 0.5 - Math.random());
+
+            return {
+                subType: 'math',
+                question: questionText,
+                hint: hintText,
+                correctVal,
+                options,
+                explainCorrect: explainOk,
+                explainWrong: explainErr
+            };
+        }
+    }
+
+    // 3. Retos para la Laguna de Lotuses (Fusión de Matemáticas + Preguntas Editables de rana.html)
+    generateLagoonChallenge() {
+        if (this.customQuestions.length > 0 && Math.random() < 0.35) {
+            const q = this.customQuestions[Math.floor(Math.random() * this.customQuestions.length)];
+            const opts = [...q.options].sort(() => 0.5 - Math.random());
+            return {
+                question: q.question,
+                hint: q.hint || "💡 Analiza cada nenúfar antes de saltar.",
+                options: opts,
+                correctVal: q.correctAnswer,
+                explainCorrect: `¡Excelente! "${q.correctAnswer}" es la respuesta correcta.`,
+                explainWrong: (v) => `"${v}" no era la respuesta. La opción correcta es "${q.correctAnswer}".`
+            };
+        }
+        const m = this.generatePlatformerChallenge();
+        if (m.subType === 'angle') {
+            return {
+                question: m.question.replace('Salta sobre el Gólem con', 'Salta al nenúfar con'),
+                hint: m.hint,
+                options: m.options.map(o => `${o}°`),
+                correctVal: `${m.correctVal}°`,
+                explainCorrect: m.explainCorrect,
+                explainWrong: m.explainWrong
+            };
+        }
+        return m;
+    }
+
+    // 4. Retos para el Pozo Astral (Rediseño de angulos.html)
+    generateWellAngleChallenge() {
+        const roll = Math.random();
+        let angle, type, hint;
+        if (roll < 0.32) {
+            const acutes = [25, 35, 45, 60, 75];
+            angle = acutes[Math.floor(Math.random() * acutes.length)];
+            type = 'agudo';
+            hint = '💡 Observa el transportador láser: la abertura es MENOR que la esquina de 90°.';
+        } else if (roll < 0.58) {
+            angle = 90;
+            type = 'recto';
+            hint = '💡 Observa el transportador láser: forma una esquina perpendicular exacta de 90°.';
+        } else if (roll < 0.85) {
+            const obtuses = [110, 125, 135, 150, 165];
+            angle = obtuses[Math.floor(Math.random() * obtuses.length)];
+            type = 'obtuso';
+            hint = '💡 Observa el transportador láser: supera los 90° pero no llega a 180°.';
+        } else {
+            angle = 180;
+            type = 'llano';
+            hint = '💡 Observa el transportador láser: forma una línea completamente recta de 180°.';
+        }
+
+        return {
+            angle,
+            type,
+            question: `Láser calibrado a ${angle}° — ¿Qué tipo de ángulo es?`,
+            hint,
+            explainCorrect: `¡Ascenso exitoso! ${angle}° es un ángulo ${type.toUpperCase()}.`,
+            explainWrong: (chosen) => `Elegiste ${chosen.toUpperCase()}, pero ${angle}° es ${type.toUpperCase()}.`
+        };
+    }
+}
+
+const pedagogy = new PedagogicalEngine();
+
+/**
+ * RENDERIZADOR DE PERSONAJES 2D ESTILO VIDEOJUEGO PROFESIONAL
+ * Dibuja personajes vectoriales articulados con Squash & Stretch, parpadeo,
+ * bufanda/capa dinámica y mascota acompañante Lumi.
+ */
+class HeroRenderer {
+    static drawHero(ctx, x, y, width, height, state) {
+        const {
+            heroType = 'kael',
+            vx = 0,
+            vy = 0,
+            facing = 1,
+            animTime = 0,
+            scaleX = 1,
+            scaleY = 1,
+            rotation = 0,
+            isHurt = false,
+            isDashing = false
+        } = state;
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.scale(facing * scaleX, scaleY);
+
+        // Sombra suave en el suelo
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+        ctx.beginPath();
+        ctx.ellipse(0, height * 0.48, width * 0.42, 6, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Paleta según el Guardián elegido
+        const palettes = {
+            kael: { main: '#f97316', secondary: '#fde047',visor: '#38bdf8', cape: '#ef4444', ear: '#ea580c' },
+            nova: { main: '#38bdf8', secondary: '#e0f2fe', visor: '#f43f5e', cape: '#a855f7', ear: '#0284c7' },
+            baku: { main: '#10b981', secondary: '#a7f3d0', visor: '#f59e0b', cape: '#3b82f6', ear: '#059669' }
+        };
+        const pal = palettes[heroType] || palettes.kael;
+
+        if (isHurt && Math.floor(animTime * 15) % 2 === 0) {
+            ctx.globalAlpha = 0.55;
+        }
+
+        // Aura de Impulso (Dash)
+        if (isDashing) {
+            ctx.fillStyle = 'rgba(253, 224, 71, 0.35)';
+            ctx.beginPath();
+            ctx.arc(0, 0, width * 0.75, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        const speed = Math.abs(vx);
+        const walkCycle = speed > 0.4 ? Math.sin(animTime * 14) : 0;
+        const breathe = Math.sin(animTime * 3.5) * 2;
+
+        // 1. Bufanda / Capa dinámica con ondas senoidales
+        ctx.fillStyle = pal.cape;
+        ctx.beginPath();
+        ctx.moveTo(-6, -4 + breathe);
+        const capeWave = Math.sin(animTime * 12) * 6 - Math.min(speed * 2.5, 18);
+        ctx.quadraticCurveTo(-22, -10 + capeWave * 0.4, -34 - speed * 1.4, 4 + capeWave);
+        ctx.quadraticCurveTo(-20, 12 + capeWave * 0.3, -4, 8 + breathe);
+        ctx.closePath();
+        ctx.fill();
+
+        // 2. Piernas articuladas
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 7;
+        ctx.strokeStyle = '#1e293b';
+
+        // Pierna trasera
+        ctx.beginPath();
+        ctx.moveTo(-4, 12);
+        ctx.lineTo(-4 - walkCycle * 10, 24 - Math.abs(walkCycle) * 3);
+        ctx.stroke();
+
+        // Pierna delantera
+        ctx.strokeStyle = '#334155';
+        ctx.beginPath();
+        ctx.moveTo(5, 12);
+        ctx.lineTo(5 + walkCycle * 10, 24 - Math.abs(walkCycle) * 3);
+        ctx.stroke();
+
+        // 3. Torso / Armadura del Guardián
+        ctx.fillStyle = pal.main;
+        ctx.beginPath();
+        ctx.roundRect(-14, -8 + breathe, 28, 23, 10);
+        ctx.fill();
+
+        // Pechera luminosa
+        ctx.fillStyle = pal.secondary;
+        ctx.beginPath();
+        ctx.roundRect(-7, -3 + breathe, 16, 13, 6);
+        ctx.fill();
+
+        // 4. Cabeza expresiva 2D
+        ctx.save();
+        ctx.translate(0, -18 + breathe);
+
+        // Orejas/Antenas según personaje
+        ctx.fillStyle = pal.ear;
+        if (heroType === 'kael') {
+            // Orejas de zorro astral
+            ctx.beginPath();
+            ctx.moveTo(-14, -8); ctx.lineTo(-20, -25); ctx.lineTo(-4, -14); ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(6, -14); ctx.lineTo(18, -25); ctx.lineTo(15, -7); ctx.fill();
+        } else if (heroType === 'nova') {
+            // Antenas cibernéticas
+            ctx.strokeStyle = pal.secondary;
+            ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(0, -14); ctx.lineTo(-4, -26); ctx.stroke();
+            ctx.fillStyle = '#fde047';
+            ctx.beginPath(); ctx.arc(-4, -27, 4, 0, Math.PI * 2); ctx.fill();
+        } else {
+            // Cintas de maestro anfibio
+            ctx.fillStyle = pal.ear;
+            ctx.beginPath(); ctx.arc(-9, -12, 7, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(9, -12, 7, 0, Math.PI * 2); ctx.fill();
+        }
+
+        // Cráneo redondeado
+        ctx.fillStyle = pal.main;
+        ctx.beginPath();
+        ctx.roundRect(-17, -15, 34, 26, 13);
+        ctx.fill();
+
+        // Visor / Rostro
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.roundRect(-10, -9, 25, 14, 7);
+        ctx.fill();
+
+        // Ojos expresivos con parpadeo periódico
+        const isBlinking = (animTime % 4.2) > 4.05;
+        ctx.fillStyle = pal.visor;
+        if (isBlinking) {
+            ctx.fillRect(-5, -2, 6, 2);
+            ctx.fillRect(6, -2, 6, 2);
+        } else {
+            ctx.beginPath();
+            ctx.ellipse(-2, -2, 3.2, 4.5, 0, 0, Math.PI * 2);
+            ctx.ellipse(9, -2, 3.2, 4.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            // Brillo ocular
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(-1, -4, 1.3, 0, Math.PI * 2);
+            ctx.arc(10, -4, 1.3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.restore();
+
+        // 5. Brazo delantero con balanceo
+        ctx.strokeStyle = pal.main;
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(2, -2 + breathe);
+        ctx.lineTo(6 - walkCycle * 8, 9 + breathe);
+        ctx.stroke();
+
+        ctx.restore();
+
+        // 6. Compañero flotante "Lumi" (Hada/Orbe pedagógico)
+        const lumiX = x - facing * 34 + Math.cos(animTime * 4) * 5;
+        const lumiY = y - 34 + Math.sin(animTime * 5) * 6;
+        ctx.save();
+        ctx.translate(lumiX, lumiY);
+        const grad = ctx.createRadialGradient(0, 0, 2, 0, 0, 12);
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.4, '#38bdf8');
+        grad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Dibuja los Gólems Geométricos con transportador visual animado
+    static drawAngleGolem(ctx, enemy, animTime) {
+        ctx.save();
+        ctx.translate(enemy.x, enemy.y);
+
+        const bounce = Math.abs(Math.sin(animTime * 6 + enemy.phase)) * 4;
+        // Sombra
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.beginPath();
+        ctx.ellipse(0, 24, 22, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.translate(0, -bounce);
+
+        // Arco Transportador Luminoso detrás del Gólem (Andamiaje Visual del Ángulo)
+        const rad = (enemy.angleVal * Math.PI) / 180;
+        ctx.save();
+        ctx.translate(0, -8);
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.22)';
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, 34, -rad, 0, false);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        // Cuerpo de Roca Rúnica
+        ctx.fillStyle = '#334155';
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(-22, -18, 44, 38, 12);
+        ctx.fill();
+        ctx.stroke();
+
+        // Ojos brillantes del Gólem
+        ctx.fillStyle = '#fde047';
+        ctx.beginPath();
+        ctx.arc(-8, -4, 3.5, 0, Math.PI * 2);
+        ctx.arc(8, -4, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Etiqueta del valor del ángulo o número
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 15px "Segoe UI", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${enemy.angleVal}°`, 0, 14);
+
+        ctx.restore();
+    }
+}
+
+/**
+ * MOTOR PRINCIPAL DEL VIDEOJUEGO UNIFICADO
+ * Integra:
+ * - Modo 'runner' (Valle del Impulso - Dino.html mejorado)
+ * - Modo 'platformer' (Templo de Orbes y Gólems - Tablas retro + Plataformero Ángulos)
+ * - Modo 'lagoon' (Laguna de Lotuses - Rana.html mejorado)
+ * - Modo 'well' (Pozo Astral - Angulos.html mejorado con transportador láser)
+ * - Modo 'odisea' (Transición dinámica por las 4 mecánicas)
+ */
+class UnifiedEduGame {
+    constructor() {
+        this.canvas = document.getElementById('gameCanvas');
+        this.ctx = this.canvas.getContext('2d');
+
+        this.mode = 'odisea'; // Modo seleccionado en el Hub
+        this.activeBiome = 'runner'; // Bioma activo actual
+        this.heroType = 'kael';
+        this.isRunning = false;
+
+        this.score = 0;
+        this.hearts = 3;
+        this.streak = 0;
+        this.stageClears = 0;
+        this.targetClears = 8;
+        this.totalAttempts = 0;
+        this.correctAttempts = 0;
+
+        this.animTime = 0;
+        this.lastFrame = performance.now();
+        this.particles = [];
+        this.floatingTexts = [];
+        this.stars = [];
+
+        this.keys = { left: false, right: false, jump: false, dash: false };
+
+        // Estado del Héroe
+        this.hero = {
+            x: 140, y: 300, vx: 0, vy: 0,
+            w: 44, h: 52,
+            facing: 1,
+            onGround: false,
+            jumpsLeft: 2,
+            scaleX: 1, scaleY: 1,
+            rotation: 0,
+            hurtTimer: 0,
+            dashTimer: 0
+        };
+
+        // Entidades específicas de cada Bioma
+        this.runnerState = { challenge: null, crystals: [], spawnTimer: 0, speed: 240, scrollX: 0 };
+        this.platformState = { challenge: null, platforms: [], orbs: [], golems: [] };
+        this.lagoonState = { challenge: null, pads: [], homePad: { x: 0, y: 0 }, jumpAnim: null, ripples: [] };
+        this.wellState = { challenge: null, climbY: 0, targetY: 0, ropeX: 0, laserSweep: 0, state: 'aiming' };
+
+        this.initStars();
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        this.bindInputs();
+    }
+
+    initStars() {
+        this.stars = [];
+        for (let i = 0; i < 55; i++) {
+            this.stars.push({
+                x: Math.random() * 1600,
+                y: Math.random() * 900,
+                r: Math.random() * 2.2 + 0.8,
+                phase: Math.random() * Math.PI * 2
+            });
+        }
+    }
+
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        if (this.isRunning) {
+            this.repositionCurrentBiome();
+        }
+    }
+
+    bindInputs() {
+        // Teclado para PC
+        window.addEventListener('keydown', (e) => {
+            if (!this.isRunning) return;
+            if (e.code === 'ArrowLeft' || e.code === 'KeyA') this.keys.left = true;
+            if (e.code === 'ArrowRight' || e.code === 'KeyD') this.keys.right = true;
+            if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
+                if (!this.keys.jump) this.triggerJump();
+                this.keys.jump = true;
+            }
+            if (e.code === 'ShiftLeft' || e.code === 'KeyE' || e.code === 'KeyX') {
+                this.triggerDash();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowLeft' || e.code === 'KeyA') this.keys.left = false;
+            if (e.code === 'ArrowRight' || e.code === 'KeyD') this.keys.right = false;
+            if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') this.keys.jump = false;
+        });
+
+        // Botones táctiles en pantalla
+        const bindHoldBtn = (id, keyName) => {
+            const btn = document.getElementById(id);
+            const start = (e) => { e.preventDefault(); this.keys[keyName] = true; btn.classList.add('active'); };
+            const end = (e) => { e.preventDefault(); this.keys[keyName] = false; btn.classList.remove('active'); };
+            btn.addEventListener('pointerdown', start);
+            btn.addEventListener('pointerup', end);
+            btn.addEventListener('pointercancel', end);
+            btn.addEventListener('pointerleave', end);
+        };
+
+        bindHoldBtn('btnLeft', 'left');
+        bindHoldBtn('btnRight', 'right');
+
+        const btnJump = document.getElementById('btnJump');
+        btnJump.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            btnJump.classList.add('active');
+            this.triggerJump();
+        });
+        btnJump.addEventListener('pointerup', () => btnJump.classList.remove('active'));
+
+        const btnDash = document.getElementById('btnDash');
+        btnDash.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            btnDash.classList.add('active');
+            this.triggerDash();
+        });
+        btnDash.addEventListener('pointerup', () => btnDash.classList.remove('active'));
+
+        // Toque directo en el Canvas (Laguna de Lotuses o salto rápido en Runner)
+        this.canvas.addEventListener('pointerdown', (e) => {
+            if (!this.isRunning) return;
+            const rect = this.canvas.getBoundingClientRect();
+            const px = e.clientX - rect.left;
+            const py = e.clientY - rect.top;
+
+            if (this.activeBiome === 'lagoon') {
+                this.handleLagoonTap(px, py);
+            } else if (this.activeBiome === 'runner') {
+                if (px > this.canvas.width * 0.5) {
+                    this.triggerJump();
+                } else {
+                    this.triggerDash();
+                }
+            }
+        });
+
+        // Botones de clasificación de ángulos en el Pozo Astral (Mundo 4)
+        document.querySelectorAll('.btn-angle').forEach(btn => {
+            btn.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                if (this.activeBiome === 'well') {
+                    this.handleWellChoice(btn.dataset.angle);
+                }
+            });
+        });
+    }
+
+    startSession(selectedMode) {
+        sfx.init();
+        this.mode = selectedMode;
+        this.score = 0;
+        this.hearts = 3;
+        this.streak = 0;
+        this.stageClears = 0;
+        this.totalAttempts = 0;
+        this.correctAttempts = 0;
+        this.targetClears = selectedMode === 'odisea' ? 8 : 5;
+
+        document.getElementById('hubScreen').classList.add('hidden');
+        document.getElementById('resultScreen').classList.add('hidden');
+
+        const startBiome = selectedMode === 'odisea' ? 'runner' : selectedMode;
+        this.switchBiome(startBiome);
+        this.updateHUD();
+        this.isRunning = true;
+    }
+
+    switchBiome(biomeName) {
+        this.activeBiome = biomeName;
+        this.particles = [];
+        this.hero.rotation = 0;
+        this.hero.vx = 0;
+        this.hero.vy = 0;
+
+        const touchControls = document.getElementById('touchControls');
+        const leftCluster = document.getElementById('leftCluster');
+        const angleBar = document.getElementById('angleChoiceBar');
+        const lblSpecial = document.getElementById('lblSpecial');
+
+        touchControls.style.display = 'none';
+        angleBar.style.display = 'none';
+
+        if (biomeName === 'runner') {
+            touchControls.style.display = 'flex';
+            leftCluster.style.visibility = 'hidden'; // En runner corre automático
+            lblSpecial.textContent = 'IMÁN';
+            this.setupRunnerBiome();
+        } else if (biomeName === 'platformer') {
+            touchControls.style.display = 'flex';
+            leftCluster.style.visibility = 'visible';
+            lblSpecial.textContent = 'IMPULSO';
+            this.setupPlatformerBiome();
+        } else if (biomeName === 'lagoon') {
+            this.setupLagoonBiome();
+        } else if (biomeName === 'well') {
+            angleBar.style.display = 'flex';
+            this.setupWellBiome();
+        }
+    }
+
+    repositionCurrentBiome() {
+        if (this.activeBiome === 'platformer') this.setupPlatformerBiome(true);
+        if (this.activeBiome === 'lagoon') this.setupLagoonBiome(true);
+        if (this.activeBiome === 'well') this.setupWellBiome(true);
+    }
+
+    setupRunnerBiome() {
+        const ch = pedagogy.generateMultipleChallenge();
+        this.runnerState.challenge = ch;
+        this.runnerState.crystals = [];
+        this.runnerState.spawnTimer = 0.5;
+        this.runnerState.speed = 230 + pedagogy.difficulty * 35;
+
+        const groundY = this.canvas.height - 135;
+        this.hero.x = Math.min(140, this.canvas.width * 0.22);
+        this.hero.y = groundY - this.hero.h * 0.5;
+        this.hero.facing = 1;
+
+        this.setMissionBanner('BIOMA 1: VALLE DEL IMPULSO', 'CARRERA DE MÚLTIPLOS', ch.title, ch.hint);
+    }
+
+    setupPlatformerBiome(keepChallenge = false) {
+        if (!keepChallenge || !this.platformState.challenge) {
+            this.platformState.challenge = pedagogy.generatePlatformerChallenge();
+        }
+        const ch = this.platformState.challenge;
+        const W = this.canvas.width;
+        const H = this.canvas.height;
+        const groundY = H - 125;
+
+        this.platformState.platforms = [
+            { x: 0, y: groundY, w: W, h: 140, type: 'ground' },
+            { x: W * 0.12, y: groundY - 115, w: W * 0.24, h: 18, type: 'floating', baseX: W * 0.12, range: 35, speed: 1.5, phase: 0 },
+            { x: W * 0.44, y: groundY - 195, w: W * 0.24, h: 18, type: 'floating', baseX: W * 0.44, range: 45, speed: 1.8, phase: 2 },
+            { x: W * 0.68, y: groundY - 115, w: W * 0.22, h: 18, type: 'floating', baseX: W * 0.68, range: 30, speed: 1.3, phase: 4 }
+        ];
+
+        this.hero.x = W * 0.08;
+        this.hero.y = groundY - 40;
+
+        this.platformState.orbs = [];
+        this.platformState.golems = [];
+
+        const spots = [
+            { x: W * 0.24, y: groundY - 155, platIdx: 1 },
+            { x: W * 0.56, y: groundY - 235, platIdx: 2 },
+            { x: W * 0.79, y: groundY - 155, platIdx: 3 }
+        ];
+
+        ch.options.forEach((val, idx) => {
+            const sp = spots[idx];
+            if (ch.subType === 'angle') {
+                this.platformState.golems.push({
+                    x: sp.x, y: sp.y + 16,
+                    angleVal: val,
+                    isCorrect: val === ch.correctVal,
+                    platIdx: sp.platIdx,
+                    phase: idx * 1.7,
+                    collected: false
+                });
+            } else {
+                this.platformState.orbs.push({
+                    x: sp.x, y: sp.y,
+                    val: val,
+                    isCorrect: val === ch.correctVal,
+                    platIdx: sp.platIdx,
+                    phase: idx * 2.1,
+                    collected: false
+                });
+            }
+        });
+
+        const tag = ch.subType === 'angle' ? 'GÓLEMS DE ÁNGULOS' : 'TEMPLO DE CÁLCULO';
+        this.setMissionBanner('BIOMA 2: RUINAS ANCESTRALES', tag, ch.question, ch.hint);
+    }
+
+    setupLagoonBiome(keepChallenge = false) {
+        if (!keepChallenge || !this.lagoonState.challenge) {
+            this.lagoonState.challenge = pedagogy.generateLagoonChallenge();
+        }
+        const ch = this.lagoonState.challenge;
+        const W = this.canvas.width;
+        const H = this.canvas.height;
+
+        this.lagoonState.homePad = { x: W * 0.5, y: H - 135, r: 58 };
+        this.hero.x = this.lagoonState.homePad.x;
+        this.hero.y = this.lagoonState.homePad.y - 25;
+        this.hero.facing = 1;
+        this.lagoonState.jumpAnim = null;
+
+        const padY = H * 0.48;
+        const radius = Math.min(68, W * 0.13);
+        const xs = [W * 0.22, W * 0.5, W * 0.78];
+
+        this.lagoonState.pads = ch.options.map((opt, idx) => ({
+            x: xs[idx],
+            y: idx === 1 ? padY - 36 : padY + 12,
+            r: radius,
+            val: opt,
+            isCorrect: opt === ch.correctVal,
+            sinkOffset: 0
+        }));
+
+        this.setMissionBanner('BIOMA 3: LAGUNA DE LOTUSES', 'TOCA UN NENÚFAR PARA SALTAR', ch.question, ch.hint);
+    }
+
+    setupWellBiome(keepChallenge = false) {
+        if (!keepChallenge || !this.wellState.challenge) {
+            this.wellState.challenge = pedagogy.generateWellAngleChallenge();
+        }
+        const ch = this.wellState.challenge;
+        const W = this.canvas.width;
+        const H = this.canvas.height;
+
+        this.wellState.state = 'aiming';
+        this.hero.x = W * 0.5;
+        this.hero.y = H - 195;
+        this.wellState.ropeX = this.hero.x;
+
+        this.setMissionBanner('BIOMA 4: POZO DEL TRANSPORTADOR', 'CLASIFICACIÓN GEOMÉTRICA', ch.question, ch.hint);
+    }
+
+    setMissionBanner(worldName, tag, question, hint) {
+        document.getElementById('missionWorldName').textContent = worldName;
+        document.getElementById('missionMechanicTag').textContent = tag;
+        document.getElementById('missionQuestion').textContent = question;
+        const hintEl = document.getElementById('missionHint');
+        hintEl.textContent = hint;
+        hintEl.classList.toggle('visible', pedagogy.showHints);
+    }
+
+    triggerJump() {
+        if (this.activeBiome !== 'runner' && this.activeBiome !== 'platformer') return;
+        if (this.hero.jumpsLeft > 0) {
+            const isDouble = !this.hero.onGround && this.hero.jumpsLeft === 1;
+            this.hero.vy = isDouble ? -490 : -540;
+            this.hero.onGround = false;
+            this.hero.jumpsLeft--;
+            this.hero.scaleX = 0.78;
+            this.hero.scaleY = 1.28;
+            if (isDouble) {
+                sfx.doubleJump();
+                this.spawnParticles(this.hero.x, this.hero.y + 20, '#38bdf8', 14);
+            } else {
+                sfx.jump();
+                this.spawnParticles(this.hero.x, this.hero.y + 24, '#e2e8f0', 10);
+            }
+        }
+    }
+
+    triggerDash() {
+        if (this.activeBiome !== 'runner' && this.activeBiome !== 'platformer') return;
+        if (this.hero.dashTimer <= 0) {
+            this.hero.dashTimer = 0.45;
+            sfx.dash();
+            this.spawnParticles(this.hero.x, this.hero.y, '#fde047', 16);
+        }
+    }
+
+    registerAnswer(isCorrect, explainText, fxX, fxY) {
+        this.totalAttempts++;
+        if (isCorrect) {
+            this.correctAttempts++;
+            this.streak++;
+            const pts = 100 + this.streak * 25;
+            this.score += pts;
+            this.stageClears++;
+            sfx.correct();
+
+            this.spawnParticles(fxX, fxY, '#10b981', 26);
+            this.spawnParticles(fxX, fxY, '#fde047', 16);
+            this.addFloatingText(`+${pts} ¡Genial!`, fxX, fxY - 20, '#6ee7b7');
+            this.showToast('✨ ¡ Sabiduría Desbloqueada !', explainText, '#10b981');
+            this.updateHUD(true);
+
+            if (this.stageClears >= this.targetClears) {
+                setTimeout(() => this.finishSession(true), 950);
+            } else {
+                setTimeout(() => this.advanceNextChallenge(), 850);
+            }
+        } else {
+            this.streak = 0;
+            this.hearts = Math.max(0, this.hearts - 1);
+            this.hero.hurtTimer = 1.2;
+            sfx.wrong();
+
+            this.spawnParticles(fxX, fxY, '#f43f5e', 22);
+            this.addFloatingText('¡Escudo dañado!', fxX, fxY - 20, '#fda4af');
+            this.showToast('🛡️ Andamiaje Pedagógico', explainText, '#f43f5e');
+            this.updateHUD(false);
+
+            if (this.hearts <= 0) {
+                setTimeout(() => this.finishSession(false), 1100);
+            }
+        }
+    }
+
+    advanceNextChallenge() {
+        if (!this.isRunning) return;
+        if (this.mode === 'odisea') {
+            const order = ['runner', 'platformer', 'lagoon', 'well'];
+            const nextBiome = order[Math.floor(this.stageClears / 2) % order.length];
+            if (nextBiome !== this.activeBiome) {
+                this.switchBiome(nextBiome);
+                return;
+            }
+        }
+
+        if (this.activeBiome === 'runner') this.setupRunnerBiome();
+        else if (this.activeBiome === 'platformer') this.setupPlatformerBiome(false);
+        else if (this.activeBiome === 'lagoon') this.setupLagoonBiome(false);
+        else if (this.activeBiome === 'well') this.setupWellBiome(false);
+    }
+
+    finishSession(victory) {
+        this.isRunning = false;
+        const screen = document.getElementById('resultScreen');
+        screen.classList.remove('hidden');
+
+        document.getElementById('resultEmoji').textContent = victory ? '🏆' : '💡';
+        document.getElementById('resultTitle').textContent = victory ? '¡Odisea Completada con Éxito!' : '¡Sigue Practicando, Guardián!';
+        document.getElementById('resultSubtitle').textContent = victory
+            ? 'Has dominado las pruebas matemáticas y geométricas con gran destreza.'
+            : 'Cada intento fortalece tu mente. Usa el botón 💡 para ver pistas visuales.';
+        document.getElementById('resScore').textContent = this.score;
+        const acc = this.totalAttempts > 0 ? Math.round((this.correctAttempts / this.totalAttempts) * 100) : 100;
+        document.getElementById('resAccuracy').textContent = `${acc}%`;
+    }
+
+    showToast(title, body, borderColor) {
+        const toast = document.getElementById('feedbackToast');
+        toast.style.borderColor = borderColor;
+        document.getElementById('toastTitle').textContent = title;
+        document.getElementById('toastBody').textContent = body;
+        toast.classList.add('show');
+        clearTimeout(this.toastTimeout);
+        this.toastTimeout = setTimeout(() => toast.classList.remove('show'), 3200);
+    }
+
+    updateHUD(pulse = false) {
+        document.getElementById('pillHearts').textContent = '❤️'.repeat(this.hearts) + '🖤'.repeat(Math.max(0, 3 - this.hearts));
+        document.getElementById('pillStreak').textContent = `🔥 x${this.streak}`;
+        const scoreEl = document.getElementById('pillScore');
+        scoreEl.textContent = `💎 ${this.score}`;
+        document.getElementById('pillProgress').textContent = `⭐ ${this.stageClears}/${this.targetClears}`;
+
+        if (pulse) {
+            scoreEl.classList.add('pulse');
+            setTimeout(() => scoreEl.classList.remove('pulse'), 280);
+        }
+    }
+
+    update(dt) {
+        this.animTime += dt;
+
+        // Recuperación elástica de Squash & Stretch
+        this.hero.scaleX += (1 - this.hero.scaleX) * 10 * dt;
+        this.hero.scaleY += (1 - this.hero.scaleY) * 10 * dt;
+        if (this.hero.hurtTimer > 0) this.hero.hurtTimer -= dt;
+        if (this.hero.dashTimer > 0) this.hero.dashTimer -= dt;
+
+        if (this.activeBiome === 'runner') this.updateRunner(dt);
+        else if (this.activeBiome === 'platformer') this.updatePlatformer(dt);
+        else if (this.activeBiome === 'lagoon') this.updateLagoon(dt);
+        else if (this.activeBiome === 'well') this.updateWell(dt);
+
+        // Actualizar partículas
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.vy += 320 * dt;
+            p.life -= dt;
+            if (p.life <= 0) this.particles.splice(i, 1);
+        }
+
+        // Actualizar textos flotantes
+        for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+            const ft = this.floatingTexts[i];
+            ft.y -= 45 * dt;
+            ft.life -= dt;
+            if (ft.life <= 0) this.floatingTexts.splice(i, 1);
+        }
+    }
+
+    updateRunner(dt) {
+        const groundY = this.canvas.height - 135;
+        const st = this.runnerState;
+        st.scrollX = (st.scrollX + st.speed * dt) % this.canvas.width;
+        this.hero.vx = 5;
+
+        // Física vertical del héroe
+        this.hero.vy += 1250 * dt;
+        this.hero.y += this.hero.vy * dt;
+
+        if (!this.hero.onGround && this.hero.jumpsLeft === 0) {
+            this.hero.rotation += 9 * dt;
+        } else {
+            this.hero.rotation = 0;
+        }
+
+        if (this.hero.y >= groundY - this.hero.h * 0.5) {
+            if (!this.hero.onGround) {
+                this.hero.scaleX = 1.22;
+                this.hero.scaleY = 0.8;
+            }
+            this.hero.y = groundY - this.hero.h * 0.5;
+            this.hero.vy = 0;
+            this.hero.onGround = true;
+            this.hero.jumpsLeft = 2;
+            this.hero.rotation = 0;
+        }
+
+        // Generar cristales matemáticos
+        st.spawnTimer -= dt;
+        if (st.spawnTimer <= 0) {
+            st.spawnTimer = 1.65;
+            const base = st.challenge.base;
+            const isMult = Math.random() < 0.55;
+            let num;
+            if (isMult) {
+                num = base * (Math.floor(Math.random() * 9) + 1);
+            } else {
+                num = base * (Math.floor(Math.random() * 8) + 1) + (Math.floor(Math.random() * (base - 1)) + 1);
+            }
+            const elevated = Math.random() < 0.45;
+            st.crystals.push({
+                x: this.canvas.width + 50,
+                y: elevated ? groundY - 125 : groundY - 34,
+                num,
+                isMultiple: num % base === 0
+            });
+        }
+
+        // Mover y colisionar cristales
+        for (let i = st.crystals.length - 1; i >= 0; i--) {
+            const c = st.crystals[i];
+            // Atracción magnética si el jugador usa Dash y es múltiplo correcto
+            if (this.hero.dashTimer > 0 && c.isMultiple && c.x - this.hero.x < 260) {
+                c.x += (this.hero.x - c.x) * 8 * dt;
+                c.y += (this.hero.y - c.y) * 8 * dt;
+            } else {
+                c.x -= st.speed * dt;
+            }
+
+            const dist = Math.hypot(c.x - this.hero.x, c.y - this.hero.y);
+            if (dist < 42) {
+                if (c.isMultiple) {
+                    this.registerAnswer(true, st.challenge.explainCorrect(c.num), c.x, c.y);
+                } else {
+                    this.registerAnswer(false, st.challenge.explainWrong(c.num), c.x, c.y);
+                }
+                st.crystals.splice(i, 1);
+                continue;
+            }
+            if (c.x < -60) st.crystals.splice(i, 1);
+        }
+    }
+
+    updatePlatformer(dt) {
+        const st = this.platformState;
+        const moveSpeed = this.hero.dashTimer > 0 ? 420 : 270;
+
+        if (this.keys.left) {
+            this.hero.vx = -moveSpeed;
+            this.hero.facing = -1;
+        } else if (this.keys.right) {
+            this.hero.vx = moveSpeed;
+            this.hero.facing = 1;
+        } else {
+            this.hero.vx *= 0.82;
+        }
+
+        const prevBottom = this.hero.y + this.hero.h * 0.5;
+        this.hero.x += this.hero.vx * dt;
+        this.hero.vy += 1200 * dt;
+        this.hero.y += this.hero.vy * dt;
+
+        this.hero.x = Math.max(28, Math.min(this.canvas.width - 28, this.hero.x));
+        this.hero.onGround = false;
+
+        // Mover plataformas flotantes y sincronizar orbes/gólems
+        st.platforms.forEach((p, idx) => {
+            let dx = 0;
+            if (p.type === 'floating') {
+                const oldX = p.x;
+                p.x = p.baseX + Math.sin(this.animTime * p.speed + p.phase) * p.range;
+                dx = p.x - oldX;
+            }
+
+            const heroBottom = this.hero.y + this.hero.h * 0.5;
+            if (
+                this.hero.vy >= 0 &&
+                this.hero.x + 16 > p.x &&
+                this.hero.x - 16 < p.x + p.w &&
+                heroBottom >= p.y &&
+                prevBottom <= p.y + 18
+            ) {
+                this.hero.y = p.y - this.hero.h * 0.5;
+                this.hero.vy = 0;
+                this.hero.onGround = true;
+                this.hero.jumpsLeft = 2;
+                this.hero.rotation = 0;
+                this.hero.x += dx;
+            }
+        });
+
+        // Actualizar Orbes Matemáticos
+        st.orbs.forEach(orb => {
+            if (orb.collected) return;
+            const p = st.platforms[orb.platIdx];
+            if (p) orb.x = p.x + p.w * 0.5;
+            const dist = Math.hypot(this.hero.x - orb.x, this.hero.y - orb.y);
+            if (dist < 42) {
+                orb.collected = true;
+                if (orb.isCorrect) {
+                    this.registerAnswer(true, st.challenge.explainCorrect, orb.x, orb.y);
+                } else {
+                    this.registerAnswer(false, st.challenge.explainWrong(orb.val), orb.x, orb.y);
+                }
+            }
+        });
+
+        // Actualizar Gólems de Ángulo
+        st.golems.forEach(g => {
+            if (g.collected) return;
+            const p = st.platforms[g.platIdx];
+            if (p) g.x = p.x + p.w * 0.5;
+            const dist = Math.hypot(this.hero.x - g.x, this.hero.y - g.y);
+            if (dist < 44) {
+                g.collected = true;
+                this.hero.vy = -420; // Rebote clásico de videojuego 2D
+                if (g.isCorrect) {
+                    this.registerAnswer(true, st.challenge.explainCorrect, g.x, g.y);
+                } else {
+                    this.registerAnswer(false, st.challenge.explainWrong(g.angleVal), g.x, g.y);
+                }
+            }
+        });
+    }
+
+    handleLagoonTap(px, py) {
+        const st = this.lagoonState;
+        if (st.jumpAnim) return;
+
+        for (const pad of st.pads) {
+            if (Math.hypot(px - pad.x, py - pad.y) <= pad.r + 18) {
+                sfx.jump();
+                st.jumpAnim = {
+                    startX: this.hero.x,
+                    startY: this.hero.y,
+                    targetPad: pad,
+                    progress: 0
+                };
+                this.lagoonState.ripples.push({ x: this.hero.x, y: this.hero.y + 20, r: 10, alpha: 1 });
+                break;
+            }
+        }
+    }
+
+    updateLagoon(dt) {
+        const st = this.lagoonState;
+        // Ondas en el agua
+        for (let i = st.ripples.length - 1; i >= 0; i--) {
+            const rp = st.ripples[i];
+            rp.r += 65 * dt;
+            rp.alpha -= 0.9 * dt;
+            if (rp.alpha <= 0) st.ripples.splice(i, 1);
+        }
+
+        if (st.jumpAnim) {
+            st.jumpAnim.progress += dt * 2.1;
+            const p = Math.min(1, st.jumpAnim.progress);
+            const target = st.jumpAnim.targetPad;
+
+            this.hero.x = st.jumpAnim.startX + (target.x - st.jumpAnim.startX) * p;
+            const linearY = st.jumpAnim.startY + (target.y - 24 - st.jumpAnim.startY) * p;
+            const arc = Math.sin(p * Math.PI) * 135;
+            this.hero.y = linearY - arc;
+
+            if (p >= 1) {
+                st.ripples.push({ x: target.x, y: target.y, r: 15, alpha: 1 });
+                const ch = st.challenge;
+                if (target.isCorrect) {
+                    this.registerAnswer(true, ch.explainCorrect, target.x, target.y);
+                } else {
+                    target.sinkOffset = 18;
+                    this.registerAnswer(false, ch.explainWrong(target.val), target.x, target.y);
+                    setTimeout(() => {
+                        this.hero.x = st.homePad.x;
+                        this.hero.y = st.homePad.y - 25;
+                        target.sinkOffset = 0;
+                    }, 550);
+                }
+                st.jumpAnim = null;
+            }
+        }
+    }
+
+    handleWellChoice(chosenAngleType) {
+        const st = this.wellState;
+        if (st.state !== 'aiming') return;
+
+        const W = this.canvas.width;
+        const anchorMap = {
+            agudo: W * 0.2,
+            recto: W * 0.4,
+            obtuso: W * 0.6,
+            llano: W * 0.8
+        };
+        st.ropeX = anchorMap[chosenAngleType] || W * 0.5;
+        sfx.grapple();
+
+        const isCorrect = chosenAngleType === st.challenge.type;
+        st.state = isCorrect ? 'climbing' : 'slipping';
+
+        setTimeout(() => {
+            if (isCorrect) {
+                this.registerAnswer(true, st.challenge.explainCorrect, st.ropeX, this.hero.y);
+            } else {
+                this.registerAnswer(false, st.challenge.explainWrong(chosenAngleType), st.ropeX, this.hero.y);
+                st.state = 'aiming';
+                this.hero.x = W * 0.5;
+                this.hero.y = this.canvas.height - 195;
+            }
+        }, 650);
+    }
+
+    updateWell(dt) {
+        const st = this.wellState;
+        this.hero.x += (st.ropeX - this.hero.x) * 10 * dt;
+        if (st.state === 'climbing') {
+            this.hero.y -= 280 * dt;
+            this.spawnParticles(this.hero.x, this.hero.y + 20, '#38bdf8', 2);
+        } else if (st.state === 'slipping') {
+            this.hero.y += 140 * dt;
+        }
+    }
+
+    draw() {
+        const ctx = this.ctx;
+        const W = this.canvas.width;
+        const H = this.canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        // Cielo nocturno estrellado común con gradiente según Bioma
+        const bgGrads = {
+            runner: ['#090d16', '#1e1b4b', '#0f172a'],
+            platformer: ['#0c0a1d', '#311042', '#1e293b'],
+            lagoon: ['#042f2e', '#0f766e', '#134e4a'],
+            well: ['#1c1917', '#292524', '#090d16']
+        };
+        const colors = bgGrads[this.activeBiome] || bgGrads.runner;
+        const sky = ctx.createLinearGradient(0, 0, 0, H);
+        sky.addColorStop(0, colors[0]);
+        sky.addColorStop(0.6, colors[1]);
+        sky.addColorStop(1, colors[2]);
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, W, H);
+
+        // Estrellas / Luciérnagas animadas
+        this.stars.forEach(s => {
+            const alpha = 0.35 + Math.sin(this.animTime * 2.5 + s.phase) * 0.3;
+            ctx.fillStyle = `rgba(253, 224, 71, ${alpha})`;
+            ctx.beginPath();
+            ctx.arc(s.x % W, s.y % (H * 0.75), s.r, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        if (this.activeBiome === 'runner') this.drawRunnerBiome(ctx, W, H);
+        else if (this.activeBiome === 'platformer') this.drawPlatformerBiome(ctx, W, H);
+        else if (this.activeBiome === 'lagoon') this.drawLagoonBiome(ctx, W, H);
+        else if (this.activeBiome === 'well') this.drawWellBiome(ctx, W, H);
+
+        // Dibujar al Guardián 2D y su compañero Lumi
+        HeroRenderer.drawHero(ctx, this.hero.x, this.hero.y, this.hero.w, this.hero.h, {
+            heroType: this.heroType,
+            vx: this.hero.vx,
+            vy: this.hero.vy,
+            facing: this.hero.facing,
+            animTime: this.animTime,
+            scaleX: this.hero.scaleX,
+            scaleY: this.hero.scaleY,
+            rotation: this.hero.rotation,
+            isHurt: this.hero.hurtTimer > 0,
+            isDashing: this.hero.dashTimer > 0
+        });
+
+        // Dibujar Partículas
+        this.particles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(0, p.life);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+
+        // Textos Flotantes
+        this.floatingTexts.forEach(ft => {
+            ctx.fillStyle = ft.color;
+            ctx.font = '900 18px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(ft.text, ft.x, ft.y);
+        });
+    }
+
+    drawRunnerBiome(ctx, W, H) {
+        const groundY = H - 135;
+        const st = this.runnerState;
+
+        // Montañas Parallax
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.12)';
+        for (let i = -1; i < 4; i++) {
+            const mx = (i * 340) - (st.scrollX * 0.4) % 340;
+            ctx.beginPath();
+            ctx.moveTo(mx, groundY);
+            ctx.lineTo(mx + 170, groundY - 160);
+            ctx.lineTo(mx + 340, groundY);
+            ctx.fill();
+        }
+
+        // Suelo Bioluminiscente
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, groundY, W, H - groundY);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(0, groundY);
+        ctx.lineTo(W, groundY);
+        ctx.stroke();
+
+        // Cristales Matemáticos
+        st.crystals.forEach(c => {
+            ctx.save();
+            ctx.translate(c.x, c.y);
+            const highlight = pedagogy.showHints && c.isMultiple;
+            ctx.fillStyle = highlight ? '#10b981' : '#a855f7';
+            ctx.strokeStyle = highlight ? '#a7f3d0' : '#e9d5ff';
+            ctx.lineWidth = 3;
+
+            // Hexágono de cristal
+            ctx.beginPath();
+            ctx.roundRect(-26, -26, 52, 52, 14);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '900 20px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(c.num, 0, 0);
+            ctx.restore();
+        });
+    }
+
+    drawPlatformerBiome(ctx, W, H) {
+        const st = this.platformState;
+        st.platforms.forEach(p => {
+            if (p.type === 'ground') {
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(p.x, p.y, p.w, p.h);
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillRect(p.x, p.y, p.w, 4);
+            } else {
+                ctx.fillStyle = '#334155';
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.roundRect(p.x, p.y, p.w, p.h, 9);
+                ctx.fill();
+                ctx.stroke();
+            }
+        });
+
+        // Orbes Matemáticos
+        st.orbs.forEach(orb => {
+            if (orb.collected) return;
+            const bob = Math.sin(this.animTime * 4 + orb.phase) * 6;
+            ctx.save();
+            ctx.translate(orb.x, orb.y + bob);
+
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.9)';
+            ctx.strokeStyle = '#fef08a';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, 0, 26, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#090d16';
+            ctx.font = '900 19px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(orb.val, 0, 0);
+            ctx.restore();
+        });
+
+        // Gólems con Transportador de Ángulos
+        st.golems.forEach(g => {
+            if (!g.collected) {
+                HeroRenderer.drawAngleGolem(ctx, g, this.animTime);
+            }
+        });
+    }
+
+    drawLagoonBiome(ctx, W, H) {
+        const st = this.lagoonState;
+
+        // Ondas de agua
+        st.ripples.forEach(rp => {
+            ctx.strokeStyle = `rgba(167, 243, 208, ${rp.alpha})`;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.ellipse(rp.x, rp.y, rp.r, rp.r * 0.45, 0, 0, Math.PI * 2);
+            ctx.stroke();
+        });
+
+        const drawLotusPad = (pad, label, isHome = false) => {
+            ctx.save();
+            ctx.translate(pad.x, pad.y + (pad.sinkOffset || 0));
+
+            // Sombra acuática
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+            ctx.beginPath();
+            ctx.ellipse(0, 8, pad.r, pad.r * 0.55, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Hoja de Nenúfar 2D
+            ctx.fillStyle = isHome ? '#059669' : '#10b981';
+            ctx.strokeStyle = '#6ee7b7';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, pad.r, pad.r * 0.58, 0, 0.15, Math.PI * 1.92);
+            ctx.lineTo(0, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            if (label !== null) {
+                ctx.fillStyle = 'rgba(9, 13, 22, 0.82)';
+                ctx.beginPath();
+                ctx.roundRect(-pad.r * 0.75, -22, pad.r * 1.5, 36, 10);
+                ctx.fill();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '900 18px "Segoe UI", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(label, 0, -4);
+            }
+            ctx.restore();
+        };
+
+        drawLotusPad(st.homePad, null, true);
+        st.pads.forEach(pad => drawLotusPad(pad, pad.val, false));
+    }
+
+    drawWellBiome(ctx, W, H) {
+        const st = this.wellState;
+        const ch = st.challenge;
+        if (!ch) return;
+
+        // Muros de piedra del Pozo Ancestral
+        ctx.fillStyle = '#1c1917';
+        ctx.fillRect(0, 0, W * 0.08, H);
+        ctx.fillRect(W * 0.92, 0, W * 0.08, H);
+
+        // Cuerdas de Gancho para cada clasificación de ángulo
+        const anchors = [
+            { x: W * 0.2, label: 'AGUDO' },
+            { x: W * 0.4, label: 'RECTO' },
+            { x: W * 0.6, label: 'OBTUSO' },
+            { x: W * 0.8, label: 'LLANO' }
+        ];
+
+        anchors.forEach(a => {
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.55)';
+            ctx.lineWidth = 4;
+            ctx.setLineDash([8, 6]);
+            ctx.beginPath();
+            ctx.moveTo(a.x, 120);
+            ctx.lineTo(a.x, H - 150);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        });
+
+        // TRANSPORTADOR GEOMÉTRICO EN TIEMPO REAL EN EL CENTRO DEL POZO
+        const cx = W * 0.5;
+        const cy = H * 0.48;
+        const radius = Math.min(115, W * 0.26);
+
+        ctx.save();
+        ctx.translate(cx, cy);
+
+        // Semicírculo graduado del transportador
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, Math.PI, 0, false);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Línea de referencia de 90° (Andamiaje visual)
+        ctx.strokeStyle = 'rgba(253, 224, 71, 0.45)';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, -radius);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Arco del ángulo objetivo actual
+        const rad = (ch.angle * Math.PI) / 180;
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, radius * 0.88, -rad, 0, false);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Etiqueta grande de grados
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 24px "Segoe UI", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${ch.angle}°`, 0, 32);
+        ctx.restore();
+    }
+
+    spawnParticles(x, y, color, count = 12) {
+        for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 190 + 50;
+            this.particles.push({
+                x, y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 80,
+                color,
+                size: Math.random() * 4 + 2,
+                life: Math.random() * 0.5 + 0.3
+            });
+        }
+    }
+
+    addFloatingText(text, x, y, color) {
+        this.floatingTexts.push({ text, x, y, color, life: 1.1 });
+    }
+
+    loop(now) {
+        const dt = Math.min(0.05, (now - this.lastFrame) / 1000);
+        this.lastFrame = now;
+        if (this.isRunning) {
+            this.update(dt);
+        }
+        this.draw();
+        requestAnimationFrame((t) => this.loop(t));
+    }
+}
+
+window.onload = () => {
+    const game = new UnifiedEduGame();
+    requestAnimationFrame((t) => game.loop(t));
+
+    // Selección de Héroe
+    document.querySelectorAll('#heroSelector .choice-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('#heroSelector .choice-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            game.heroType = chip.dataset.hero;
+            sfx.jump();
+        });
+    });
+
+    // Selección de Dificultad Pedagógica
+    document.querySelectorAll('#diffSelector .choice-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('#diffSelector .choice-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            pedagogy.difficulty = parseInt(chip.dataset.diff, 10);
+            sfx.jump();
+        });
+    });
+
+    // Tarjetas de Mundos en el Hub
+    document.querySelectorAll('.world-card').forEach(card => {
+        card.addEventListener('click', () => {
+            game.startSession(card.dataset.mode);
+        });
+    });
+
+    // Botones del HUD y Modales
+    document.getElementById('btnHome').addEventListener('click', () => {
+        game.isRunning = false;
+        document.getElementById('hubScreen').classList.remove('hidden');
+    });
+
+    document.getElementById('btnSound').addEventListener('click', (e) => {
+        sfx.enabled = !sfx.enabled;
+        e.currentTarget.textContent = sfx.enabled ? '🔊' : '🔇';
+    });
+
+    document.getElementById('btnHintToggle').addEventListener('click', () => {
+        pedagogy.showHints = !pedagogy.showHints;
+        document.getElementById('missionHint').classList.toggle('visible', pedagogy.showHints);
+        sfx.jump();
+    });
+
+    document.getElementById('btnPlayAgain').addEventListener('click', () => {
+        game.startSession(game.mode);
+    });
+
+    document.getElementById('btnBackHub').addEventListener('click', () => {
+        document.getElementById('resultScreen').classList.add('hidden');
+        document.getElementById('hubScreen').classList.remove('hidden');
+    });
+
+    // Editor Docente (Preguntas Personalizadas)
+    const renderCustomQuestions = () => {
+        const container = document.getElementById('customQList');
+        container.innerHTML = pedagogy.customQuestions.map((q, i) =>
+            `<div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <strong>${i + 1}. ${q.question}</strong> ➔ <span style="color:#10b981">${q.correctAnswer}</span>
+            </div>`
+        ).join('');
+    };
+
+    document.getElementById('btnOpenEditor').addEventListener('click', () => {
+        renderCustomQuestions();
+        document.getElementById('editorScreen').classList.remove('hidden');
+    });
+
+    document.getElementById('btnCloseEditor').addEventListener('click', () => {
+        document.getElementById('editorScreen').classList.add('hidden');
+    });
+
+    document.getElementById('btnAddCustomQ').addEventListener('click', () => {
+        const q = document.getElementById('inpQuestion').value.trim();
+        const c = document.getElementById('inpCorrect').value.trim();
+        const w1 = document.getElementById('inpWrong1').value.trim();
+        const w2 = document.getElementById('inpWrong2').value.trim();
+        if (q && c && w1 && w2) {
+            pedagogy.customQuestions.push({
+                question: q,
+                options: [c, w1, w2],
+                correctAnswer: c,
+                hint: '💡 Pregunta personalizada del Laboratorio Docente.'
+            });
+            document.getElementById('inpQuestion').value = '';
+            document.getElementById('inpCorrect').value = '';
+            document.getElementById('inpWrong1').value = '';
+            document.getElementById('inpWrong2').value = '';
+            renderCustomQuestions();
+            sfx.correct();
+        }
+    });
+};
+</script>
+</body>
+</html>
