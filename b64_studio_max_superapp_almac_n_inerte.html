@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0f19">
+    <title>B64 STUDIO MAX — Motor Asíncrono Multi-Formato & Almacén Inerte</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter, JetBrains Mono & Fredoka One (para créditos TecnoEducaTics) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        display: ['Fredoka One', 'cursive']
+                    },
+                    colors: {
+                        studio: {
+                            bg: '#070b14',
+                            panel: '#0f172a',
+                            card: '#1e293b',
+                            cyan: '#06b6d4',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e',
+                            indigo: '#6366f1'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos personalizados para estética High-Craft Dark Glassmorphism */
+        :root {
+            --glow-cyan: rgba(6, 182, 212, 0.25);
+            --glow-emerald: rgba(16, 185, 129, 0.25);
+        }
+
+        body {
+            background-color: #070b14;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(6, 182, 212, 0.12) 0px, transparent 45%),
+                radial-gradient(at 90% 20%, rgba(99, 102, 241, 0.12) 0px, transparent 45%),
+                radial-gradient(at 50% 90%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.78);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(6, 182, 212, 0.35);
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.12);
+        }
+
+        .shimmer-border {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #06b6d4, #10b981, #6366f1, transparent);
+            animation: shimmerLine 4s infinite linear;
+        }
+
+        @keyframes shimmerLine {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(50%); }
+        }
+
+        .drop-zone-active {
+            border-color: #06b6d4 !important;
+            background: rgba(6, 182, 212, 0.12) !important;
+            transform: scale(1.01);
+        }
+
+        /* Scrollbars elegantes */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b1120;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06b6d4;
+        }
+
+        .tab-active {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.22), rgba(99, 102, 241, 0.22));
+            border-color: #06b6d4 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+        }
+
+        .pulse-dot {
+            animation: pulseDot 2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.25); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-950">
+
+    <!-- =========================================================================
+         SISTEMA DE NOTIFICACIONES TOAST (Cero uso de alert/confirm)
+         ========================================================================= -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-md w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- =========================================================================
+         BARRA SUPERIOR DE TELEMETRÍA RAM Y ESTADO DEL MOTOR ASÍNCRONO
+         ========================================================================= -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <!-- Logo y Título -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500 via-indigo-500 to-emerald-500 p-0.5 shadow-lg shadow-cyan-500/20">
+                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-mono font-bold text-lg text-cyan-400">
+                        B64
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-lg sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-emerald-300 to-indigo-400 bg-clip-text text-transparent">
+                            B64 STUDIO MAX
+                        </h1>
+                        <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                            Zero atob() · Async Fetch
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400 hidden sm:block">
+                        Convertidor Multi-Formato, Generador de Código &amp; Motor de Almacén Inerte (&lt;script type="text/plain"&gt;)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Monitor de Memoria RAM / Garbage Collector en Vivo -->
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3 bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-2 text-xs">
+                <div class="flex items-center gap-2">
+                    <span id="ram-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-dot"></span>
+                    <span class="text-slate-400 font-medium">ObjectURL Activa:</span>
+                    <code id="active-blob-url-badge" class="font-mono text-cyan-300 bg-slate-950 px-2 py-0.5 rounded border border-slate-800 max-w-[160px] truncate" title="Ninguna URL activa en RAM">
+                        Ninguna (RAM Libre)
+                    </code>
+                </div>
+                <div class="h-4 w-[1px] bg-slate-800 hidden md:block"></div>
+                <div class="hidden md:flex items-center gap-1.5 text-slate-400">
+                    <span>GC Revocados:</span>
+                    <span id="gc-revoke-count" class="font-mono font-bold text-emerald-400">0</span>
+                    <span class="text-slate-600">|</span>
+                    <span id="inert-store-count" class="font-mono font-semibold text-indigo-400">4 bloques inertes</span>
+                </div>
+                <button id="btn-force-gc" onclick="app.revocarUrlActivaManual()" class="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-medium transition flex items-center gap-1 text-xs" title="Ejecuta URL.revokeObjectURL(urlAnterior) inmediatamente">
+                    <span>🧹</span> Liberar RAM
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- =========================================================================
+         CONTENIDO PRINCIPAL DE LA SUPERAPP
+         ========================================================================= -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 space-y-8">
+
+        <!-- BANNER ARQUITECTÓNICO DE LAS 4 REGLAS DE INGENIERÍA -->
+        <section class="glass-panel shimmer-border rounded-2xl p-4 sm:p-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="glass-card rounded-xl p-3.5 flex items-start gap-3">
+                    <div class="text-xl bg-cyan-500/15 text-cyan-400 p-2 rounded-lg border border-cyan-500/30">🛡️</div>
+                    <div>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-cyan-300">1. Aislamiento del DOM</h2>
+                        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                            Cero Base64 en atributos <code class="text-cyan-400">src</code> o <code class="text-cyan-400">data-*</code>. Almacenamiento inerte en <code class="text-emerald-300">&lt;script type="text/plain"&gt;</code> al final del <code class="text-amber-300">&lt;body&gt;</code>.
+                        </p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-xl p-3.5 flex items-start gap-3">
+                    <div class="text-xl bg-emerald-500/15 text-emerald-400 p-2 rounded-lg border border-emerald-500/30">⚡</div>
+                    <div>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-300">2. Decodificación Asíncrona</h2>
+                        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                            Erradicado el bloqueo síncrono. Conversión vía <code class="text-emerald-400">requestAnimationFrame</code> + <code class="text-cyan-300">await fetch(dataURI)</code> + <code class="text-cyan-300">await res.blob()</code>.
+                        </p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-xl p-3.5 flex items-start gap-3">
+                    <div class="text-xl bg-amber-500/15 text-amber-400 p-2 rounded-lg border border-amber-500/30">♻️</div>
+                    <div>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-amber-300">3. Gestión RAM &amp; GC</h2>
+                        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                            Inyección con <code class="text-amber-300">URL.createObjectURL(blob)</code>, limpieza estricta con <code class="text-rose-300">URL.revokeObjectURL(urlAnterior)</code> e <code class="text-cyan-300">img.decoding = 'async'</code>.
+                        </p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-xl p-3.5 flex items-start gap-3">
+                    <div class="text-xl bg-indigo-500/15 text-indigo-400 p-2 rounded-lg border border-indigo-500/30">📦</div>
+                    <div>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-300">4. Salida 6-en-1 + Plantilla</h2>
+                        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                            Entrega Base64 Puro, Data URI, Etiqueta HTML, Variable JS, Blob JS Asíncrono y Plantilla HTML completa descargable.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================================
+             SECCIÓN 1: ENTRADA MULTI-FORMATO + ESTUDIO DE SALIDA DE 6 PESTAÑAS
+             ========================================================================= -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- COLUMNA IZQUIERDA (5 cols): CARGA DE ARCHIVOS, TEXTO O BASE64 INVERSO -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="glass-panel rounded-2xl p-5 space-y-5">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <span class="text-cyan-400">📥</span> Centro de Entrada Multi-Formato
+                        </h2>
+                        <span class="text-xs font-mono text-slate-400">Video · Audio · Imagen · Texto · Binario</span>
+                    </div>
+
+                    <!-- Selector de Modo de Entrada -->
+                    <div class="grid grid-cols-3 gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800">
+                        <button id="mode-btn-file" onclick="app.cambiarModoEntrada('file')" class="py-2 px-3 rounded-lg text-xs font-semibold transition tab-active flex items-center justify-center gap-1.5">
+                            <span>📁</span> Archivos (Drag&amp;Drop)
+                        </button>
+                        <button id="mode-btn-text" onclick="app.cambiarModoEntrada('text')" class="py-2 px-3 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
+                            <span>✍️</span> Texto / JSON / Código
+                        </button>
+                        <button id="mode-btn-decode" onclick="app.cambiarModoEntrada('decode')" class="py-2 px-3 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
+                            <span>🔄</span> Pegar Base64
+                        </button>
+                    </div>
+
+                    <!-- MODO 1: DRAG & DROP DE ARCHIVOS (SOPORTA MÚLTIPLES ARCHIVOS) -->
+                    <div id="input-panel-file" class="space-y-4">
+                        <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-cyan-400 rounded-2xl p-6 text-center cursor-pointer transition-all bg-slate-900/40 group">
+                            <input type="file" id="file-input" class="hidden" multiple accept="video/*,audio/*,image/*,text/*,application/pdf,application/json,*/*">
+                            <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                                🚀
+                            </div>
+                            <p class="text-sm font-semibold text-white">
+                                Arrastra tus videos, audios, imágenes o cualquier archivo aquí
+                            </p>
+                            <p class="text-xs text-slate-400 mt-1">
+                                o <span class="text-cyan-400 underline font-medium">haz clic para explorar</span> (Soporta carga múltiple simultánea)
+                            </p>
+                            <div class="flex flex-wrap justify-center gap-1.5 mt-4">
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-cyan-300">MP4 / WebM</span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-emerald-300">MP3 / WAV / OGG</span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-amber-300">WebP / PNG / GIF / SVG</span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-indigo-300">PDF / TXT / JSON</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MODO 2: TEXTO DIRECTO A BASE64 (UTF-8 ASÍNCRONO) -->
+                    <div id="input-panel-text" class="hidden space-y-3">
+                        <div class="flex items-center justify-between text-xs text-slate-300">
+                            <label for="raw-text-input" class="font-medium">Escribe o pega texto, HTML, JSON, Markdown o SVG:</label>
+                            <select id="text-mime-select" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-cyan-300">
+                                <option value="text/plain">text/plain</option>
+                                <option value="text/html">text/html</option>
+                                <option value="application/json">application/json</option>
+                                <option value="image/svg+xml">image/svg+xml</option>
+                                <option value="text/css">text/css</option>
+                                <option value="application/javascript">application/javascript</option>
+                            </select>
+                        </div>
+                        <textarea id="raw-text-input" rows="5" placeholder="Escribe aquí cualquier texto con emojis 🚀, tildes áéíóú o código para codificarlo a Base64 sin errores UTF-8..." class="w-full rounded-xl bg-slate-950 border border-slate-800 p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500"></textarea>
+                        <button onclick="app.convertirTextoABase64()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-2">
+                            <span>⚡</span> Codificar Texto a Base64 e Inyectar en Almacén Inerte
+                        </button>
+                    </div>
+
+                    <!-- MODO 3: DECODIFICADOR INVERSO (PEGAR BASE64 -> ARCHIVO / VISTA PREVIA ASÍNCRONA) -->
+                    <div id="input-panel-decode" class="hidden space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">MIME Type (Autodetecta si tiene data:):</label>
+                                <select id="decode-mime-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-emerald-300">
+                                    <option value="image/webp">image/webp</option>
+                                    <option value="image/png">image/png</option>
+                                    <option value="image/jpeg">image/jpeg</option>
+                                    <option value="image/gif">image/gif</option>
+                                    <option value="image/svg+xml">image/svg+xml</option>
+                                    <option value="video/mp4">video/mp4</option>
+                                    <option value="video/webm">video/webm</option>
+                                    <option value="audio/wav">audio/wav</option>
+                                    <option value="audio/mpeg">audio/mpeg</option>
+                                    <option value="audio/webm">audio/webm</option>
+                                    <option value="text/plain">text/plain</option>
+                                    <option value="application/pdf">application/pdf</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">Nombre para el Recurso:</label>
+                                <input type="text" id="decode-name-input" value="recurso_decodificado" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
+                            </div>
+                        </div>
+                        <textarea id="decode-b64-input" rows="4" placeholder="Pega aquí tu cadena Base64 pura o con prefijo data:mime/type;base64,... Se decodificará asíncronamente con fetch() -> blob() sin usar atob()." class="w-full rounded-xl bg-slate-950 border border-slate-800 p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-emerald-500"></textarea>
+                        <button onclick="app.procesarBase64Pegado()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-semibold text-xs shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2">
+                            <span>🔬</span> Registrar en Almacén Inerte &amp; Decodificar vía Fetch Blob
+                        </button>
+                    </div>
+
+                    <!-- BARRA DE PROGRESO REAL -->
+                    <div id="conversion-progress-box" class="hidden bg-slate-950/90 border border-slate-800 rounded-xl p-3 space-y-2">
+                        <div class="flex justify-between items-center text-xs">
+                            <span id="progress-label" class="text-cyan-300 font-medium flex items-center gap-2">
+                                <span class="inline-block w-3 h-3 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></span>
+                                Procesando flujo binario...
+                            </span>
+                            <span id="progress-percent" class="font-mono font-bold text-white">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-cyan-400 via-indigo-500 to-emerald-400 transition-all duration-150" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- METADATOS Y ESTADÍSTICAS DEL RECURSO ACTIVO -->
+                    <div class="bg-slate-950/70 border border-slate-800/90 rounded-xl p-4 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">📊 Telemetría del Recurso Seleccionado</span>
+                            <span id="meta-id-badge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                                #recurso-1
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+                            <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800/80">
+                                <div class="text-[10px] text-slate-400 uppercase">Nombre</div>
+                                <div id="meta-name" class="font-semibold text-white truncate mt-0.5" title="-">-</div>
+                            </div>
+                            <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800/80">
+                                <div class="text-[10px] text-slate-400 uppercase">MIME Type</div>
+                                <div id="meta-mime" class="font-mono text-cyan-300 truncate mt-0.5">-</div>
+                            </div>
+                            <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800/80">
+                                <div class="text-[10px] text-slate-400 uppercase">Tamaño Original</div>
+                                <div id="meta-orig-size" class="font-mono text-emerald-300 mt-0.5">0 B</div>
+                            </div>
+                            <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800/80">
+                                <div class="text-[10px] text-slate-400 uppercase">Tamaño Base64</div>
+                                <div id="meta-b64-size" class="font-mono text-amber-300 mt-0.5">0 B</div>
+                            </div>
+                            <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800/80">
+                                <div class="text-[10px] text-slate-400 uppercase">Sobrecarga B64</div>
+                                <div id="meta-overhead" class="font-mono text-rose-300 mt-0.5">+33.3%</div>
+                            </div>
+                            <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800/80">
+                                <div class="text-[10px] text-slate-400 uppercase">Caracteres B64</div>
+                                <div id="meta-char-count" class="font-mono text-indigo-300 mt-0.5">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLA DE RECURSOS CARGADOS EN EL ALMACÉN INERTE -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-slate-300 uppercase tracking-wider">🗂️ Cola en Almacén Inerte (&lt;script type="text/plain"&gt;)</span>
+                            <button onclick="app.limpiarRecursosUsuario()" class="text-[11px] text-rose-400 hover:text-rose-300 underline">
+                                Restaurar Demos
+                            </button>
+                        </div>
+                        <div id="resource-queue-list" class="max-h-48 overflow-y-auto space-y-1.5 pr-1">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA (7 cols): LAS 6 OPCIONES DE SALIDA Y GENERADOR DE CÓDIGO -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="glass-panel rounded-2xl p-5 flex flex-col h-full justify-between space-y-4">
+                    
+                    <div class="space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                            <div>
+                                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                                    <span class="text-emerald-400">⚡</span> Estudio de Salida Multi-Formato (6 Modos)
+                                </h2>
+                                <p class="text-xs text-slate-400">
+                                    Selecciona cómo deseas exportar o integrar el recurso activo <code id="output-active-id" class="text-cyan-300 font-mono">#recurso-1</code>
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="app.copiarSalidaActual()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/20 transition flex items-center gap-1.5">
+                                    <span>📋</span> Copiar Salida Íntegra
+                                </button>
+                                <button onclick="app.descargarSalidaActual()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-semibold text-xs transition flex items-center gap-1.5">
+                                    <span>💾</span> Descargar Código
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- SELECTOR DE LAS 6 PESTAÑAS DE SALIDA -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="output-tabs-container">
+                            <button onclick="app.seleccionarPestanaSalida('raw')" data-tab="raw" class="output-tab-btn tab-active text-left p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 transition">
+                                <div class="text-[11px] font-mono text-cyan-400 font-bold">01 · BASE64 PURO</div>
+                                <div class="text-xs font-semibold text-white truncate">Sin prefijo data:</div>
+                            </button>
+                            <button onclick="app.seleccionarPestanaSalida('datauri')" data-tab="datauri" class="output-tab-btn text-left p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition">
+                                <div class="text-[11px] font-mono text-emerald-400 font-bold">02 · DATA URI</div>
+                                <div class="text-xs font-semibold text-white truncate">Listo para atributo</div>
+                            </button>
+                            <button onclick="app.seleccionarPestanaSalida('htmltag')" data-tab="htmltag" class="output-tab-btn text-left p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition">
+                                <div class="text-[11px] font-mono text-amber-400 font-bold">03 · ETIQUETA HTML</div>
+                                <div class="text-xs font-semibold text-white truncate">&lt;video&gt; / &lt;audio&gt; / &lt;img&gt;</div>
+                            </button>
+                            <button onclick="app.seleccionarPestanaSalida('jsvar')" data-tab="jsvar" class="output-tab-btn text-left p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition">
+                                <div class="text-[11px] font-mono text-indigo-400 font-bold">04 · VARIABLE JS</div>
+                                <div class="text-xs font-semibold text-white truncate">Constante &amp; Metadatos</div>
+                            </button>
+                            <button onclick="app.seleccionarPestanaSalida('jsblob')" data-tab="jsblob" class="output-tab-btn text-left p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition">
+                                <div class="text-[11px] font-mono text-rose-400 font-bold">05 · BLOB ASÍNCRONO</div>
+                                <div class="text-xs font-semibold text-white truncate">Fetch + ObjectURL + GC</div>
+                            </button>
+                            <button onclick="app.seleccionarPestanaSalida('inerthtml')" data-tab="inerthtml" class="output-tab-btn text-left p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition">
+                                <div class="text-[11px] font-mono text-cyan-300 font-bold">06 · HTML OPTIMIZADO</div>
+                                <div class="text-xs font-semibold text-white truncate">Almacén Inerte + Fetch</div>
+                            </button>
+                        </div>
+
+                        <!-- BARRA DE OPCIONES DINÁMICAS SEGÚN PESTAÑA SELECCIONADA -->
+                        <div id="tab-custom-options" class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs space-y-2">
+                            <!-- Opciones para Pestaña 3 (Etiqueta HTML) -->
+                            <div id="opts-htmltag" class="hidden flex flex-wrap items-center gap-4">
+                                <span class="text-amber-300 font-semibold">Atributos de Etiqueta:</span>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="attr-controls" checked onchange="app.actualizarVistaSalida()" class="rounded accent-cyan-500">
+                                    <span>controls</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="attr-autoplay" onchange="app.actualizarVistaSalida()" class="rounded accent-cyan-500">
+                                    <span>autoplay</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="attr-loop" onchange="app.actualizarVistaSalida()" class="rounded accent-cyan-500">
+                                    <span>loop</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="attr-muted" onchange="app.actualizarVistaSalida()" class="rounded accent-cyan-500">
+                                    <span>muted</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="attr-async-dec" checked onchange="app.actualizarVistaSalida()" class="rounded accent-cyan-500">
+                                    <span>decoding="async" &amp; loading="lazy"</span>
+                                </label>
+                            </div>
+
+                            <!-- Opciones para Pestaña 6 (Plantilla HTML Optimizada Almacén Inerte) -->
+                            <div id="opts-inerthtml" class="hidden flex flex-wrap items-center justify-between gap-3">
+                                <div class="flex flex-wrap items-center gap-4">
+                                    <span class="text-cyan-300 font-semibold">Modo de Plantilla:</span>
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="radio" name="inert-template-mode" value="injected" checked onchange="app.actualizarVistaSalida()" class="accent-cyan-500">
+                                        <span>Incluir Base64 real + Comentarios guía</span>
+                                    </label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="radio" name="inert-template-mode" value="placeholder" onchange="app.actualizarVistaSalida()" class="accent-cyan-500">
+                                        <span>Solo comentarios <code class="text-amber-300">&lt;!-- PEGAR BASE64 AQUÍ --&gt;</code> (Plantilla limpia)</span>
+                                    </label>
+                                </div>
+                                <button onclick="app.descargarPlantillaInerteHTML()" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-semibold transition flex items-center gap-1">
+                                    <span>🚀</span> Descargar .HTML Entregable
+                                </button>
+                            </div>
+
+                            <!-- Descripción estándar de la pestaña activa -->
+                            <div id="tab-description-bar" class="text-slate-300 flex items-center justify-between">
+                                <span id="tab-desc-text">Cadena Base64 pura sin cabecera MIME. Ideal para APIs REST, payloads JSON o bloques &lt;script type="text/plain"&gt;.</span>
+                            </div>
+                        </div>
+
+                        <!-- AVISO DE VIRTUALIZACIÓN PARA ARCHIVOS GRANDES (> 100 KB) -->
+                        <div id="virtualization-banner" class="hidden bg-amber-500/15 border border-amber-500/40 rounded-xl p-2.5 px-3.5 flex items-center justify-between gap-2 text-xs text-amber-200">
+                            <div class="flex items-center gap-2">
+                                <span class="text-base">🛡️</span>
+                                <span>
+                                    <strong>Protección de Hilo Principal Activa:</strong> Mostrando vista truncada en pantalla para evitar congelar el DOM. <strong>Al Copiar o Descargar se entrega el 100% del código íntegro</strong> desde el Almacén Inerte.
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- TEXTAREA DE CÓDIGO GENERADO -->
+                        <div class="relative">
+                            <textarea id="code-output-textarea" readonly rows="14" class="w-full rounded-xl bg-slate-950/95 border border-slate-800 p-4 font-mono text-xs text-cyan-100 leading-relaxed focus:outline-none focus:border-cyan-500 selection:bg-cyan-500 selection:text-slate-950" spellcheck="false"></textarea>
+                            <div class="absolute bottom-3 right-3 flex items-center gap-2 pointer-events-none">
+                                <span id="output-mode-pill" class="text-[10px] font-mono uppercase px-2.5 py-1 rounded-md bg-slate-900/90 text-cyan-400 border border-slate-700">
+                                    RAW BASE64
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PIE DEL ESTUDIO DE SALIDA: ACCIONES RÁPIDAS -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-800/80 text-xs">
+                        <div class="text-slate-400 flex items-center gap-2">
+                            <span>💡</span>
+                            <span>Este recurso también está disponible abajo en el <strong>Reproductor de Almacén Inerte</strong>.</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="app.reproducirRecursoActivoEnVisor()" class="px-3 py-1.5 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 font-semibold transition flex items-center gap-1.5">
+                                <span>▶️</span> Decodificar y Reproducir Ahora
+                            </button>
+                            <button onclick="app.descargarBinarioDesdeAlmacen()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium transition flex items-center gap-1.5">
+                                <span>📦</span> Descargar Archivo Original
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================================================
+             SECCIÓN 2: MOTOR EN VIVO DE ALMACÉN INERTE, DECODIFICACIÓN ASÍNCRONA Y GESTIÓN RAM
+             (Cumplimiento estricto de las Reglas 1, 2, 3 y 4 en vivo)
+             ========================================================================= -->
+        <section id="inert-engine-section" class="glass-panel rounded-2xl p-5 sm:p-6 space-y-6 border border-cyan-500/30">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                            ARQUITECTURA EN VIVO
+                        </span>
+                        <h2 class="text-lg sm:text-xl font-extrabold text-white">
+                            Reproductor Multimedia de Almacén Inerte &amp; Gestor RAM (Garbage Collection)
+                        </h2>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-1">
+                        Haz clic en cualquier botón de recurso para extraer su Base64 desde <code class="text-cyan-300">&lt;script id="recurso-X" type="text/plain"&gt;</code>, convertirlo mediante <code class="text-emerald-300">fetch() &rarr; response.blob()</code> tras un <code class="text-amber-300">requestAnimationFrame</code> y revocar el <code class="text-rose-300">ObjectURL</code> anterior automáticamente.
+                    </p>
+                </div>
+
+                <!-- Botón para abrir/cerrar el Editor en Vivo de los bloques <script type="text/plain"> -->
+                <button onclick="app.toggleEditorInerte()" class="self-start md:self-auto px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 font-semibold text-xs transition flex items-center gap-2">
+                    <span>🛠️</span> Inspeccionar / Pegar en Bloques &lt;script type="text/plain"&gt;
+                </button>
+            </div>
+
+            <!-- BOTONERA DE RECURSOS CONFIGURADOS CON SUS MIME TYPES -->
+            <div class="space-y-2">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                    <span>🎛️ Botones de Carga Bajo Demanda (Configurados con ID de Almacén Inerte y MIME Type)</span>
+                    <span class="font-mono text-[11px] text-emerald-400">Cero bloqueo del Main Thread</span>
+                </div>
+                <div id="inert-trigger-buttons" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+                    <!-- Se renderiza dinámicamente con cada <script id="recurso-X" type="text/plain"> -->
+                </div>
+            </div>
+
+            <!-- ÁREA DE REPRODUCCIÓN MULTIMEDIA + CONSOLA DE AUDITORÍA RAM -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- VISOR / REPRODUCTOR MULTIMEDIA (7 cols) -->
+                <div class="lg:col-span-7 bg-slate-950/90 border border-slate-800 rounded-2xl p-4 sm:p-5 min-h-[340px] flex flex-col justify-between relative overflow-hidden">
+                    
+                    <!-- Cabecera del Reproductor -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3 mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                            <span id="player-title" class="text-xs font-bold text-white">Visor Multimedia Dinámico (DOM Aislado)</span>
+                        </div>
+                        <span id="player-mime-badge" class="text-[11px] font-mono px-2.5 py-0.5 rounded bg-slate-900 text-cyan-300 border border-slate-800">
+                            Esperando orden...
+                        </span>
+                    </div>
+
+                    <!-- OVERLAY DE CARGA ASÍNCRONA (Garantizado por requestAnimationFrame antes de fetch) -->
+                    <div id="async-loading-indicator" class="hidden absolute inset-0 z-20 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center">
+                        <div class="w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mb-3"></div>
+                        <p class="text-sm font-bold text-white">Cargando recurso...</p>
+                        <p id="async-loading-subtext" class="text-xs font-mono text-cyan-300 mt-1">
+                            Ejecutando requestAnimationFrame() &rarr; fetch(dataURI) &rarr; response.blob()
+                        </p>
+                    </div>
+
+                    <!-- CONTENEDOR DONDE SE INYECTAN LOS ELEMENTOS CON OBJECTURL -->
+                    <div id="media-stage" class="my-auto flex flex-col items-center justify-center text-center py-6 px-2 min-h-[220px]">
+                        <div class="text-4xl mb-2 opacity-60">🎬</div>
+                        <p class="text-sm text-slate-300 font-medium">Ningún recurso cargado en memoria RAM</p>
+                        <p class="text-xs text-slate-500 max-w-md mt-1">
+                            Selecciona cualquiera de los botones superiores para decodificar asíncronamente desde el bloque <code class="text-cyan-400">&lt;script type="text/plain"&gt;</code> e inyectar un <code class="text-emerald-400">blob:ObjectURL</code> temporal.
+                        </p>
+                    </div>
+
+                    <!-- Barra inferior del reproductor: URL Temporal Activa -->
+                    <div class="border-t border-slate-800/80 pt-3 mt-4 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono">
+                        <div class="flex items-center gap-1.5 text-slate-400 truncate max-w-full">
+                            <span>src dinámico:</span>
+                            <code id="stage-current-src" class="text-emerald-300 truncate">sin asignar (0 bytes en reproductor)</code>
+                        </div>
+                        <span id="stage-decoding-attr" class="text-indigo-300 hidden">img.decoding = 'async' ✓</span>
+                    </div>
+                </div>
+
+                <!-- AUDITORÍA EN TIEMPO REAL DEL GARBAGE COLLECTOR Y FLUJO ASÍNCRONO (5 cols) -->
+                <div class="lg:col-span-5 bg-slate-950/90 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+                            <span>🔬</span> Telemetría de Memoria RAM &amp; GC
+                        </h3>
+                        <button onclick="app.limpiarConsolaGC()" class="text-[11px] text-slate-400 hover:text-white">
+                            Limpiar Log
+                        </button>
+                    </div>
+
+                    <!-- Tarjetas de estado de punteros ObjectURL -->
+                    <div class="grid grid-cols-1 gap-2.5 text-xs font-mono">
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-emerald-500/30">
+                            <div class="text-[10px] text-slate-400 uppercase flex justify-between">
+                                <span>Puntero RAM Activo (urlActual)</span>
+                                <span id="ram-active-bytes" class="text-emerald-400">0 B</span>
+                            </div>
+                            <div id="telemetry-current-url" class="text-emerald-300 truncate mt-1 font-semibold">
+                                null
+                            </div>
+                        </div>
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-rose-500/30">
+                            <div class="text-[10px] text-slate-400 uppercase flex justify-between">
+                                <span>Último Puntero Revocado (URL.revokeObjectURL)</span>
+                                <span id="ram-revoked-status" class="text-rose-400">Liberado ✓</span>
+                            </div>
+                            <div id="telemetry-revoked-url" class="text-rose-300/90 truncate mt-1 line-through">
+                                Ninguno todavía
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Registro paso a paso de la ejecución asíncrona -->
+                    <div class="space-y-1.5">
+                        <div class="text-[11px] font-semibold text-slate-400">Historial de Operaciones Asíncronas:</div>
+                        <div id="gc-audit-log" class="h-44 overflow-y-auto bg-slate-900/70 rounded-xl p-3 font-mono text-[11px] space-y-1.5 border border-slate-800/90">
+                            <div class="text-slate-400">[INIT] Almacén Inerte inicializado al final del &lt;body&gt; sin bloquear el renderizado inicial.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- INSPECTOR / EDITOR EN VIVO DE LOS BLOQUES <script type="text/plain"> DEL DOM -->
+            <div id="live-inert-editor-drawer" class="hidden bg-slate-950 border border-amber-500/40 rounded-2xl p-4 sm:p-5 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-amber-300 flex items-center gap-2">
+                            <span>🧬</span> Inspector y Editor Directo de Bloques <code class="text-white">&lt;script id="recurso-X" type="text/plain"&gt;</code>
+                        </h3>
+                        <p class="text-xs text-slate-400">
+                            Pega aquí tus cadenas Base64 directamente o edita las etiquetas inertes que residen al final del <code class="text-cyan-300">&lt;body&gt;</code>.
+                        </p>
+                    </div>
+                    <button onclick="app.crearNuevoBloqueInerteManual()" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-semibold transition">
+                        + Añadir Nuevo Bloque &lt;script type="text/plain"&gt;
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Seleccionar Bloque del Almacén Inerte:</label>
+                        <select id="inspector-block-select" onchange="app.cargarBloqueEnInspector()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-white"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">MIME Type Configurado en el Botón:</label>
+                        <input type="text" id="inspector-mime-input" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-cyan-300" placeholder="video/mp4, audio/webm, image/webp...">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Nombre / Etiqueta del Recurso:</label>
+                        <input type="text" id="inspector-name-input" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-white" placeholder="Ej: Video Intro MP4">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">
+                        Contenido Interno de <code id="inspector-tag-label" class="text-emerald-300">&lt;script id="recurso-1" type="text/plain"&gt;</code>:
+                    </label>
+                    <textarea id="inspector-b64-textarea" rows="5" class="w-full rounded-xl bg-slate-900 border border-slate-700 p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-amber-400" placeholder="<!-- PEGAR BASE64 DE [NOMBRE DEL RECURSO] AQUÍ -->"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-2">
+                    <button onclick="app.guardarCambiosInspectorInerte()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-950 font-bold text-xs shadow-lg transition">
+                        💾 Actualizar &lt;script type="text/plain"&gt; y Probar Recurso
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =========================================================================
+         FOOTER Y CANALES COMUNIDAD TECNOEDUCATICS (Ing. Ruben Sierra C.)
+         ========================================================================= -->
+    <footer class="mt-12 border-t border-slate-800/90 bg-slate-950/90 px-4 py-10 text-slate-300">
+        <div class="max-w-7xl mx-auto space-y-8">
+            
+            <!-- Créditos y Licencia Creative Commons (Icono en SVG puro para cumplir Regla 1 de cero imágenes no gestionadas) -->
+            <div class="max-w-3xl mx-auto text-center space-y-3 bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6">
+                <p class="text-sm sm:text-base text-white">
+                    Inspirado y evolucionado para <strong>Ruben Sierra C. (Ing. de Sistemas)</strong> — SuperApp <strong>B64 STUDIO MAX</strong>.
+                </p>
+                <div class="flex justify-center py-1">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-mono text-cyan-300 transition">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-9.5c.83 0 1.5.67 1.5 1.5h1c0-1.38-1.12-2.5-2.5-2.5S7 10.62 7 12s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5h-1c0 .83-.67 1.5-1.5 1.5S8 12.83 8 12s.67-1.5 1.5-1.5zm5 0c.83 0 1.5.67 1.5 1.5h1c0-1.38-1.12-2.5-2.5-2.5S12 10.62 12 12s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5h-1c0 .83-.67 1.5-1.5 1.5S13 12.83 13 12s.67-1.5 1.5-1.5z"/>
+                        </svg>
+                        <span>CC BY-NC 4.0 Internacional</span>
+                    </a>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Esta obra está bajo una
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank" class="text-cyan-400 hover:underline font-semibold">
+                        Licencia Creative Commons Atribución-NoComercial 4.0 Internacional
+                    </a>.
+                    Puedes editar, compartir y adaptar, pero no para fines comerciales y siempre dando el debido reconocimiento.
+                </p>
+            </div>
+
+            <!-- Tarjetas de Canales TecnoEducaTics -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-display text-lg text-white mb-2">Comunidad TecnoEducaTics</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Descubre tutoriales, cursos y contenido educativo para docentes y profesionales.
+                        </p>
+                    </div>
+                    <a href="https://www.youtube.com/@TecnoEducaTics?sub_confirmation=1" target="_blank" rel="noopener" class="w-full py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs text-center transition shadow-lg shadow-red-600/20">
+                        🔔 YouTube
+                    </a>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-display text-lg text-white mb-2">Canal de WhatsApp</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Recibe las últimas novedades y tips exclusivos directamente en tu WhatsApp.
+                        </p>
+                    </div>
+                    <a href="https://whatsapp.com/channel/0029Va6FP4C6hENyzxtO8d0e" target="_blank" rel="noopener" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs text-center transition shadow-lg shadow-emerald-600/20">
+                        📱 Unirse
+                    </a>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-display text-lg text-white mb-2">Canal de Telegram</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Accede a material exclusivo, discusiones y anuncios de nuestra comunidad.
+                        </p>
+                    </div>
+                    <a href="https://t.me/cursoseducativos" target="_blank" rel="noopener" class="w-full py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs text-center transition shadow-lg shadow-sky-600/20">
+                        📢 Seguir
+                    </a>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-display text-lg text-white mb-2">Podcast TecnoEducaTics</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Escucha análisis, entrevistas y novedades sobre tecnología educativa e IA.
+                        </p>
+                    </div>
+                    <a href="https://www.spreaker.com/podcast/tecnoeducatics--6664603" target="_blank" rel="noopener" class="w-full py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs text-center transition shadow-lg shadow-amber-500/20">
+                        🎙️ Escuchar
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- =========================================================================
+         LÓGICA PRINCIPAL DE INGENIERÍA DE SOFTWARE (CERO atob, ASYNC FETCH BLOB, GC)
+         ========================================================================= -->
+    <script>
+        /**
+         * B64 STUDIO MAX — Motor Asíncrono Multi-Formato & Almacén Inerte
+         * Cumple estrictamente:
+         * 1. Aislamiento del DOM en <script id="recurso-X" type="text/plain"> al final del <body>.
+         * 2. Decodificación asíncrona con requestAnimationFrame + fetch() + response.blob() (Cero bloqueo del hilo principal).
+         * 3. Gestión de Memoria RAM con URL.createObjectURL(blob), URL.revokeObjectURL(urlAnterior) e img.decoding = 'async'.
+         */
+        class B64StudioMax {
+            constructor() {
+                // Referencia para Garbage Collection (Regla 3)
+                this.urlAnterior = null;
+                this.contadorRevocacionesGC = 0;
+
+                // Registro de metadatos de los recursos en el Almacén Inerte
+                this.recursos = new Map();
+                this.idRecursoActivo = 'recurso-1';
+                this.pestanaSalidaActiva = 'raw';
+                this.contadorIds = 4; // Empezamos con 4 bloques inertes preconfigurados al final del <body>
+
+                // Umbral de virtualización del textarea para proteger el DOM (100 KB)
+                this.UMBRAL_VIRTUALIZACION = 102400;
+
+                this.inicializarDemosAlmacenInerte();
+                this.vincularEventosDOM();
+                this.sincronizarInterfazCompleta();
+            }
+
+            /**
+             * Genera recursos demostrativos reales (Audio WAV sintetizado, Imagen SVG/WebP e Info)
+             * y los inyecta en los bloques <script type="text/plain"> al final del <body>
+             * manteniendo los comentarios claros <!-- PEGAR BASE64 DE [...] AQUÍ -->.
+             */
+            async inicializarDemosAlmacenInerte() {
+                // registraremos los 4 bloques preexistentes al final del <body>
+                const definicionesIniciales = [
+                    {
+                        id: 'recurso-1',
+                        nombre: 'Poster_TecnoEducaTics.svg',
+                        mimeType: 'image/svg+xml',
+                        comentario: '<!-- PEGAR BASE64 DE [IMAGEN WEBP / SVG / PNG] AQUÍ -->'
+                    },
+                    {
+                        id: 'recurso-2',
+                        nombre: 'Sintetizador_Acorde_440Hz.wav',
+                        mimeType: 'audio/wav',
+                        comentario: '<!-- PEGAR BASE64 DE [AUDIO WAV / WEBM / MP3] AQUÍ -->'
+                    },
+                    {
+                        id: 'recurso-3',
+                        nombre: 'Video_Demo_Reproductor.mp4',
+                        mimeType: 'video/mp4',
+                        comentario: '<!-- PEGAR BASE64 DE [VIDEO MP4 / WEBM] AQUÍ -->'
+                    },
+                    {
+                        id: 'recurso-4',
+                        nombre: 'Manifiesto_Arquitectura_Inerte.json',
+                        mimeType: 'application/json',
+                        comentario: '<!-- PEGAR BASE64 DE [DOCUMENTO JSON / TEXTO / PDF] AQUÍ -->'
+                    }
+                ];
+
+                // Generamos un audio WAV real de 1 segundo (acorde armónico) en memoria usando ArrayBuffer + FileReader asíncrono
+                const wavBlob = this.crearAudioWavDemoBlob();
+                const wavB64 = await this.blobABase64PuroAsync(wavBlob);
+                const elAudio = document.getElementById('recurso-2');
+                if (elAudio) {
+                    elAudio.textContent = `\n<!-- PEGAR BASE64 DE [AUDIO WAV / WEBM / MP3] AQUÍ -->\n${wavB64}\n`;
+                }
+
+                // Registramos todos los bloques en el mapa de control
+                for (const def of definicionesIniciales) {
+                    const scriptNode = document.getElementById(def.id);
+                    const b64Limpio = this.extraerBase64LimpioDeNodo(scriptNode);
+                    const bytesEstimados = Math.floor((b64Limpio.length * 3) / 4);
+                    this.recursos.set(def.id, {
+                        id: def.id,
+                        nombre: def.nombre,
+                        mimeType: def.mimeType,
+                        tamanoOriginal: bytesEstimados,
+                        comentarioGuia: def.comentario,
+                        fecha: new Date().toLocaleTimeString()
+                    });
+                }
+
+                this.sincronizarInterfazCompleta();
+            }
+
+            /**
+             * Crea un archivo de audio WAV real en un Blob binario (acorde musical Do Mayor)
+             * para que el botón de Audio funcione de inmediato al probar el Almacén Inerte.
+             */
+            crearAudioWavDemoBlob() {
+                const sampleRate = 22050;
+                const durationSeconds = 1.2;
+                const numSamples = Math.floor(sampleRate * durationSeconds);
+                const buffer = new ArrayBuffer(44 + numSamples * 2);
+                const view = new DataView(buffer);
+
+                const writeStr = (offset, str) => {
+                    for (let i = 0; i < str.length; i++) {
+                        view.setUint8(offset + i, str.charCodeAt(i));
+                    }
+                };
+
+                writeStr(0, 'RIFF');
+                view.setUint32(4, 36 + numSamples * 2, true);
+                writeStr(8, 'WAVE');
+                writeStr(12, 'fmt ');
+                view.setUint32(16, 16, true);
+                view.setUint16(20, 1, true); // PCM
+                view.setUint16(22, 1, true); // Mono
+                view.setUint32(24, sampleRate, true);
+                view.setUint32(28, sampleRate * 2, true);
+                view.setUint16(32, 2, true);
+                view.setUint16(34, 16, true);
+                writeStr(36, 'data');
+                view.setUint32(40, numSamples * 2, true);
+
+                // Acorde armónico (523.25Hz C5 + 659.25Hz E5 + 783.99Hz G5) con envolvente suave
+                for (let i = 0; i < numSamples; i++) {
+                    const t = i / sampleRate;
+                    const env = Math.exp(-2.8 * t) * Math.min(1, t * 40);
+                    const wave = (
+                        Math.sin(2 * Math.PI * 523.25 * t) +
+                        0.7 * Math.sin(2 * Math.PI * 659.25 * t) +
+                        0.5 * Math.sin(2 * Math.PI * 783.99 * t)
+                    ) / 2.2;
+                    const sample = Math.max(-1, Math.min(1, wave * env));
+                    view.setInt16(44 + i * 2, sample * 32767, true);
+                }
+
+                return new Blob([buffer], { type: 'audio/wav' });
+            }
+
+            /**
+             * Convierte cualquier Blob o File a Base64 puro asíncronamente con FileReader
+             */
+            blobABase64PuroAsync(blob, onProgressCallback = null) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    if (onProgressCallback) {
+                        reader.onprogress = (e) => {
+                            if (e.lengthComputable) {
+                                onProgressCallback(Math.round((e.loaded / e.total) * 100));
+                            }
+                        };
+                    }
+                    reader.onload = (e) => {
+                        const dataUrl = e.target.result || '';
+                        const commaIdx = dataUrl.indexOf(',');
+                        resolve(commaIdx !== -1 ? dataUrl.slice(commaIdx + 1) : dataUrl);
+                    };
+                    reader.onerror = () => reject(new Error('Error leyendo flujo binario'));
+                    reader.readAsDataURL(blob);
+                });
+            }
+
+            /**
+             * Extrae el contenido Base64 limpio de una etiqueta <script type="text/plain">
+             * ignorando comentarios HTML <!-- ... --> y espacios/saltos de línea.
+             */
+            extraerBase64LimpioDeNodo(scriptNode) {
+                if (!scriptNode) return '';
+                let raw = scriptNode.textContent || '';
+                // Eliminar comentarios HTML <!-- ... -->
+                raw = raw.replace(/<!--[\s\S]*?-->/g, '').trim();
+                // Si el usuario pegó una cadena con prefijo data:...;base64,, extraer solo el Base64 puro
+                if (raw.startsWith('data:')) {
+                    const commaPos = raw.indexOf(',');
+                    if (commaPos !== -1) {
+                        raw = raw.slice(commaPos + 1);
+                    }
+                }
+                // Limpiar espacios en blanco o saltos de línea internos
+                return raw.replace(/\s+/g, '');
+            }
+
+            /**
+             * Configura los eventos de Drag & Drop y selección de archivos
+             */
+            vincularEventosDOM() {
+                const dropZone = document.getElementById('drop-zone');
+                const fileInput = document.getElementById('file-input');
+
+                dropZone.addEventListener('click', () => fileInput.click());
+
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('drop-zone-active');
+                });
+
+                dropZone.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('drop-zone-active');
+                });
+
+                dropZone.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('drop-zone-active');
+                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                        await this.procesarListaArchivos(e.dataTransfer.files);
+                    }
+                });
+
+                fileInput.addEventListener('change', async (e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                        await this.procesarListaArchivos(e.target.files);
+                        fileInput.value = '';
+                    }
+                });
+            }
+
+            /**
+             * Cambia entre los 3 modos de entrada: Archivos, Texto directo o Pegar Base64
+             */
+            cambiarModoEntrada(modo) {
+                const modos = ['file', 'text', 'decode'];
+                modos.forEach(m => {
+                    const panel = document.getElementById(`input-panel-${m}`);
+                    const btn = document.getElementById(`mode-btn-${m}`);
+                    if (m === modo) {
+                        panel.classList.remove('hidden');
+                        btn.classList.add('tab-active');
+                        btn.classList.remove('text-slate-400');
+                    } else {
+                        panel.classList.add('hidden');
+                        btn.classList.remove('tab-active');
+                        btn.classList.add('text-slate-400');
+                    }
+                });
+            }
+
+            /**
+             * Procesa uno o múltiples archivos seleccionados o arrastrados,
+             * los almacena en etiquetas <script id="recurso-X" type="text/plain"> al final del <body>
+             * y actualiza las 6 salidas y el reproductor asíncrono.
+             */
+            async procesarListaArchivos(fileList) {
+                const progressBox = document.getElementById('conversion-progress-box');
+                const progressFill = document.getElementById('progress-bar-fill');
+                const progressPercent = document.getElementById('progress-percent');
+                const progressLabel = document.getElementById('progress-label');
+
+                progressBox.classList.remove('hidden');
+                let ultimoIdCreado = null;
+
+                for (let i = 0; i < fileList.length; i++) {
+                    const file = fileList[i];
+                    const mimeType = file.type || this.inferirMimePorExtension(file.name);
+
+                    progressLabel.textContent = `Codificando (${i + 1}/${fileList.length}): ${file.name}`;
+                    progressFill.style.width = '0%';
+                    progressPercent.textContent = '0%';
+
+                    // Ceder un frame para que el navegador pinte la barra de progreso
+                    await new Promise(r => requestAnimationFrame(r));
+
+                    try {
+                        const base64Puro = await this.blobABase64PuroAsync(file, (pct) => {
+                            progressFill.style.width = `${pct}%`;
+                            progressPercent.textContent = `${pct}%`;
+                        });
+
+                        ultimoIdCreado = this.registrarRecursoEnAlmacenInerte({
+                            nombre: file.name,
+                            mimeType: mimeType,
+                            tamanoOriginal: file.size,
+                            base64Puro: base64Puro
+                        });
+
+                        this.registrarLogGC(`[INGESTA] "${file.name}" (${this.formatearBytes(file.size)}) aislado en <script id="${ultimoIdCreado}" type="text/plain">`);
+                    } catch (err) {
+                        this.mostrarToast(`Error al procesar ${file.name}: ${err.message}`, 'error');
+                    }
+                }
+
+                progressBox.classList.add('hidden');
+
+                if (ultimoIdCreado) {
+                    this.idRecursoActivo = ultimoIdCreado;
+                    this.sincronizarInterfazCompleta();
+                    this.mostrarToast(`✅ ${fileList.length > 1 ? fileList.length + ' archivos convertidos y aislados' : 'Archivo convertido y aislado'} en el Almacén Inerte`, 'success');
+                    // Reproducir automáticamente el nuevo recurso usando el motor asíncrono
+                    const rec = this.recursos.get(ultimoIdCreado);
+                    if (rec) {
+                        await this.cargarRecursoInerte(rec.id, rec.mimeType, rec.nombre);
+                    }
+                }
+            }
+
+            /**
+             * Convierte texto escrito por el usuario a Base64 (UTF-8 seguro vía Blob + FileReader)
+             */
+            async convertirTextoABase64() {
+                const texto = document.getElementById('raw-text-input').value;
+                const mimeType = document.getElementById('text-mime-select').value;
+
+                if (!texto.trim()) {
+                    this.mostrarToast('Escribe o pega algún texto antes de codificar.', 'warning');
+                    return;
+                }
+
+                await new Promise(r => requestAnimationFrame(r));
+                const blob = new Blob([texto], { type: `${mimeType};charset=utf-8` });
+                const base64Puro = await this.blobABase64PuroAsync(blob);
+
+                const extMap = {
+                    'text/plain': 'txt',
+                    'text/html': 'html',
+                    'application/json': 'json',
+                    'image/svg+xml': 'svg',
+                    'text/css': 'css',
+                    'application/javascript': 'js'
+                };
+                const ext = extMap[mimeType] || 'txt';
+                const nombre = `texto_utf8_${Date.now().toString().slice(-4)}.${ext}`;
+
+                const nuevoId = this.registrarRecursoEnAlmacenInerte({
+                    nombre,
+                    mimeType,
+                    tamanoOriginal: blob.size,
+                    base64Puro
+                });
+
+                this.idRecursoActivo = nuevoId;
+                this.sincronizarInterfazCompleta();
+                this.mostrarToast(`✅ Texto UTF-8 codificado en <script id="${nuevoId}" type="text/plain">`, 'success');
+                await this.cargarRecursoInerte(nuevoId, mimeType, nombre);
+            }
+
+            /**
+             * Procesa una cadena Base64 pegada por el usuario (con o sin prefijo data:),
+             * la guarda en el Almacén Inerte y la decodifica asíncronamente con fetch().
+             */
+            async procesarBase64Pegado() {
+                let rawInput = document.getElementById('decode-b64-input').value.trim();
+                let mimeType = document.getElementById('decode-mime-select').value;
+                let nombre = document.getElementById('decode-name-input').value.trim() || 'recurso_decodificado';
+
+                if (!rawInput) {
+                    this.mostrarToast('Pega una cadena Base64 para decodificar.', 'warning');
+                    return;
+                }
+
+                // Limpiar comentarios HTML si los hubiera
+                rawInput = rawInput.replace(/<!--[\s\S]*?-->/g, '').trim();
+
+                // Autodetectar MIME type si incluye cabecera data:
+                const matchData = rawInput.match(/^data:([^;]+);base64,([\s\S]+)$/i);
+                let base64Puro = rawInput;
+                if (matchData) {
+                    mimeType = matchData[1].trim();
+                    base64Puro = matchData[2].replace(/\s+/g, '');
+                    document.getElementById('decode-mime-select').value = mimeType;
+                } else {
+                    base64Puro = rawInput.replace(/\s+/g, '');
+                }
+
+                const tamanoEstimado = Math.floor((base64Puro.length * 3) / 4);
+                const ext = mimeType.split('/')[1]?.split('+')[0] || 'bin';
+                if (!nombre.includes('.')) {
+                    nombre = `${nombre}.${ext}`;
+                }
+
+                const nuevoId = this.registrarRecursoEnAlmacenInerte({
+                    nombre,
+                    mimeType,
+                    tamanoOriginal: tamanoEstimado,
+                    base64Puro
+                });
+
+                this.idRecursoActivo = nuevoId;
+                this.sincronizarInterfazCompleta();
+                this.mostrarToast(`✅ Base64 registrado en #${nuevoId} y enviado al decodificador asíncrono`, 'success');
+                await this.cargarRecursoInerte(nuevoId, mimeType, nombre);
+            }
+
+            /**
+             * REGLA 1: Crea e inyecta un bloque <script id="recurso-X" type="text/plain">
+             * al final del <body> dentro de #almacen-inerte-dom.
+             */
+            registrarRecursoEnAlmacenInerte({ nombre, mimeType, tamanoOriginal, base64Puro }) {
+                this.contadorIds++;
+                const id = `recurso-${this.contadorIds}`;
+                const comentarioGuia = `<!-- PEGAR BASE64 DE [${nombre.toUpperCase()}] AQUÍ -->`;
+
+                const almacenContainer = document.getElementById('almacen-inerte-dom');
+                const scriptTag = document.createElement('script');
+                scriptTag.id = id;
+                scriptTag.type = 'text/plain';
+                scriptTag.textContent = `\n${comentarioGuia}\n${base64Puro}\n`;
+                almacenContainer.appendChild(scriptTag);
+
+                this.recursos.set(id, {
+                    id,
+                    nombre,
+                    mimeType,
+                    tamanoOriginal,
+                    comentarioGuia,
+                    fecha: new Date().toLocaleTimeString()
+                });
+
+                return id;
+            }
+
+            /**
+             * =========================================================================
+             * REGLAS 2 y 3: DECODIFICACIÓN ASÍNCRONA (Cero atob) + GESTIÓN RAM (ObjectURL)
+             * =========================================================================
+             * Extrae bajo demanda el .textContent.trim() del <script type="text/plain">,
+             * cede un frame con requestAnimationFrame para mostrar "Cargando recurso...",
+             * convierte a Blob con fetch(`data:${mimeType};base64,${base64}`) -> response.blob(),
+             * revoca siempre urlAnterior con URL.revokeObjectURL(urlAnterior)
+             * y asigna URL.createObjectURL(blob) + img.decoding = 'async'.
+             */
+            async cargarRecursoInerte(idRecurso, mimeType, nombre = '') {
+                const indicadorCarga = document.getElementById('async-loading-indicator');
+                const subtextoCarga = document.getElementById('async-loading-subtext');
+                const stage = document.getElementById('media-stage');
+
+                // 1. Mostrar indicador visual y usar requestAnimationFrame (Regla 2)
+                indicadorCarga.classList.remove('hidden');
+                subtextoCarga.textContent = `Extrayendo #${idRecurso} (${mimeType}) vía requestAnimationFrame...`;
+                await new Promise(r => requestAnimationFrame(r));
+                await new Promise(r => requestAnimationFrame(r)); // Doble frame para garantizar repintado en todos los navegadores
+
+                try {
+                    const nodoScript = document.getElementById(idRecurso);
+                    if (!nodoScript) {
+                        throw new Error(`No existe el bloque <script id="${idRecurso}" type="text/plain">`);
+                    }
+
+                    // Extraer .textContent.trim() y limpiar comentario guía HTML si está presente
+                    const rawText = nodoScript.textContent.trim();
+                    const base64 = this.extraerBase64LimpioDeNodo(nodoScript);
+
+                    if (!base64) {
+                        throw new Error(`El bloque #${idRecurso} está vacío. Pega tu cadena Base64 dentro de la etiqueta.`);
+                    }
+
+                    // 2. Conversión asíncrona prohibiendo atob(): await fetch(...) seguido de await response.blob()
+                    const response = await fetch(`data:${mimeType};base64,${base64}`);
+                    const blob = await response.blob();
+
+                    // 3. Gestión Eficiente de Memoria RAM (Garbage Collection - Regla 3)
+                    if (this.urlAnterior) {
+                        const urlRevocada = this.urlAnterior;
+                        URL.revokeObjectURL(this.urlAnterior);
+                        this.contadorRevocacionesGC++;
+                        document.getElementById('telemetry-revoked-url').textContent = urlRevocada;
+                        document.getElementById('gc-revoke-count').textContent = String(this.contadorRevocacionesGC);
+                        this.registrarLogGC(`[GC RAM] URL.revokeObjectURL("${urlRevocada.slice(0, 38)}...") ejecutado. Memoria liberada.`);
+                    }
+
+                    // Generar nueva URL temporal en memoria RAM
+                    const nuevaUrl = URL.createObjectURL(blob);
+                    this.urlAnterior = nuevaUrl;
+
+                    // Actualizar telemetría RAM en pantalla
+                    document.getElementById('active-blob-url-badge').textContent = nuevaUrl;
+                    document.getElementById('active-blob-url-badge').title = nuevaUrl;
+                    document.getElementById('telemetry-current-url').textContent = nuevaUrl;
+                    document.getElementById('ram-active-bytes').textContent = this.formatearBytes(blob.size);
+                    document.getElementById('stage-current-src').textContent = nuevaUrl;
+                    document.getElementById('player-title').textContent = `${nombre || idRecurso} (${idRecurso})`;
+                    document.getElementById('player-mime-badge').textContent = `${mimeType} · ${this.formatearBytes(blob.size)}`;
+
+                    // Limpiar contenedor e inyectar elemento multimedia dinámico con su ObjectURL
+                    stage.innerHTML = '';
+                    const decodingBadge = document.getElementById('stage-decoding-attr');
+                    decodingBadge.classList.add('hidden');
+
+                    if (mimeType.startsWith('image/')) {
+                        const img = document.createElement('img');
+                        // Regla 3: Añadir propiedad img.decoding = 'async'
+                        img.decoding = 'async';
+                        img.src = nuevaUrl;
+                        img.alt = nombre || idRecurso;
+                        img.className = 'max-h-[320px] max-w-full rounded-xl shadow-2xl border border-slate-700/80 object-contain mx-auto';
+                        stage.appendChild(img);
+                        decodingBadge.classList.remove('hidden');
+                    } else if (mimeType.startsWith('video/')) {
+                        const video = document.createElement('video');
+                        video.controls = true;
+                        video.autoplay = true;
+                        video.preload = 'metadata';
+                        video.src = nuevaUrl;
+                        video.className = 'max-h-[320px] w-full max-w-xl rounded-xl shadow-2xl border border-slate-700/80 bg-black mx-auto';
+                        stage.appendChild(video);
+                    } else if (mimeType.startsWith('audio/')) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'w-full max-w-md space-y-4 p-4 rounded-2xl bg-slate-900/90 border border-slate-800';
+                        wrapper.innerHTML = `
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-2xl">🎵</div>
+                                <div class="text-left overflow-hidden">
+                                    <div class="text-xs font-bold text-white truncate">${this.escaparHTML(nombre || idRecurso)}</div>
+                                    <div class="text-[11px] font-mono text-emerald-400">${this.escaparHTML(mimeType)} · ${this.formatearBytes(blob.size)}</div>
+                                </div>
+                            </div>
+                        `;
+                        const audio = document.createElement('audio');
+                        audio.controls = true;
+                        audio.autoplay = true;
+                        audio.src = nuevaUrl;
+                        audio.className = 'w-full';
+                        wrapper.appendChild(audio);
+                        stage.appendChild(wrapper);
+                    } else if (mimeType.startsWith('text/') || mimeType === 'application/json' || mimeType === 'application/javascript') {
+                        const textoDecodificado = await blob.text();
+                        const pre = document.createElement('pre');
+                        pre.className = 'w-full max-h-[260px] overflow-auto text-left bg-slate-900 p-4 rounded-xl border border-slate-800 font-mono text-xs text-cyan-200 whitespace-pre-wrap';
+                        pre.textContent = textoDecodificado.slice(0, 5000);
+                        stage.appendChild(pre);
+                    } else if (mimeType === 'application/pdf') {
+                        const iframe = document.createElement('iframe');
+                        iframe.src = nuevaUrl;
+                        iframe.className = 'w-full h-[300px] rounded-xl border border-slate-700 bg-white';
+                        stage.appendChild(iframe);
+                    } else {
+                        const box = document.createElement('div');
+                        box.className = 'p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-3 text-center';
+                        box.innerHTML = `
+                            <div class="text-3xl">📦</div>
+                            <div class="text-xs font-bold text-white">${this.escaparHTML(nombre || idRecurso)}</div>
+                            <div class="text-[11px] font-mono text-cyan-300">${this.escaparHTML(mimeType)} (${this.formatearBytes(blob.size)})</div>
+                        `;
+                        const link = document.createElement('a');
+                        link.href = nuevaUrl;
+                        link.download = nombre || `${idRecurso}.bin`;
+                        link.className = 'inline-block px-4 py-2 rounded-lg bg-cyan-500 text-slate-950 font-bold text-xs';
+                        link.textContent = '⬇️ Descargar Blob desde ObjectURL';
+                        box.appendChild(link);
+                        stage.appendChild(box);
+                    }
+
+                    this.registrarLogGC(`[ASYNC FETCH] #${idRecurso} decodificado a Blob (${this.formatearBytes(blob.size)}) -> ${nuevaUrl.slice(0, 38)}...`);
+
+                    // Seleccionar también este recurso en el Estudio de Salida superior
+                    if (this.recursos.has(idRecurso) && this.idRecursoActivo !== idRecurso) {
+                        this.idRecursoActivo = idRecurso;
+                        this.sincronizarInterfazCompleta();
+                    }
+                } catch (error) {
+                    this.mostrarToast(`⚠️ Error en decodificación asíncrona: ${error.message}`, 'error');
+                    this.registrarLogGC(`[ERROR] ${error.message}`);
+                } finally {
+                    indicadorCarga.classList.add('hidden');
+                }
+            }
+
+            /**
+             * Permite al usuario liberar manualmente el ObjectURL activo y verificar cómo el reproductor
+             * suelta inmediatamente la referencia en memoria RAM.
+             */
+            revocarUrlActivaManual() {
+                if (!this.urlAnterior) {
+                    this.mostrarToast('La memoria RAM ya está limpia (No hay ObjectURL activa).', 'info');
+                    return;
+                }
+                const revocada = this.urlAnterior;
+                URL.revokeObjectURL(this.urlAnterior);
+                this.urlAnterior = null;
+                this.contadorRevocacionesGC++;
+
+                // Limpiar reproductor
+                const stage = document.getElementById('media-stage');
+                stage.innerHTML = `
+                    <div class="text-4xl mb-2">🧹</div>
+                    <p class="text-sm text-emerald-300 font-bold">Memoria RAM liberada exitosamente</p>
+                    <p class="text-xs font-mono text-slate-400 mt-1">Se ejecutó URL.revokeObjectURL("${this.escaparHTML(revocada)}")</p>
+                `;
+
+                document.getElementById('active-blob-url-badge').textContent = 'Ninguna (RAM Libre)';
+                document.getElementById('telemetry-current-url').textContent = 'null (Liberado)';
+                document.getElementById('telemetry-revoked-url').textContent = revocada;
+                document.getElementById('ram-active-bytes').textContent = '0 B';
+                document.getElementById('stage-current-src').textContent = 'revocado (0 bytes)';
+                document.getElementById('gc-revoke-count').textContent = String(this.contadorRevocacionesGC);
+
+                this.registrarLogGC(`[GC MANUAL] URL.revokeObjectURL("${revocada.slice(0, 38)}...") ejecutado por el usuario.`);
+                this.mostrarToast('🧹 ObjectURL revocada y memoria RAM liberada inmediatamente.', 'success');
+            }
+
+            /**
+             * Sincroniza la cola de archivos, telemetría, botones del reproductor inerte y las 6 pestañas de código
+             */
+            sincronizarInterfazCompleta() {
+                const recActivo = this.recursos.get(this.idRecursoActivo);
+                if (!recActivo) return;
+
+                const scriptNode = document.getElementById(recActivo.id);
+                const b64Puro = this.extraerBase64LimpioDeNodo(scriptNode);
+                const b64Length = b64Puro.length;
+                const origBytes = recActivo.tamanoOriginal || Math.floor((b64Length * 3) / 4);
+                const aumentoPct = origBytes > 0 ? (((b64Length - origBytes) / origBytes) * 100).toFixed(1) : '0.0';
+
+                // Actualizar tarjetas de metadatos
+                document.getElementById('meta-id-badge').textContent = `#${recActivo.id}`;
+                document.getElementById('output-active-id').textContent = `#${recActivo.id}`;
+                document.getElementById('meta-name').textContent = recActivo.nombre;
+                document.getElementById('meta-name').title = recActivo.nombre;
+                document.getElementById('meta-mime').textContent = recActivo.mimeType;
+                document.getElementById('meta-orig-size').textContent = this.formatearBytes(origBytes);
+                document.getElementById('meta-b64-size').textContent = this.formatearBytes(b64Length);
+                document.getElementById('meta-overhead').textContent = `+${aumentoPct}%`;
+                document.getElementById('meta-char-count').textContent = b64Length.toLocaleString('es-CO');
+                document.getElementById('inert-store-count').textContent = `${this.recursos.size} bloques inertes`;
+
+                this.renderizarColaRecursos();
+                this.renderizarBotonesAlmacenInerte();
+                this.actualizarSelectorInspector();
+                this.actualizarVistaSalida();
+            }
+
+            /**
+             * Renderiza la lista de recursos disponibles en el panel izquierdo
+             */
+            renderizarColaRecursos() {
+                const container = document.getElementById('resource-queue-list');
+                container.innerHTML = '';
+
+                this.recursos.forEach((rec) => {
+                    const activo = rec.id === this.idRecursoActivo;
+                    const item = document.createElement('div');
+                    item.className = `flex items-center justify-between p-2.5 rounded-xl border text-xs cursor-pointer transition ${
+                        activo
+                            ? 'bg-cyan-500/15 border-cyan-500/50 text-white'
+                            : 'bg-slate-900/70 border-slate-800/90 text-slate-300 hover:border-slate-700'
+                    }`;
+                    item.onclick = () => {
+                        this.idRecursoActivo = rec.id;
+                        this.sincronizarInterfazCompleta();
+                    };
+
+                    const icono = this.obtenerIconoMime(rec.mimeType);
+                    item.innerHTML = `
+                        <div class="flex items-center gap-2.5 overflow-hidden">
+                            <span class="text-base">${icono}</span>
+                            <div class="overflow-hidden">
+                                <div class="font-semibold truncate">${this.escaparHTML(rec.nombre)}</div>
+                                <div class="text-[10px] font-mono text-slate-400">${this.escaparHTML(rec.id)} · ${this.escaparHTML(rec.mimeType)}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-950 text-cyan-300 border border-slate-800">
+                                ${this.formatearBytes(rec.tamanoOriginal)}
+                            </span>
+                            <button onclick="event.stopPropagation(); app.cargarRecursoInerte('${rec.id}', '${rec.mimeType}', '${this.escaparJS(rec.nombre)}')" class="p-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300" title="Decodificar y reproducir en visor">
+                                ▶️
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            }
+
+            /**
+             * Renderiza los botones de carga bajo demanda en la Sección 2 (Almacén Inerte)
+             */
+            renderizarBotonesAlmacenInerte() {
+                const container = document.getElementById('inert-trigger-buttons');
+                container.innerHTML = '';
+
+                this.recursos.forEach((rec) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'glass-card text-left p-3.5 rounded-xl flex items-center justify-between gap-3 group transition';
+                    btn.onclick = () => this.cargarRecursoInerte(rec.id, rec.mimeType, rec.nombre);
+
+                    const icono = this.obtenerIconoMime(rec.mimeType);
+                    btn.innerHTML = `
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 group-hover:border-cyan-400 flex items-center justify-center text-xl shrink-0 transition">
+                                ${icono}
+                            </div>
+                            <div class="overflow-hidden">
+                                <div class="text-xs font-bold text-white truncate group-hover:text-cyan-300 transition">
+                                    ${this.escaparHTML(rec.nombre)}
+                                </div>
+                                <div class="text-[11px] font-mono text-emerald-400 truncate">
+                                    ${this.escaparHTML(rec.mimeType)}
+                                </div>
+                                <div class="text-[10px] font-mono text-slate-400">
+                                    &lt;script id="${this.escaparHTML(rec.id)}"&gt;
+                                </div>
+                            </div>
+                        </div>
+                        <span class="text-xs font-mono px-2.5 py-1 rounded-lg bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 group-hover:bg-cyan-500 group-hover:text-slate-950 font-bold transition shrink-0">
+                            Cargar
+                        </span>
+                    `;
+                    container.appendChild(btn);
+                });
+            }
+
+            /**
+             * Cambia entre las 6 pestañas de salida:
+             * 1. raw (Base64 Puro)
+             * 2. datauri (Data URI listo para etiqueta)
+             * 3. htmltag (Etiqueta HTML completa con atributos)
+             * 4. jsvar (Variable / Objeto JS)
+             * 5. jsblob (Código JS Blob Asíncrono + ObjectURL)
+             * 6. inerthtml (Plantilla HTML Optimizada con Almacén Inerte)
+             */
+            seleccionarPestanaSalida(tabId) {
+                this.pestanaSalidaActiva = tabId;
+                document.querySelectorAll('.output-tab-btn').forEach(btn => {
+                    if (btn.getAttribute('data-tab') === tabId) {
+                        btn.classList.add('tab-active');
+                    } else {
+                        btn.classList.remove('tab-active');
+                    }
+                });
+
+                // Mostrar u ocultar barras de opciones específicas
+                document.getElementById('opts-htmltag').classList.toggle('hidden', tabId !== 'htmltag');
+                document.getElementById('opts-inerthtml').classList.toggle('hidden', tabId !== 'inerthtml');
+
+                const descripciones = {
+                    raw: '1. Base64 Puro (Raw): Solo la cadena codificada sin prefijo data:, lista para APIs o bloques <script type="text/plain">.',
+                    datauri: '2. Data URI: Cadena con cabecera data:${mimeType};base64,... lista para pegar directamente.',
+                    htmltag: '3. Etiqueta HTML Completa: Código HTML con su etiqueta multimedia y atributos configurados.',
+                    jsvar: '4. Variable JS / Objeto: Constante JavaScript estructurada con metadatos y carga útil.',
+                    jsblob: '5. Blob Asíncrono JS: Función lista para producción con requestAnimationFrame + fetch() + blob() + URL.revokeObjectURL().',
+                    inerthtml: '6. Plantilla HTML Optimizada (Almacén Inerte): Archivo .html completo cumpliendo las 4 reglas de aislamiento DOM y RAM.'
+                };
+                document.getElementById('tab-desc-text').textContent = descripciones[tabId] || '';
+                document.getElementById('output-mode-pill').textContent = tabId.toUpperCase();
+
+                this.actualizarVistaSalida();
+            }
+
+            /**
+             * Construye la cadena de salida íntegra según la pestaña activa.
+             * Si mostrarTruncado = true y supera 100 KB, trunca solo para la vista del textarea.
+             */
+            generarCodigoSalida(modoTruncadoVista = false) {
+                const rec = this.recursos.get(this.idRecursoActivo);
+                if (!rec) return '';
+
+                const scriptNode = document.getElementById(rec.id);
+                const b64Completo = this.extraerBase64LimpioDeNodo(scriptNode);
+                const esGrande = b64Completo.length > this.UMBRAL_VIRTUALIZACION;
+
+                const b64ParaUso = (modoTruncadoVista && esGrande)
+                    ? `${b64Completo.slice(0, 3500)} ... [⚡ ${ (b64Completo.length - 4500).toLocaleString() } CARACTERES OCULTOS EN VISTA PREVIA — AL COPIAR O DESCARGAR SE ENTREGA EL 100% ÍNTEGRO] ... ${b64Completo.slice(-1000)}`
+                    : b64Completo;
+
+                const mime = rec.mimeType;
+                const nombre = rec.nombre;
+                const varName = this.generarNombreVariableJS(nombre);
+
+                switch (this.pestanaSalidaActiva) {
+                    case 'raw':
+                        return b64ParaUso;
+
+                    case 'datauri':
+                        return `data:${mime};base64,${b64ParaUso}`;
+
+                    case 'htmltag': {
+                        const controls = document.getElementById('attr-controls')?.checked ? ' controls' : '';
+                        const autoplay = document.getElementById('attr-autoplay')?.checked ? ' autoplay' : '';
+                        const loop = document.getElementById('attr-loop')?.checked ? ' loop' : '';
+                        const muted = document.getElementById('attr-muted')?.checked ? ' muted' : '';
+                        const asyncDec = document.getElementById('attr-async-dec')?.checked;
+
+                        const dataUri = `data:${mime};base64,${b64ParaUso}`;
+                        if (mime.startsWith('image/')) {
+                            const decAttr = asyncDec ? ' decoding="async" loading="lazy"' : '';
+                            return `<img src="${dataUri}" alt="${this.escaparHTML(nombre)}"${decAttr} style="max-width: 100%; height: auto; border-radius: 12px;">`;
+                        } else if (mime.startsWith('video/')) {
+                            return `<video${controls}${autoplay}${loop}${muted} preload="metadata" style="width: 100%; max-width: 720px; border-radius: 12px;">\n  <source src="${dataUri}" type="${mime}">\n  Tu navegador no soporta reproducción de video HTML5.\n</video>`;
+                        } else if (mime.startsWith('audio/')) {
+                            return `<audio${controls}${autoplay}${loop}${muted} preload="metadata" style="width: 100%; max-width: 480px;">\n  <source src="${dataUri}" type="${mime}">\n  Tu navegador no soporta reproducción de audio HTML5.\n</audio>`;
+                        } else if (mime === 'application/pdf') {
+                            return `<iframe src="${dataUri}" width="100%" height="600px" style="border: none; border-radius: 12px;" title="${this.escaparHTML(nombre)}"></iframe>`;
+                        } else {
+                            return `<a href="${dataUri}" download="${this.escaparHTML(nombre)}" class="btn-download">Descargar ${this.escaparHTML(nombre)} (${this.formatearBytes(rec.tamanoOriginal)})</a>`;
+                        }
+                    }
+
+                    case 'jsvar':
+                        return `/**\n * Recurso Base64 Generado por B64 STUDIO MAX\n * Archivo: ${nombre} (${mime})\n */\nconst ${varName} = {\n  id: "${rec.id}",\n  nombre: "${this.escaparJS(nombre)}",\n  mimeType: "${mime}",\n  tamanoOriginalBytes: ${rec.tamanoOriginal},\n  dataUri: "data:${mime};base64,${b64ParaUso}",\n  base64Puro: "${b64ParaUso}"\n};\n\nexport default ${varName};`;
+
+                    case 'jsblob':
+                        return `/**\n * Motor de Decodificación Asíncrona a Blob & Gestión RAM (Cero bloqueo Main Thread)\n * Recurso: ${nombre} (${mime})\n */\nlet urlActivaAnterior = null;\nconst BASE64_${varName.toUpperCase()} = "${b64ParaUso}";\n\nasync function inyectarRecursoMultimedia(selectorContenedor) {\n  const contenedor = document.querySelector(selectorContenedor);\n  if (!contenedor) return;\n\n  // 1. Permitir que la interfaz muestre estado de carga sin congelarse\n  contenedor.textContent = "Cargando recurso...";\n  await new Promise(r => requestAnimationFrame(r));\n\n  // 2. Decodificación asíncrona con fetch() -> response.blob() (Sin bloqueo síncrono)\n  const response = await fetch(\`data:${mime};base64,\${BASE64_${varName.toUpperCase()}}\`);\n  const blob = await response.blob();\n\n  // 3. Liberación inmediata de memoria RAM previa (Garbage Collection)\n  if (urlActivaAnterior) {\n    URL.revokeObjectURL(urlActivaAnterior);\n  }\n\n  const nuevaObjectUrl = URL.createObjectURL(blob);\n  urlActivaAnterior = nuevaObjectUrl;\n\n  // 4. Inyección dinámica segura en el DOM\n  contenedor.innerHTML = "";\n  ${this.generarSnippetInyeccionSegunMime(mime, nombre)}\n}`;
+
+                    case 'inerthtml': {
+                        const modoPlantilla = document.querySelector('input[name="inert-template-mode"]:checked')?.value || 'injected';
+                        return this.generarPlantillaHTMLOptimizada(modoPlantilla, modoTruncadoVista);
+                    }
+
+                    default:
+                        return b64ParaUso;
+                }
+            }
+
+            /**
+             * Genera el fragmento de creación de elemento DOM según el MIME type para la Pestaña 5
+             */
+            generarSnippetInyeccionSegunMime(mime, nombre) {
+                if (mime.startsWith('image/')) {
+                    return `const img = document.createElement("img");\n  img.decoding = "async";\n  img.src = nuevaObjectUrl;\n  img.alt = "${this.escaparJS(nombre)}";\n  contenedor.appendChild(img);`;
+                } else if (mime.startsWith('video/')) {
+                    return `const video = document.createElement("video");\n  video.controls = true;\n  video.src = nuevaObjectUrl;\n  contenedor.appendChild(video);`;
+                } else if (mime.startsWith('audio/')) {
+                    return `const audio = document.createElement("audio");\n  audio.controls = true;\n  audio.src = nuevaObjectUrl;\n  contenedor.appendChild(audio);`;
+                }
+                return `const link = document.createElement("a");\n  link.href = nuevaObjectUrl;\n  link.download = "${this.escaparJS(nombre)}";\n  link.textContent = "Descargar ${this.escaparJS(nombre)}";\n  contenedor.appendChild(link);`;
+            }
+
+            /**
+             * =========================================================================
+             * PESTAÑA 6 / REGLA 4: GENERADOR DE PLANTILLA HTML OPTIMIZADA (ALMACÉN INERTE)
+             * =========================================================================
+             * Genera un archivo .html limpio, moderno y responsivo listo para producción
+             * con todos los recursos en bloques <script id="recurso-X" type="text/plain"> al final del <body>,
+             * comentarios claros <!-- PEGAR BASE64 DE [NOMBRE DEL RECURSO] AQUÍ -->,
+             * decodificación asíncrona con fetch() y liberación de RAM con URL.revokeObjectURL().
+             */
+            generarPlantillaHTMLOptimizada(modo = 'injected', truncarVista = false) {
+                let botonesHTML = '';
+                let bloquesScriptInertes = '';
+
+                this.recursos.forEach((rec) => {
+                    const nodo = document.getElementById(rec.id);
+                    const b64Real = this.extraerBase64LimpioDeNodo(nodo);
+                    let contenidoBloque = '';
+
+                    if (modo === 'placeholder') {
+                        contenidoBloque = `\n  <!-- PEGAR BASE64 DE [${rec.nombre.toUpperCase()}] AQUÍ -->\n`;
+                    } else {
+                        const b64Mostrar = (truncarVista && b64Real.length > this.UMBRAL_VIRTUALIZACION)
+                            ? `${b64Real.slice(0, 1500)}...[TRUNCADO EN VISTA PREVIA - COMPLETO AL COPIAR/DESCARGAR]...${b64Real.slice(-500)}`
+                            : b64Real;
+                        contenidoBloque = `\n  <!-- PEGAR BASE64 DE [${rec.nombre.toUpperCase()}] AQUÍ -->\n  ${b64Mostrar}\n`;
+                    }
+
+                    botonesHTML += `      <button class="resource-btn" onclick="cargarRecursoInerte('${rec.id}', '${rec.mimeType}', '${this.escaparJS(rec.nombre)}')">\n        <span>Cargar ${this.escaparHTML(rec.nombre)}</span>\n        <small>${rec.mimeType}</small>\n      </button>\n`;
+
+                    // Evitar que la secuencia literal de cierre de script rompa el parser del archivo padre
+                    const closeScriptTag = '</scr' + 'ipt>';
+                    bloquesScriptInertes += `  <script id="${rec.id}" type="text/plain">${contenidoBloque}  ${closeScriptTag}\n\n`;
+                });
+
+                const closeScript = '</scr' + 'ipt>';
+                return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visor Multimedia Optimizado — Almacén Inerte & Async Fetch</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --panel: #111827;
+      --border: #1f2937;
+      --accent: #06b6d4;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 70%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .app-shell {
+      width: 100%;
+      max-width: 900px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+    }
+    h1 { font-size: 1.4rem; margin-bottom: 0.4rem; color: #fff; }
+    p.subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .resource-btn {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .resource-btn:hover {
+      border-color: var(--accent);
+      background: rgba(6, 182, 212, 0.12);
+      transform: translateY(-1px);
+    }
+    .resource-btn small { color: var(--accent); font-family: monospace; font-size: 0.75rem; }
+    .viewer-box {
+      background: #030712;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .viewer-box img, .viewer-box video {
+      max-width: 100%;
+      max-height: 440px;
+      border-radius: 10px;
+    }
+    .viewer-box audio { width: 100%; max-width: 480px; }
+    .loading-badge {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.95rem;
+      animation: pulse 1.2s infinite;
+    }
+    .ram-bar {
+      margin-top: 1rem;
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  </style>
+</head>
+<body>
+
+  <main class="app-shell">
+    <h1>Reproductor Multimedia — Arquitectura de Almacén Inerte</h1>
+    <p class="subtitle">
+      Aislamiento del DOM con &lt;script type="text/plain"&gt;, decodificación asíncrona vía fetch() y liberación automática de RAM con URL.revokeObjectURL().
+    </p>
+
+    <!-- Botones configurados con sus MIME types (video/mp4, audio/webm, image/webp, etc.) -->
+    <div class="btn-grid">
+${botonesHTML}    </div>
+
+    <!-- Contenedor limpio (Cero Base64 en atributos src o data-*) -->
+    <div id="visor-multimedia" class="viewer-box">
+      <span style="color: #6b7280; font-size: 0.9rem;">Selecciona un recurso arriba para decodificarlo bajo demanda</span>
+    </div>
+
+    <div class="ram-bar">
+      <span id="estado-ram">URL Activa en RAM: Ninguna</span>
+      <span id="estado-gc">Última URL Revocada: Ninguna</span>
+    </div>
+  </main>
+
+  <script>
+    // Referencia activa en memoria RAM para Garbage Collection (Regla 3)
+    let urlAnterior = null;
+
+    /**
+     * Decodificación Asíncrona (Cero bloqueo del Main Thread - Regla 2)
+     */
+    async function cargarRecursoInerte(idRecurso, mimeType, nombreRecurso) {
+      const visor = document.getElementById('visor-multimedia');
+      const estadoRam = document.getElementById('estado-ram');
+      const estadoGc = document.getElementById('estado-gc');
+
+      // Mostrar indicador visual y esperar al siguiente frame antes de procesar
+      visor.innerHTML = '<div class="loading-badge">Cargando recurso...</div>';
+      await new Promise(r => requestAnimationFrame(r));
+
+      try {
+        const bloqueInerte = document.getElementById(idRecurso);
+        if (!bloqueInerte) throw new Error('Bloque inerte no encontrado: ' + idRecurso);
+
+        // Extraer .textContent.trim() y limpiar comentarios HTML <!-- ... -->
+        const base64 = bloqueInerte.textContent
+          .replace(/<!--[\\s\\S]*?-->/g, '')
+          .replace(/\\s+/g, '')
+          .trim();
+
+        if (!base64) {
+          visor.innerHTML = '<p style="color:#f87171;">Pega tu cadena Base64 dentro de &lt;script id="' + idRecurso + '" type="text/plain"&gt;</p>';
+          return;
+        }
+
+        // Conversión asíncrona a Blob usando fetch() + response.blob()
+        const response = await fetch(\`data:\${mimeType};base64,\${base64}\`);
+        const blob = await response.blob();
+
+        // Liberar memoria RAM del recurso anterior inmediatamente
+        if (urlAnterior) {
+          URL.revokeObjectURL(urlAnterior);
+          estadoGc.textContent = 'Última URL Revocada: ' + urlAnterior;
+        }
+
+        // Generar nueva ObjectURL temporal en RAM
+        const nuevaUrl = URL.createObjectURL(blob);
+        urlAnterior = nuevaUrl;
+        estadoRam.textContent = 'URL Activa en RAM: ' + nuevaUrl;
+
+        visor.innerHTML = '';
+
+        if (mimeType.startsWith('image/')) {
+          const img = document.createElement('img');
+          img.decoding = 'async';
+          img.src = nuevaUrl;
+          img.alt = nombreRecurso;
+          visor.appendChild(img);
+        } else if (mimeType.startsWith('video/')) {
+          const video = document.createElement('video');
+          video.controls = true;
+          video.autoplay = true;
+          video.src = nuevaUrl;
+          visor.appendChild(video);
+        } else if (mimeType.startsWith('audio/')) {
+          const audio = document.createElement('audio');
+          audio.controls = true;
+          audio.autoplay = true;
+          audio.src = nuevaUrl;
+          visor.appendChild(audio);
+        } else {
+          const enlace = document.createElement('a');
+          enlace.href = nuevaUrl;
+          enlace.download = nombreRecurso || idRecurso;
+          enlace.style.color = '#06b6d4';
+          enlace.textContent = 'Descargar ' + (nombreRecurso || idRecurso);
+          visor.appendChild(enlace);
+        }
+      } catch (err) {
+        visor.innerHTML = '<p style="color:#f87171;">Error al decodificar recurso: ' + err.message + '</p>';
+      }
+    }
+  ${closeScript}
+
+  <!-- =======================================================================
+       ALMACÉN INERTE DE RECURSOS BASE64 AL FINAL DEL <BODY> (REGLA 1 y 4)
+       El navegador ignora estas etiquetas durante el renderizado inicial.
+       ======================================================================= -->
+${bloquesScriptInertes}</body>
+</html>`;
+            }
+
+            /**
+             * Actualiza el textarea de salida con protección de virtualización
+             */
+            actualizarVistaSalida() {
+                const rec = this.recursos.get(this.idRecursoActivo);
+                if (!rec) return;
+
+                const scriptNode = document.getElementById(rec.id);
+                const b64Completo = this.extraerBase64LimpioDeNodo(scriptNode);
+                const bannerVirtual = document.getElementById('virtualization-banner');
+
+                if (b64Completo.length > this.UMBRAL_VIRTUALIZACION) {
+                    bannerVirtual.classList.remove('hidden');
+                } else {
+                    bannerVirtual.classList.add('hidden');
+                }
+
+                const codigoVista = this.generarCodigoSalida(true);
+                document.getElementById('code-output-textarea').value = codigoVista;
+            }
+
+            /**
+             * Copia el 100% de la salida íntegra (sin truncamiento) al portapapeles
+             */
+            async copiarSalidaActual() {
+                const codigoIntegro = this.generarCodigoSalida(false);
+                if (!codigoIntegro) {
+                    this.mostrarToast('No hay contenido para copiar.', 'warning');
+                    return;
+                }
+
+                try {
+                    const tempArea = document.createElement('textarea');
+                    tempArea.value = codigoIntegro;
+                    tempArea.style.position = 'fixed';
+                    tempArea.style.opacity = '0';
+                    document.body.appendChild(tempArea);
+                    tempArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempArea);
+                    this.mostrarToast(`📋 Salida "${this.pestanaSalidaActiva.toUpperCase()}" copiada íntegra (${this.formatearBytes(codigoIntegro.length)})`, 'success');
+                } catch (err) {
+                    this.mostrarToast('Error al copiar al portapapeles.', 'error');
+                }
+            }
+
+            /**
+             * Descarga la salida de la pestaña activa con la extensión apropiada (.txt, .html, .js)
+             */
+            descargarSalidaActual() {
+                const codigoIntegro = this.generarCodigoSalida(false);
+                const rec = this.recursos.get(this.idRecursoActivo);
+                if (!codigoIntegro || !rec) return;
+
+                const extPorPestana = {
+                    raw: 'b64.txt',
+                    datauri: 'datauri.txt',
+                    htmltag: 'etiqueta.html',
+                    jsvar: 'recurso.js',
+                    jsblob: 'loader_async_blob.js',
+                    inerthtml: 'visor_almacen_inerte.html'
+                };
+                const sufijo = extPorPestana[this.pestanaSalidaActiva] || 'txt';
+                const baseName = rec.nombre.replace(/\.[^/.]+$/, '');
+                const nombreArchivo = `${baseName}_${sufijo}`;
+
+                this.descargarTextoComoArchivo(codigoIntegro, nombreArchivo, sufijo.endsWith('.html') ? 'text/html' : 'text/plain');
+                this.mostrarToast(`💾 Archivo "${nombreArchivo}" descargado.`, 'success');
+            }
+
+            /**
+             * Descarga directamente la plantilla HTML Optimizada con Almacén Inerte
+             */
+            descargarPlantillaInerteHTML() {
+                const modo = document.querySelector('input[name="inert-template-mode"]:checked')?.value || 'injected';
+                const htmlCompleto = this.generarPlantillaHTMLOptimizada(modo, false);
+                this.descargarTextoComoArchivo(htmlCompleto, 'entregable_almacen_inerte_b64.html', 'text/html');
+                this.mostrarToast('🚀 Entregable .HTML con Almacén Inerte descargado con éxito.', 'success');
+            }
+
+            /**
+             * Descarga el archivo binario original reconstruido asíncronamente desde el Almacén Inerte
+             */
+            async descargarBinarioDesdeAlmacen() {
+                const rec = this.recursos.get(this.idRecursoActivo);
+                if (!rec) return;
+
+                const scriptNode = document.getElementById(rec.id);
+                const base64 = this.extraerBase64LimpioDeNodo(scriptNode);
+                if (!base64) {
+                    this.mostrarToast('El bloque inerte está vacío.', 'warning');
+                    return;
+                }
+
+                await new Promise(r => requestAnimationFrame(r));
+                const response = await fetch(`data:${rec.mimeType};base64,${base64}`);
+                const blob = await response.blob();
+                const tempUrl = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = tempUrl;
+                a.download = rec.nombre;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                // Revocar después de iniciar descarga para no dejar fugas en RAM
+                setTimeout(() => URL.revokeObjectURL(tempUrl), 1500);
+                this.mostrarToast(`📦 Descargando binario original: ${rec.nombre}`, 'success');
+            }
+
+            /**
+             * Reproduce el recurso actualmente seleccionado en el visor inferior
+             */
+            async reproducirRecursoActivoEnVisor() {
+                const rec = this.recursos.get(this.idRecursoActivo);
+                if (!rec) return;
+                document.getElementById('inert-engine-section').scrollIntoView({ behavior: 'smooth' });
+                await this.cargarRecursoInerte(rec.id, rec.mimeType, rec.nombre);
+            }
+
+            /**
+             * Funciones del Inspector en Vivo de etiquetas <script id="recurso-X" type="text/plain">
+             */
+            toggleEditorInerte() {
+                const drawer = document.getElementById('live-inert-editor-drawer');
+                drawer.classList.toggle('hidden');
+                if (!drawer.classList.contains('hidden')) {
+                    this.actualizarSelectorInspector();
+                    this.cargarBloqueEnInspector();
+                }
+            }
+
+            actualizarSelectorInspector() {
+                const select = document.getElementById('inspector-block-select');
+                if (!select) return;
+                const valorPrevio = select.value || this.idRecursoActivo;
+                select.innerHTML = '';
+
+                this.recursos.forEach((rec) => {
+                    const opt = document.createElement('option');
+                    opt.value = rec.id;
+                    opt.textContent = `<script id="${rec.id}" type="text/plain"> — ${rec.nombre} (${rec.mimeType})`;
+                    select.appendChild(opt);
+                });
+
+                if (this.recursos.has(valorPrevio)) {
+                    select.value = valorPrevio;
+                }
+            }
+
+            cargarBloqueEnInspector() {
+                const id = document.getElementById('inspector-block-select').value;
+                const rec = this.recursos.get(id);
+                const nodo = document.getElementById(id);
+                if (!rec || !nodo) return;
+
+                document.getElementById('inspector-mime-input').value = rec.mimeType;
+                document.getElementById('inspector-name-input').value = rec.nombre;
+                document.getElementById('inspector-tag-label').textContent = `<script id="${id}" type="text/plain">`;
+                document.getElementById('inspector-b64-textarea').value = nodo.textContent.trim();
+            }
+
+            async guardarCambiosInspectorInerte() {
+                const id = document.getElementById('inspector-block-select').value;
+                const nuevoMime = document.getElementById('inspector-mime-input').value.trim() || 'application/octet-stream';
+                const nuevoNombre = document.getElementById('inspector-name-input').value.trim() || id;
+                const nuevoContenido = document.getElementById('inspector-b64-textarea').value;
+
+                const nodo = document.getElementById(id);
+                if (!nodo) return;
+
+                nodo.textContent = `\n${nuevoContenido.trim()}\n`;
+                const b64Limpio = this.extraerBase64LimpioDeNodo(nodo);
+
+                this.recursos.set(id, {
+                    id,
+                    nombre: nuevoNombre,
+                    mimeType: nuevoMime,
+                    tamanoOriginal: Math.floor((b64Limpio.length * 3) / 4),
+                    comentarioGuia: `<!-- PEGAR BASE64 DE [${nuevoNombre.toUpperCase()}] AQUÍ -->`,
+                    fecha: new Date().toLocaleTimeString()
+                });
+
+                this.idRecursoActivo = id;
+                this.sincronizarInterfazCompleta();
+                this.mostrarToast(`✅ Bloque <script id="${id}" type="text/plain"> actualizado en el DOM`, 'success');
+                await this.cargarRecursoInerte(id, nuevoMime, nuevoNombre);
+            }
+
+            crearNuevoBloqueInerteManual() {
+                const nuevoId = this.registrarRecursoEnAlmacenInerte({
+                    nombre: `Nuevo_Recurso_${this.contadorIds + 1}.webp`,
+                    mimeType: 'image/webp',
+                    tamanoOriginal: 0,
+                    base64Puro: ''
+                });
+                this.idRecursoActivo = nuevoId;
+                this.sincronizarInterfazCompleta();
+                document.getElementById('inspector-block-select').value = nuevoId;
+                this.cargarBloqueEnInspector();
+                this.mostrarToast(`➕ Creado <script id="${nuevoId}" type="text/plain"> al final del <body>. Pega tu Base64 ahí.`, 'info');
+            }
+
+            limpiarRecursosUsuario() {
+                // Eliminar bloques creados después de los 4 iniciales
+                this.recursos.forEach((rec, key) => {
+                    if (!['recurso-1', 'recurso-2', 'recurso-3', 'recurso-4'].includes(key)) {
+                        const node = document.getElementById(key);
+                        if (node) node.remove();
+                        this.recursos.delete(key);
+                    }
+                });
+                this.idRecursoActivo = 'recurso-1';
+                this.sincronizarInterfazCompleta();
+                this.mostrarToast('🔄 Cola restaurada a los 4 bloques demostrativos iniciales.', 'info');
+            }
+
+            /**
+             * Utilidades auxiliares de formato, logs y seguridad
+             */
+            descargarTextoComoArchivo(contenido, nombreArchivo, mimeType = 'text/plain') {
+                const blob = new Blob([contenido], { type: `${mimeType};charset=utf-8` });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = nombreArchivo;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            }
+
+            registrarLogGC(mensaje) {
+                const logBox = document.getElementById('gc-audit-log');
+                if (!logBox) return;
+                const linea = document.createElement('div');
+                const hora = new Date().toLocaleTimeString();
+                if (mensaje.includes('[GC')) {
+                    linea.className = 'text-rose-300';
+                } else if (mensaje.includes('[ASYNC')) {
+                    linea.className = 'text-emerald-300';
+                } else {
+                    linea.className = 'text-cyan-300';
+                }
+                linea.textContent = `[${hora}] ${mensaje}`;
+                logBox.prepend(linea);
+            }
+
+            limpiarConsolaGC() {
+                const logBox = document.getElementById('gc-audit-log');
+                if (logBox) logBox.innerHTML = '';
+            }
+
+            mostrarToast(mensaje, tipo = 'info') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                const estilos = {
+                    success: 'bg-slate-900/95 border-emerald-500/60 text-emerald-200 shadow-emerald-500/10',
+                    error: 'bg-slate-900/95 border-rose-500/60 text-rose-200 shadow-rose-500/10',
+                    warning: 'bg-slate-900/95 border-amber-500/60 text-amber-200 shadow-amber-500/10',
+                    info: 'bg-slate-900/95 border-cyan-500/60 text-cyan-200 shadow-cyan-500/10'
+                };
+                toast.className = `pointer-events-auto border px-4 py-3 rounded-xl shadow-2xl backdrop-blur-md text-xs font-semibold flex items-center justify-between gap-3 transition-all duration-300 ${estilos[tipo] || estilos.info}`;
+                toast.innerHTML = `<span>${this.escaparHTML(mensaje)}</span>`;
+                container.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(20px)';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3600);
+            }
+
+            formatearBytes(bytes) {
+                if (!bytes || bytes <= 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            obtenerIconoMime(mime = '') {
+                if (mime.startsWith('video/')) return '🎬';
+                if (mime.startsWith('audio/')) return '🎵';
+                if (mime.startsWith('image/')) return '🖼️';
+                if (mime === 'application/pdf') return '📕';
+                if (mime.includes('json') || mime.startsWith('text/')) return '📄';
+                return '📦';
+            }
+
+            inferirMimePorExtension(filename = '') {
+                const ext = filename.split('.').pop().toLowerCase();
+                const map = {
+                    mp4: 'video/mp4', webm: 'video/webm', ogg: 'audio/ogg',
+                    mp3: 'audio/mpeg', wav: 'audio/wav', m4a: 'audio/mp4',
+                    webp: 'image/webp', png: 'image/png', jpg: 'image/jpeg',
+                    jpeg: 'image/jpeg', gif: 'image/gif', svg: 'image/svg+xml',
+                    pdf: 'application/pdf', json: 'application/json', txt: 'text/plain',
+                    html: 'text/html', css: 'text/css', js: 'application/javascript'
+                };
+                return map[ext] || 'application/octet-stream';
+            }
+
+            generarNombreVariableJS(nombreArchivo = 'recurso') {
+                const limpio = nombreArchivo
+                    .replace(/\.[^/.]+$/, '')
+                    .replace(/[^a-zA-Z0-9_]/g, '_')
+                    .replace(/^([0-9])/, '_$1');
+                return limpio || 'recursoBase64';
+            }
+
+            escaparHTML(str = '') {
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            escaparJS(str = '') {
+                return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+            }
+        }
+
+        // Inicializar la SuperApp cuando el DOM esté listo
+        let app;
+        window.addEventListener('DOMContentLoaded', () => {
+            app = new B64StudioMax();
+        });
+    </script>
+
+    <!-- =========================================================================
+         REGLA 1 Y 4: ALMACÉN INERTE DE RECURSOS BASE64 AL FINAL DEL <BODY>
+         El motor de renderizado del navegador ignora el contenido de estas etiquetas
+         <script type="text/plain"> durante la carga inicial (Cero bloqueo de DOM).
+         Puedes pegar tus propias cadenas Base64 directamente debajo de cada comentario.
+         ========================================================================= -->
+    <div id="almacen-inerte-dom" class="hidden" aria-hidden="true">
+
+        <!-- BLOQUE INERTE 1: IMAGEN DEMO (image/svg+xml / image/webp) -->
+        <script id="recurso-1" type="text/plain">
+            <!-- PEGAR BASE64 DE [IMAGEN WEBP / SVG / PNG] AQUÍ -->
+            PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDUwIiB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzA3MGIxNCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzBmMTcyYSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxZTI5M2IiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImFjY2VudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDZiNmQ0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMTBiOTgxIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzYzNjZmMSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI0NTAi rxPSIyNCIgZmlsbD0idXJsKCNiZykiLz4KICA8Y2lyY2xlIGN4PSI2ODAiIGN5PSI5MCIgcj0iMTQwIiBmaWxsPSIjMDZiNmQ0IiBvcGFjaXR5PSIwLjA4Ii8+CiAgPGNpcmNsZSBjeD0iMTIwIiBjeT0iMzYwIiByPSIxNjAiIGZpbGw9IiMxMGI5ODEiIG9wYWNpdHk9IjAuMDgiLz4KICA8cmVjdCB4PSI1MCIgeT0iNTAiIHdpZHRoPSI3MDAiIGhlaWdodD0iMzUwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNhY2NlbnQpIiBzdHJva2Utd2lkdGg9IjIiIG9wYWNpdHk9IjAuNiIvPgogIDx0ZXh0IHg9IjQwMCIgeT0iMTYwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CNjQgU1RVRElPIE1BWCBc4oCUIERPTSBBSVNMQURPPC90ZXh0PgogIDx0ZXh0IHg9IjQwMCIgeT0iMjE1IiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjIwIiBmaWxsPSIjMDZiNmQ0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj48c2NyaXB0IHR5cGU9InRleHQvcGxhaW4iPiArIGZldGNoKCkgKyBVUkwucmV2b2tlT2JqZWN0VVJMKCk8L3RleHQ+CiAgPHRleHQgeD0iNDAwIiB5PSIyNzUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5NGEzYjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkRlY29kaWZpY2FjacOzbiBBc8OtbmNyb25hIHNpbiBhdG9iKCkgfCBpbWcuZGVjb2RpbmcgPSAnYXN5bmMnPC90ZXh0PgogIDx0ZXh0IHg9IjQwMCIgeT0iMzM1IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iboldIiBmaWxsPSIjMTBiOTgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbmdlbmnDrWEgZGUgU29mdHdhcmUgXOKAlCBDb211bmlkYWQgVGVjbm9FZHVjYVRpY3M8L3RleHQ+Cjwvc3ZnPg==
+        </script>
+
+        <!-- BLOQUE INERTE 2: AUDIO DEMO (audio/wav o audio/webm) - Inicializado con onda armónica al cargar -->
+        <script id="recurso-2" type="text/plain">
+            <!-- PEGAR BASE64 DE [AUDIO WAV / WEBM / MP3] AQUÍ -->
+        </script>
+
+        <!-- BLOQUE INERTE 3: VIDEO MP4 / WEBM (Listo para recibir tu cadena Base64 de video o usar el cargador superior) -->
+        <script id="recurso-3" type="text/plain">
+            <!-- PEGAR BASE64 DE [VIDEO MP4 / WEBM] AQUÍ -->
+            UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=
+        </script>
+
+        <!-- BLOQUE INERTE 4: DOCUMENTO JSON DE ARQUITECTURA (application/json) -->
+        <script id="recurso-4" type="text/plain">
+            <!-- PEGAR BASE64 DE [DOCUMENTO JSON / TEXTO / PDF] AQUÍ -->
+            ewogICJhcHBsaWNhdGlvbiI6ICJCNjQgU1RVRElPIE1BWCIsCiAgImF1dGhvciI6ICJSdWJlbiBTaWVycmEgQy4gKEluZy4gZGUgU2lzdGVtYXMpIC0gVGVjbm9FZHVjYVRpY3MiLAogICJhcmNoaXRlY3R1cmUiOiB7CiAgICAiZG9tSXNvbGF0aW9uIjogIjxzY3JpcHQgaWQ9JnF1b3Q7cmVjdXJzby1YJnF1b3Q7IHR5cGU9JnF1b3Q7dGV4dC9wbGFpbiZxdW90Oz4gYWwgZmluYWwgZGVsIDxib2R5PiIsCiAgICAiYXN5bmNEZWNvZGluZyI6ICJyZXF1ZXN0QW5pbWF0aW9uRnJhbWUgKyBhd2FpdCBmZXRjaChkYXRhVVJJKSArIGF3YWl0IHJlc3BvbnNlLmJsb2IoKSIsCiAgICAicmFtR2FyYmFnZUNvbGxlY3Rpb24iOiAiVVJMLmNyZWF0ZU9iamVjdFVSTChibG9iKSArIFVSTC5yZXZva2VPYmplY3RVUkwodXJsQW50ZXJpb3IpIiwKICAgICJ6ZXJvQXRvYiI6IHRydWUKICB9Cn0=
+        </script>
+
+    </div>
+
+</body>
+</html>
