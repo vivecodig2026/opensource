@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-+MZ+61o+QmQr3uxypMGuAQb4dTzsSTNB7k/Jdc7yPdw=' 'sha256-t5NMg1B6854Hmq+7SPH6lheP8QJ3Bkg9+ATRtdyhZy8='; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-AwoLOMKiD65QpBflnWQsPJxb9JJZyXfL3nN7DRT7HIs=' 'sha256-aE8ABUaZtBkOnuSH7f6kHiGc2hGY+I5J2Aqesn1pDOY='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08786d">
@@ -21,7 +21,22 @@
 @media(max-width:480px){.app-grid{grid-template-columns:1fr}.card-visual{height:108px}.card-buttons{grid-template-columns:1fr auto}.card-bottom{flex-direction:row;align-items:center;gap:8px}.card-content{padding:20px}.card-topline{flex-wrap:nowrap}.custom-card{min-height:255px}.hero h1{font-size:43px}.file-stack{padding-left:0}.file-tile:nth-child(2){margin-left:10px}.file-tile .file-ext{font-size:10px}.hero-actions .btn{flex:auto}.hero-proof span:last-child{display:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 @media print{.topbar,.hero-actions,.catalog-tools,.filters,.card-buttons,.card-bottom,.service-options .btn,.support-action,.footer-links,.metrics-line button,.toast,dialog{display:none!important}.hero{padding:15px 0}.app-grid{grid-template-columns:repeat(2,1fr)}.app-card,.model-strip{break-inside:avoid}.section{padding-top:25px}.shell{width:100%}.workbench{display:none}.hero-grid{display:block}.footer{margin-top:25px}.services-wrap{color:black;background:white}.services-wrap p{color:#333}}
-.payment-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}.payment-fields label,.payment-label{display:block;font-weight:650}.payment-fields select,.payment-label select{display:block;width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);margin-top:7px}.payment-consent{display:flex;align-items:flex-start;gap:10px;margin:18px 0;font-size:14px}.payment-consent input{width:20px;height:20px;flex-shrink:0;accent-color:var(--green)}.payment-result{padding:18px;background:var(--mint);border-radius:12px;margin:20px 0}.payment-result h3{font-size:20px}.payment-result p{margin:10px 0}#supportDialog .form-note{margin-top:14px}#supportDialog details{margin-top:20px}#supportDialog details p{margin:12px 0}#supportDialog details a{text-decoration:underline}#supportDialog [hidden]{display:none!important}@media(max-width:600px){.payment-fields{grid-template-columns:1fr}} </style>
+.payment-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}.payment-fields label,.payment-label{display:block;font-weight:650}.payment-fields select,.payment-label select{display:block;width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);margin-top:7px}.payment-consent{display:flex;align-items:flex-start;gap:10px;margin:18px 0;font-size:14px}.payment-consent input{width:20px;height:20px;flex-shrink:0;accent-color:var(--green)}.payment-result{padding:18px;background:var(--mint);border-radius:12px;margin:20px 0}.payment-result h3{font-size:20px}.payment-result p{margin:10px 0}#supportDialog .form-note{margin-top:14px}#supportDialog details{margin-top:20px}#supportDialog details p{margin:12px 0}#supportDialog details a{text-decoration:underline}#supportDialog [hidden]{display:none!important}@media(max-width:600px){.payment-fields{grid-template-columns:1fr}} .preview-button{display:block;width:100%;border:0;padding:0;cursor:zoom-in;position:relative;overflow:hidden;aspect-ratio:1363/936;height:auto;min-height:0;background:#eef0ed}.preview-button img{display:block;width:100%;height:100%;object-fit:contain}.preview-label{position:absolute;right:8px;bottom:8px;background:#fff;color:#203b30;border:1px solid #dce4dd;border-radius:20px;padding:5px 9px;font-size:11px;box-shadow:0 2px 9px #0002}.preview-button:focus-visible{outline:3px solid var(--accent,#26755b);outline-offset:-3px}.detail-preview{margin:0 0 20px}.detail-preview img{display:block;width:100%;height:auto;border:1px solid #dce4dd;border-radius:10px}.detail-preview figcaption{font-size:12px;color:#617168;margin-top:7px}
+:root{--ink:#0f172a;--muted:#52647b;--green:#0f766e;--green-dark:#115e59;--mint:#dff5ef;--paper:#f8fafc;--surface:#fff;--line:#dbe4ec}
+.app-card{justify-content:space-between}.card-title{min-height:2.28em}.app-description{min-height:4.95em}.card-visual{flex-shrink:0}.card-meta{margin-top:auto}.download-status:not(:empty){min-height:3.2em}
+.model-strip{background:transparent;border:0;overflow:visible;gap:16px;box-shadow:none}.model-item{background:var(--surface);border:1px solid var(--line)!important;border-radius:16px;box-shadow:0 7px 24px #0f172a06}
+.support-wrap{background:var(--mint);border-color:#addbd2}.support-wrap .eyebrow{color:var(--green)}.support-wrap p,.support-action small{color:var(--muted)}.support-action .btn{background:var(--green);color:#fff}.support-action .btn:hover{background:var(--green-dark)}
+.theme-toggle{font-size:21px;line-height:1}.preview-button img{transition:transform .22s ease}.preview-button:hover img{transform:scale(1.035)}.preview-button:hover .preview-label{background:var(--green);color:#fff}.preview-button:focus-visible{outline-color:var(--green)}#detailDialog{width:860px}
+html[data-theme=dark]{color-scheme:dark;--ink:#e5edf7;--muted:#aebed0;--green:#5eead4;--green-dark:#99f6e4;--mint:#153b3b;--paper:#0b1220;--surface:#142032;--line:#334155;--white:#142032;--amber:#393420;--amber-ink:#f5d995;--shadow:0 18px 50px #0005}
+html[data-theme=dark] .topbar{background:#0f1929f7}html[data-theme=dark] :is(.app-card,.file-tile,.count-pill,.footer,dialog,.dialog-head,.icon-btn,.btn.secondary,.step-no,.nav-links){background:var(--surface);border-color:var(--line);color:var(--ink)}
+html[data-theme=dark] :is(input[type=search],select,.dialog-content input:not([type=checkbox]),.dialog-content textarea,.dialog-content select,.payment-fields select,.payment-label select){background:var(--paper);color:var(--ink);border-color:var(--line)}
+html[data-theme=dark] :is(input,textarea)::placeholder{color:#9dadc0}html[data-theme=dark] .btn.primary,html[data-theme=dark] .support-action .btn,html[data-theme=dark] .brand-icon{color:#092d2b}html[data-theme=dark] .btn.soft,html[data-theme=dark] .state-badge{background:#164e45;color:#b8f8e7}html[data-theme=dark] .state-badge.online{background:var(--amber);color:var(--amber-ink)}html[data-theme=dark] .state-badge.unavailable{background:#492c30;color:#ffb9b0}
+html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#122e31;border-color:#335f5e}html[data-theme=dark] .bench-caption,html[data-theme=dark] .bench-footer{color:#b2d9d4}html[data-theme=dark] .card-meta{border-color:var(--line)}html[data-theme=dark] .support-wrap{border-color:#335f5e}html[data-theme=dark] .services-wrap{background:#13263f;border:1px solid #334b65}html[data-theme=dark] .services-wrap h2{color:#fff}html[data-theme=dark] .chip[aria-pressed=true]{background:var(--green);border-color:var(--green);color:#092d2b}html[data-theme=dark] .toast{background:#dff5ef;color:#10233f}html[data-theme=dark] .detail-preview figcaption{color:var(--muted)}html[data-theme=dark] .feedback{color:#ffb9b0}html[data-theme=dark] .btn.ghost:hover{background:#24364a}
+@media(max-width:720px){.model-strip{gap:10px}.model-item{padding:17px}.nav-actions .theme-toggle{display:inline-flex}.card-title,.app-description{min-height:0}}
+@media(prefers-reduced-motion:reduce){.preview-button img{transition:none}.preview-button:hover img{transform:none}}
+
+.card-visual:not(.preview-button){height:auto;aspect-ratio:1363/936;flex-shrink:0}
+</style>
 </head>
 <body>
 <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden"><defs>
@@ -52,7 +67,7 @@
 <header class="topbar"><div class="shell nav">
 <a class="brand" href="#inicio" aria-label="VibeCoding Lab, inicio"><span class="brand-icon" aria-hidden="true">‹›</span><span><strong>VibeCoding Lab</strong><small>Por Rubén Sierra</small></span></a>
 <nav class="nav-links" id="mainNav" aria-label="Navegación principal"><a href="#catalogo">Explorar apps</a><a href="#como-funciona">Cómo funciona</a><a href="#a-medida">A tu medida</a><a href="#apoyar">Apoyar</a></nav>
-<div class="nav-actions"><button class="btn secondary" data-request="new">Tengo una idea <span data-icon="arrow"></span></button><a class="icon-btn" href="https://github.com/vivecodig2026/opensource" target="_blank" rel="noopener noreferrer" aria-label="Ver el código en GitHub" title="Código en GitHub"><span data-icon="code"></span></a><button class="icon-btn mobile-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menú"><span data-icon="menu"></span></button></div>
+<div class="nav-actions"><button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Activar tema oscuro" aria-pressed="false" title="Cambiar tema">☾</button><button class="btn secondary" data-request="new">Tengo una idea <span data-icon="arrow"></span></button><a class="icon-btn" href="https://github.com/vivecodig2026/opensource" target="_blank" rel="noopener noreferrer" aria-label="Ver el código en GitHub" title="Código en GitHub"><span data-icon="code"></span></a><button class="icon-btn mobile-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menú"><span data-icon="menu"></span></button></div>
 </div></header>
 <main id="inicio" class="shell">
 <section class="hero" aria-labelledby="heroTitle"><div class="hero-grid">
@@ -64,7 +79,7 @@
 </div><div class="bench-footer"><span data-icon="file"></span> Elige una herramienta y hazla parte de tu día.</div></div>
 </div></section>
 <div class="model-strip" aria-label="Cómo se sostiene el proyecto"><div class="model-item"><span data-icon="download"></span><div><strong>Las apps son gratuitas</strong><small>Úsalas sin pagar una suscripción.</small></div></div><div class="model-item"><span data-icon="settings"></span><div><strong>El trabajo a medida se cotiza</strong><small>Personalizaciones y nuevos proyectos.</small></div></div><div class="model-item"><span data-icon="heart"></span><div><strong>Tu aporte es voluntario</strong><small>Ayuda a crear y mantener herramientas.</small></div></div></div>
-<section id="catalogo" aria-labelledby="catalogTitle"><div class="section-head"><div><div class="eyebrow">Hechas para usarse</div><h2 id="catalogTitle">Encuentra tu próxima herramienta.</h2><p>Solo proyectos publicados. Revisa su tamaño y si necesitan conexión antes de descargar.</p></div><span class="count-pill" id="catalogCount">6 proyectos</span></div>
+<section id="catalogo" aria-labelledby="catalogTitle"><div class="section-head"><div><div class="eyebrow">Hechas para usarse</div><h2 id="catalogTitle">Encuentra tu próxima herramienta.</h2><p>Solo proyectos publicados. Revisa su tamaño y si necesitan conexión antes de descargar.</p></div><span class="count-pill" id="catalogCount">13 proyectos</span></div>
 <div class="catalog-tools"><div class="searchbox"><label for="search" class="sr-only">Buscar aplicaciones</label><span data-icon="search"></span><input id="search" type="search" placeholder="Busca una app o lo que necesitas hacer…" autocomplete="off" maxlength="120"></div><label class="sort" for="sort">Ordenar por <select id="sort"><option value="recommended">Recomendadas</option><option value="name">Nombre</option><option value="downloads" selected>Más descargadas</option><option value="size">Menor tamaño</option></select></label></div>
 <div class="filters"><div class="chips" role="group" aria-label="Categorías"><button class="chip" data-category="all" aria-pressed="true">Todas</button><button class="chip" data-category="educacion" aria-pressed="false">Educación</button><button class="chip" data-category="productividad" aria-pressed="false">Productividad</button><button class="chip" data-category="creatividad" aria-pressed="false">Creatividad</button></div><label class="offline-filter"><input id="offlineOnly" type="checkbox"> Solo para usar sin conexión</label></div>
 <div id="appGrid" class="app-grid"></div><p id="resultAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
@@ -76,7 +91,7 @@
 <section id="apoyar" class="section" aria-labelledby="supportTitle"><div class="support-wrap"><div><div class="eyebrow">Gratis para usar. Abierto a tu apoyo.</div><h2 id="supportTitle">Si te ayuda, puedes ayudar a que siga.</h2><p>Los aportes voluntarios contribuyen al tiempo de desarrollo, las mejoras y las herramientas de IA de pago que uso para crear nuevas apps. Descargar seguirá siendo gratis, aportes o no.</p></div><div class="support-action"><button class="btn" id="supportButton"><span data-icon="heart"></span> Pagar o hacer un aporte</button><small>Sin monto mínimo ni pago recurrente.<br>Elige un medio de pago o solicita sus datos por privado.</small></div></div></section>
 <section id="preguntas" class="section" aria-labelledby="faqTitle"><div class="faq-grid"><div class="faq-intro"><div class="eyebrow">Todo claro desde el principio</div><h2 id="faqTitle" style="margin-top:12px">Antes de descargar.</h2><p>Estas son las preguntas que importan cuando eliges una herramienta para trabajar.</p></div><div class="faq-list">
 <details><summary>¿Qué es gratis y qué se cobra?</summary><p>Las versiones publicadas en el catálogo se descargan gratis. Los aportes son voluntarios. Se cotiza el trabajo de personalizar una aplicación o desarrollar una nueva; cada solicitud se acuerda antes de comenzar.</p></details>
-<details><summary>¿Todas las aplicaciones funcionan sin internet?</summary><p>No. La etiqueta de cada app lo indica. Aula Mágica, OmniWord, Corte Studio y AnimSketch incluyen sus recursos principales; algunas funciones del navegador, como el dictado, pueden necesitar conexión. La versión actual de Toby carga bibliotecas externas y requiere internet.</p></details>
+<details><summary>¿Todas las aplicaciones funcionan sin internet?</summary><p>No. La etiqueta de cada app lo indica. Aula Mágica, OmniWord, Corte Studio y AnimSketch incluyen sus recursos principales; algunas funciones del navegador, como el dictado, pueden necesitar conexión. Las versiones actuales de Toby y EduBingo cargan bibliotecas externas y requieren internet.</p></details>
 <details><summary>¿En qué equipo puedo usarlas?</summary><p>Necesitas un navegador actualizado que pueda abrir archivos HTML. Para editar video, animaciones o documentos grandes conviene una computadora. El juego 3D necesita WebGL; el rendimiento y algunas funciones dependen del navegador y del equipo.</p></details>
 <details><summary>¿Dónde quedan mis trabajos?</summary><p>Depende de la app. Varias guardan datos en el navegador y permiten exportarlos. Ese almacenamiento puede borrarse al limpiar el navegador o cambiar de dispositivo, por lo que conviene descargar copias de tus proyectos.</p></details>
 <details id="licencias"><summary>¿Puedo ver y modificar el código?</summary><p>El código está disponible en el <a href="https://github.com/vivecodig2026/opensource" target="_blank" rel="noopener noreferrer">repositorio de GitHub</a>. Revisa la licencia de cada herramienta y los avisos de sus bibliotecas antes de redistribuirla. El código original de este catálogo se entrega con licencia MIT.</p></details>
@@ -100,10 +115,11 @@
 <details><summary>¿Qué conviene para transferencias internacionales?</summary><p><strong>PayPal:</strong> primera opción para revisar si ya lo utilizas y está disponible en tu país. Compara la comisión y la conversión de moneda antes de pagar; no siempre es la opción más económica.</p><p><strong>UNO en dólares:</strong> solicita instrucciones privadas antes de una transferencia bancaria. Confirma si corresponde ACH o wire y si se admiten pagos de terceros; no envíes una transferencia SWIFT utilizando solo un número de ruta estadounidense.</p><p><strong>UNO por enlace y AstroPay:</strong> alternativas si su pantalla de pago admite tu país y método. En AstroPay hay un enlace específico para dólares; verifica siempre la moneda que muestra la plataforma.</p><p><strong>Bre-B y Bancolombia:</strong> opciones para transferencias locales en Colombia. Una llave Bre-B no es por sí sola una instrucción bancaria internacional. Mercado Pago se ofrece en la sección Colombia; la aceptación de una tarjeta extranjera debe comprobarse en el pago.</p><p>No hay una opción universalmente más barata: compara lo que pagas, la moneda y lo que recibirá el destinatario.</p><p class="form-note">Información revisada el 15 de octubre de 2026. Fuentes: <a href="https://www.paypal.com/co/digital-wallet/send-receive-money/send-money" target="_blank" rel="noopener noreferrer">PayPal</a> · <a href="https://www.paypal.com/co/digital-wallet/paypal-consumer-fees" target="_blank" rel="noopener noreferrer">Comisiones PayPal</a> · <a href="https://www.banrep.gov.co/es/bre-b/preguntas-frecuentes" target="_blank" rel="noopener noreferrer">Banco de la República</a>. La compatibilidad de cada cuenta y enlace debe confirmarse con el proveedor.</p></details>
 </div></dialog>
 <dialog id="statsDialog" aria-labelledby="statsTitle"><div class="dialog-head"><div><small>Transparencia del catálogo</small><h2 id="statsTitle">Descargas por herramienta.</h2></div><button class="icon-btn" data-close aria-label="Cerrar estadísticas"><span data-icon="close"></span></button></div><div class="dialog-content"><p id="statsExplanation"></p><div class="stats-table-wrap"><table class="stats-table"><thead><tr><th scope="col">Aplicación</th><th scope="col">Descargas</th><th scope="col">Versiones medidas</th></tr></thead><tbody id="statsRows"></tbody></table></div><p class="field-hint" id="statsUpdated"></p><div class="actions"><button class="btn primary" id="exportStats"><span data-icon="download"></span> Exportar CSV</button><button class="btn secondary" id="refreshStats">Actualizar</button></div><p class="form-note">Fuente: GitHub Releases. Los totales dependen de que se conserven las versiones publicadas. Los guiones significan que no hay datos verificables, no cero descargas.</p></div></dialog>
-<dialog id="privacyDialog" aria-labelledby="privacyTitle"><div class="dialog-head"><div><small>Datos y servicios externos</small><h2 id="privacyTitle">Tu navegación, explicada.</h2></div><button class="icon-btn" data-close aria-label="Cerrar privacidad"><span data-icon="close"></span></button></div><div class="dialog-content"><p>Este catálogo no incorpora publicidad, píxeles de seguimiento ni identificadores de visitantes. Guarda una copia temporal de los metadatos públicos de las apps y de sus estadísticas para reducir consultas.</p><p>Consulta GitHub para obtener archivos, tamaños y contadores; GitHub procesa esas solicitudes según sus propias condiciones. Cuando abres WhatsApp, ese servicio recibe el mensaje preparado, además de los datos habituales de una conexión.</p><p>Los enlaces de cobro abren plataformas externas, que aplican sus propias condiciones y políticas de privacidad. Elegir un medio en esta página no envía un pago ni registra tus datos bancarios. Las aplicaciones del catálogo son documentos independientes. Consulta sus funciones y requisitos; esta explicación no sustituye sus propios avisos de privacidad.</p><button class="btn secondary" id="clearCache">Borrar la caché del catálogo</button></div></dialog>
+<dialog id="privacyDialog" aria-labelledby="privacyTitle"><div class="dialog-head"><div><small>Datos y servicios externos</small><h2 id="privacyTitle">Tu navegación, explicada.</h2></div><button class="icon-btn" data-close aria-label="Cerrar privacidad"><span data-icon="close"></span></button></div><div class="dialog-content"><p>Este catálogo no incorpora publicidad, píxeles de seguimiento ni identificadores de visitantes. Recuerda tu elección de tema claro u oscuro en este navegador. Guarda una copia temporal de los metadatos públicos de las apps y de sus estadísticas para reducir consultas.</p><p>Consulta GitHub para obtener archivos, tamaños y contadores; GitHub procesa esas solicitudes según sus propias condiciones. Cuando abres WhatsApp, ese servicio recibe el mensaje preparado, además de los datos habituales de una conexión.</p><p>Los enlaces de cobro abren plataformas externas, que aplican sus propias condiciones y políticas de privacidad. Elegir un medio en esta página no envía un pago ni registra tus datos bancarios. Las aplicaciones del catálogo son documentos independientes. Consulta sus funciones y requisitos; esta explicación no sustituye sus propios avisos de privacidad.</p><button class="btn secondary" id="clearCache">Borrar la caché del catálogo</button></div></dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script id="siteConfig" type="application/json">{
-  "version": 4,
+<script id="siteConfig" type="application/json">
+{
+  "version": 5,
   "owner": "vivecodig2026",
   "repo": "opensource",
   "branch": "main",
@@ -137,7 +153,8 @@
       ],
       "requirements": "Las herramientas de clase funcionan localmente. Enviar mensajes por WhatsApp necesita conexión; la voz depende de las voces instaladas en el navegador.",
       "size": 357243,
-      "sha256": "e44741673bf600643d302bc686fc3c6def84cc4cce5ed72ec8547bab4039d6c5"
+      "sha256": "e44741673bf600643d302bc686fc3c6def84cc4cce5ed72ec8547bab4039d6c5",
+      "preview": "previews/aula-magica.jpg"
     },
     {
       "id": "omniword",
@@ -166,7 +183,8 @@
       ],
       "requirements": "Recomendado en computadora. No reproduce todas las funciones de Word. Algunas funciones de voz y dictado dependen del navegador y pueden requerir internet.",
       "size": 9170315,
-      "sha256": "8ef77ec27b560776364e7e0968a7efc75610b0176e3b766efa7fac6f7d5bac05"
+      "sha256": "8ef77ec27b560776364e7e0968a7efc75610b0176e3b766efa7fac6f7d5bac05",
+      "preview": "previews/omniword.jpg"
     },
     {
       "id": "corte-studio",
@@ -194,7 +212,8 @@
       ],
       "requirements": "Para trabajar con video conviene una computadora con memoria disponible. La duración, resolución y compatibilidad de formatos influyen en el rendimiento.",
       "size": 13968438,
-      "sha256": "ad8d2927f66c23e2df87ed165c4bff71dfc6064cd59b22eb2964205d80a67f33"
+      "sha256": "ad8d2927f66c23e2df87ed165c4bff71dfc6064cd59b22eb2964205d80a67f33",
+      "preview": "previews/corte-studio.jpg"
     },
     {
       "id": "animsketch",
@@ -221,9 +240,11 @@
         "Poses, movimiento y herramientas de animación.",
         "Exportación de imágenes y animaciones según el formato elegido."
       ],
-      "requirements": "Recomendado en computadora para proyectos grandes. El procesamiento se realiza en el equipo; las animaciones complejas pueden requerir más memoria.",
-      "size": 14266111,
-      "sha256": "68efee9533f069279a5c77539f607d430d71ef3a00bf565d19281d9ca109aaca"
+      "requirements": "El archivo de AnimSketch publicado actualmente contiene OmniWord. Pendiente de reponer el archivo correcto.",
+      "size": 9173021,
+      "catalogIssue": "El archivo de AnimSketch publicado actualmente contiene OmniWord. Pendiente de reponer el archivo correcto.",
+      "available": false,
+      "unavailableReason": "El archivo de AnimSketch publicado actualmente contiene OmniWord. Pendiente de reponer el archivo correcto."
     },
     {
       "id": "toby-vocales",
@@ -252,7 +273,8 @@
       ],
       "requirements": "Esta versión necesita internet para cargar Three.js, Tailwind, iconos y fuentes. Requiere un navegador con WebGL. El HTML es pequeño, pero descarga recursos adicionales.",
       "size": 90284,
-      "sha256": "6d3dc1c4ae2a4637f9fc303b09682fb8f459e500e2f9b04b41170f8e4f52e27f"
+      "sha256": "6d3dc1c4ae2a4637f9fc303b09682fb8f459e500e2f9b04b41170f8e4f52e27f",
+      "preview": "previews/toby-vocales.jpg"
     },
     {
       "id": "cumulo",
@@ -279,11 +301,218 @@
         "Herramientas para explorar palabras en clase."
       ],
       "requirements": "Funciona en el navegador con recursos incluidos en el HTML.",
-      "size": 182919
+      "size": 182919,
+      "preview": "previews/cumulo.jpg"
+    },
+    {
+      "id": "gantt",
+      "name": "Gantt Studio",
+      "file": "Gantt_Studio.html",
+      "category": "productividad",
+      "categoryLabel": "Productividad",
+      "icon": "document",
+      "tone": "#e9edfa",
+      "ink": "#4057a1",
+      "offline": true,
+      "rank": 7,
+      "description": "Planifica proyectos con actividades, dependencias y un cronograma visual de Gantt.",
+      "tags": [
+        "gantt",
+        "proyectos",
+        "cronograma",
+        "tareas",
+        "planificacion"
+      ],
+      "features": [
+        "Actividades, hitos, dependencias y seguimiento del avance.",
+        "Calendario laboral, ruta crítica y línea base.",
+        "Guardar y abrir proyectos JSON; exportar el cronograma como imagen."
+      ],
+      "requirements": "Funciona localmente. Recomendado en computadora para editar cronogramas amplios.",
+      "size": 131984,
+      "preview": "previews/gantt.jpg"
+    },
+    {
+      "id": "arboria",
+      "name": "Arboria · Studio Botánico",
+      "file": "arboria-super-studio.html",
+      "category": "productividad",
+      "categoryLabel": "Productividad",
+      "icon": "pen",
+      "tone": "#e9edfa",
+      "ink": "#4057a1",
+      "offline": true,
+      "rank": 8,
+      "description": "Organiza problemas y objetivos en árboles visuales con estilos botánicos.",
+      "tags": [
+        "arbol",
+        "problemas",
+        "objetivos",
+        "marco logico",
+        "diagramas"
+      ],
+      "features": [
+        "Árboles de problemas y objetivos con seis estilos botánicos.",
+        "Edición de contenidos y elementos; matriz de marco lógico.",
+        "Modo presentación, exportación y guardado en HTML."
+      ],
+      "requirements": "Recursos incluidos en el HTML. Recomendado en computadora para editar diagramas.",
+      "size": 120776,
+      "preview": "previews/arboria.jpg"
+    },
+    {
+      "id": "edubingo",
+      "name": "EduBingo Pro Studio",
+      "file": "edubingo_pro_studio_multigenerador.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "school",
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "offline": false,
+      "rank": 9,
+      "description": "Crea cartones de bingo pedagógico y dirige una tómbola interactiva en clase.",
+      "tags": [
+        "bingo",
+        "cartones",
+        "tombola",
+        "docente",
+        "pdf"
+      ],
+      "features": [
+        "Cartones de 3×3, 4×4 y 5×5 con temas curriculares.",
+        "Modo directo o de asociación, banco de palabras y fichas docentes.",
+        "Tómbola en vivo y generación de cartones PDF."
+      ],
+      "requirements": "Necesita internet para cargar bibliotecas, iconos y fuentes externas. La voz depende del navegador.",
+      "size": 193373,
+      "preview": "previews/edubingo.jpg"
+    },
+    {
+      "id": "guardianes",
+      "name": "Guardianes del Saber",
+      "file": "guardianes_del_saber_videojuego_educativo_2d_offline.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "game",
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "offline": true,
+      "rank": 10,
+      "description": "Una aventura 2D para practicar múltiplos, operaciones y geometría entre cuatro mundos.",
+      "tags": [
+        "juego",
+        "matematicas",
+        "angulos",
+        "multiplicacion",
+        "2d"
+      ],
+      "features": [
+        "Tres guardianes y niveles de dificultad pedagógica.",
+        "Cuatro biomas con carreras, plataformas y retos de ángulos.",
+        "Odisea combinada y banco de preguntas personalizable."
+      ],
+      "requirements": "Funciona sin conexión con los recursos incluidos. Dispone de controles de juego para teclado y pantalla.",
+      "size": 91046,
+      "preview": "previews/guardianes.jpg"
+    },
+    {
+      "id": "pdf",
+      "name": "PDF Pro Studio",
+      "file": "pdf_pro_studio_suite_offline.html",
+      "category": "productividad",
+      "categoryLabel": "Productividad",
+      "icon": "document",
+      "tone": "#e9edfa",
+      "ink": "#4057a1",
+      "offline": true,
+      "rank": 11,
+      "description": "Trabaja con documentos PDF locales, añade anotaciones y organiza sus páginas.",
+      "tags": [
+        "pdf",
+        "documentos",
+        "anotaciones",
+        "paginas",
+        "editor"
+      ],
+      "features": [
+        "Herramientas de texto, resaltado, dibujo, formas y notas.",
+        "Organización de páginas y utilidades para documentos.",
+        "Exportación de PDF, imágenes PNG y texto Markdown."
+      ],
+      "requirements": "Motor propio de PDF: la compatibilidad puede variar en documentos complejos. Trabaja con copias y revisa el resultado exportado. Recomendado en computadora.",
+      "size": 160820,
+      "preview": "previews/pdf.jpg"
+    },
+    {
+      "id": "serpiente-clasica",
+      "name": "Serpiente Sabia · Clásica",
+      "file": "s_per_serpiente_sabia_aventura_educativa.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "game",
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "offline": true,
+      "rank": 12,
+      "description": "El juego de la serpiente convertido en una aventura de letras y operaciones.",
+      "tags": [
+        "serpiente",
+        "snake",
+        "vocales",
+        "hiatos",
+        "sumas"
+      ],
+      "features": [
+        "Retos de vocales, consonantes, diptongos e hiatos.",
+        "Sumas, restas, multiplicaciones y modo combinado.",
+        "Personajes y controles táctiles para jugar."
+      ],
+      "requirements": "Funciona sin conexión. Usa teclado o controles táctiles según tu dispositivo.",
+      "size": 67475,
+      "preview": "previews/serpiente-clasica.jpg"
+    },
+    {
+      "id": "serpiente-full",
+      "name": "Serpiente Sabia 3.0",
+      "file": "serpienteSabiaFull.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "game",
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "offline": true,
+      "rank": 13,
+      "description": "Una versión ampliada de Serpiente Sabia con más temas, modos de juego y preguntas propias.",
+      "tags": [
+        "serpiente",
+        "snake",
+        "ingles",
+        "ciencias",
+        "geografia",
+        "cartesiano"
+      ],
+      "features": [
+        "Trece temas educativos y preguntas personalizables.",
+        "Modos aventura, contrarreloj y zen.",
+        "Tablero clásico o mundo gigante y aspectos desbloqueables en el juego."
+      ],
+      "requirements": "Funciona sin conexión con los recursos incluidos. Elige la versión clásica si prefieres una experiencia más sencilla.",
+      "size": 161854,
+      "preview": "previews/serpiente-full.jpg"
     }
   ]
-}</script>
+}
+</script>
 <script>'use strict';
+const themeButton=document.getElementById('themeToggle');
+const themeMedia=window.matchMedia('(prefers-color-scheme: dark)');
+let themePreference=null;try{themePreference=localStorage.getItem('vcl:theme');}catch{}
+function applyTheme(dark){document.documentElement.dataset.theme=dark?'dark':'light';themeButton.textContent=dark?'☀':'☾';themeButton.setAttribute('aria-pressed',String(dark));themeButton.setAttribute('aria-label',dark?'Activar tema claro':'Activar tema oscuro');themeButton.title=dark?'Activar tema claro':'Activar tema oscuro';document.querySelector('meta[name="theme-color"]').content=dark?'#0b1220':'#0f766e';}
+applyTheme(themePreference==='dark'||(themePreference!=='light'&&themeMedia.matches));
+themeButton.addEventListener('click',()=>{const dark=document.documentElement.dataset.theme!=='dark';themePreference=dark?'dark':'light';applyTheme(dark);try{localStorage.setItem('vcl:theme',themePreference);}catch{}});
+themeMedia.addEventListener('change',e=>{if(!themePreference)applyTheme(e.matches);});
+
 /* VibeCoding Lab — catálogo estático. Los contadores provienen de GitHub, nunca de clics locales. */
 const CONFIG=JSON.parse(document.getElementById('siteConfig').textContent);
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -294,7 +523,7 @@ const APPS=CONFIG.apps,byId=new Map(APPS.map(a=>[a.id,a])),byFile=new Map(APPS.m
 const API=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
 const REPO=`https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
 const RAW=`https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/`;
-const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v2`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v4`;
+const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v2`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v5`;
 const stats=new Map(),health=new Map(APPS.map(a=>[a.id,{available:a.available!==false,size:a.size,reason:a.unavailableReason||""}]));
 const MAX_FILE=60*1024*1024,CACHE_TTL=15*60*1000;
 let category='all',statsState='loading',statsTime=0,statsComplete=true,statsBusy=null,lastAttempt=0,toastTimer=null,detailApp=null,modalOpener=null;
@@ -317,14 +546,14 @@ async function loadCatalogHealth(){const local=location.protocol==='file:'||['lo
 function metric(app){const s=stats.get(app.id);if(s)return (statsComplete?'':'≥ ')+s.count.toLocaleString('es-CO')+' descargas';return statsState==='loading'?'Consultando…':'Sin historial medido';}
 function currentApps(){const query=normalize($('#search').value.trim()),onlyOffline=$('#offlineOnly').checked;let items=APPS.filter(a=>(category==='all'||a.category===category)&&(!onlyOffline||a.offline)&&(!query||normalize([a.name,a.description,...a.tags].join(' ')).includes(query)));const order=$('#sort').value;if(order==='name')items.sort((a,b)=>a.name.localeCompare(b.name,'es'));else if(order==='size')items.sort((a,b)=>(stats.get(a.id)?.latest.size||health.get(a.id).size)-(stats.get(b.id)?.latest.size||health.get(b.id).size));else if(order==='downloads')items.sort((a,b)=>(stats.get(b.id)?.count??-1)-(stats.get(a.id)?.count??-1)||a.rank-b.rank);else items.sort((a,b)=>a.rank-b.rank);return items;}
 function popularityBadge(app){const count=stats.get(app.id)?.count||0;if(!count)return '';const max=Math.max(...APPS.map(a=>stats.get(a.id)?.count||0));return count===max?'<span class="state-badge" style="background:#fff0cc;color:#72501b;margin-bottom:10px">★ Más descargada'+(APPS.filter(a=>(stats.get(a.id)?.count||0)===max).length>1?' · empate':'')+'</span>':'';}
-function card(app){const available=health.get(app.id).available,asset=stats.get(app.id)?.latest,canDownload=available||!!asset,size=asset?.size||health.get(app.id).size;const badge=!canDownload?'En actualización':app.offline?'Offline':'Necesita internet';const className=!canDownload?'unavailable':app.offline?'':'online';const sourceTitle=app.offline?'Recursos principales incluidos. Consulta las funciones que dependen del navegador.':'Esta versión carga bibliotecas externas y necesita conexión.';let art=app.id==='omniword'?'<span class="art-word">Aa</span>':app.id==='toby-vocales'?'<span class="art-word">A e i</span>':'<span class="art-bar"></span>'.repeat(4);return `<article class="app-card" data-app="${app.id}" style="--tone:${app.tone};--tone-ink:${app.ink}"><div class="card-visual" aria-hidden="true"><span class="app-mark">${icon(app.icon)}</span><span class="card-art">${art}</span></div><div class="card-content"><div class="card-topline"><span>${esc(app.categoryLabel)}</span><span class="state-badge ${className}" title="${esc(sourceTitle)}"><span class="state-dot"></span>${badge}</span></div>${popularityBadge(app)}<h3 class="card-title">${esc(app.name)}</h3><p class="app-description">${esc(app.description)}</p><div class="card-meta"><span>${icon('file')}HTML · ${bytes(size)}</span><span title="Registros públicos de GitHub Releases; no visitas ni personas únicas.">${icon('download')}${metric(app)}</span></div><div class="card-buttons"><button class="btn primary" data-download="${app.id}" ${canDownload?'':'disabled'}>${icon('download')}<span>${canDownload?'Descargar gratis':'No disponible'}</span></button>${available?`<a class="btn secondary" href="${esc(appURL(app))}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${esc(app.name)} en otra pestaña">Abrir ${icon('external')}</a>`:`<button class="btn secondary" disabled>Demo pendiente</button>`}</div><p class="download-status" id="download-${app.id}" role="status">${!canDownload?esc(health.get(app.id).reason||"Archivo pendiente de publicación."):""}</p><div class="card-bottom"><button class="text-btn" data-custom="${app.id}">Personalizar ${icon('arrow')}</button><button class="text-btn muted" data-detail="${app.id}">Ver detalles</button></div></div></article>`;}
+function card(app){const available=!app.catalogIssue&&health.get(app.id).available,asset=stats.get(app.id)?.latest,canDownload=!app.catalogIssue&&(available||!!asset),size=asset?.size||health.get(app.id).size;const badge=!canDownload?'En actualización':app.offline?'Offline':'Necesita internet';const className=!canDownload?'unavailable':app.offline?'':'online';const sourceTitle=app.offline?'Recursos principales incluidos. Consulta las funciones que dependen del navegador.':'Esta versión carga bibliotecas externas y necesita conexión.';let art=app.id==='omniword'?'<span class="art-word">Aa</span>':app.id==='toby-vocales'?'<span class="art-word">A e i</span>':'<span class="art-bar"></span>'.repeat(4);return `<article class="app-card" data-app="${app.id}" style="--tone:${app.tone};--tone-ink:${app.ink}">${app.preview?`<button class="card-visual preview-button" data-detail="${app.id}" aria-label="Ver captura y detalles de ${esc(app.name)}"><img src="${esc(app.preview)}" alt="Captura real de ${esc(app.name)} abierta" loading="lazy" decoding="async" width="1363" height="936"><span class="preview-label">Vista real · Ampliar</span></button>`:`<div class="card-visual" aria-hidden="true"><span class="app-mark">${icon(app.icon)}</span><span class="card-art">${art}</span></div>`}<div class="card-content"><div class="card-topline"><span>${esc(app.categoryLabel)}</span><span class="state-badge ${className}" title="${esc(sourceTitle)}"><span class="state-dot"></span>${badge}</span></div>${popularityBadge(app)}<h3 class="card-title">${esc(app.name)}</h3><p class="app-description">${esc(app.description)}</p><div class="card-meta"><span>${icon('file')}HTML · ${bytes(size)}</span><span title="Registros públicos de GitHub Releases; no visitas ni personas únicas.">${icon('download')}${metric(app)}</span></div><div class="card-buttons"><button class="btn primary" data-download="${app.id}" ${canDownload?'':'disabled'}>${icon('download')}<span>${canDownload?'Descargar gratis':'No disponible'}</span></button>${available?`<a class="btn secondary" href="${esc(appURL(app))}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${esc(app.name)} en otra pestaña">Abrir ${icon('external')}</a>`:`<button class="btn secondary" disabled>Demo pendiente</button>`}</div><p class="download-status" id="download-${app.id}" role="status">${!canDownload?esc(app.catalogIssue||health.get(app.id).reason||"Archivo pendiente de publicación."):""}</p><div class="card-bottom"><button class="text-btn" data-custom="${app.id}">Personalizar ${icon('arrow')}</button><button class="text-btn muted" data-detail="${app.id}">Ver detalles</button></div></div></article>`;}
 function renderApps(announce=true){const items=currentApps(),focused=document.activeElement?.dataset;const active=focused?.download?['download',focused.download]:focused?.detail?['detail',focused.detail]:focused?.custom?['custom',focused.custom]:null;$('#appGrid').innerHTML=items.length?items.map(card).join(''):'<div class="empty"><h3>No encontramos esa herramienta.</h3><p>Prueba otra palabra o elimina los filtros.</p><button class="btn secondary" id="resetFilters">Ver todas las apps</button></div>';if(items.length===APPS.length&&category==='all'&&!$('#search').value&&!$('#offlineOnly').checked)$('#appGrid').insertAdjacentHTML('beforeend',`<aside class="custom-card"><span class="circle">${icon('plus')}</span><h3>¿Y si hacemos<br>la tuya?</h3><p>Tu idea puede convertirse en una herramienta útil para tu trabajo o tu comunidad.</p><button class="text-btn" data-request="new">Cuéntame qué necesitas ${icon('arrow')}</button></aside>`);$('#catalogCount').textContent=items.length+' de '+APPS.length+' proyectos';if(announce)$('#resultAnnouncement').textContent=items.length+' aplicaciones encontradas.';for(const id of busyDownloads){for(const button of $$(`[data-download="${id}"]`)){button.disabled=true;button.querySelector('span').textContent='Preparando…';}}if(active)$(`[data-${active[0]}="${active[1]}"]`)?.focus({preventScroll:true});}
 function updateMetrics(){let text;if(statsState==='loading')text='Consultando el historial de descargas…';else if(!stats.size)text=statsState==='empty'||statsState==='cached'?'Aún no hay historial medido de descargas.':statsState==='offline'?'Sin conexión · historial de descargas no disponible.':'Estadísticas no disponibles temporalmente.';else{const total=[...stats.values()].reduce((s,v)=>s+v.count,0);text=(statsComplete?'':'Al menos ')+total.toLocaleString('es-CO')+' descargas registradas en GitHub'+(['stale','cached'].includes(statsState)?' · última consulta guardada.':'.');}$('#metricsStatus').textContent=text;}
 async function directDownload(app,status){const local=location.protocol==='file:';if(local){const a=document.createElement('a');a.href=appURL(app);a.download=app.file;a.click();status('Descarga local. Este HTML debe estar junto al index; no se suma al contador global.');return;}const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),90000);try{const r=await fetch(appURL(app),{signal:controller.signal,credentials:'omit'});if(!r.ok)throw Error('El archivo no está disponible ('+r.status+').');const encoding=(r.headers.get('content-encoding')||'identity').toLowerCase();const length=encoding==='identity'?Number(r.headers.get('content-length')):0;if(length>MAX_FILE)throw Error('El archivo supera el tamaño previsto. Ábrelo desde GitHub.');const reader=r.body?.getReader();let chunks=[],received=0,last=0;if(reader){for(;;){const {value,done}=await reader.read();if(done)break;received+=value.byteLength;if(received>MAX_FILE){await reader.cancel();throw Error('El archivo supera el límite de descarga.');}chunks.push(value);if(Date.now()-last>250){status('Descargando '+bytes(received)+(length?' de '+bytes(length):'')+'…');last=Date.now();}}}else{const buf=await r.arrayBuffer();received=buf.byteLength;chunks=[new Uint8Array(buf)];}if(length&&received!==length)throw Error('La transferencia quedó incompleta. Vuelve a intentar la descarga.');if(received<256||received>MAX_FILE)throw Error('El archivo está vacío o incompleto. Inténtalo más tarde.');const blob=new Blob(chunks,{type:'text/html;charset=utf-8'}),begin=await blob.slice(0,8192).text();if(!/<(?:!doctype\s+html|html\b)/i.test(begin))throw Error('El servidor no devolvió una aplicación HTML.');const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=app.file;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);status('Archivo entregado al navegador. Descarga directa, sin registro global.');toast('Guarda '+app.file+' y ábrelo con tu navegador.');}finally{clearTimeout(timer);}}
-async function downloadApp(id){const app=byId.get(id);if(!app||busyDownloads.has(id))return;const status=message=>{const el=$('#download-'+id);if(el)el.textContent=message;if($('#detailDialog').open&&detailApp?.id===id){const detail=$('#detailDownloadStatus');if(detail)detail.textContent=message;}};busyDownloads.add(id);for(const button of $$(`[data-download="${id}"]`)){button.disabled=true;button.querySelector('span').textContent='Preparando…';}try{if(statsBusy){status('Buscando la versión publicada…');await statsBusy;}const asset=stats.get(id)?.latest;if(asset){const a=document.createElement('a');a.href=asset.url;a.rel='noopener noreferrer';a.download=app.file;document.body.appendChild(a);a.click();a.remove();status('Descarga solicitada a GitHub. El contador se actualiza después de su registro.');}else{if(!health.get(id).available)throw Error('Esta herramienta está en actualización.');await directDownload(app,status);}}catch(e){status(e.name==='AbortError'?'La descarga tardó demasiado. Puedes volver a intentarlo.':e.message);toast('No se pudo descargar '+app.name+'. '+(e.name==='AbortError'?'Revisa tu conexión.':e.message));}finally{busyDownloads.delete(id);for(const b of $$(`[data-download="${id}"]`)){b.disabled=!(health.get(id).available||stats.has(id));b.querySelector('span').textContent=b.disabled?'No disponible':'Descargar gratis';}}}
+async function downloadApp(id){const app=byId.get(id);if(!app||busyDownloads.has(id))return;if(app.catalogIssue){toast(app.catalogIssue);return;}const status=message=>{const el=$('#download-'+id);if(el)el.textContent=message;if($('#detailDialog').open&&detailApp?.id===id){const detail=$('#detailDownloadStatus');if(detail)detail.textContent=message;}};busyDownloads.add(id);for(const button of $$(`[data-download="${id}"]`)){button.disabled=true;button.querySelector('span').textContent='Preparando…';}try{if(statsBusy){status('Buscando la versión publicada…');await statsBusy;}const asset=stats.get(id)?.latest;if(asset){const a=document.createElement('a');a.href=asset.url;a.rel='noopener noreferrer';a.download=app.file;document.body.appendChild(a);a.click();a.remove();status('Descarga solicitada a GitHub. El contador se actualiza después de su registro.');}else{if(!health.get(id).available)throw Error('Esta herramienta está en actualización.');await directDownload(app,status);}}catch(e){status(e.name==='AbortError'?'La descarga tardó demasiado. Puedes volver a intentarlo.':e.message);toast('No se pudo descargar '+app.name+'. '+(e.name==='AbortError'?'Revisa tu conexión.':e.message));}finally{busyDownloads.delete(id);for(const b of $$(`[data-download="${id}"]`)){b.disabled=!(health.get(id).available||stats.has(id));b.querySelector('span').textContent=b.disabled?'No disponible':'Descargar gratis';}}}
 function showDialog(id){const dialog=$('#'+id);for(const d of $$('dialog[open]'))d.close();modalOpener=document.activeElement;dialog.showModal();}
 for(const dialog of $$('dialog')){dialog.addEventListener('click',e=>{if(e.target.closest('[data-close]'))dialog.close();if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});dialog.addEventListener('close',()=>{if(modalOpener?.isConnected)modalOpener.focus({preventScroll:true});});}
-function renderDetail(app){const s=stats.get(app.id),h=health.get(app.id),available=h.available||!!s;$('#detailTitle').textContent=app.name;$('#detailCategory').textContent=app.categoryLabel+' · Gratis';$('#detailBody').innerHTML=`<p>${esc(app.description)}</p><ul class="app-features">${app.features.map(f=>'<li>'+esc(f)+'</li>').join('')}</ul><div class="notice">${!available?'El archivo publicado no está listo para descargarse. Se mantiene visible el proyecto para que puedas conocerlo. ':''}${esc(app.requirements)}</div><dl class="detail-meta"><div><dt>Uso sin conexión</dt><dd>${app.offline?'Recursos principales incluidos':'Necesita internet'}</dd></div><div><dt>Tamaño del HTML</dt><dd>${bytes(s?.latest.size||h.size)}${app.offline?'':' + recursos externos'}</dd></div><div><dt>Descargas registradas</dt><dd>${metric(app)}</dd></div><div><dt>Archivo</dt><dd>${esc(app.file)}</dd></div></dl><div class="actions"><button class="btn primary" data-download="${app.id}" ${available?'':'disabled'}>${icon('download')}<span>Descargar gratis</span></button><a class="btn secondary" href="${sourceURL(app)}" target="_blank" rel="noopener noreferrer">${icon('code')}Ver código</a><button class="btn ghost" data-custom="${app.id}">Personalizar</button></div><p id="detailDownloadStatus" class="download-status" role="status"></p><p class="form-note">${s?'Se descargará la versión publicada en GitHub Releases; la demo puede tener cambios posteriores.':'La descarga directa funciona cuando el archivo está disponible. Su uso no se suma a un contador global.'}</p>`;}
+function renderDetail(app){const s=stats.get(app.id),h=health.get(app.id),available=!app.catalogIssue&&(h.available||!!s);$('#detailTitle').textContent=app.name;$('#detailCategory').textContent=app.categoryLabel+' · Gratis';$('#detailBody').innerHTML=`${app.preview?`<figure class="detail-preview"><a href="${esc(app.preview)}" target="_blank" rel="noopener noreferrer"><img src="${esc(app.preview)}" alt="Captura real de ${esc(app.name)} abierta" width="1363" height="936"></a><figcaption>Captura de la aplicación abierta. Selecciona la imagen para ampliarla.</figcaption></figure>`:''}<p>${esc(app.description)}</p><ul class="app-features">${app.features.map(f=>'<li>'+esc(f)+'</li>').join('')}</ul><div class="notice">${!available?'El archivo publicado no está listo para descargarse. Se mantiene visible el proyecto para que puedas conocerlo. ':''}${esc(app.requirements)}</div><dl class="detail-meta"><div><dt>Uso sin conexión</dt><dd>${app.offline?'Recursos principales incluidos':'Necesita internet'}</dd></div><div><dt>Tamaño del HTML</dt><dd>${bytes(s?.latest.size||h.size)}${app.offline?'':' + recursos externos'}</dd></div><div><dt>Descargas registradas</dt><dd>${metric(app)}</dd></div><div><dt>Archivo</dt><dd>${esc(app.file)}</dd></div></dl><div class="actions"><button class="btn primary" data-download="${app.id}" ${available?'':'disabled'}>${icon('download')}<span>Descargar gratis</span></button><a class="btn secondary" href="${sourceURL(app)}" target="_blank" rel="noopener noreferrer">${icon('code')}Ver código</a><button class="btn ghost" data-custom="${app.id}">Personalizar</button></div><p id="detailDownloadStatus" class="download-status" role="status"></p><p class="form-note">${s?'Se descargará la versión publicada en GitHub Releases; la demo puede tener cambios posteriores.':'La descarga directa funciona cuando el archivo está disponible. Su uso no se suma a un contador global.'}</p>`;}
 function openDetail(id){const app=byId.get(id);if(!app)return;detailApp=app;renderDetail(app);showDialog('detailDialog');}
 function setRequestType(){const kind=$('#requestType').value;$('#appField').hidden=kind==='new';$('#requestTitle').textContent=kind==='new'?'Construyamos tu aplicación.':kind==='feedback'?'Ayúdame a mejorar la app.':'Adaptemos una herramienta.';$('#needLabel').textContent=kind==='feedback'?'¿Qué ocurrió y cómo podemos reproducirlo?':'¿Qué necesitas resolver?';}
 function openRequest(kind='new',id){$('#requestForm').hidden=false;$('#requestReview').hidden=true;$('#requestError').textContent='';$('#requestType').value=['new','custom','feedback'].includes(kind)?kind:'new';if(id&&byId.has(id))$('#requestApp').value=id;setRequestType();showDialog('requestDialog');}
@@ -401,12 +630,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-PUBLICACIÓN: guardar como index.html en la raíz, junto a los seis HTML del
+PUBLICACIÓN: guardar como index.html en la raíz, junto a los HTML del
 catálogo. Las estadísticas provienen de los assets de GitHub Releases con
 los mismos nombres que los archivos del catálogo. Las descargas directas no
 se suman a esos contadores. No borrar las Releases si se desea conservar
 el historial. No se requieren claves privadas en este documento.
 -->
+
 
 
 

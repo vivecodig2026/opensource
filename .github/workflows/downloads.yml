@@ -37,6 +37,9 @@ jobs:
           uploaded = {a['name'] for a in current['assets']}
           valid = 0
           for app in config['apps']:
+              if app.get('catalogIssue'):
+                  print('Omitido por revisión del catálogo:', app['file'])
+                  continue
               path = pathlib.Path(app['file'])
               if path.parent != pathlib.Path('.') or not path.is_file():
                   continue
@@ -55,3 +58,4 @@ jobs:
               gh('release', 'edit', tag, '--draft=false', '--latest')
           print('Publicadas', valid, 'aplicaciones; historial anterior conservado.')
           PY
+
