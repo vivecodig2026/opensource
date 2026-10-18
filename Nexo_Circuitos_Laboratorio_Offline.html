@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c1225">
+<title>NEXO Circuitos · Laboratorio eléctrico sin conexión</title>
+<style>
+:root{color-scheme:dark;--bg:#070c19;--panel:#10182c;--panel2:#151f37;--edge:#293653;--txt:#ebf4ff;--muted:#93a4c2;--cyan:#63e1f7;--violet:#aa91ff;--amber:#ffc476;--green:#65e6ae;--red:#ff7d91;--shadow:0 20px 60px #0005}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.35;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}svg{display:block}h1,h2,h3,p{margin:0}h2{font-size:15px;letter-spacing:.1px}h3{font-size:12px;color:#bdcce7;font-weight:650}small{color:var(--muted)}.hidden{display:none!important}
+.app{height:100dvh;min-height:500px;display:flex;flex-direction:column}.topbar{height:73px;flex:none;padding:0 18px;display:flex;gap:18px;align-items:center;border-bottom:1px solid #23304b;background:linear-gradient(100deg,#12172b,#0b1224 66%,#111b33);z-index:5}.brand{display:flex;align-items:center;gap:10px;min-width:240px}.mark{width:41px;height:41px;display:grid;place-items:center;border:1px solid #5779ac88;background:radial-gradient(circle at 35% 30%,#30476d,#121d36);border-radius:13px;box-shadow:0 0 26px #3986ba22}.brand strong{font-weight:900;font-size:16px;letter-spacing:2.5px}.brand strong span{color:var(--cyan)}.brand .sub{display:block;color:var(--muted);font-size:10px;letter-spacing:.4px}.top-center{display:flex;align-items:center;gap:12px;flex:1;min-width:0}.lab-chip{display:flex;align-items:center;gap:7px;background:#12283b;border:1px solid #265575;padding:7px 10px;border-radius:30px;color:#9de8ee;font-size:11px;white-space:nowrap}.status-dot{height:7px;width:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}#simTime{font-variant-numeric:tabular-nums;color:#a7c6e1;white-space:nowrap;font-size:12px}.top-actions{display:flex;gap:7px;align-items:center}.btn{display:inline-flex;gap:7px;align-items:center;justify-content:center;border:1px solid #34425d;border-radius:10px;color:#dceafe;background:#1a253b;min-height:34px;padding:7px 11px;font-size:12px;font-weight:650;transition:.16s background,.16s border-color,.16s transform}.btn:hover:not(:disabled){border-color:#587da0;background:#263754}.btn:active:not(:disabled){transform:scale(.98)}.btn.icon-only{padding:7px;min-width:35px}.btn.primary{background:linear-gradient(130deg,#3db2c9,#3768c8);border-color:#64c5e1;color:#fff;box-shadow:0 3px 18px #3baedb25}.btn.danger{border-color:#934351;background:#4b2534;color:#ffd7db}.btn.tiny{min-height:27px;padding:4px 7px;font-size:11px;border-radius:7px}.btn svg{width:16px;height:16px;flex:none}.menu-toggle{display:none}
+.workarea{display:grid;grid-template-columns:239px minmax(0,1fr) 300px;flex:1;min-height:0;position:relative}.sidebar{display:flex;flex-direction:column;min-height:0;background:var(--panel);z-index:3}.leftbar{border-right:1px solid var(--edge)}.rightbar{border-left:1px solid var(--edge)}.side-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:19px 16px 12px}.side-heading small{font-size:10px}.side-heading h2{font-size:15px}.scroll-area{min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-color:#3c4e70 transparent;scrollbar-width:thin;flex:1;padding:0 12px 16px}.group-heading{margin:17px 4px 9px;display:flex;justify-content:space-between;align-items:center;text-transform:uppercase;letter-spacing:1.35px;font-size:10px;font-weight:800;color:#899bb9}.group-heading:first-child{margin-top:6px}.preset-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:0 0 14px}.preset-grid button{border:1px solid #365572;border-radius:8px;padding:7px 3px;background:#1a324a;color:#a9e9f3;font-size:10px;font-weight:700}.preset-grid button:hover{background:#2a5165}.parts-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.part-tile{min-height:93px;text-align:center;border:1px solid #2b3a56;border-radius:13px;background:linear-gradient(160deg,#1a2842,#141d34);color:#dbe8fa;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;touch-action:none;user-select:none;position:relative;transition:transform .14s,border-color .14s,background .14s}.part-tile:hover{border-color:#6396b9;background:#233552;transform:translateY(-1px)}.part-tile:active{transform:scale(.97)}.part-tile svg{width:90px;height:44px;overflow:visible;pointer-events:none}.part-tile span{font-size:11px;font-weight:650}.part-tile small{position:absolute;top:6px;right:7px;font-size:9px;color:#76a7cc}.side-note{margin:16px 0;border-radius:12px;padding:13px;border:1px solid #294366;background:linear-gradient(145deg,#182c47,#13243b);color:#baccdc;font-size:11px}.side-note strong{display:block;color:#dceeff;margin-bottom:5px}.side-note b{color:var(--cyan)}
+.stage{min-width:0;position:relative;display:flex;flex-direction:column;background:#0a1226}.stage-top{position:absolute;z-index:2;left:17px;right:17px;top:14px;display:flex;justify-content:space-between;gap:12px;pointer-events:none}.stage-top>*{pointer-events:auto}.stage-label{background:#101e38c9;backdrop-filter:blur(10px);border:1px solid #314365;border-radius:13px;padding:10px 13px;box-shadow:0 10px 30px #0002;max-width:320px}.stage-label strong{display:block;font-size:12px;font-weight:800}.stage-label small{display:block;margin-top:2px;font-size:10px}.stage-kpis{display:flex;gap:8px;align-items:start}.kpi{border:1px solid #2c4161;border-radius:12px;min-width:85px;padding:8px 10px;background:#121f38d9;backdrop-filter:blur(10px)}.kpi span{display:block;color:#9bb4d2;font-size:9px;font-weight:750;letter-spacing:1px;text-transform:uppercase}.kpi strong{font-size:18px;letter-spacing:-.5px;font-variant-numeric:tabular-nums}.kpi.warn strong{color:var(--red)}.stage-view{min-height:0;flex:1;position:relative;touch-action:none;overflow:hidden}#scene{width:100%;height:100%;touch-action:none;cursor:crosshair;user-select:none}.stage-hint{position:absolute;pointer-events:none;bottom:18px;left:18px;max-width:min(430px,65%);background:#0d1930dd;border:1px solid #344663;padding:9px 12px;border-radius:10px;color:#bad4ed;font-size:11px;backdrop-filter:blur(8px);line-height:1.5}.stage-hint b{color:#e3f4ff}.toast{position:absolute;z-index:8;left:50%;transform:translateX(-50%);top:78px;background:#162740eb;border:1px solid #46748b;border-radius:10px;padding:11px 16px;font-size:12px;color:#ebf6ff;max-width:90%;min-width:180px;text-align:center;pointer-events:none;box-shadow:var(--shadow);animation:enterToast .18s ease-out}@keyframes enterToast{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}.floating-tools{position:absolute;right:16px;bottom:18px;display:flex;flex-direction:column;gap:7px;z-index:2}.floating-tools .btn{background:#142540e5;backdrop-filter:blur(12px)}
+.bottom-bar{flex:none;z-index:2;min-height:62px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 15px;background:linear-gradient(180deg,#131f38,#121b31);border-top:1px solid #2e3c59;flex-wrap:wrap}.tool-row{display:flex;align-items:center;gap:7px;min-width:0}.tool-row .btn{white-space:nowrap}.pill-switch{display:flex;background:#091425;border:1px solid #2c425d;padding:3px;border-radius:9px;gap:2px}.pill-switch button{border:0;background:transparent;color:#879fbb;border-radius:6px;padding:6px 9px;font-size:11px;font-weight:700}.pill-switch button.active{background:#304461;color:#eaf6ff;box-shadow:0 2px 7px #0003}label.speed{font-size:10px;color:#9cb4d2;display:flex;align-items:center;gap:6px;white-space:nowrap}.speed input{width:86px;accent-color:var(--cyan)}
+.tabs{display:flex;align-items:center;gap:4px;padding:0 10px 11px;border-bottom:1px solid var(--edge)}.tab{flex:1;border:1px solid transparent;border-radius:9px;background:transparent;color:#94a9c9;font-size:11px;font-weight:750;min-height:38px;padding:7px 2px}.tab:hover{color:white;background:#213049}.tab.active{color:#81e7f7;background:#172d44;border-color:#325e79}.tab .ico{display:block;margin:0 auto 2px;font-size:15px}.panel-content{padding:15px;overflow:auto;min-height:0;flex:1;scrollbar-color:#3c4e70 transparent;scrollbar-width:thin}.panel-section{margin-bottom:18px}.panel-title{color:#c0cee4;font-weight:800;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 9px}.hero-card{padding:14px;border:1px solid #354b70;border-radius:13px;background:linear-gradient(150deg,#1c3050,#142039)}.hero-card h2{font-size:17px;margin-bottom:4px}.hero-card p{font-size:12px;color:#b2c4df;line-height:1.6}.intro-viz{display:flex;gap:8px;margin:14px 0 8px;align-items:center;justify-content:center;background:#0d1b31;padding:9px;border-radius:9px;font-size:20px;color:#8ddfea}.intro-viz .arrow{font-size:16px;color:#7093b3}.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat-card{border:1px solid #2b405f;border-radius:10px;background:#132038;padding:10px;min-width:0}.stat-card label{display:block;font-size:10px;color:#91a9ca;margin-bottom:3px}.stat-card strong{font-size:20px;color:#eef5ff;font-variant-numeric:tabular-nums}.stat-card.violet strong{color:#c3adff}.stat-card.cyan strong{color:#85e9ff}.stat-card.amber strong{color:#ffd089}.field{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #27364f}.field:last-child{border-bottom:0}.field label{color:#afc1d9;font-size:12px}.field input[type=number]{max-width:108px;background:#0c1830;color:#e8f6ff;border:1px solid #3e597a;border-radius:8px;padding:8px}.field input[type=range]{width:118px;accent-color:var(--cyan)}.field input[type=checkbox]{accent-color:var(--cyan);width:17px;height:17px}.field select{max-width:145px;color:#ebf4ff;background:#14263e;border:1px solid #375271;border-radius:8px;padding:7px}.desc{color:#a9bed9;font-size:11px;line-height:1.65}.row-buttons{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}.tip{padding:10px 11px;background:#173148;border-left:3px solid #55c6de;border-radius:0 9px 9px 0;font-size:11px;line-height:1.65;color:#cbdbec;margin:10px 0}.tip.alert{background:#442731;border-left-color:var(--red);color:#ffdadc}.tip.good{background:#183b35;border-left-color:var(--green);color:#c3fae5}.meter{padding:13px;margin-bottom:12px;background:linear-gradient(155deg,#1d2d46,#111e32);border:1px solid #3b5071;border-radius:13px}.meter-head{display:flex;align-items:center;justify-content:space-between;color:#b8cbea;font-size:11px;margin-bottom:9px}.meter-read{display:flex;align-items:baseline;gap:9px;padding:15px;background:#081c25;border:1px solid #307282;border-radius:8px;box-shadow:inset 0 0 20px #001b29;font-variant-numeric:tabular-nums}.meter-read strong{font:700 26px ui-monospace,SFMono-Regular,Consolas,monospace;color:#91ffe0;letter-spacing:-1px}.meter-read span{font-size:12px;color:#86b6ae}.probe-dots{display:flex;gap:8px;justify-content:center;margin:10px auto 0}.probe-dots span{font-size:11px;color:#b5c6df}.probe-dots .red{color:#ff8b8b}.probe-dots .blue{color:#79d5ff}.challenge{padding:12px;border-radius:12px;border:1px solid #354765;background:#18263e;margin-bottom:9px;transition:background .15s}.challenge.active{border-color:#658cd4;background:#1e3051}.challenge.done{border-color:#357e64}.challenge-top{display:flex;align-items:center;justify-content:space-between;gap:9px}.challenge h3{color:#e7f1ff;font-size:12px}.challenge p{color:#a8bcd5;margin:6px 0 0;font-size:11px;line-height:1.5}.challenge .badge{font-size:9px;padding:3px 6px;border-radius:20px;background:#25405f;color:#adcee9;white-space:nowrap}.challenge.done .badge{background:#234c41;color:#7bf3bf}.challenge button{margin-top:9px}.progress{height:8px;background:#263851;border-radius:20px;overflow:hidden;margin:10px 0}.progress span{height:100%;display:block;background:linear-gradient(90deg,#32c3d3,#a69dff);border-radius:20px;transition:width .3s}.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;padding:9px 11px;border:1px solid #35516b;border-radius:10px;background:#0d1b2f;color:#b0e6ff;line-height:1.7}.scope{border:1px solid #33516c;border-radius:12px;background:#091c2d;overflow:hidden}.scope canvas{width:100%;height:143px;display:block}.scope-foot{display:flex;justify-content:space-between;color:#78a6b8;font-size:10px;padding:5px 9px;background:#10283c}.log-list{font-size:11px;color:#a7bed9;margin:0;padding-left:18px}.log-list li{padding:5px 0}.divider{height:1px;background:#2a3e5d;margin:15px 0}.note-row{display:flex;align-items:center;gap:8px;color:#a8bad4;font-size:11px}.color-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}.color-dot.red{background:var(--red)}.hint-spacer{min-height:10px}
+/* SVG: all artwork is locally drawn, independent of any remote resource. */
+#scene .world-grid{pointer-events:none}#scene .component{cursor:grab}#scene .component.moving{cursor:grabbing}#scene .selection-frame{fill:none;stroke:#9deaff;stroke-width:1.65;stroke-dasharray:7 5;pointer-events:none;filter:drop-shadow(0 0 7px #77ceff)}#scene .terminal-hit{fill:transparent;stroke:none;cursor:crosshair;pointer-events:all}#scene .terminal-ring{fill:#152d49;stroke:#8bafcc;stroke-width:2;pointer-events:none}#scene .terminal-core{fill:#8ce5f1;stroke:#e7fbff;stroke-width:1;pointer-events:none}#scene .terminal-group:hover .terminal-ring,#scene .terminal-group.pending .terminal-ring{stroke:#f7f5ac;stroke-width:3;filter:drop-shadow(0 0 5px #fce788)}#scene .terminal-group{cursor:crosshair}#scene .wire-hit{stroke:transparent;stroke-width:22;fill:none;pointer-events:stroke;cursor:pointer}#scene .wire-outer{stroke:#4b2b30;stroke-width:12;stroke-linejoin:round;stroke-linecap:round;fill:none;pointer-events:none;filter:drop-shadow(0 3px 2px #0009)}#scene .wire-inner{stroke:url(#wireCopper);stroke-width:7.5;stroke-linejoin:round;stroke-linecap:round;fill:none;pointer-events:none}#scene .wire-highlight{stroke:#f5c3a1;stroke-opacity:.7;stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round;fill:none;pointer-events:none}#scene .wire-selected .wire-outer{stroke:#dce6ff;stroke-width:15}#scene .wire-selected .wire-inner{stroke:#e0a66d}#scene .flow-dot{fill:#74efff;stroke:#d8feff;stroke-width:.65;filter:drop-shadow(0 0 5px #20c9ff);pointer-events:none}#scene .flow-arrow{fill:#ffd08d;stroke:#ffeac0;stroke-width:.4;filter:drop-shadow(0 0 5px #ffaf5a);pointer-events:none}#scene .lamp-aura{fill:url(#haloGrad);pointer-events:none}#scene .led-aura{fill:url(#ledHalo);pointer-events:none}#scene .value-tag{font:600 12px system-ui,sans-serif;fill:#c6e2f7;stroke:#06152a;stroke-width:3px;paint-order:stroke;pointer-events:none;text-anchor:middle}#scene .comp-name{font:700 10px system-ui,sans-serif;letter-spacing:.6px;fill:#9fb3cc;pointer-events:none;text-anchor:middle}#scene .wire-handle{fill:#15283b;stroke:#9eefff;stroke-width:2;cursor:ew-resize}#scene .wire-preview{stroke:#89eefa;stroke-width:4;stroke-dasharray:10 9;fill:none;pointer-events:none;opacity:.83}#scene .meter-lead{stroke-width:2.3;fill:none;stroke-dasharray:6 6;pointer-events:none}#scene .probe-label{font:bold 11px system-ui;fill:white;text-anchor:middle;pointer-events:none}#scene .nohit{pointer-events:none}
+@media(max-width:1370px){.workarea{grid-template-columns:210px minmax(0,1fr) 270px}.topbar{gap:10px;padding:0 12px}.brand{min-width:193px}.top-actions{gap:4px}.btn .long{display:none}.stage-kpis .kpi:nth-child(3){display:none}.part-tile{min-height:83px}.parts-grid{gap:6px}}
+@media(max-width:1060px){.workarea{grid-template-columns:205px minmax(0,1fr)}.rightbar{position:absolute;right:0;top:0;bottom:0;width:min(320px,90vw);transform:translateX(103%);transition:transform .2s;box-shadow:-20px 0 30px #0007}.rightbar.open{transform:translateX(0)}.menu-toggle.info{display:inline-flex}.lab-chip{display:none}.stage-kpis .kpi:nth-child(3){display:block}}
+@media(max-width:720px){.app{min-height:400px}.topbar{height:60px;padding:0 9px}.brand{min-width:auto}.brand strong{font-size:13px;letter-spacing:1.3px}.brand .sub{display:none}.mark{width:32px;height:32px;border-radius:10px}.mark svg{width:25px}.top-center{display:none}.top-actions{margin-left:auto}.top-actions .less-important{display:none}.menu-toggle.tools{display:inline-flex}.workarea{display:flex}.leftbar{position:absolute;left:0;top:0;bottom:0;width:min(248px,88vw);transform:translateX(-103%);transition:transform .2s;box-shadow:20px 0 30px #0007}.leftbar.open{transform:translateX(0)}.stage{flex:1}.stage-top{left:9px;right:9px;top:9px}.stage-label{max-width:190px;padding:7px 9px}.stage-label small{font-size:9px}.kpi{padding:6px;min-width:72px}.kpi strong{font-size:14px}.stage-kpis .kpi:nth-child(2),.stage-kpis .kpi:nth-child(3){display:none}.stage-hint{font-size:10px;bottom:8px;left:8px;max-width:60%}.bottom-bar{padding:7px;gap:5px;justify-content:center}.bottom-bar .btn{font-size:11px;padding:6px}.pill-switch button{padding:5px 6px;font-size:10px}.floating-tools{right:8px;bottom:8px}.speed input{width:53px}.speed{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+ <header class="topbar">
+  <div class="brand"><div class="mark"><svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><path d="M5 17h6l5-10 5 20 4-10h5" stroke="#77e7ed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="5" cy="17" r="3" fill="#ffcc78"/><circle cx="30" cy="17" r="3" fill="#ffcc78"/></svg></div><div><strong>NE<span>X</span>O CIRCUITOS</strong><span class="sub">ESTUDIO DE ELECTRICIDAD · EDICIÓN OFFLINE</span></div></div>
+  <div class="top-center"><span class="lab-chip"><i class="status-dot"></i> Motor DC activo</span><span id="simTime">t = 0,00 s</span></div>
+  <div class="top-actions">
+   <button class="btn icon-only menu-toggle tools" id="toolsToggle" title="Componentes" aria-label="Abrir componentes">☰</button>
+   <button class="btn icon-only less-important" id="undoBtn" title="Deshacer (Ctrl+Z)" aria-label="Deshacer">↶</button>
+   <button class="btn icon-only less-important" id="redoBtn" title="Rehacer (Ctrl+Y)" aria-label="Rehacer">↷</button>
+   <button class="btn less-important" id="openBtn" title="Importar proyecto JSON">↥ <span class="long">Abrir</span></button>
+   <button class="btn" id="saveBtn" title="Guardar proyecto en JSON">↧ <span class="long">Guardar</span></button>
+   <button class="btn less-important" id="exportBtn" title="Exportar vista del circuito como imagen PNG">▧ <span class="long">PNG</span></button>
+   <button class="btn danger icon-only" id="clearBtn" title="Limpiar circuito" aria-label="Limpiar">⌫</button>
+   <button class="btn icon-only menu-toggle info" id="infoToggle" title="Abrir panel de análisis">☷</button>
+  </div>
+ </header>
+ <div class="workarea" id="workarea">
+  <aside class="sidebar leftbar" id="leftPanel"><div class="side-heading"><div><h2>Biblioteca de piezas</h2><small>Arrastra o toca para añadir</small></div><span style="color:var(--cyan)">✧</span></div><div class="scroll-area" id="partsLibrary"></div></aside>
+  <main class="stage" id="stage">
+   <div class="stage-top"><div class="stage-label"><strong>◈ Mesa de experimentación</strong><small id="modeInstruction">Une los terminales para construir circuitos.</small></div><div class="stage-kpis"><div class="kpi"><span>Componentes</span><strong id="totalComp">0</strong></div><div class="kpi"><span>Potencia</span><strong id="totalPower">0 W</strong></div><div class="kpi"><span>Simulación</span><strong id="stateText" style="color:var(--green)">EN VIVO</strong></div></div></div>
+   <div class="stage-view" id="stageView"><svg id="scene" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" aria-label="Área interactiva de construcción de circuitos">
+    <defs>
+     <pattern id="dotGrid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1.25" fill="#345879" opacity=".55"/></pattern>
+     <linearGradient id="wireCopper" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff1cc"/><stop offset=".3" stop-color="#fba96e"/><stop offset=".65" stop-color="#b85743"/><stop offset="1" stop-color="#632e38"/></linearGradient>
+     <linearGradient id="metal" x1="0" y1="0" x2=".1" y2="1"><stop stop-color="#e4effc"/><stop offset=".35" stop-color="#94adc6"/><stop offset=".65" stop-color="#576f95"/><stop offset="1" stop-color="#293e61"/></linearGradient>
+     <linearGradient id="batteryBody" x1="0" y1="0" x2=".25" y2="1"><stop stop-color="#4f688d"/><stop offset=".4" stop-color="#273b5e"/><stop offset="1" stop-color="#111e38"/></linearGradient>
+     <radialGradient id="haloGrad"><stop stop-color="#ffefa3" stop-opacity=".7"/><stop offset=".55" stop-color="#ffc65a" stop-opacity=".36"/><stop offset="1" stop-color="#ffbe50" stop-opacity="0"/></radialGradient>
+     <radialGradient id="ledHalo"><stop stop-color="#93f7d5" stop-opacity=".7"/><stop offset=".62" stop-color="#50eed0" stop-opacity=".35"/><stop offset="1" stop-color="#49edba" stop-opacity="0"/></radialGradient>
+     <linearGradient id="glass" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ecfaff" stop-opacity=".88"/><stop offset=".4" stop-color="#8dd8f2" stop-opacity=".25"/><stop offset="1" stop-color="#5c87b7" stop-opacity=".55"/></linearGradient>
+     <filter id="warmGlow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="5"/></filter>
+     <filter id="softShadow" x="-50%" y="-90%" width="200%" height="300%"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000" flood-opacity=".6"/></filter>
+    </defs>
+    <g id="camera"><rect class="world-grid" x="-5000" y="-5000" width="11000" height="11000" fill="url(#dotGrid)"/><g id="wireLayer"></g><g id="partsLayer"></g><g id="overlayLayer"></g></g>
+   </svg><div class="stage-hint" id="stageHint"><b>Conexiones:</b> toca un punto luminoso de una pieza y luego otro. Arrastra las piezas para moverlas. Doble clic para girar.</div><div class="floating-tools"><button class="btn icon-only" id="zoomIn" title="Acercar" aria-label="Acercar">＋</button><button class="btn icon-only" id="zoomOut" title="Alejar" aria-label="Alejar">−</button><button class="btn icon-only" id="fitBtn" title="Centrar vista" aria-label="Centrar vista">⊡</button></div><div class="toast hidden" id="toast" role="status" aria-live="polite"></div></div>
+   <div class="bottom-bar">
+    <div class="tool-row"><button class="btn primary" id="playBtn">Ⅱ Pausar</button><button class="btn" id="stepBtn" title="Avanzar un paso si está pausado">⤏ Paso</button><label class="speed">Velocidad <input type="range" min="0.25" max="4" step="0.25" value="1" id="speedRange"><b id="speedLabel">1×</b></label></div>
+    <div class="tool-row"><div class="pill-switch" id="viewSwitch"><button data-view="real" class="active">Realista</button><button data-view="schematic">Esquema</button></div><div class="pill-switch" id="chargeSwitch"><button data-charge="electrons" class="active">e⁻</button><button data-charge="conventional">I →</button></div></div>
+    <div class="tool-row"><button class="btn tiny" id="valuesBtn">✓ Valores</button><button class="btn tiny" id="gridBtn">✓ Cuadrícula</button></div>
+   </div>
+  </main>
+  <aside class="sidebar rightbar" id="rightPanel"><div class="side-heading"><div><h2>Centro de análisis</h2><small>Explora, mide y comprende</small></div><span style="color:#9a8efa">◉</span></div>
+   <nav class="tabs" aria-label="Vistas del panel"><button class="tab active" data-tab="props"><span class="ico">◈</span>Editar</button><button class="tab" data-tab="meters"><span class="ico">▥</span>Medir</button><button class="tab" data-tab="challenges"><span class="ico">✦</span>Retos</button><button class="tab" data-tab="analysis"><span class="ico">⌁</span>Análisis</button></nav>
+   <div class="panel-content" id="panelContent"></div>
+  </aside>
+ </div>
+</div>
+<input type="file" id="openFile" accept=".json,application/json" hidden>
+<script>
+'use strict';
+/* NEXO CIRCUITOS — independent, dependency-free educational DC circuit engine.
+   Kirchhoff nodal analysis, linear element models, piecewise LED and backward-Euler RC.
+   Implementation and SVG artwork are original; no PhET code or image assets are used. */
+(() => {
+ const $=id=>document.getElementById(id);
+ const svg=$('scene'), camera=$('camera'), wiresEl=$('wireLayer'),partsEl=$('partsLayer'),overlayEl=$('overlayLayer');
+ const bounds=(n,a,b)=>Math.max(a,Math.min(b,n));
+ const NAMES={battery:'Batería',resistor:'Resistencia',bulb:'Bombilla',switch:'Interruptor',led:'LED',capacitor:'Condensador',motor:'Motor DC',fuse:'Fusible',pot:'Reóstato',coin:'Moneda',eraser:'Borrador',node:'Unión'};
+ const DESCS={battery:'Fuente continua con resistencia interna configurable. El terminal derecho es el polo positivo.',resistor:'Oposición constante al paso de la corriente. Disipa energía en calor (P = I²R).',bulb:'Lámpara modelada como resistencia constante. Su brillo depende de la potencia disipada.',switch:'Abre o cierra el circuito sin desconectar los cables.',led:'Diodo luminoso unidireccional con umbral aproximado de 1,9 V y resistencia directa.',capacitor:'Almacena energía eléctrica. Su tensión cambia con el tiempo al cargarse o descargarse.',motor:'Motor simplificado con resistencia, velocidad dinámica y fuerza contraelectromotriz.',fuse:'Elemento protector: se funde si la corriente supera su umbral durante un intervalo breve.',pot:'Resistencia variable de dos terminales (reóstato).',coin:'Conductor de resistencia muy pequeña: puede causar cortocircuitos.',eraser:'Aislante de resistencia muy alta: prácticamente interrumpe la circulación.',node:'Unión eléctrica para crear derivaciones: varios cables conectados aquí comparten potencial.'};
+ const GROUPS=[['FUENTES DE ENERGÍA',['battery']],['CIRCUITO BÁSICO',['resistor','bulb','switch','node']],['ELECTRÓNICA EXTENDIDA',['led','capacitor','motor','fuse','pot']],['¿CONDUCTOR O AISLANTE?',['coin','eraser']]];
+ const DEFAULTS={battery:{value:9,r:.18},resistor:{value:10},bulb:{value:15},switch:{closed:true},led:{on:false},capacitor:{value:.47,vc:0},motor:{value:8,rpm:0},fuse:{value:1.5,blown:false,heat:0},pot:{value:30},coin:{},eraser:{},node:{}};
+ const CHALLENGES=[
+  {id:'light',name:'¡Hágase la luz!',level:'INICIO',description:'Construye un circuito cerrado y consigue encender una bombilla.',hint:'Batería → interruptor cerrado → bombilla → batería. Puedes empezar con el ejemplo «Serie».',test:()=>parts.some(p=>p.type==='bulb'&&Math.abs(p.i||0)>.02)},
+  {id:'ohm',name:'Domina la ley de Ohm',level:'BÁSICO',description:'Consigue una resistencia de 20 Ω con una corriente cercana a 0,45 A.',hint:'Usa una fuente de 9 V, un resistor de 20 Ω y cables formando una vuelta completa.',test:()=>parts.some(p=>p.type==='resistor'&&Math.abs(p.value-20)<.01&&Math.abs(p.i||0)>.42&&Math.abs(p.i||0)<.47)},
+  {id:'series',name:'Dos luces en serie',level:'INTERMEDIO',description:'Enciende dos bombillas en serie. Ambas deben llevar la misma corriente y repartirse la tensión.',hint:'Cada bombilla debe recibir una fracción de la tensión total, y sus corrientes deben coincidir.',test:()=>{const b=parts.filter(p=>p.type==='bulb'&&Math.abs(p.i||0)>.025);let bat=parts.find(p=>p.type==='battery');return Boolean(bat&&b.length>=2&&Math.abs(Math.abs(b[0].i)-Math.abs(b[1].i))<.01&&Math.abs(b[0].dv)<Math.abs(bat.value)*.8&&Math.abs(b[1].dv)<Math.abs(bat.value)*.8)}},
+  {id:'parallel',name:'La magia del paralelo',level:'AVANZADO',description:'Logra que dos bombillas reciban, cada una, casi toda la tensión de la batería.',hint:'Crea dos caminos independientes entre los polos de la batería. Las uniones permiten ramificar.',test:()=>{const bat=parts.find(p=>p.type==='battery');return !!bat&&parts.filter(p=>p.type==='bulb'&&Math.abs(p.i||0)>.025&&Math.abs(Math.abs(p.dv)-Math.abs(bat.value))<Math.max(1,.16*bat.value)).length>=2}},
+  {id:'motor',name:'Activa el laboratorio móvil',level:'EXPERIMENTO',description:'Haz girar un motor por encima de 150 rpm.',hint:'Conecta los dos terminales del motor a una batería mediante cables; observa la velocidad.',test:()=>parts.some(p=>p.type==='motor'&&Math.abs(p.rpm)>150)},
+  {id:'rc',name:'Energía almacenada',level:'EXPERIMENTO',description:'Carga un condensador a más de 4 voltios y observa su evolución temporal.',hint:'Abre el ejemplo «RC» y déjalo funcionando varios segundos.',test:()=>parts.some(p=>p.type==='capacitor'&&Math.abs(p.vc||0)>4)}
+ ];
+ let parts=[],wires=[],seq=1,selected=null,tab='props',mode='select',pendingWire=null,meterA=null,meterB=null,probeTarget=null;
+ let playing=true,settings={view:'real',charge:'electrons',values:true,grid:true,speed:1,rho:0},cam={x:0,y:0,s:1};
+ let simulationTime=0,lastFrame=0,lastElectrical=0,lastInfo=0,frameFase=0,sampleWait=0,scopeData=[],history=[],historyAt=-1,drag=null;
+ let netPot={},netGroup={},hazard='',toastTimeout=0,activeChallenge='light',completed=new Set(),lastPropsId='',rotorAngle=new Map();
+ let wireMotion=[],lastWarning='',scopedChannel='i';
+ const fmt=(n,d=2)=>Number.isFinite(n)?(Math.abs(n)>=10000?n.toExponential(2):n.toFixed(d)).replace('.',','):'—';
+ const fNum=n=>Number.isFinite(Number(n))?Number(n):0;
+ const uid=prefix=>prefix+(seq++);
+ const sAttr=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const name=p=>NAMES[p.type]+' '+p.id.replace(/\D/g,'');
+ const partValue=p=>p.type==='battery'?`${fmt(p.value,1)} V`:p.type==='capacitor'?`${fmt(p.value,2)} F`:['resistor','bulb','pot'].includes(p.type)?`${fmt(p.value,p.value<10?1:0)} Ω`:p.type==='fuse'?`${fmt(p.value,1)} A`:p.type==='motor'?`${fmt(p.rpm||0,0)} rpm`:'';
+ const serialState=()=>({version:1,parts:parts.map(p=>{let q={...p};delete q.i;delete q.dv;delete q.power;return q}),wires:wires.map(w=>({id:w.id,a:{...w.a},b:{...w.b},route:w.route,bend:w.bend})),settings:{...settings},achievements:[...completed]});
+ const jsonState=()=>JSON.stringify(serialState());
+ const STORE_KEY='nexo-circuitos-v2-autosave';
+ const putStorage=()=>{try{localStorage.setItem(STORE_KEY,jsonState())}catch(e){/* file:// may deny storage */}};
+ const pushHistory=()=>{const state=jsonState();if(history[historyAt]===state)return;history=history.slice(0,historyAt+1);history.push(state);if(history.length>75)history.shift();historyAt=history.length-1;putStorage();updateHistoryButtons()};
+ const updateHistoryButtons=()=>{$('undoBtn').disabled=historyAt<1;$('redoBtn').disabled=historyAt>=history.length-1};
+ const snapshot=()=>{pushHistory()};
+ function loadState(data){
+  if(!data||!Array.isArray(data.parts)||!Array.isArray(data.wires)||data.parts.length>180||data.wires.length>420)throw Error('Estructura inválida o circuito demasiado grande.');
+  let ids=new Set(),pNew=[],wNew=[];
+  for(let raw of data.parts){if(!raw||!NAMES[raw.type]||typeof raw.id!=='string'||!/^[c][0-9]{1,8}$/.test(raw.id)||ids.has(raw.id))throw Error('Componente incompatible');ids.add(raw.id);let p={...DEFAULTS[raw.type],id:raw.id,type:raw.type,x:bounds(fNum(raw.x),-3000,3000),y:bounds(fNum(raw.y),-3000,3000),rot:[0,90,180,270].includes(raw.rot)?raw.rot:0};if('value'in p)p.value=bounds(fNum(raw.value)||p.value,.001,p.type==='battery'?200:p.type==='capacitor'?100:1000000);if('r'in p)p.r=bounds(fNum(raw.r)||p.r,.02,50);if(p.type==='switch')p.closed=!!raw.closed;if(p.type==='led')p.on=!!raw.on;if(p.type==='capacitor')p.vc=bounds(fNum(raw.vc),-1000,1000);if(p.type==='motor')p.rpm=bounds(fNum(raw.rpm),-10000,10000);if(p.type==='fuse'){p.blown=!!raw.blown;p.heat=bounds(fNum(raw.heat),0,10)}pNew.push(p)}
+  let terminals=new Set(pNew.flatMap(p=>p.type==='node'?[`${p.id}:n`]:[`${p.id}:a`,`${p.id}:b`]));
+  for(let w of data.wires){if(!w||typeof w.id!=='string'||!/^[w][0-9]{1,8}$/.test(w.id)||ids.has(w.id))throw Error('Cable incompatible');const a=String(w.a?.comp)+':'+String(w.a?.port),b=String(w.b?.comp)+':'+String(w.b?.port);if(!terminals.has(a)||!terminals.has(b)||a===b)throw Error('Conexión inválida');ids.add(w.id);wNew.push({id:w.id,a:{comp:w.a.comp,port:w.a.port},b:{comp:w.b.comp,port:w.b.port},route:['auto','hv','vh','direct'].includes(w.route)?w.route:'auto',bend:bounds(fNum(w.bend),.05,.95)||.5})}
+  parts=pNew;wires=wNew;const matches=[...ids].map(k=>Number(k.slice(1)));seq=Math.max(1,...matches)+1;
+  if(data.settings){const t=data.settings;settings={...settings,view:t.view==='schematic'?'schematic':'real',charge:t.charge==='conventional'?'conventional':'electrons',values:t.values!==false,grid:t.grid!==false,speed:bounds(fNum(t.speed)||1,.25,4),rho:bounds(fNum(t.rho),0,5)}}
+  if(Array.isArray(data.achievements))completed=new Set(data.achievements.filter(id=>CHALLENGES.some(ch=>ch.id===id)));selected=null;mode='select';pendingWire=null;meterA=null;meterB=null;probeTarget=null;simulationTime=0;scopeData=[];syncButtons();refreshScene();
+ }
+ const findPart=id=>parts.find(p=>p.id===id);
+ const findWire=id=>wires.find(w=>w.id===id);
+ function makePart(type,x,y,rot=0){if(parts.length>=120){showToast('Límite de 120 componentes para mantener la simulación fluida.');return null}const p={id:uid('c'),type,x,y,rot,...structuredClone(DEFAULTS[type])};parts.push(p);return p}
+ function makeWire(a,b){if(wires.length>=280){showToast('Límite de 280 cables para conservar el rendimiento.');return null}if(!a||!b||`${a.comp}:${a.port}`===`${b.comp}:${b.port}`)return null;if(wires.some(w=>((w.a.comp===a.comp&&w.a.port===a.port&&w.b.comp===b.comp&&w.b.port===b.port)||(w.a.comp===b.comp&&w.a.port===b.port&&w.b.comp===a.comp&&w.b.port===a.port))))return null;const w={id:uid('w'),a:{...a},b:{...b},route:'auto',bend:.5};wires.push(w);return w}
+ const tId=t=>t.comp+':'+t.port;
+ function portPos(t){const p=findPart(t.comp);if(!p)return null;const x=t.port==='a'?-54:t.port==='b'?54:0;const a=p.rot*Math.PI/180;return {x:p.x+Math.cos(a)*x,y:p.y+Math.sin(a)*x}}
+ function segmentPts(w){const a=portPos(w.a),b=portPos(w.b);if(!a||!b)return[];const dx=Math.abs(a.x-b.x),dy=Math.abs(a.y-b.y);const rt=w.route==='auto'?(dy<16||dx<16?'direct':dx>dy?'hv':'vh'):w.route;let pts;if(rt==='direct')pts=[a,b];else if(rt==='vh'){const yy=a.y+(b.y-a.y)*w.bend;pts=[a,{x:a.x,y:yy},{x:b.x,y:yy},b]}else{const xx=a.x+(b.x-a.x)*w.bend;pts=[a,{x:xx,y:a.y},{x:xx,y:b.y},b]}return pts.filter((p,i,arr)=>!i||p.x!==arr[i-1].x||p.y!==arr[i-1].y)}
+ const polyPath=pts=>pts.length?'M '+pts.map(p=>`${fmtCoord(p.x)} ${fmtCoord(p.y)}`).join(' L '):'';
+ const fmtCoord=n=>Number(n.toFixed(2));
+ const lengthPts=pts=>pts.slice(1).reduce((a,p,i)=>a+Math.hypot(p.x-pts[i].x,p.y-pts[i].y),0);
+ const wireR=w=>.025+settings.rho*lengthPts(segmentPts(w))/100;
+ const face=c=>c.rot===0?'→':c.rot===90?'↓':c.rot===180?'←':'↑';
+ function art(c,schematic){
+  const dark='#14243e',outline='#a9d0e5',blue='#95e8fa';
+  if(c.type==='node')return `<circle cx="0" cy="0" r="13" fill="#142b49" stroke="#82e6f7" stroke-width="3"/><circle r="5" fill="#d6faff"/><circle r="20" fill="none" stroke="#4bcce6" stroke-dasharray="4 5" opacity=".43"/>`;
+  let leads=`<line x1="-54" y1="0" x2="-33" y2="0" stroke="#c98362" stroke-width="6" stroke-linecap="round"/><line x1="33" y1="0" x2="54" y2="0" stroke="#c98362" stroke-width="6" stroke-linecap="round"/>`;
+  if(schematic){
+   const schematics={
+    battery:`<line x1="-12" y1="-13" x2="-12" y2="13" stroke="#e5ebfa" stroke-width="3"/><line x1="9" y1="-25" x2="9" y2="25" stroke="#e5ebfa" stroke-width="3.5"/><text x="17" y="-20" fill="#f9c680" font-size="16" font-weight="900">+</text>`,
+    resistor:`<path d="M-35 0 L-27 -15 L-15 15 L-3 -15 L9 15 L21 -15 L32 0" stroke="#e7ebfd" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>`,
+    bulb:`<circle r="24" fill="#152944" stroke="#dbeafa" stroke-width="3"/><path d="M-16 -16L16 16M-16 16L16 -16" stroke="#ffc88a" stroke-width="4"/>`,
+    switch:`<circle cx="-22" r="5" fill="${blue}"/><circle cx="22" r="5" fill="${blue}"/><line x1="-22" y1="-1" x2="22" y2="${c.closed?0:-23}" stroke="#f4d9b6" stroke-width="4" stroke-linecap="round"/>`,
+    led:`<path d="M-21 -20L10 0L-21 20Z" stroke="#b4ffe4" stroke-width="3" fill="#3f7c7d"/><path d="M14 -23V23" stroke="#d1fff8" stroke-width="4"/><path d="M4 -18L20 -33M14 -16l7 -3 -4 -7M16 -8L32 -22M27 -14l6 -3 -3 -7" stroke="#94ebda" stroke-width="2" fill="none"/>`,
+    capacitor:`<path d="M-10 -25V25 M10 -25V25" stroke="#e5eff9" stroke-width="5"/>`,
+    motor:`<circle r="24" fill="#153251" stroke="#dcefff" stroke-width="3"/><text x="0" y="9" text-anchor="middle" font-size="29" font-weight="800" fill="#c6ecff">M</text>`,
+    fuse:`<rect x="-33" y="-12" width="66" height="24" rx="5" fill="none" stroke="#e2ebfa" stroke-width="2.8"/><path d="M-24 0H${c.blown?'-6':'24'} ${c.blown?'M6 0H24':''}" stroke="${c.blown?'#ff8394':'#ffc78b'}" stroke-width="4"/>`,
+    pot:`<rect x="-30" y="-13" width="60" height="26" fill="#193149" stroke="#e9efff" stroke-width="2"/><path d="M7 -34V-14m-7 -7l7 7 7 -7" stroke="#ffd188" stroke-width="3" fill="none"/>`,
+    coin:`<circle r="23" fill="#6a5733" stroke="#f5c97d" stroke-width="3"/><text x="0" y="8" text-anchor="middle" font-size="25" font-weight="800" fill="#ffe7a5">$</text>`,
+    eraser:`<rect x="-29" y="-19" width="58" height="38" rx="6" fill="#d67b9a" stroke="#f9bbcb" stroke-width="3"/><path d="M-6 -18V19" stroke="#f8cbdc" stroke-width="6"/>`
+   };
+   return leads+schematics[c.type];
+  }
+  switch(c.type){
+   case 'battery':return leads+`<g filter="url(#softShadow)"><rect x="-41" y="-20" width="82" height="40" rx="10" fill="url(#batteryBody)" stroke="#7a97be" stroke-width="1.6"/><rect x="22" y="-19" width="14" height="38" rx="3" fill="#f5a54b"/><rect x="-44" y="-13" width="5" height="26" rx="2" fill="url(#metal)"/><rect x="39" y="-12" width="8" height="24" rx="2" fill="url(#metal)"/><path d="M-29 -14H13" stroke="#d0eaff" stroke-opacity=".38" stroke-width="2"/><text x="-9" y="7" text-anchor="middle" font-size="13" fill="#cdeaff" font-weight="900">DC</text><text x="29" y="6" text-anchor="middle" font-size="14" fill="#fff8db" font-weight="900">+</text></g>`;
+   case 'resistor':return leads+`<g filter="url(#softShadow)"><rect x="-38" y="-13" width="76" height="26" rx="9" fill="#e9d1a7" stroke="#fff0c5" stroke-width="2"/><rect x="-24" y="-12" width="7" height="24" fill="#6e4c35"/><rect x="-9" y="-12" width="7" height="24" fill="#ba543e"/><rect x="6" y="-12" width="7" height="24" fill="#c68b37"/><rect x="24" y="-12" width="4" height="24" fill="#bda24e"/><path d="M-32 -8H31" stroke="#fff9de" stroke-opacity=".5" stroke-width="2"/></g>`;
+   case 'bulb':return leads+`<circle class="lamp-aura" data-halo="${c.id}" r="85" opacity="0"/><g class="bulb-rays nohit" data-rays="${c.id}" opacity="0">${Array.from({length:16},(_,k)=>{const a=k*Math.PI/8;const c1=39,c2=60+(k%3)*5;return `<line x1="${(Math.cos(a)*c1).toFixed(2)}" y1="${(Math.sin(a)*c1).toFixed(2)}" x2="${(Math.cos(a)*c2).toFixed(2)}" y2="${(Math.sin(a)*c2).toFixed(2)}" stroke="#ffd27b" stroke-width="${k%2===0?2.3:1.6}" stroke-linecap="round"/>`}).join('')}</g><g filter="url(#softShadow)"><path d="M-21 7Q-27 -3 -20 -19A25 25 0 0 1 20 -19Q27 -2 17 8L11 21H-11Z" fill="url(#glass)" stroke="#bedffa" stroke-width="2.4"/><path d="M-12 -6L-5 2 0 -5 6 2 12 -7" stroke="#ffbc68" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-12 -4L-14 10M12 -5L14 10" stroke="#b7cddd" stroke-width="1.5"/><rect x="-15" y="11" width="30" height="17" rx="4" fill="url(#metal)" stroke="#bed3f1"/><path d="M-14 16H14M-14 22H14" stroke="#354e73" stroke-width="2"/></g>`;
+   case 'switch':return leads+`<g filter="url(#softShadow)"><rect x="-39" y="-17" width="78" height="34" rx="10" fill="#25415d" stroke="#7e9cbc" stroke-width="2"/><circle cx="-24" r="6" fill="#ffd18e" stroke="#fff1d4" stroke-width="2"/><circle cx="24" r="6" fill="#ffd18e" stroke="#fff1d4" stroke-width="2"/><path d="M-24 0L23 ${c.closed?0:-26}" stroke="#e4ad7a" stroke-width="7" stroke-linecap="round"/><circle cx="-24" r="5" fill="#dce8fb"/><circle cx="23" cy="${c.closed?0:-26}" r="5" fill="#dfc4a0"/></g>`;
+   case 'led':return leads+`<circle class="led-aura" data-halo="${c.id}" r="70" opacity="0"/><g filter="url(#softShadow)"><path d="M-30 12V-6A30 30 0 0 1 30 -6V12Z" fill="url(#glass)" stroke="#a5f6e3" stroke-width="2"/><rect x="-30" y="8" width="60" height="14" rx="5" fill="#358a89" stroke="#95ffe7" stroke-width="2"/><path d="M-12 4L0 -15 13 4Z" fill="#c7ffdd" opacity=".9"/></g>`;
+   case 'capacitor':return leads+`<g filter="url(#softShadow)"><rect x="-24" y="-31" width="48" height="62" rx="11" fill="#173550" stroke="#6aacc3" stroke-width="2"/><rect x="-17" y="-30" width="9" height="60" rx="3" fill="#c3ddef"/><rect x="8" y="-30" width="9" height="60" rx="3" fill="#f4b37a"/><path d="M-6 -25V25" stroke="#74d4e8" stroke-dasharray="3 4" stroke-width="1.6"/></g>`;
+   case 'motor':return leads+`<g filter="url(#softShadow)"><circle r="34" fill="#1d3958" stroke="#89b0cb" stroke-width="3"/><circle r="27" fill="#12253e" stroke="#4c7d9f" stroke-width="3"/><g data-rotor="${c.id}"><path d="M0 -21C16 -26 17 -6 0 0C-4 -8 -6 -15 0 -21M21 0C25 15 6 17 0 0C8 -4 15 -6 21 0M0 21C-15 25 -17 6 0 0C4 9 6 15 0 21M-21 0C-25 -17 -6 -17 0 0C-9 5 -16 6 -21 0" fill="#81d2e4" stroke="#b9f2fa" stroke-width="1"/></g><circle r="6" fill="#ffe4b1"/></g>`;
+   case 'fuse':return leads+`<g filter="url(#softShadow)"><rect x="-39" y="-15" width="78" height="30" rx="8" fill="#a8d6e1" fill-opacity=".22" stroke="#a4dbe8" stroke-width="2.5"/><rect x="-42" y="-17" width="10" height="34" rx="3" fill="url(#metal)"/><rect x="32" y="-17" width="10" height="34" rx="3" fill="url(#metal)"/><path d="M-32 0 L${c.blown?'-9':'32'} 0 ${c.blown?'M9 0L32 0':''}" stroke="${c.blown?'#ff7a8e':'#ffc57a'}" stroke-width="3.8"/><path d="M-20 -9H24" stroke="#ecffff" stroke-opacity=".34" stroke-width="1.7"/></g>`;
+   case 'pot':return leads+`<g filter="url(#softShadow)"><rect x="-39" y="-14" width="78" height="28" rx="8" fill="#234663" stroke="#8bb9d7" stroke-width="2"/><path d="M-28 0H28" stroke="#d0e6f3" stroke-width="4"/><circle cx="8" cy="0" r="9" fill="#f4bb77" stroke="#fff1c7" stroke-width="2"/><path d="M8 -8V-25" stroke="#ffc586" stroke-width="3"/></g>`;
+   case 'coin':return leads+`<g filter="url(#softShadow)"><circle r="27" fill="#cf9750" stroke="#fce0a1" stroke-width="3"/><circle r="21" fill="#e1ae61" stroke="#a56a34" stroke-width="2"/><text x="0" y="9" text-anchor="middle" fill="#fff1ba" font-size="29" font-weight="900">$</text></g>`;
+   case 'eraser':return leads+`<g filter="url(#softShadow)" transform="rotate(-11)"><rect x="-30" y="-20" width="60" height="40" rx="8" fill="#f6a5c0" stroke="#ffd3df" stroke-width="2"/><rect x="-8" y="-20" width="15" height="40" fill="#e970a0"/><path d="M-24 -13H-14" stroke="#ffe7ec" stroke-width="3"/></g>`;
+  }
+  return leads;
+ }
+ function drawTerm(c,port){let x=port==='a'?-54:port==='b'?54:0,k=c.id+':'+port;return `<g class="terminal-group ${pendingWire===k?'pending':''}" data-terminal="${k}" transform="translate(${x},0)"><circle class="terminal-ring" r="8"/><circle class="terminal-core" r="3"/><circle class="terminal-hit" r="17"/></g>`}
+ function drawComp(c){const sel=selected?.kind==='part'&&selected.id===c.id,nonode=c.type==='node';const transform=`translate(${fmtCoord(c.x)} ${fmtCoord(c.y)}) rotate(${c.rot})`;
+  const frame=sel?nonode?`<circle class="selection-frame" r="25"/>`:`<rect class="selection-frame" x="-64" y="-44" width="128" height="88" rx="14"/>`:'';
+  const terminals=nonode?drawTerm(c,'n'):drawTerm(c,'a')+drawTerm(c,'b');
+  const value=settings.values&&partValue(c)?`<text class="value-tag" x="${fmtCoord(c.x)}" y="${fmtCoord(c.y+62)}">${partValue(c)}</text>`:'';
+  const label=sel?`<text class="comp-name" x="${fmtCoord(c.x)}" y="${fmtCoord(c.y-60)}">${NAMES[c.type].toUpperCase()}</text>`:'';
+  return `<g class="component" data-comp="${c.id}" transform="${transform}">${frame}${art(c,settings.view==='schematic')}${terminals}</g>${value}${label}`;
+ }
+ function drawWire(w){const pts=segmentPts(w),d=polyPath(pts);const sel=selected?.kind==='wire'&&selected.id===w.id;const n=Math.max(3,Math.min(10,Math.floor(lengthPts(pts)/45)));const dots=Array.from({length:n},(_,i)=>settings.charge==='electrons'?`<circle class="flow-dot" cx="0" cy="0" r="4" opacity="0"/>`:`<path class="flow-arrow" d="M-5 -4L5 0L-5 4Z" opacity="0"/>`).join('');return `<g class="wire-group ${sel?'wire-selected':''}" data-wire="${w.id}"><path class="wire-hit" d="${d}"/><path class="wire-outer" d="${d}"/><path class="wire-inner" d="${d}"/><path class="wire-highlight" d="${d}"/><g data-flow-wire="${w.id}" class="nohit">${dots}</g></g>`}
+ function renderOverlay(){let out='';
+  if(pendingWire){const [comp,port]=pendingWire.split(':');const a=portPos({comp,port});if(a){const b=lastMouseWorld||a;out+=`<path id="draftWire" class="wire-preview" d="M${fmtCoord(a.x)} ${fmtCoord(a.y)} L${fmtCoord(b.x)} ${fmtCoord(b.y)}"/>`}}
+  const drawProbe=(t,color,letter)=>{const p=t&&portPos(t);return p?`<g class="nohit" transform="translate(${p.x} ${p.y})"><circle r="21" fill="${color}" fill-opacity=".13" stroke="${color}" stroke-width="2" stroke-dasharray="4 4"/><circle r="11" fill="${color}"/><text class="probe-label" x="0" y="4">${letter}</text></g>`:''};
+  out+=drawProbe(meterA,'#f7768b','+')+drawProbe(meterB,'#6ec6fa','−');
+  if(selected?.kind==='wire'){const w=findWire(selected.id);if(w&&['hv','vh'].includes(w.route)){const p=segmentPts(w);if(p.length>=4){const mid={x:(p[1].x+p[2].x)/2,y:(p[1].y+p[2].y)/2};out+=`<circle class="wire-handle" data-wirehandle="${w.id}" cx="${mid.x}" cy="${mid.y}" r="11"/>`}}}
+  return out;
+ }
+ let lastMouseWorld=null;
+ function render(){
+  camera.setAttribute('transform',`translate(${fmtCoord(cam.x)} ${fmtCoord(cam.y)}) scale(${cam.s})`);
+  $('scene').style.background='radial-gradient(ellipse at 40% 20%,#10213b,#0a1428 62%,#071123)';
+  camera.querySelector('.world-grid').setAttribute('opacity',settings.grid?'1':'0');
+  wiresEl.innerHTML=wires.map(drawWire).join('');partsEl.innerHTML=parts.map(drawComp).join('');overlayEl.innerHTML=renderOverlay();
+  wireMotion=[];
+  for(const w of wires){const group=wiresEl.querySelector(`[data-wire="${w.id}"]`);if(!group)continue;const path=group.querySelector('.wire-inner'),dots=Array.from(group.querySelector('[data-flow-wire]').children);let len=0;try{len=path.getTotalLength()}catch(e){}wireMotion.push({w,path,dots,len})}
+  $('totalComp').textContent=parts.length;
+  $('stageHint').innerHTML=mode==='volt'?'<b>Voltímetro:</b> selecciona dos terminales, primero punta roja (+), luego punta azul (−).':mode==='amp'?'<b>Amperímetro:</b> toca una pieza o un cable para consultar su corriente.':pendingWire?'<b>Conexión en progreso:</b> ahora toca otro terminal. Pulsa Escape para cancelar.':'<b>Conexiones:</b> toca un terminal y luego otro. Arrastra piezas para moverlas. Doble clic para girar.';
+  $('modeInstruction').textContent=mode==='volt'?'Midiendo diferencia de potencial':mode==='amp'?'Midiendo intensidad':pendingWire?'Selecciona el destino del cable':'Une los terminales para construir circuitos.';
+ }
+ function drawLibrary(){let h='<div class="group-heading"><span>PLANTILLAS INTERACTIVAS</span><span>↗</span></div><div class="preset-grid"><button data-example-tile="series">◉ Serie</button><button data-example-tile="parallel">⫴ Paralelo</button><button data-example-tile="rc">⌁ RC</button><button data-example-tile="motor">⚙ Motor</button><button data-example-tile="fuse">⚡ Fusible</button><button data-example-tile="empty">＋ En blanco</button></div>';for(const [group,types] of GROUPS){h+=`<div class="group-heading"><span>${group}</span><span>${types.length}</span></div><div class="parts-grid">`;for(const type of types){const dummy={id:'c0',type,...DEFAULTS[type],rot:0};h+=`<button class="part-tile" type="button" data-add="${type}" title="Toca para añadir o arrastra al tablero"><svg viewBox="0 0 90 45" aria-hidden="true"><g transform="translate(45 23) scale(.45)">${art(dummy,false)}</g></svg><span>${NAMES[type]}</span></button>`}h+='</div>'}h+=`<div class="side-note"><strong>◈ Acceso sin conexión</strong>Los circuitos se calculan <b>localmente</b> en tu navegador. Nada se transmite a internet.<br><br>Consejo: usa <b>Unión</b> para ramificar cables. Los cruces de cables no conectan por sí solos.</div>`;$('partsLibrary').innerHTML=h}
+ // DC numerical core: every component and cable is a branch in a nodal-admittance network.
+ function gaussian(A,b){const n=b.length;if(!n)return[];const x=b.slice();for(let k=0;k<n;k++){let pivot=k;for(let i=k+1;i<n;i++)if(Math.abs(A[i][k])>Math.abs(A[pivot][k]))pivot=i;if(Math.abs(A[pivot][k])<1e-13)return Array(n).fill(0);if(pivot!==k){[A[pivot],A[k]]=[A[k],A[pivot]];[x[pivot],x[k]]=[x[k],x[pivot]]}const d=A[k][k];for(let i=k+1;i<n;i++){let f=A[i][k]/d;if(!f)continue;A[i][k]=0;for(let j=k+1;j<n;j++)A[i][j]-=f*A[k][j];x[i]-=f*x[k]}}const out=new Array(n).fill(0);for(let i=n-1;i>=0;i--){let v=x[i];for(let j=i+1;j<n;j++)v-=A[i][j]*out[j];out[i]=v/A[i][i]}return out}
+ function solveCircuit(dt,advance){
+  dt=bounds(dt,.005,.2);
+  const allTerminals=[];
+  for(const p of parts){if(p.type==='node')allTerminals.push(`${p.id}:n`);else allTerminals.push(`${p.id}:a`,`${p.id}:b`);p.i=0;p.dv=0;p.power=0}
+  for(const w of wires){allTerminals.push(tId(w.a),tId(w.b));w.i=0;w.dv=0}
+  let V={};const nodes=[...new Set(allTerminals)];if(!nodes.length){netPot={};netGroup={};hazard='';return {loadP:0,totalI:0,balance:0}}
+  let edges=[];
+  function createEdges(){edges=[];const add=(a,b,g,i0,object,kind)=>edges.push({a,b,g,i0,object,kind,i:0,dv:0});
+   for(const p of parts){if(p.type==='node')continue;let g=0,i0=0;
+    switch(p.type){
+     case 'battery':g=1/Math.max(.02,p.r);i0=p.value*g;break;
+     case 'resistor':case 'pot':case 'bulb':g=1/Math.max(.001,p.value);break;
+     case 'switch':g=p.closed?1/.035:1/1e9;break;
+     case 'led':g=p.on?1/2.2:1/1e9;i0=p.on?-1.9*g:0;break;
+     case 'capacitor':g=p.value/dt;i0=-g*(p.vc||0);break;
+     case 'motor':g=1/Math.max(.5,p.value);i0=-g*(p.rpm||0)*.003;break;
+     case 'fuse':g=p.blown?1/1e9:1/.075;break;
+     case 'coin':g=1/.065;break;
+     case 'eraser':g=1/1e9;break;
+    }
+    add(`${p.id}:a`,`${p.id}:b`,g,i0,p,'part');
+   }
+   for(const w of wires)add(tId(w.a),tId(w.b),1/wireR(w),0,w,'wire');
+  }
+  function calculate(){
+   const parent=new Map(nodes.map(k=>[k,k]));
+   function root(a){while(parent.get(a)!==a){parent.set(a,parent.get(parent.get(a)));a=parent.get(a)}return a}
+   function union(a,b){a=root(a);b=root(b);if(a!==b)parent.set(b,a)}
+   for(const e of edges)union(e.a,e.b);
+   const groups=new Map();for(const node of nodes){let r=root(node);if(!groups.has(r))groups.set(r,[]);groups.get(r).push(node)}
+   netGroup={};for(const node of nodes)netGroup[node]=root(node);
+   let byGroup=new Map();for(const e of edges){let r=root(e.a);if(!byGroup.has(r))byGroup.set(r,[]);byGroup.get(r).push(e)}
+   V={};
+   for(const [r,gn] of groups){const ref=gn.find(n=>{const p=findPart(n.split(':')[0]);return p?.type==='battery'&&n.endsWith(':a')})||gn[0];V[ref]=0;if(gn.length===1)continue;const ordered=gn.filter(n=>n!==ref),at=new Map(ordered.map((n,i)=>[n,i])),size=ordered.length,A=Array.from({length:size},()=>new Array(size).fill(0)),rhs=new Array(size).fill(0);
+    for(const e of byGroup.get(r)||[]){if(e.a===e.b)continue;let ia=at.get(e.a),ib=at.get(e.b),g=e.g;if(ia!==undefined){A[ia][ia]+=g;rhs[ia]-=e.i0}if(ib!==undefined){A[ib][ib]+=g;rhs[ib]+=e.i0}if(ia!==undefined&&ib!==undefined){A[ia][ib]-=g;A[ib][ia]-=g}}
+    const X=gaussian(A,rhs);ordered.forEach((n,i)=>{V[n]=Number.isFinite(X[i])?bounds(X[i],-1e8,1e8):0});
+   }
+   for(const e of edges){e.dv=(V[e.a]||0)-(V[e.b]||0);e.i=e.g*e.dv+e.i0}
+  }
+  for(let j=0;j<9;j++){
+   createEdges();calculate();let changed=false;
+   for(const p of parts.filter(p=>p.type==='led')){const dv=(V[`${p.id}:a`]||0)-(V[`${p.id}:b`]||0);const next=p.on?dv>1.83:dv>1.92;if(next!==p.on){p.on=next;changed=true}}
+   if(!changed)break;
+   if(j===8){createEdges();calculate()}
+  }
+  netPot=V;
+  let loadP=0,totalI=0,balanceMap={},maxKCL=0,warnings=[];
+  for(const e of edges){e.object.i=e.i;e.object.dv=e.dv;e.object.power=e.dv*e.i;balanceMap[e.a]=(balanceMap[e.a]||0)+e.i;balanceMap[e.b]=(balanceMap[e.b]||0)-e.i;
+   if(e.kind==='wire')loadP+=Math.max(0,e.object.power);
+   else if(e.object.type!=='battery'){loadP+=Math.max(0,e.object.power)}
+  }
+  for(const val of Object.values(balanceMap))maxKCL=Math.max(maxKCL,Math.abs(val));
+  let fuseChanged=false;
+  if(advance){for(const p of parts){if(p.type==='capacitor')p.vc=bounds((V[`${p.id}:a`]||0)-(V[`${p.id}:b`]||0),-1000,1000);
+    if(p.type==='motor'){const target=bounds(p.i*650,-6000,6000);p.rpm=bounds(p.rpm+(target-p.rpm)*(1-Math.exp(-dt*1.8)),-6000,6000)}
+    if(p.type==='fuse'&&!p.blown){p.heat=Math.max(0,p.heat+dt*(Math.abs(p.i)>p.value?Math.min(25,Math.pow(Math.abs(p.i)/p.value,2)):-2));if(p.heat>=1){p.blown=true;fuseChanged=true;warnings.push('Un fusible se ha fundido para proteger el circuito.')}}
+   }}
+  for(const p of parts.filter(p=>p.type==='battery')){totalI+=Math.abs(p.i);if(Math.abs(p.i)>8||Math.abs(p.dv)<Math.abs(p.value)*.2&&Math.abs(p.i)>3)warnings.push('¡Alerta! Intensidad excesiva: posible cortocircuito. Añade resistencia o un fusible.')}
+  if(parts.some(p=>p.type==='fuse'&&p.blown))warnings.push('Hay un fusible fundido. Selecciónalo para rearmarlo.');
+  hazard=[...new Set(warnings)].join(' ');
+  if(fuseChanged){render();showToast('⚠ Protección activada: fusible fundido.')}
+  return {loadP,totalI,balance:maxKCL,edges};
+ }
+ let metrics={loadP:0,totalI:0,balance:0};
+ function refreshScene(){metrics=solveCircuit(1/30,false);render();buildPanel();updateMeasurements();updateFlow(0);validateChallenge()}
+ function safeCompare(a,b){return a===b}
+ function activeObject(){return selected?.kind==='part'?findPart(selected.id):selected?.kind==='wire'?findWire(selected.id):null}
+ function setSelected(kind,id){selected=kind&&id?{kind,id}:null;if(tab==='props'||tab==='analysis')buildPanel();render();updateMeasurements()}
+ function showToast(message){const el=$('toast');el.textContent=message;el.classList.remove('hidden');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.classList.add('hidden'),2500)}
+ const getTerminal=s=>{if(!s)return null;const [comp,port]=s.split(':');const p=findPart(comp);if(!p||(p.type==='node'?port!=='n':port!=='a'&&port!=='b'))return null;return{comp,port}};
+ function connectTerminal(key){const target=getTerminal(key);if(!target)return;if(mode==='volt'){if(!meterA||meterA&&meterB){meterA=target;meterB=null;showToast('Punta roja situada. Selecciona un segundo terminal (azul).')}else{meterB=target;showToast('Medición de tensión disponible en «Medir».')}render();updateMeasurements();return}
+  if(mode==='amp'){showToast('Para medir corriente, selecciona un cable o componente.');return}
+  if(!pendingWire){pendingWire=key;lastMouseWorld=portPos(target);render();return}
+  if(pendingWire===key){pendingWire=null;render();return}
+  const a=getTerminal(pendingWire);pendingWire=null;if(makeWire(a,target)){afterEdit();showToast('Cable conectado.')}else{render();showToast('Esta conexión ya existe.')}
+ }
+ function afterEdit(){metrics=solveCircuit(1/30,false);render();buildPanel();updateMeasurements();pushHistory();validateChallenge()}
+ function removeSelected(){if(!selected)return;if(selected.kind==='part'){const id=selected.id;parts=parts.filter(p=>p.id!==id);wires=wires.filter(w=>w.a.comp!==id&&w.b.comp!==id);if(meterA?.comp===id)meterA=null;if(meterB?.comp===id)meterB=null}else wires=wires.filter(w=>w.id!==selected.id);selected=null;afterEdit();showToast('Elemento eliminado')}
+ function rotateSelected(){const p=activeObject();if(!p||!p.type)return;p.rot=(p.rot+90)%360;afterEdit()}
+ function duplicateSelected(){const p=activeObject();if(!p||!p.type)return;const q=makePart(p.type,p.x+90,p.y+90,p.rot);if(!q)return;for(const key of Object.keys(DEFAULTS[p.type]))q[key]=p[key];selected={kind:'part',id:q.id};afterEdit();showToast('Componente duplicado')}
+ function toggleSwitch(p){if(!p||p.type!=='switch')return;p.closed=!p.closed;afterEdit();showToast(p.closed?'Interruptor cerrado':'Interruptor abierto')}
+ function setMode(newMode){mode=mode===newMode?'select':newMode;pendingWire=null;render();buildPanel();showToast(mode==='volt'?'Selecciona dos terminales para medir voltaje.':mode==='amp'?'Selecciona un componente o cable para medir corriente.':'Herramienta de selección activada.')}
+ function addPartAt(type,pos){if(!NAMES[type])return;const p=makePart(type,bounds(pos.x,-2500,2500),bounds(pos.y,-2500,2500));if(!p)return;selected={kind:'part',id:p.id};pendingWire=null;afterEdit();showToast(NAMES[type]+' añadido. Conecta sus puntos luminosos.');if(innerWidth<721)$('leftPanel').classList.remove('open')}
+ function addPartCenter(type){const center=worldPointAtCenter();let pos=center;for(let k=0;k<70;k++){const a=k*2.3999632297,r=125*Math.sqrt(k),candidate={x:center.x+Math.cos(a)*r,y:center.y+Math.sin(a)*r};pos=candidate;if(parts.every(p=>Math.hypot(p.x-pos.x,p.y-pos.y)>143))break}addPartAt(type,pos)}
+ const pointerWorld=(x,y)=>{const p=svg.createSVGPoint();p.x=x;p.y=y;const m=camera.getScreenCTM();return m?p.matrixTransform(m.inverse()):{x:600,y:380}};
+ function worldPointAtCenter(){const b=svg.getBoundingClientRect();return pointerWorld(b.left+b.width/2,b.top+b.height/2)}
+ function panCamera(dx,dy){cam.x+=dx;cam.y+=dy;camera.setAttribute('transform',`translate(${cam.x} ${cam.y}) scale(${cam.s})`)}
+ function zoomCamera(mult){const old=cam.s,now=bounds(old*mult,.45,3);const b=svg.getBoundingClientRect(),center={x:b.left+b.width/2,y:b.top+b.height/2};const before=pointerWorld(center.x,center.y);cam.s=now;camera.setAttribute('transform',`translate(${cam.x} ${cam.y}) scale(${cam.s})`);const after=pointerWorld(center.x,center.y);cam.x+=(after.x-before.x)*cam.s;cam.y+=(after.y-before.y)*cam.s;render()}
+ function layoutBounds(){if(!parts.length)return null;const pts=[];for(const p of parts){pts.push({x:p.x-75,y:p.y-90},{x:p.x+75,y:p.y+82})}for(const w of wires)pts.push(...segmentPts(w));return {x0:Math.min(...pts.map(p=>p.x)),x1:Math.max(...pts.map(p=>p.x)),y0:Math.min(...pts.map(p=>p.y)),y1:Math.max(...pts.map(p=>p.y))}}
+ function fitTransform(vb){const b=layoutBounds();if(!b)return{x:0,y:0,s:1};const wid=Math.max(90,b.x1-b.x0),hei=Math.max(90,b.y1-b.y0),scale=bounds(Math.min((vb.width-110)/wid,(vb.height-135)/hei),.45,2.5);return{x:vb.x+vb.width/2-scale*(b.x0+b.x1)/2,y:vb.y+vb.height/2-scale*(b.y0+b.y1)/2,s:scale}}
+ function fitView(){cam=fitTransform(svg.viewBox.baseVal);render()}
+ function resetView(){fitView()}
+ function resizeScene(){if(innerWidth<721){const r=svg.getBoundingClientRect();const h=Math.round(840*r.height/Math.max(1,r.width));svg.setAttribute('viewBox',`0 0 840 ${h}`)}else svg.setAttribute('viewBox','0 0 1200 760')}
+ 
+ function stat(label,id,accent=''){return `<div class="stat-card ${accent}"><label>${label}</label><strong id="${id}">—</strong></div>`}
+ function selectedMeter(){if(probeTarget?.kind==='wire')return findWire(probeTarget.id);if(probeTarget?.kind==='part')return findPart(probeTarget.id);return activeObject()}
+ function readVoltage(){return meterA&&meterB&&tId(meterA)in netPot&&tId(meterB)in netPot&&netGroup[tId(meterA)]===netGroup[tId(meterB)]?(netPot[tId(meterA)]-netPot[tId(meterB)]):null}
+ function readAmp(){let t=selectedMeter();return t&&Number.isFinite(t.i)?t.i:null}
+ function buildProps(){const obj=activeObject();if(!obj){return `<div class="hero-card"><div style="color:#7bd9f4;font-size:24px;margin-bottom:6px">◈ ↝ ◉</div><h2>Tu laboratorio, tus reglas</h2><p>Selecciona una pieza en el tablero para cambiar sus propiedades y examinar el resultado al instante.</p></div><div class="panel-section" style="margin-top:17px"><div class="panel-title">CIRCUITOS LISTOS PARA INVESTIGAR</div><div class="row-buttons"><button class="btn" data-example="series">◉ Serie</button><button class="btn" data-example="parallel">⫴ Paralelo</button><button class="btn" data-example="rc">⌁ Circuito RC</button><button class="btn" data-example="motor">⚙ Motor</button><button class="btn" data-example="fuse">⚡ Protección</button></div></div><div class="tip"><b>Empieza aquí:</b> toca los puntos de conexión de dos componentes para tender un cable. Para ramificar, añade piezas «Unión».</div><div class="panel-section"><div class="panel-title">CÓMO EXPLORAR</div><ol class="log-list"><li>Arrastra componentes desde la biblioteca o tócales.</li><li>Une terminales; los cruces sin unión no se conectan.</li><li>Selecciona una pieza y ajusta tensión o resistencia.</li><li>Utiliza el voltímetro, los retos o el osciloscopio.</li></ol></div>`}
+  if(selected.kind==='wire')return `<div class="hero-card"><h2>Conductor ${sAttr(obj.id)}</h2><p>Cable con conductividad configurable. Se comporta como una pequeña resistencia distribuida.</p></div><div class="panel-section" style="margin-top:15px"><div class="panel-title">MEDICIONES DEL CABLE</div><div class="stat-grid">${stat('Intensidad','propI','cyan')}${stat('Caída de voltaje','propV','violet')}${stat('Resistencia del cable','propR','amber')}${stat('Potencia disipada','propP')}</div></div><div class="field"><label for="routeInput">Trazado</label><select id="routeInput" data-wirefield="route"><option value="auto" ${obj.route==='auto'?'selected':''}>Automático</option><option value="hv" ${obj.route==='hv'?'selected':''}>Horizontal primero</option><option value="vh" ${obj.route==='vh'?'selected':''}>Vertical primero</option><option value="direct" ${obj.route==='direct'?'selected':''}>Directo</option></select></div><div class="row-buttons"><button class="btn danger" data-action="remove">✕ Quitar cable</button></div><div class="tip">Para ajustar un codo, elige un trazado horizontal o vertical y arrastra el círculo central del cable.</div>`;
+  const p=obj;let fields='';
+  if(p.type==='battery')fields=`${numberField('Tensión nominal','value',p.value,'V',.1,200,.5)}${numberField('Resistencia interna','r',p.r,'Ω',.02,50,.05)}`;
+  if(['resistor','pot','bulb'].includes(p.type))fields=numberField('Resistencia','value',p.value,'Ω',.1,100000,.5);
+  if(p.type==='capacitor')fields=numberField('Capacitancia','value',p.value,'F',.001,100,.01);
+  if(p.type==='motor')fields=numberField('Resistencia de bobina','value',p.value,'Ω',.5,100000,.5);
+  if(p.type==='fuse')fields=numberField('Intensidad máxima','value',p.value,'A',.1,100,.1);
+  if(p.type==='switch')fields=`<div class="field"><label>Contacto</label><button class="btn ${p.closed?'primary':''}" data-action="toggle">${p.closed?'● Cerrado':'○ Abierto'} · cambiar</button></div>`;
+  if(p.type==='fuse'&&p.blown)fields+=`<div class="tip alert">El fusible se fundió por sobrecorriente.</div><button class="btn" data-action="resetFuse">↻ Sustituir fusible</button>`;
+  let details='';if(p.type==='capacitor')details=`<div class="formula" style="margin-top:10px">V<sub>C</sub> = <span id="capVolts">—</span><br>Q = C · V = <span id="capCharge">—</span><br>E = ½ · C · V²</div>`;
+  if(p.type==='motor')details=`<div class="formula" style="margin-top:10px">Velocidad: <span id="rpmValue">—</span><br>Fem inversa: <span id="backEmf">—</span></div>`;
+  if(p.type==='led')details=`<div class="tip">Polaridad: terminal izquierdo = ánodo (+), derecho = cátodo (−), antes de rotar. Conduce principalmente del ánodo al cátodo.</div>`;
+  if(p.type==='eraser')details=`<div class="tip">Resistencia modelada ≈ 1 GΩ (aislante). Compárala con la de la moneda (0,065 Ω).</div>`;
+  return `<div class="hero-card"><div style="color:#9fd5e9;font-size:10px;font-weight:750;letter-spacing:1.5px;margin-bottom:6px">PIEZA SELECCIONADA · ${sAttr(p.id)}</div><h2>${NAMES[p.type]}</h2><p>${DESCS[p.type]}</p></div><div class="panel-section" style="margin-top:15px"><div class="panel-title">LECTURAS EN TIEMPO REAL</div><div class="stat-grid">${stat('Intensidad','propI','cyan')}${stat('ΔV entre extremos','propV','violet')}${stat('Potencia del elemento','propP','amber')}${stat('Orientación','propRot')}</div></div><div class="panel-section"><div class="panel-title">AJUSTES DEL COMPONENTE</div>${fields||'<p class="desc">Esta pieza no requiere parámetros adicionales.</p>'}${details}<div class="row-buttons"><button class="btn" data-action="rotate">⤾ Girar 90°</button>${p.type==='switch'?'<button class="btn" data-action="toggle">⇋ Abrir/cerrar</button>':''}<button class="btn" data-action="duplicate">⊞ Duplicar</button><button class="btn danger" data-action="remove">✕ Eliminar</button></div></div>`;
+ }
+ function numberField(label,key,val,unit,min,max,step){return `<div class="field"><label for="field-${key}">${label} (${unit})</label><input id="field-${key}" data-field="${key}" type="number" min="${min}" max="${max}" step="${step}" value="${val}"></div>`}
+ function buildMeters(){return `<div class="panel-section"><div class="panel-title">INSTRUMENTOS VIRTUALES</div><div class="meter"><div class="meter-head"><b>▣ Voltímetro digital</b><span>V</span></div><div class="meter-read"><strong id="voltageRead">—</strong><span>voltios</span></div><div class="probe-dots"><span class="red">● Punta roja (+)</span><span class="blue">● Punta azul (−)</span></div><div class="row-buttons"><button class="btn ${mode==='volt'?'primary':''}" data-mode="volt">${mode==='volt'?'✓':'+'} Colocar puntas</button><button class="btn tiny" data-action="clearProbes">✕ Reiniciar</button></div><p class="desc" style="margin-top:9px">Toca dos terminales del circuito. Resultado = V(rojo) − V(azul).</p></div><div class="meter"><div class="meter-head"><b>◉ Amperímetro sin contacto</b><span>A</span></div><div class="meter-read"><strong id="ammeterRead">—</strong><span>amperios</span></div><div class="row-buttons"><button class="btn ${mode==='amp'?'primary':''}" data-mode="amp">${mode==='amp'?'✓':'◎'} Elegir rama</button></div><p class="desc" style="margin-top:9px">Con esta herramienta activa, toca una pieza o un cable para medir la corriente de esa rama.</p></div></div><div class="tip">El voltímetro ideal no carga el circuito. El amperímetro es no invasivo, mide la corriente ya calculada y no modifica conexiones.</div>`}
+ function buildChallenges(){const done=completed.size;return `<div class="hero-card"><h2>✦ Expediciones eléctricas</h2><p>Construye, formula hipótesis y demuestra lo aprendido. Los logros se verifican mediante el motor del circuito.</p><div class="progress"><span style="width:${done/CHALLENGES.length*100}%"></span></div><small>${done} / ${CHALLENGES.length} experimentos alcanzados</small></div><div style="margin-top:14px">${CHALLENGES.map(ch=>{const fin=completed.has(ch.id),active=activeChallenge===ch.id;return `<div class="challenge ${fin?'done':''} ${active?'active':''}"><div class="challenge-top"><h3>${fin?'✓ ':''}${ch.name}</h3><span class="badge">${fin?'SUPERADO':ch.level}</span></div><p>${ch.description}</p>${active?`<div class="tip" style="margin-top:9px">${ch.hint}</div>`:''}<button class="btn tiny" data-challenge="${ch.id}">${active?'Reto seleccionado':'Elegir reto'}</button></div>`}).join('')}</div>`}
+ function buildAnalysis(){return `<div class="panel-section"><div class="panel-title">OSCILOSCOPIO EN TIEMPO REAL</div><div class="field"><label for="channel">Magnitud</label><select id="channel" data-channel="1"><option value="i" ${scopedChannel==='i'?'selected':''}>Corriente · A</option><option value="v" ${scopedChannel==='v'?'selected':''}>Voltaje · V</option><option value="p" ${scopedChannel==='p'?'selected':''}>Potencia · W</option></select></div><div class="scope"><canvas id="miniScope" width="530" height="286"></canvas><div class="scope-foot"><span id="scopeName">Selecciona una pieza</span><span>Tiempo →</span></div></div><div class="tip">La gráfica muestra el componente seleccionado. Si no hay ninguno, utiliza la primera pieza disponible. El eje temporal es el tiempo de simulación.</div></div><div class="panel-section"><div class="panel-title">BALANCE DE KIRCHHOFF</div><div class="stat-grid">${stat('Potencia de carga','loadPower','amber')}${stat('Suma |corrientes| fuente','sumAmp','cyan')}${stat('Residuo KCL máximo','kclValue','violet')}${stat('Total de ramas','branchCount')}</div><div class="formula" style="margin-top:12px">Σ I<sub>nodo</sub> ≈ 0<br>V = I · R<br>Σ potencias de fuente + carga ≈ 0*</div><p class="desc" style="margin-top:9px">*Las baterías incorporan pérdidas internas, y los condensadores almacenan energía. La energía se conserva contabilizando esos términos.</p></div><div class="panel-section"><div class="panel-title">PARÁMETROS DEL LABORATORIO</div><div class="field"><label for="rhoRange">Resistencia del cable</label><input id="rhoRange" data-rho="1" type="range" min="0" max="2" step=".05" value="${settings.rho}"></div><p class="desc">Aumentar este ajuste introduce caída de tensión en el cobre. Valor actual: <span id="rhoText">${fmt(settings.rho,2)} Ω / 100 px</span>.</p><div class="row-buttons"><button class="btn" data-action="exportSVG">⬡ Exportar SVG</button><button class="btn" data-action="resetTime">↻ Reiniciar tiempo</button></div></div><div id="analysisWarning" class="tip">Circuito en condiciones normales.</div><div class="panel-section" style="margin-top:16px"><div class="panel-title">DOCENTE VIRTUAL · INTERPRETACIÓN</div><div id="pedagogicMessage" class="tip">Conecta componentes y observa las leyes eléctricas.</div></div>`}
+ function buildPanel(){const el=$('panelContent');if(tab==='props')el.innerHTML=buildProps();if(tab==='meters')el.innerHTML=buildMeters();if(tab==='challenges')el.innerHTML=buildChallenges();if(tab==='analysis')el.innerHTML=buildAnalysis();document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));updateMeasurements();if(tab==='analysis')drawScope()}
+ function setText(id,s){const el=$(id);if(el&&el.textContent!==String(s))el.textContent=s}
+ function updateMeasurements(){
+  const target=activeObject();const i=target?.i||0,dv=target?.dv||0;
+  setText('propI',`${fmt(i,3)} A`);setText('propV',`${fmt(dv,2)} V`);setText('propP',`${fmt(target?.power||0,2)} W`);
+  setText('propR',target?.id?.startsWith('w')?`${fmt(wireR(target),3)} Ω`:'—');setText('propRot',target?.rot===undefined?'—':face(target));
+  const vo=readVoltage(),am=readAmp();setText('voltageRead',vo===null?'—':fmt(vo,3));setText('ammeterRead',am===null?'—':fmt(am,3));
+  const p=activeObject();if(p?.type==='capacitor'){setText('capVolts',fmt(p.vc||0,2)+' V');setText('capCharge',fmt(p.value*(p.vc||0),3)+' C')}
+  if(p?.type==='motor'){setText('rpmValue',fmt(p.rpm||0,0)+' rpm');setText('backEmf',fmt((p.rpm||0)*.003,2)+' V')}
+  setText('totalPower',fmt(metrics.loadP||0,2)+' W');setText('simTime','t = '+fmt(simulationTime,2)+' s');setText('stateText',hazard?'RIESGO':playing?'EN VIVO':'PAUSA');$('stateText').style.color=hazard?'#ff889a':playing?'#65e6ae':'#ffcd83';
+  setText('loadPower',fmt(metrics.loadP||0,2)+' W');setText('sumAmp',fmt(metrics.totalI||0,3)+' A');setText('kclValue',fmt(metrics.balance||0,8)+' A');setText('branchCount',parts.filter(p=>p.type!=='node').length+wires.length);
+  const bat=parts.find(p=>p.type==='battery'),live=parts.filter(p=>p.type!=='battery'&&p.type!=='node'&&Math.abs(p.i||0)>.004),cap=parts.find(p=>p.type==='capacitor'),lamp=parts.find(p=>p.type==='bulb'&&Math.abs(p.i||0)>.01);let explain;if(hazard)explain='Revisa el límite de corriente: un cortocircuito puede calentar conductores y destruir componentes. Un fusible abierto corta la corriente.';else if(!bat)explain='Sin una fuente activa no hay energía sostenida para impulsar cargas. Añade una batería y cierra un lazo.';else if(!live.length)explain='No se detecta una circulación apreciable: revisa conexiones, interruptores y ramas abiertas. Recuerda que un cruce de cables no es una unión.';else if(cap)explain=`El condensador tiene ${fmt(Math.abs(cap.vc||0),2)} V entre sus placas. La corriente disminuye a medida que cambia su carga, aproximadamente según una curva exponencial.`;else if(lamp)explain=`Esta bombilla transforma ${fmt(lamp.power,2)} W en energía térmica y luminosa. Cambia una resistencia y observa cómo varía su brillo.`;else explain=`La corriente tiene un recorrido cerrado. En cada unión se conserva la carga: la suma algebraica de corrientes es ≈ 0 A.`;setText('pedagogicMessage',explain);
+  const wr=$('analysisWarning');if(wr){wr.textContent=hazard||'No se detecta sobrecorriente peligrosa. Observa cómo se reparte la corriente entre las ramas.';wr.classList.toggle('alert',!!hazard);wr.classList.toggle('good',!hazard)}
+  const watch=selectedMeter()||parts.find(p=>p.type!=='node');setText('scopeName',watch?`${NAMES[watch.type]||'Cable'} · ${watch.id}`:'Sin señales');
+ }
+ function validateChallenge(){let changed=false;for(const ch of CHALLENGES){if(!completed.has(ch.id)&&ch.test()){completed.add(ch.id);changed=true;if(ch.id===activeChallenge)showToast('🏆 Reto completado: '+ch.name)}}if(changed){putStorage();if(tab==='challenges')buildPanel()}}
+ function syncButtons(){document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===settings.view));document.querySelectorAll('[data-charge]').forEach(b=>b.classList.toggle('active',b.dataset.charge===settings.charge));$('valuesBtn').textContent=(settings.values?'✓ ':'')+'Valores';$('gridBtn').textContent=(settings.grid?'✓ ':'')+'Cuadrícula';$('playBtn').textContent=playing?'Ⅱ Pausar':'▶ Reproducir';$('speedRange').value=settings.speed;$('speedLabel').textContent=settings.speed+'×'}
+ function scopeValue(obj){return obj?{i:obj.i||0,v:obj.dv||0,p:obj.power||0}:null}
+ function sampleScope(){const obj=selectedMeter()||parts.find(p=>p.type==='bulb')||parts.find(p=>p.type!=='node')||wires[0];const v=scopeValue(obj);if(!v)return;scopeData.push({t:simulationTime,...v});if(scopeData.length>140)scopeData.shift()}
+ function drawScope(){const canvas=$('miniScope');if(!canvas)return;const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#091c2d';ctx.fillRect(0,0,w,h);
+  ctx.lineWidth=1;ctx.strokeStyle='#22405b';for(let x=0;x<w;x+=53){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}for(let y=0;y<h;y+=29){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
+  const data=scopeData;if(data.length<2){ctx.fillStyle='#7b9db8';ctx.textAlign='center';ctx.font='20px system-ui';ctx.fillText('En espera de datos…',w/2,h/2);return}
+  const vals=data.map(p=>p[scopedChannel]||0),maxAbs=Math.max(.15,...vals.map(Math.abs)),max=maxAbs*1.15,min=-max,from=data[0].t,to=data.at(-1).t,duration=Math.max(.001,to-from);
+  const Y=v=>(h-12)-(v-min)/(max-min)*(h-24),X=t=>10+(t-from)/duration*(w-20);
+  ctx.beginPath();ctx.strokeStyle='#446f86';ctx.moveTo(0,Y(0));ctx.lineTo(w,Y(0));ctx.stroke();ctx.beginPath();ctx.lineWidth=3;ctx.lineJoin='round';data.forEach((q,j)=>j?ctx.lineTo(X(q.t),Y(q[scopedChannel]||0)):ctx.moveTo(X(q.t),Y(q[scopedChannel]||0)));ctx.strokeStyle=scopedChannel==='i'?'#70edff':scopedChannel==='v'?'#b4a1ff':'#ffc980';ctx.shadowBlur=12;ctx.shadowColor=ctx.strokeStyle;ctx.stroke();ctx.shadowBlur=0;
+  ctx.fillStyle='#91b8c9';ctx.textAlign='right';ctx.font='19px ui-monospace,monospace';ctx.fillText(`${fmt(maxAbs,2)} ${scopedChannel==='i'?'A':scopedChannel==='v'?'V':'W'}`,w-12,23);ctx.fillText(fmt(-maxAbs,2),w-12,h-14)
+ }
+ function updateFlow(dt){if(playing)frameFase+=dt;
+  for(const item of wireMotion){const {w,path,dots,len}=item;const I=w.i||0,show=Math.abs(I)>.002&&settings.values!==null;if(!len||!show){for(const d of dots)d.setAttribute('opacity','0');continue}
+   const n=dots.length,dir=(Math.sign(I)||1)*(settings.charge==='electrons'?-1:1),velocity=Math.min(185,22+Math.sqrt(Math.abs(I))*49);
+   for(let k=0;k<n;k++){const fraction=((k/n+frameFase*dir*velocity/Math.max(1,len))%1+1)%1;const at=path.getPointAtLength(fraction*len),next=path.getPointAtLength(bounds(fraction*len+2*dir,0,len));const d=dots[k];d.setAttribute('opacity',String(bounds(.46+Math.sqrt(Math.abs(I))*.36,.35,1)));d.setAttribute('transform',`translate(${at.x.toFixed(2)} ${at.y.toFixed(2)}) ${settings.charge==='conventional'?`rotate(${Math.atan2((next.y-at.y)||0,(next.x-at.x)||dir)*180/Math.PI})`:''}`)}
+  }
+  for(const p of parts){if(p.type==='bulb'){const aura=partsEl.querySelector(`[data-halo="${p.id}"]`);if(aura){const norm=Math.abs((p.power||0))/5.4;aura.setAttribute('opacity',String(bounds(norm*1.35,0,.98)));const rays=partsEl.querySelector(`[data-rays="${p.id}"]`);if(rays)rays.setAttribute('opacity',String(bounds(norm*1.6,0,.92)));const glass=partsEl.querySelector(`[data-comp="${p.id}"]`);if(glass)glass.style.filter=norm>.05?`drop-shadow(0 0 ${bounds(norm*14,0,30)}px rgba(255,200,96,${bounds(norm,0,.7)}))`:''}}
+   else if(p.type==='led'){const aura=partsEl.querySelector(`[data-halo="${p.id}"]`);if(aura)aura.setAttribute('opacity',String(bounds(Math.abs(p.i||0)*2.5,0,.95)))}
+   else if(p.type==='motor'){const rotor=partsEl.querySelector(`[data-rotor="${p.id}"]`);if(rotor){const next=(rotorAngle.get(p.id)||0)+(p.rpm||0)*6/60*dt*60;rotorAngle.set(p.id,next%360);rotor.setAttribute('transform',`rotate(${next})`)}}
+  }
+ }
+ function loadPreset(which,initial=false){if(!initial&&parts.length&&!window.confirm('¿Reemplazar el circuito actual por un ejemplo? Puedes deshacer el cambio.'))return;
+  parts=[];wires=[];seq=1;selected=null;pendingWire=null;meterA=null;meterB=null;probeTarget=null;mode='select';simulationTime=0;frameFase=0;scopeData=[];
+  const P=(type,x,y,rot=0)=>makePart(type,x,y,rot);const W=(p,pa,q,pb)=>makeWire({comp:p.id,port:pa},{comp:q.id,port:pb});
+  if(which==='series'){
+   const bat=P('battery',465,585),lamp=P('bulb',465,245),res=P('resistor',715,411,90),sw=P('switch',215,411,90);
+   W(bat,'a',sw,'b');W(sw,'a',lamp,'a');W(lamp,'b',res,'a');W(res,'b',bat,'b');selected={kind:'part',id:lamp.id};
+  }else if(which==='parallel'){
+   const bat=P('battery',520,604),lamp1=P('bulb',520,221),lamp2=P('bulb',520,396);
+   const l1=P('node',285,221),l2=P('node',285,396),r1=P('node',755,221),r2=P('node',755,396);
+   W(bat,'a',l2,'n');W(l2,'n',l1,'n');W(l1,'n',lamp1,'a');W(lamp1,'b',r1,'n');W(r1,'n',r2,'n');W(r2,'n',bat,'b');W(l2,'n',lamp2,'a');W(lamp2,'b',r2,'n');selected={kind:'part',id:lamp1.id};
+  }else if(which==='rc'){
+   const bat=P('battery',460,595),sw=P('switch',215,416,90),r=P('resistor',465,225),cap=P('capacitor',725,416,270);r.value=20;cap.value=.47;
+   W(bat,'a',sw,'b');W(sw,'a',r,'a');W(r,'b',cap,'b');W(cap,'a',bat,'b');selected={kind:'part',id:cap.id};
+  }else if(which==='motor'){
+   const bat=P('battery',435,575),sw=P('switch',230,395,90),m=P('motor',510,217),r=P('resistor',735,395,90);r.value=3;
+   W(bat,'a',sw,'b');W(sw,'a',m,'a');W(m,'b',r,'a');W(r,'b',bat,'b');selected={kind:'part',id:m.id};
+  }else if(which==='fuse'){
+   const bat=P('battery',420,575),f=P('fuse',215,395,90),r=P('resistor',465,220),sw=P('switch',740,395,90);bat.value=18;r.value=2;f.value=2;
+   W(bat,'a',f,'b');W(f,'a',r,'a');W(r,'b',sw,'a');W(sw,'b',bat,'b');selected={kind:'part',id:f.id};
+  }else if(which==='empty'){};
+  metrics=solveCircuit(1/30,false);syncButtons();fitView();buildPanel();updateMeasurements();if(!initial){pushHistory();showToast('Ejemplo de circuito cargado')}
+ }
+ function rebuildHistory(){history=[jsonState()];historyAt=0;updateHistoryButtons()}
+ function goHistory(delta){const n=historyAt+delta;if(n<0||n>=history.length)return;historyAt=n;try{loadState(JSON.parse(history[historyAt]));putStorage();updateHistoryButtons();showToast(delta<0?'Cambio deshecho':'Cambio rehecho')}catch(e){showToast('No se pudo recuperar el estado anterior')}}
+ function cleanBoard(){if(parts.length&&!confirm('¿Limpiar el tablero? Puedes usar Deshacer para recuperarlo.'))return;parts=[];wires=[];selected=null;meterA=null;meterB=null;pendingWire=null;probeTarget=null;mode='select';scopeData=[];simulationTime=0;afterEdit()}
+ function download(name,blob){let url=URL.createObjectURL(blob),a=document.createElement('a');a.download=name;a.href=url;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)}
+ const fileDate=()=>new Date().toISOString().slice(0,10);
+ function saveJSON(){const data={...serialState(),meta:{app:'NEXO Circuitos · Offline',saved:new Date().toISOString(),format:'nexo-circuit-1'}};download('NEXO_circuito_'+fileDate()+'.json',new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));showToast('Proyecto JSON exportado.')}
+ function getExportSVG(){const copy=svg.cloneNode(true),ns='http://www.w3.org/2000/svg';copy.setAttribute('xmlns',ns);copy.setAttribute('width','1200');copy.setAttribute('height','760');copy.setAttribute('viewBox','0 0 1200 760');copy.removeAttribute('style');const exportFit=fitTransform({x:0,y:0,width:1200,height:760});copy.querySelector('#camera').setAttribute('transform',`translate(${exportFit.x} ${exportFit.y}) scale(${exportFit.s})`);copy.querySelectorAll('.selection-frame,.wire-handle').forEach(n=>n.remove());let backdrop=document.createElementNS(ns,'rect');backdrop.setAttribute('x','0');backdrop.setAttribute('y','0');backdrop.setAttribute('width','1200');backdrop.setAttribute('height','760');backdrop.setAttribute('fill','#0c192d');copy.insertBefore(backdrop,copy.firstChild);let css=document.createElementNS(ns,'style');css.textContent=document.querySelector('head style').textContent;copy.insertBefore(css,copy.firstChild);return new XMLSerializer().serializeToString(copy)}
+ function saveSVG(){download('NEXO_circuito_'+fileDate()+'.svg',new Blob([getExportSVG()],{type:'image/svg+xml;charset=utf-8'}));showToast('Diagrama SVG vectorial exportado.')}
+ async function savePNG(){try{const content=getExportSVG(),url=URL.createObjectURL(new Blob([content],{type:'image/svg+xml;charset=utf-8'}));const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url});const canvas=document.createElement('canvas');canvas.width=2400;canvas.height=1520;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);URL.revokeObjectURL(url);const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('No se pudo generar PNG');download('NEXO_circuito_'+fileDate()+'.png',blob);showToast('Imagen PNG 2400 × 1520 exportada.')}catch(err){showToast('Error al generar PNG. Intenta exportar SVG.');console.warn(err)}}
+ // Unified interaction via pointer events: touch, pen and mouse share the same circuit workflow.
+ svg.addEventListener('pointerdown',e=>{
+  if(e.button!==0&&e.button!==1)return;const pt=pointerWorld(e.clientX,e.clientY);
+  const terminal=e.target.closest('[data-terminal]');const part=e.target.closest('[data-comp]'),wire=e.target.closest('[data-wire]'),handle=e.target.closest('[data-wirehandle]');
+  if(terminal){const key=terminal.dataset.terminal;connectTerminal(key);drag={kind:'terminal',startX:e.clientX,startY:e.clientY,key,moved:false};try{svg.setPointerCapture(e.pointerId)}catch(_e){};e.preventDefault();return}
+  if(handle&&selected?.kind==='wire'){const w=findWire(handle.dataset.wirehandle);if(w){drag={kind:'bend',id:w.id,old:w.bend,startX:e.clientX,startY:e.clientY,moved:false};svg.setPointerCapture(e.pointerId);e.preventDefault();return}}
+  if(part){const p=findPart(part.dataset.comp);if(!p)return;
+   if(mode==='amp'){probeTarget={kind:'part',id:p.id};selected={kind:'part',id:p.id};render();buildPanel();showToast('Amperímetro: '+fmt(p.i||0,3)+' A');return}
+   if(mode==='volt'){showToast('Selecciona un terminal luminoso, no el cuerpo de la pieza.');return}
+   selected={kind:'part',id:p.id};drag={kind:'part',id:p.id,startX:e.clientX,startY:e.clientY,x:p.x,y:p.y,moved:false};svg.setPointerCapture(e.pointerId);render();buildPanel();e.preventDefault();return
+  }
+  if(wire){const w=findWire(wire.dataset.wire);if(!w)return;
+   selected={kind:'wire',id:w.id};if(mode==='amp'){probeTarget={kind:'wire',id:w.id};showToast('Amperímetro: '+fmt(w.i||0,3)+' A')}
+   render();buildPanel();e.preventDefault();return
+  }
+  if(e.button===1||!pendingWire){drag={kind:'pan',startX:e.clientX,startY:e.clientY,oldX:cam.x,oldY:cam.y,moved:false};try{svg.setPointerCapture(e.pointerId)}catch(_e){};if(mode==='select'){selected=null;buildPanel();render()}}
+ });
+ svg.addEventListener('pointermove',e=>{
+  const pt=pointerWorld(e.clientX,e.clientY);lastMouseWorld=pt;
+  if(pendingWire){const a=getTerminal(pendingWire),start=a&&portPos(a),line=$('draftWire');if(start&&line)line.setAttribute('d',`M ${fmtCoord(start.x)} ${fmtCoord(start.y)} L ${fmtCoord(pt.x)} ${fmtCoord(pt.y)}`)}
+  if(!drag)return;const dist=Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY);if(dist>4)drag.moved=true;
+  if(drag.kind==='part'&&drag.moved){const p=findPart(drag.id);if(!p)return;const curr=pointerWorld(e.clientX,e.clientY),from=pointerWorld(drag.startX,drag.startY);p.x=bounds(drag.x+curr.x-from.x,-3000,3000);p.y=bounds(drag.y+curr.y-from.y,-3000,3000);metrics=solveCircuit(1/30,false);render();updateMeasurements()}
+  if(drag.kind==='pan'&&drag.moved){const pix=svg.getScreenCTM()?.a||1;cam.x=drag.oldX+(e.clientX-drag.startX)/pix;cam.y=drag.oldY+(e.clientY-drag.startY)/pix;render()}
+  if(drag.kind==='bend'&&drag.moved){const w=findWire(drag.id);if(!w)return;let points=segmentPts(w),a=portPos(w.a),b=portPos(w.b);const rt=w.route==='auto'?'hv':w.route;if(rt==='hv')w.bend=bounds((pt.x-a.x)/((b.x-a.x)||1),.05,.95);else if(rt==='vh')w.bend=bounds((pt.y-a.y)/((b.y-a.y)||1),.05,.95);render()}
+ });
+ svg.addEventListener('pointerup',e=>{if(!drag)return;const d=drag;drag=null;try{svg.releasePointerCapture(e.pointerId)}catch(_e){};
+  if(d.kind==='terminal'&&d.moved&&pendingWire){const el=document.elementFromPoint(e.clientX,e.clientY),to=el?.closest?.('[data-terminal]');if(to&&to.dataset.terminal!==pendingWire)connectTerminal(to.dataset.terminal)}
+  if(d.kind==='part'){if(d.moved){afterEdit()}else{const p=findPart(d.id);if(p?.type==='switch')toggleSwitch(p);else{buildPanel();render()}}}
+  if(d.kind==='bend'&&d.moved)afterEdit();
+ });
+ svg.addEventListener('pointercancel',()=>{if(drag?.kind==='part'||drag?.kind==='bend')afterEdit();drag=null});
+ svg.addEventListener('dblclick',e=>{const part=e.target.closest('[data-comp]');if(part){const p=findPart(part.dataset.comp);if(p){selected={kind:'part',id:p.id};rotateSelected()}}});
+ svg.addEventListener('wheel',e=>{e.preventDefault();const before=pointerWorld(e.clientX,e.clientY),old=cam.s;cam.s=bounds(old*(e.deltaY>0?.9:1.11),.45,3);camera.setAttribute('transform',`translate(${cam.x} ${cam.y}) scale(${cam.s})`);const after=pointerWorld(e.clientX,e.clientY);cam.x+=(after.x-before.x)*cam.s;cam.y+=(after.y-before.y)*cam.s;render()},{passive:false});
+ let paletteDrag=null,suppressPaletteClick=0,ghost=null;
+ $('partsLibrary').addEventListener('pointerdown',e=>{const tile=e.target.closest('[data-add]');if(!tile||e.button!==0)return;paletteDrag={type:tile.dataset.add,x:e.clientX,y:e.clientY,moved:false,pointerId:e.pointerId};e.preventDefault()});
+ window.addEventListener('pointermove',e=>{if(!paletteDrag||e.pointerId!==paletteDrag.pointerId)return;if(Math.hypot(e.clientX-paletteDrag.x,e.clientY-paletteDrag.y)>9)paletteDrag.moved=true;if(paletteDrag.moved){if(!ghost){ghost=document.createElement('div');ghost.style.cssText='position:fixed;pointer-events:none;z-index:99;background:#223c60ee;border:1px solid #64cbe3;color:#fff;border-radius:12px;padding:10px 15px;box-shadow:0 10px 40px #0009;font-weight:700';document.body.appendChild(ghost)}ghost.textContent='✦ '+NAMES[paletteDrag.type];ghost.style.left=(e.clientX+16)+'px';ghost.style.top=(e.clientY-20)+'px'}});
+ window.addEventListener('pointerup',e=>{if(!paletteDrag||e.pointerId!==paletteDrag.pointerId)return;const d=paletteDrag;paletteDrag=null;suppressPaletteClick=Date.now();if(ghost){ghost.remove();ghost=null}const r=svg.getBoundingClientRect();if(d.moved){if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom)addPartAt(d.type,pointerWorld(e.clientX,e.clientY));else showToast('Arrastra el componente hacia el tablero.')}else addPartCenter(d.type)});
+ $('partsLibrary').addEventListener('click',e=>{const sample=e.target.closest('[data-example-tile]');if(sample){loadPreset(sample.dataset.exampleTile);if(innerWidth<721)$('leftPanel').classList.remove('open');return}const tile=e.target.closest('[data-add]');if(tile&&Date.now()-suppressPaletteClick>350)addPartCenter(tile.dataset.add)});
+ $('panelContent').addEventListener('click',e=>{let b=e.target.closest('button');if(!b)return;
+  if(b.dataset.example){loadPreset(b.dataset.example);return}
+  if(b.dataset.challenge){activeChallenge=b.dataset.challenge;buildPanel();return}
+  if(b.dataset.mode){setMode(b.dataset.mode);return}
+  const action=b.dataset.action,p=activeObject();if(!action)return;
+  if(action==='remove')removeSelected();else if(action==='rotate')rotateSelected();else if(action==='duplicate')duplicateSelected();else if(action==='toggle')toggleSwitch(p);
+  else if(action==='resetFuse'&&p?.type==='fuse'){p.blown=false;p.heat=0;afterEdit()}
+  else if(action==='clearProbes'){meterA=null;meterB=null;render();buildPanel()}
+  else if(action==='exportSVG')saveSVG();else if(action==='resetTime'){simulationTime=0;scopeData=[];for(const x of parts){if(x.type==='capacitor')x.vc=0;if(x.type==='motor')x.rpm=0}refreshScene();showToast('Tiempo y estados dinámicos reiniciados')}
+ });
+ $('panelContent').addEventListener('change',e=>{const input=e.target,p=activeObject();
+  if(input.dataset.field&&p){let value=Number(input.value),k=input.dataset.field;if(!Number.isFinite(value))return;const limits=k==='r'?[.02,50]:p.type==='battery'?[.1,200]:p.type==='capacitor'?[.001,100]:p.type==='fuse'?[.1,100]:[.1,1000000];p[k]=bounds(value,...limits);afterEdit()}
+  if(input.dataset.wirefield&&selected?.kind==='wire'){const w=findWire(selected.id);if(w){w.route=input.value;w.bend=.5;afterEdit()}}
+  if(input.dataset.channel){scopedChannel=input.value;drawScope()}
+ });
+ $('panelContent').addEventListener('input',e=>{if(e.target.dataset.rho){settings.rho=Number(e.target.value);setText('rhoText',fmt(settings.rho,2)+' Ω / 100 px');metrics=solveCircuit(1/30,false);render();updateMeasurements()}});
+ $('panelContent').addEventListener('change',e=>{if(e.target.dataset.rho){pushHistory();refreshScene()}});
+ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;buildPanel()}));
+ document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{settings.view=b.dataset.view;syncButtons();render();pushHistory()}));
+ document.querySelectorAll('[data-charge]').forEach(b=>b.addEventListener('click',()=>{settings.charge=b.dataset.charge;syncButtons();render();pushHistory()}));
+ $('valuesBtn').addEventListener('click',()=>{settings.values=!settings.values;syncButtons();render();pushHistory()});$('gridBtn').addEventListener('click',()=>{settings.grid=!settings.grid;syncButtons();render();pushHistory()});
+ $('speedRange').addEventListener('input',e=>{settings.speed=Number(e.target.value);$('speedLabel').textContent=settings.speed+'×'});$('speedRange').addEventListener('change',pushHistory);
+ $('playBtn').addEventListener('click',()=>{playing=!playing;syncButtons();updateMeasurements()});$('stepBtn').addEventListener('click',()=>{if(playing){playing=false;syncButtons()}const dt=.08*settings.speed;simulationTime+=dt;metrics=solveCircuit(dt,true);sampleScope();updateFlow(dt);updateMeasurements();drawScope();validateChallenge()});
+ $('zoomIn').addEventListener('click',()=>zoomCamera(1.18));$('zoomOut').addEventListener('click',()=>zoomCamera(.85));$('fitBtn').addEventListener('click',resetView);
+ $('undoBtn').addEventListener('click',()=>goHistory(-1));$('redoBtn').addEventListener('click',()=>goHistory(1));$('clearBtn').addEventListener('click',cleanBoard);
+ $('saveBtn').addEventListener('click',saveJSON);$('exportBtn').addEventListener('click',savePNG);$('openBtn').addEventListener('click',()=>$('openFile').click());
+ $('openFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const text=await file.text();const parsed=JSON.parse(text);loadState(parsed);pushHistory();showToast('Proyecto cargado con éxito.')}catch(err){showToast('Archivo no compatible: '+err.message)}e.target.value=''});
+ function togglePanel(which){const target=$(which),other=$(which==='leftPanel'?'rightPanel':'leftPanel');other.classList.remove('open');target.classList.toggle('open')}
+ $('toolsToggle').addEventListener('click',()=>togglePanel('leftPanel'));$('infoToggle').addEventListener('click',()=>togglePanel('rightPanel'));
+ window.addEventListener('keydown',e=>{
+  if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();goHistory(e.shiftKey?1:-1);return}
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();goHistory(1);return}
+  if(e.key==='Escape'){mode='select';pendingWire=null;drag=null;render();buildPanel();return}
+  if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();removeSelected();return}
+  if(e.key.toLowerCase()==='r'&&selected){rotateSelected();return}
+  if(e.key===' '){e.preventDefault();playing=!playing;syncButtons();updateMeasurements()}
+ });
+ // Continuous animation and time-step integration. Browser paints at requestAnimationFrame;
+ // the electrical model is capped at 30 Hz to avoid needless matrix solves.
+ function loop(timestamp){if(!lastFrame)lastFrame=timestamp;const realDt=Math.min((timestamp-lastFrame)/1000,.08);lastFrame=timestamp;
+  if(timestamp-lastElectrical>=34){const dt=bounds((timestamp-lastElectrical)/1000||.035,.01,.09),simDt=dt*settings.speed;lastElectrical=timestamp;
+   if(playing){simulationTime+=simDt;metrics=solveCircuit(simDt,true);sampleWait+=simDt;if(sampleWait>=.10){sampleScope();sampleWait=0}}
+   updateFlow(playing?dt:0);
+   if(timestamp-lastInfo>170){updateMeasurements();if(tab==='analysis')drawScope();lastInfo=timestamp}
+   if(Math.floor(simulationTime*2)!==Math.floor((simulationTime-simDt)*2))validateChallenge();
+  }
+  requestAnimationFrame(loop)
+ }
+ function initialize(){drawLibrary();let restored=false;
+  try{let saved=localStorage.getItem(STORE_KEY);if(saved){loadState(JSON.parse(saved));restored=true}}catch(e){restored=false}
+  if(!restored)loadPreset('series',true);
+  rebuildHistory();syncButtons();resizeScene();fitView();buildPanel();updateMeasurements();requestAnimationFrame(loop);
+  window.__NEXO_TEST__={getParts:()=>parts,getWires:()=>wires,solve:()=>solveCircuit(1/30,false),loadPreset,serialState,loadState,makePart,makeWire,refreshScene,portPos,metrics:()=>metrics};
+ }
+ let mobileMode=innerWidth<721;window.addEventListener('resize',()=>{const next=innerWidth<721;if(next!==mobileMode){mobileMode=next;resizeScene();fitView()}else if(next){resizeScene();render()}});
+ initialize();
+})();
+</script>
+</body>
+</html>
