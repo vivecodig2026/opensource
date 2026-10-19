@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Wn+cY+67aSeM9hylj+f1aJvrL1yE6PE8MS7YlK0FC0A=' 'sha256-btW3G1XApuCaJG02K7X5BDe0s7fyKgF7/snlJPO2Ikc='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-UvPKHd8ik7Z2zJ0sMDBwPdGkpSYIIx735PiKrmVUhsQ=' 'sha256-ABtQv46m+cKdeWciVM8HvrEMO+ivCqEZUQx7tjlylAs='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08786d">
@@ -82,7 +82,7 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 </div><div class="bench-footer"><span data-icon="file"></span> Elige una herramienta y hazla parte de tu día.</div></div>
 </div></section>
 <div class="model-strip" aria-label="Cómo se sostiene el proyecto"><div class="model-item"><span data-icon="download"></span><div><strong>Las apps son gratuitas</strong><small>Úsalas sin pagar una suscripción.</small></div></div><div class="model-item"><span data-icon="settings"></span><div><strong>El trabajo a medida se cotiza</strong><small>Financia desarrollo y herramientas de IA.</small></div></div><div class="model-item"><span data-icon="heart"></span><div><strong>Tu aporte es voluntario</strong><small>Ayuda a cubrir las suscripciones de IA.</small></div></div></div>
-<section id="catalogo" aria-labelledby="catalogTitle"><div class="section-head"><div><div class="eyebrow">Hechas para usarse</div><h2 id="catalogTitle">Encuentra tu próxima herramienta.</h2><p>Solo proyectos publicados. Revisa su tamaño y si necesitan conexión antes de descargar.</p></div><span class="count-pill" id="catalogCount">15 proyectos</span></div>
+<section id="catalogo" aria-labelledby="catalogTitle"><div class="section-head"><div><div class="eyebrow">Hechas para usarse</div><h2 id="catalogTitle">Encuentra tu próxima herramienta.</h2><p>Solo proyectos publicados. Revisa su tamaño y si necesitan conexión antes de descargar.</p></div><span class="count-pill" id="catalogCount">19 proyectos</span></div>
 <div class="catalog-tools"><div class="searchbox"><label for="search" class="sr-only">Buscar aplicaciones</label><span data-icon="search"></span><input id="search" type="search" placeholder="Busca una app o lo que necesitas hacer…" autocomplete="off" maxlength="120"></div><label class="sort" for="sort">Ordenar por <select id="sort"><option value="recommended">Recomendadas</option><option value="name">Nombre</option><option value="downloads" selected>Más descargadas</option><option value="size">Menor tamaño</option></select></label></div>
 <div class="filters"><div class="chips" role="group" aria-label="Categorías"><button class="chip" data-category="all" aria-pressed="true">Todas</button><button class="chip" data-category="educacion" aria-pressed="false">Educación</button><button class="chip" data-category="productividad" aria-pressed="false">Productividad</button><button class="chip" data-category="creatividad" aria-pressed="false">Creatividad</button></div><label class="offline-filter"><input id="offlineOnly" type="checkbox"> Solo para usar sin conexión</label></div>
 <div id="appGrid" class="app-grid"></div><p id="resultAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
@@ -122,7 +122,7 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script id="siteConfig" type="application/json">
 {
-  "version": 6,
+  "version": 7,
   "owner": "vivecodig2026",
   "repo": "opensource",
   "branch": "main",
@@ -616,6 +616,138 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
       "preview": "previews/sigoi.jpg",
       "previewSmall": "previews/sigoi-480.webp",
       "previewMedium": "previews/sigoi-800.webp"
+    },
+    {
+      "id": "edulab",
+      "name": "EduLab · 60 laboratorios interactivos",
+      "file": "EduLab_60_laboratorios_interactivos.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "school",
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "offline": true,
+      "rank": 16,
+      "description": "Explora matemáticas, física, química y ciencias con 60 laboratorios interactivos.",
+      "tags": [
+        "laboratorios",
+        "ciencias",
+        "matematicas",
+        "fisica",
+        "quimica",
+        "conicas"
+      ],
+      "features": [
+        "Simulaciones organizadas por asignatura y nivel escolar.",
+        "Experimentos, retos y controles interactivos.",
+        "Cuaderno de observaciones y descarga de registros."
+      ],
+      "requirements": "Funciona sin conexión. Los modelos son didácticos; consulta el alcance indicado dentro de cada laboratorio.",
+      "publishedAt": "2026-10-18T12:56:03Z",
+      "publicationCommit": "1fcbdc5f104f12c00a677fa79966606a25966ff9",
+      "preview": "previews/edulab.jpg",
+      "previewSmall": "previews/edulab-480.webp",
+      "previewMedium": "previews/edulab-800.webp",
+      "size": 201159,
+      "sha256": "4d690d3764d0e5a47b92a4ed497a03e1fdf18c47e78979377bce9bfc16f81d91"
+    },
+    {
+      "id": "electrolab",
+      "name": "ElectroLab Studio 4.0",
+      "file": "ElectroLab_Studio_v4_Offline_Auditado.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "school",
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "offline": true,
+      "rank": 17,
+      "description": "Construye circuitos electrónicos y aprende con mediciones, simulaciones y un tutor didáctico.",
+      "tags": [
+        "electronica",
+        "circuitos",
+        "arduino",
+        "resistencias",
+        "led"
+      ],
+      "features": [
+        "Componentes, cableado y misiones guiadas.",
+        "Multímetro, señales y calculadora de resistencias.",
+        "Importación y exportación de circuitos JSON; intérprete limitado de comandos estilo Arduino."
+      ],
+      "requirements": "Funciona sin conexión. Usa modelos didácticos aproximados; el intérprete incluido no compila C++ real.",
+      "publishedAt": "2026-10-18T15:06:36Z",
+      "publicationCommit": "02362d5de23ae1cfc8b3d42726e4c30b78c3eec6",
+      "preview": "previews/electrolab.jpg",
+      "previewSmall": "previews/electrolab-480.webp",
+      "previewMedium": "previews/electrolab-800.webp",
+      "size": 236282,
+      "sha256": "ca9161562acb6de13db63ddac209dd4fecf78b425c20def3f1f083bdeb1d6dac"
+    },
+    {
+      "id": "nexo",
+      "name": "Nexo Circuitos",
+      "file": "Nexo_Circuitos_Laboratorio_Offline.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "school",
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "offline": true,
+      "rank": 18,
+      "description": "Arma circuitos eléctricos, observa la corriente y comprueba tus ideas con instrumentos y retos.",
+      "tags": [
+        "electricidad",
+        "circuitos",
+        "fisica",
+        "ohm",
+        "motor"
+      ],
+      "features": [
+        "Circuitos en serie, paralelo y RC con componentes editables.",
+        "Mediciones, retos y vistas realista y esquemática.",
+        "Guardar y abrir proyectos JSON; exportar imágenes del circuito."
+      ],
+      "requirements": "Funciona sin conexión. Las simulaciones utilizan modelos educativos simplificados.",
+      "publishedAt": "2026-10-18T14:20:05Z",
+      "publicationCommit": "d77ecb7c71f28bd44d93a15f25d441fc399619e0",
+      "preview": "previews/nexo.jpg",
+      "previewSmall": "previews/nexo-480.webp",
+      "previewMedium": "previews/nexo-800.webp",
+      "size": 95532,
+      "sha256": "3ccc18c0d67a38036546a76bd85837ede40b4e9e0e7b8c64c3f487e5cf294d23"
+    },
+    {
+      "id": "orbita",
+      "name": "Órbita 3D · Guardianes de la Puntuación",
+      "file": "Orbita_Guardianes_de_la_Puntuacion (1).html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "game",
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "offline": true,
+      "rank": 19,
+      "description": "Explora una estación en primera persona y coloca signos de puntuación en mensajes holográficos.",
+      "tags": [
+        "puntuacion",
+        "lengua",
+        "comas",
+        "puntos",
+        "3d",
+        "juego"
+      ],
+      "features": [
+        "Exploración en primera persona y recolección de signos.",
+        "Modos de práctica y evaluación de puntuación.",
+        "Resultados y exportación de registros CSV y JSON."
+      ],
+      "requirements": "Funciona con recursos incluidos y requiere WebGL y aceleración gráfica. Incluye teclado, ratón y controles táctiles.",
+      "publishedAt": "2026-10-18T22:02:23Z",
+      "publicationCommit": "0290086f3ee7a18ae2d02b875508e0e6ed95ce6e",
+      "assetFile": "orbita-guardianes-puntuacion.html",
+      "size": 79270,
+      "sha256": "aa37489ca2c8abcd5d1831b01232ea4fdc25381f9b79b7d4360528dfed1b8281"
     }
   ]
 }
@@ -635,11 +767,11 @@ const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelecto
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const icon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
 $$('[data-icon]').forEach(el=>{el.innerHTML=icon(el.dataset.icon);});
-const APPS=CONFIG.apps,byId=new Map(APPS.map(a=>[a.id,a])),byFile=new Map(APPS.map(a=>[a.file,a]));
+const APPS=CONFIG.apps,byId=new Map(APPS.map(a=>[a.id,a])),byFile=new Map(APPS.map(a=>[a.file,a])),byAsset=new Map(APPS.map(a=>[a.assetFile||a.file,a]));
 const API=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
 const REPO=`https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
 const RAW=`https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/`;
-const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v3`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v6`;
+const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v3`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v7`;
 const stats=new Map(),health=new Map(APPS.map(a=>[a.id,{available:a.available!==false,size:a.size,reason:a.unavailableReason||""}]));
 const MAX_FILE=60*1024*1024,CACHE_TTL=15*60*1000;
 let category='all',statsState='loading',statsTime=0,statsComplete=true,statsBusy=null,lastAttempt=0,toastTimer=null,detailApp=null,modalOpener=null;
@@ -652,9 +784,9 @@ function normalize(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').t
 function appURL(app){return new URL('./'+encodeURIComponent(app.file),location.href).href;}
 function sourceURL(app){return REPO+'/blob/'+encodeURIComponent(CONFIG.branch)+'/'+encodeURIComponent(app.file);}
 function releaseURL(value,file){try{const u=new URL(value);return u.protocol==='https:'&&u.hostname==='github.com'&&!u.port&&!u.username&&!u.password&&u.pathname.startsWith(`/${CONFIG.owner}/${CONFIG.repo}/releases/download/`)&&decodeURIComponent(u.pathname.split('/').pop())===file?u.href:null;}catch{return null;}}
-function validAsset(asset,app){if(!asset||asset.name!==app.file||!Number.isSafeInteger(asset.id)||asset.id<1||asset.state!=='uploaded'||!Number.isSafeInteger(asset.download_count)||asset.download_count<0||!Number.isSafeInteger(asset.size)||asset.size<256||asset.size>MAX_FILE)return null;const url=releaseURL(asset.browser_download_url,app.file);if(!url)return null;return {id:String(asset.id),url,size:asset.size,count:asset.download_count,date:Date.parse(asset.created_at)||0,digest:typeof asset.digest==='string'&&/^sha256:[a-f0-9]{64}$/.test(asset.digest)?asset.digest:null};}
-function collectReleaseStats(releases){const out=new Map(),seen=new Set();for(const r of releases){if(!r||r.draft||r.prerelease||!Array.isArray(r.assets))continue;for(const raw of r.assets){const app=byFile.get(raw?.name);if(!app)continue;const a=validAsset(raw,app);if(!a||seen.has(a.id))continue;seen.add(a.id);const previous=out.get(app.id)||{count:0,versions:0,latest:null,measuredSince:null};if(!Number.isSafeInteger(previous.count+a.count))continue;previous.count+=a.count;previous.versions++;const released=Date.parse(r.published_at),start=Number.isFinite(released)&&released>0&&a.date>0?Math.max(released,a.date):null;if(start&&(!previous.measuredSince||start<previous.measuredSince))previous.measuredSince=start;if(!previous.latest||a.date>previous.latest.date||(a.date===previous.latest.date&&Number(a.id)>Number(previous.latest.id)))previous.latest=a;out.set(app.id,previous);}}return out;}
-function applyCachedStats(cached){if(!cached||cached.version!==1||!Number.isFinite(cached.time)||cached.time<=0||cached.time>Date.now()+60000||!Array.isArray(cached.items))return false;const next=new Map();for(const item of cached.items){if(!Array.isArray(item)||item.length!==2)continue;const [id,value]=item;const app=byId.get(id);if(!app||!value||!Number.isSafeInteger(value.count)||value.count<0||!Number.isSafeInteger(value.versions)||value.versions<1||!value.latest)continue;const url=releaseURL(value.latest.url,app.file);if(!url||!Number.isSafeInteger(value.latest.size)||value.latest.size<256||value.latest.size>MAX_FILE)continue;next.set(id,{count:value.count,versions:value.versions,measuredSince:Number.isFinite(value.measuredSince)&&value.measuredSince>0?value.measuredSince:null,latest:{...value.latest,url}});}stats.clear();for(const entry of next)stats.set(...entry);statsTime=cached.time;statsComplete=cached.complete!==false;statsState='cached';return true;}
+function validAsset(asset,app){if(!asset||asset.name!==(app.assetFile||app.file)||!Number.isSafeInteger(asset.id)||asset.id<1||asset.state!=='uploaded'||!Number.isSafeInteger(asset.download_count)||asset.download_count<0||!Number.isSafeInteger(asset.size)||asset.size<256||asset.size>MAX_FILE)return null;const url=releaseURL(asset.browser_download_url,app.assetFile||app.file);if(!url)return null;return {id:String(asset.id),url,size:asset.size,count:asset.download_count,date:Date.parse(asset.created_at)||0,digest:typeof asset.digest==='string'&&/^sha256:[a-f0-9]{64}$/.test(asset.digest)?asset.digest:null};}
+function collectReleaseStats(releases){const out=new Map(),seen=new Set();for(const r of releases){if(!r||r.draft||r.prerelease||!Array.isArray(r.assets))continue;for(const raw of r.assets){const app=byAsset.get(raw?.name);if(!app)continue;const a=validAsset(raw,app);if(!a||seen.has(a.id))continue;seen.add(a.id);const previous=out.get(app.id)||{count:0,versions:0,latest:null,measuredSince:null};if(!Number.isSafeInteger(previous.count+a.count))continue;previous.count+=a.count;previous.versions++;const released=Date.parse(r.published_at),start=Number.isFinite(released)&&released>0&&a.date>0?Math.max(released,a.date):null;if(start&&(!previous.measuredSince||start<previous.measuredSince))previous.measuredSince=start;if(!previous.latest||a.date>previous.latest.date||(a.date===previous.latest.date&&Number(a.id)>Number(previous.latest.id)))previous.latest=a;out.set(app.id,previous);}}return out;}
+function applyCachedStats(cached){if(!cached||cached.version!==1||!Number.isFinite(cached.time)||cached.time<=0||cached.time>Date.now()+60000||!Array.isArray(cached.items))return false;const next=new Map();for(const item of cached.items){if(!Array.isArray(item)||item.length!==2)continue;const [id,value]=item;const app=byId.get(id);if(!app||!value||!Number.isSafeInteger(value.count)||value.count<0||!Number.isSafeInteger(value.versions)||value.versions<1||!value.latest)continue;const url=releaseURL(value.latest.url,app.assetFile||app.file);if(!url||!Number.isSafeInteger(value.latest.size)||value.latest.size<256||value.latest.size>MAX_FILE)continue;next.set(id,{count:value.count,versions:value.versions,measuredSince:Number.isFinite(value.measuredSince)&&value.measuredSince>0?value.measuredSince:null,latest:{...value.latest,url}});}stats.clear();for(const entry of next)stats.set(...entry);statsTime=cached.time;statsComplete=cached.complete!==false;statsState='cached';return true;}
 async function fetchJSON(url){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),9000);try{const r=await fetch(url,{headers:{Accept:'application/vnd.github+json'},credentials:'omit',referrerPolicy:'no-referrer',signal:controller.signal});if(!r.ok)throw Error(r.status===403||r.status===429?'GitHub ha limitado temporalmente las consultas.':'No se pudo consultar GitHub ('+r.status+').');const data=await r.json();if(!Array.isArray(data))throw Error('Respuesta de catálogo no válida.');return data;}finally{clearTimeout(timer);}}
 async function loadStats(force=false){if(statsBusy)return statsBusy;if(force&&Date.now()-lastAttempt<60000){toast('Espera un minuto antes de actualizar de nuevo.');return;}if(!force&&stats.size&&statsTime&&Date.now()-statsTime<60000)return;if(!navigator.onLine){statsState=stats.size?'stale':'offline';updateMetrics();return;}lastAttempt=Date.now();statsBusy=(async()=>{let all=[],complete=false;try{for(let page=1;page<=10;page++){const list=await fetchJSON(API+'/releases?per_page=100&page='+page);all.push(...list);if(list.length<100){complete=true;break;}}const next=collectReleaseStats(all);stats.clear();for(const entry of next)stats.set(...entry);statsTime=Date.now();statsComplete=complete;statsState=stats.size?'ready':'empty';storageWrite(cacheKey,{version:1,time:statsTime,complete,items:[...stats]});}catch(e){statsState=stats.size?'stale':'error';}finally{statsBusy=null;updateMetrics();renderApps(false);if($('#statsDialog').open)renderStats();if($('#detailDialog').open&&detailApp)renderDetail(detailApp);}})();return statsBusy;}
 function setCatalogHealth(files){if(!Array.isArray(files))return;const fileMap=new Map(files.filter(f=>f&&f.type==='file'&&typeof f.name==='string').map(f=>[f.name,f]));for(const app of APPS){const f=fileMap.get(app.file),size=f?.size;health.set(app.id,{available:!!f&&Number.isSafeInteger(size)&&size>=256&&size<=MAX_FILE,size:Number.isSafeInteger(size)?size:app.size,reason:!f?'El archivo no se encuentra en el repositorio.':size<256?'El archivo publicado está vacío o incompleto. Falta subir el HTML completo.':''});}}
