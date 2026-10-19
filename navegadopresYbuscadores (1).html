@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f6f0">
+  <meta name="description" content="Guía de navegadores y buscadores revisada el 19 de octubre de 2026. Compara plataformas, funciones, acceso y condiciones con fuentes oficiales.">
+  <title>Navegadores y buscadores · Guía actualizada</title>
+  <style>
+    :root{color-scheme:light;--bg:#f5f6f0;--surface:#fff;--surface-alt:#eef1e9;--ink:#202d28;--muted:#53625b;--line:#d5ddd2;--accent:#235c47;--accent-soft:#e0eddc;--lime:#d9eb9c;--amber:#795113;--amber-bg:#fff3d8;--shadow:0 10px 32px #2036250a;--radius:20px;--focus:#2869bf;--header:#f5f6f0}
+    :root[data-theme="dark"]{color-scheme:dark;--bg:#141c19;--surface:#1d2822;--surface-alt:#25342b;--ink:#f0f5ed;--muted:#becbbf;--line:#445347;--accent:#b3dea5;--accent-soft:#2d4734;--lime:#d9eb9c;--amber:#f1cc8a;--amber-bg:#443721;--shadow:0 10px 32px #0002;--focus:#9bcaff;--header:#141c19}
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:86px}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+    button,input,select{font:inherit;color:inherit}
+    button,a,input,select,summary{-webkit-tap-highlight-color:transparent}
+    button,a,summary{touch-action:manipulation}
+    button{cursor:pointer}
+    button:disabled{cursor:default;opacity:.55}
+    a{color:var(--accent);text-underline-offset:4px}
+    a:hover{text-decoration-thickness:2px}
+    h1,h2,h3,p{margin:0}
+    h1,h2,h3{line-height:1.18;text-wrap:balance;overflow-wrap:anywhere}
+    button,select,input{min-width:0}
+    [hidden]{display:none!important}
+    :focus-visible{outline:3px solid var(--focus);outline-offset:4px}
+    .icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+    .shell{width:min(100% - 64px,1320px);margin-inline:auto;min-width:0}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .skip{position:fixed;left:16px;top:8px;z-index:100;background:var(--surface);padding:12px 18px;border-radius:10px;transform:translateY(-150%)}
+    .skip:focus{transform:translateY(0)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:24px;border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none;font-size:16px;font-weight:780;letter-spacing:-.03em;min-width:0}
+    .brand>span:last-child{min-width:0;overflow-wrap:anywhere}
+    .brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accent);color:var(--bg)}
+    .brand-mark .icon{width:25px;height:25px}
+    .brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.09em;font-weight:600;text-transform:uppercase}
+    .top-actions{display:flex;gap:8px;align-items:center;flex:none}
+    .edition{font-size:12px;color:var(--muted);padding-right:8px}
+    .icon-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border:1px solid var(--line);background:var(--surface);border-radius:12px;text-decoration:none}
+    .icon-btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+    .hero{display:grid;grid-template-columns:1.15fr 1fr;gap:60px;align-items:center;padding-block:30px 26px}
+    .eyebrow{display:flex;align-items:center;gap:8px;color:var(--accent);font-size:11px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin-bottom:15px}
+    .dot{width:7px;height:7px;display:inline-block;border-radius:100%;background:currentColor;flex:none}
+    h1{font-size:clamp(2rem,4.2vw,3.5rem);letter-spacing:-.055em;max-width:650px;font-weight:780}
+    h1 span{color:var(--accent)}
+    .hero-copy>p{font-size:16px;max-width:570px;color:var(--muted);margin-top:17px}
+    .hero-meta{display:flex;gap:20px;flex-wrap:wrap;margin-top:22px;font-size:12px;color:var(--muted)}
+    .hero-meta span{display:inline-flex;align-items:center;gap:6px}
+    .hero-meta .icon{width:16px;height:16px}
+    .hero-meta strong{color:var(--ink)}
+    .learn{background:var(--accent-soft);border:1px solid var(--line);border-radius:var(--radius)}
+    .learn>summary{list-style:none;cursor:pointer;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;font-weight:750;min-height:56px}
+    .learn>summary::-webkit-details-marker{display:none}
+    .learn>summary .icon{transition:transform .18s}
+    .learn[open]>summary .icon{transform:rotate(180deg)}
+    .learn-content{padding:0 20px 20px}
+    .browser-visual{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px}
+    .window-top{display:flex;align-items:center;gap:7px;padding:8px 12px;border-bottom:1px solid var(--line)}
+    .window-top>i{width:6px;height:6px;background:var(--line);border-radius:50%}
+    .window-tab{margin-left:8px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700}
+    .window-body{padding:10px}
+    .mock-input{background:var(--surface-alt);display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;color:var(--muted);font-size:12px}
+    .mock-input .icon{width:16px;height:16px}
+    .mock-lines{display:none}
+    .mock-lines span{height:4px;background:var(--line);border-radius:2px}
+    .mock-lines span:last-child{width:60%}
+    .learn-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .learn-pair p{font-size:12px;color:var(--muted);line-height:1.5}
+    .learn-pair strong{display:block;font-size:13px;color:var(--ink);margin-bottom:3px}
+    .learn-example{font-size:12px;border-top:1px solid var(--line);padding-top:12px;margin-top:13px;color:var(--muted)}
+    .learn-example strong{color:var(--ink)}
+    .catalog-nav{position:sticky;top:0;z-index:20;background:var(--bg);padding:10px 0 0}
+    .catalog-nav-inner{display:flex;justify-content:space-between;align-items:center;gap:18px;border-bottom:1px solid var(--line);min-height:60px}
+    .tabs{display:flex;gap:30px;min-width:0}
+    .tab{display:flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:9px;background:transparent;border:0;border-bottom:3px solid transparent;margin-bottom:-1px;padding:15px 0;min-height:55px;font-size:15px;font-weight:700;color:var(--muted);overflow-wrap:anywhere;min-width:0}
+    .tab-word{min-width:0;overflow-wrap:anywhere}
+    .tab[aria-selected="true"]{border-color:var(--accent);color:var(--accent)}
+    .count{font-size:11px;padding:2px 7px;border-radius:7px;background:var(--surface-alt);color:var(--muted);min-width:23px;text-align:center}
+    .tab[aria-selected="true"] .count{background:var(--accent-soft);color:var(--accent)}
+    .nav-note{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px}
+    .nav-note .icon{width:15px;height:15px}
+    .workspace{padding-block:24px 32px;min-height:400px}
+    .search-row{display:flex;align-items:flex-end;gap:12px}
+    .search-block{flex:1;min-width:0}
+    .field-label{display:block;font-size:12px;font-weight:650;margin-bottom:7px}
+    .search-box{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding-left:16px}
+    .search-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+    .search-box>.icon{color:var(--muted)}
+    .search-box input{width:100%;min-width:0;border:0;background:transparent;padding:13px 0;height:50px;outline:none}
+    .search-box input::placeholder{color:var(--muted);opacity:.8}
+    .search-box input::-webkit-search-cancel-button{display:none}
+    .search-box input:focus-visible{outline:none}
+    .clear-search{width:46px;min-height:48px;display:grid;place-items:center;background:transparent;border:0;flex:none;color:var(--muted)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 16px;border:1px solid var(--line);border-radius:11px;background:var(--surface);font-size:13px;font-weight:650;text-decoration:none;color:var(--ink);line-height:1.35;overflow-wrap:anywhere;min-width:0;max-width:100%}
+    .btn-primary{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+    .btn-soft{background:var(--accent-soft);color:var(--accent)}
+    .btn[aria-pressed="true"],.btn[aria-expanded="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+    .search-row>.btn{min-height:52px}
+    .filter-count{background:var(--accent);color:var(--bg);border-radius:5px;padding:1px 5px;font-size:10px}
+    .quick-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:17px}
+    .quick-filters{display:flex;flex-wrap:wrap;gap:7px}
+    .chip{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);border-radius:30px;background:transparent;padding:9px 13px;font-size:12px;font-weight:650;color:var(--muted);line-height:1.35}
+    .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+    .chip .icon{width:15px;height:15px}
+    .favorites-toggle{white-space:nowrap;background:var(--surface)}
+    .favorites-toggle[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+    .filter-panel{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    select{width:100%;min-height:46px;border:1px solid var(--line);border-radius:9px;padding:10px 30px 10px 10px;background:var(--bg);font-size:13px}
+    select:disabled{opacity:.65}
+    .filter-explainer{grid-column:1/-1;display:flex;gap:10px;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
+    .filter-explainer p{max-width:780px}
+    .link-btn{border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:7px 8px;font-size:12px;font-weight:700;color:var(--accent);text-decoration:underline;text-underline-offset:3px;flex:none}
+    .results-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:24px 0 16px}
+    .results-bar>div:first-child{min-width:0}
+    .results-bar h2{font-size:15px;font-weight:750;letter-spacing:-.02em}
+    .results-bar p{font-size:11px;color:var(--muted);margin-top:3px}
+    .result-controls{display:flex;align-items:center;gap:6px}
+    .sort-control{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+    .sort-control select{width:auto;max-width:166px;min-height:44px;padding-block:8px;background:transparent}
+    .view-toggle{display:flex;border:1px solid var(--line);border-radius:10px;padding:2px}
+    .view-toggle button{border:0;background:transparent;border-radius:7px;width:44px;min-height:44px;display:grid;place-items:center;color:var(--muted)}
+    .view-toggle button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px #0001}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+    .card{display:flex;flex-direction:column;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;position:relative;box-shadow:var(--shadow)}
+    .card-head{display:flex;align-items:center;gap:12px;min-width:0}
+    .product-mark{width:48px;height:48px;border-radius:15px;background:var(--logo);color:white;display:grid;place-items:center;flex:none;font-size:17px;font-weight:750;letter-spacing:-.04em}
+    .product-heading{flex:1;min-width:0}
+    .product-heading h3{font-size:17px;letter-spacing:-.03em;overflow-wrap:anywhere}
+    .product-heading p{color:var(--muted);font-size:10px;margin-top:4px}
+    .save-btn{background:transparent;border:0;display:grid;place-items:center;color:var(--muted);width:44px;height:44px;flex:none;border-radius:10px;margin-right:-8px}
+    .save-btn[aria-pressed="true"]{color:var(--accent);background:var(--accent-soft)}
+    .save-btn[aria-pressed="true"] .icon{fill:currentColor;stroke:var(--surface)}
+    .card-tagline{font-size:13px;font-weight:650;margin-top:16px;color:var(--ink)}
+    .card-description{font-size:12px;line-height:1.65;color:var(--muted);margin-top:6px;flex:1}
+    .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px;align-items:center}
+    .tag{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:var(--surface-alt);color:var(--muted);font-size:10px;font-weight:650;line-height:1.4}
+    .tag-new{background:var(--accent-soft);color:var(--accent)}
+    .tag-status{background:var(--amber-bg);color:var(--amber)}
+    .card-facts{margin:15px 0;display:grid;gap:7px}
+    .card-facts div{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--muted)}
+    .card-facts .icon{width:15px;height:15px;margin-top:1px}
+    .card-facts .price{color:var(--ink);font-weight:650}
+    .card-buttons{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:auto}
+    .card-buttons .btn{padding:10px 12px;min-height:44px;font-size:12px}
+    .compare-pick{background:transparent}
+    .compare-pick .icon{width:16px;height:16px}
+    .card-footnote{margin-top:10px;padding-top:7px;border-top:1px solid var(--line);font-size:10px;color:var(--muted);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    .card-footnote>.compare-pick{min-height:44px;padding:8px 9px;font-size:11px;flex:none}
+    .card-footnote>.source-stamp{display:flex;align-items:center;gap:4px}
+    .card-footnote .icon{width:13px;height:13px}
+    .cards.compact{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .cards.compact .card{padding:17px}
+    .cards.compact .card-description{display:none}
+    .cards.compact .card-tagline{margin-top:10px;font-size:12px}
+    .cards.compact .card-facts{margin-block:11px}
+    .cards.compact .card-footnote{margin-top:8px}
+    .cards.compact .tags{margin-top:9px}
+    .empty{text-align:center;padding:50px 20px;border:1px dashed var(--line);border-radius:var(--radius);background:var(--surface)}
+    .empty>.icon{width:36px;height:36px;color:var(--muted);margin-bottom:14px}
+    .empty h3{font-size:20px}
+    .empty p{font-size:14px;color:var(--muted);margin:10px auto 20px;max-width:430px}
+    .empty-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .source-note{padding:18px 0 0;font-size:11px;color:var(--muted)}
+    .source-note a{display:inline-block;padding-block:4px}
+    .network-note{background:var(--amber-bg);color:var(--amber);border-radius:10px;padding:12px 16px;font-size:12px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+    .updates{margin-block:0 26px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+    .updates>summary{padding:20px;cursor:pointer;font-size:14px;font-weight:700;min-height:58px}
+    .updates-body{padding:0 22px 24px}
+    .updates-intro{font-size:13px;color:var(--muted);margin-bottom:16px}
+    .watch-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .watch-card{background:var(--surface-alt);border-radius:13px;padding:18px;min-width:0}
+    .watch-card h3{font-size:15px;margin-top:10px}
+    .watch-card p{color:var(--muted);font-size:12px;line-height:1.65;margin:8px 0 4px}
+    .watch-card a{display:inline-flex;align-items:center;gap:5px;font-size:12px;min-height:44px}
+    .practical{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;padding-block:10px 30px}
+    .tip h3{font-size:13px;display:flex;align-items:center;gap:7px}
+    .tip h3 .icon{width:17px;height:17px}
+    .tip p{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+    footer{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:24px 0 38px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+    footer p{max-width:660px}
+    footer .link-btn{margin-top:-9px}
+    .compare-tray{position:fixed;z-index:30;bottom:max(16px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;width:min(calc(100% - 32px),650px);background:var(--ink);color:var(--bg);box-shadow:0 10px 45px #0004;border-radius:16px;padding:13px 16px}
+    .tray-info{flex:1;min-width:0;overflow-wrap:anywhere}
+    .tray-info strong{display:block;font-size:13px}
+    .tray-info span{display:block;font-size:11px;opacity:.84;overflow-wrap:anywhere}
+    .compare-tray .btn{background:var(--lime);color:#243521;border-color:var(--lime);flex:none}
+    .compare-tray .icon-btn{background:transparent;border:0;color:inherit}
+    body.has-selection{padding-bottom:100px}
+    .toast{position:fixed;z-index:80;bottom:120px;left:50%;transform:translateX(-50%);padding:12px 18px;border-radius:12px;background:var(--ink);color:var(--bg);box-shadow:0 5px 25px #0003;font-size:13px;max-width:min(460px,calc(100% - 32px));text-align:center}
+    .toast,.dialog-toast{pointer-events:none}
+    dialog{color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:0;width:min(690px,calc(100% - 32px));max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);margin:auto;box-shadow:0 25px 90px #0004;overflow:auto;overscroll-behavior:contain}
+    dialog::backdrop{background:#10271da3}
+    body.modal-open{overflow:hidden}
+    dialog.fallback-dialog{position:fixed;inset:20px;z-index:70;box-shadow:0 0 0 100vmax #10271da3}
+    .dialog-head{position:sticky;top:0;background:var(--surface);z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 24px;border-bottom:1px solid var(--line)}
+    .dialog-head>div,.detail-header>div{min-width:0;flex:1;overflow-wrap:anywhere}
+    .dialog-head>h2{min-width:0;overflow-wrap:anywhere}
+    .dialog-head h2{font-size:18px;letter-spacing:-.03em}
+    .dialog-head p{font-size:11px;color:var(--muted);margin-top:4px}
+    .dialog-body{padding:24px}
+    .detail-header{display:flex;gap:14px;align-items:flex-start;min-width:0}
+    .detail-header .product-mark{width:58px;height:58px;font-size:22px}
+    .detail-header h3{font-size:24px;letter-spacing:-.04em}
+    .detail-header p{font-size:12px;color:var(--muted);margin-top:4px}
+    .detail-description{font-size:14px;margin:18px 0;color:var(--muted);line-height:1.7}
+    .detail-facts{margin:20px 0}
+    .detail-facts>div{display:grid;grid-template-columns:125px minmax(0,1fr);gap:14px;padding:13px 0;border-top:1px solid var(--line)}
+    .detail-facts dt{font-size:12px;font-weight:700;margin:0}
+    .detail-facts dd{font-size:12px;color:var(--muted);margin:0;line-height:1.7}
+    .detail-notice{background:var(--amber-bg);color:var(--amber);font-size:12px;padding:14px 16px;border-radius:12px;line-height:1.65}
+    .detail-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+    .detail-actions .btn-primary{flex:1}
+    .sources{margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+    .sources h3{font-size:13px}
+    .sources p{font-size:11px;color:var(--muted);margin:5px 0 8px}
+    .sources ul{margin:0;padding-left:20px;font-size:12px}
+    .sources a{display:inline-block;min-height:44px;padding:11px 0;overflow-wrap:anywhere}
+    .dialog-toast{position:sticky;top:78px;z-index:3;background:var(--accent-soft);color:var(--ink);padding:12px 20px;font-size:12px;box-shadow:0 2px 12px #0001}
+    #compareDialog{width:min(1080px,calc(100% - 32px))}
+    .compare-intro{font-size:13px;color:var(--muted);margin-bottom:18px}
+    .compare-table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:12px}
+    .compare-table th,.compare-table td{padding:13px 14px;vertical-align:top;text-align:left;border-bottom:1px solid var(--line);overflow-wrap:anywhere;line-height:1.6}
+    .compare-table th:first-child{width:130px}
+    .compare-table tbody th{font-size:11px;color:var(--muted);font-weight:600;background:var(--surface-alt)}
+    .compare-table thead th{font-size:16px;letter-spacing:-.03em}
+    .compare-table th .product-mark{width:36px;height:36px;font-size:13px;margin-bottom:8px}
+    .compare-table th button{display:flex;margin-top:7px;padding-left:0}
+    .compare-table .btn{font-size:11px;width:100%;padding-inline:8px}
+    .compare-table small{display:block;font-size:10px;font-weight:500;color:var(--muted)}
+    .compare-mobile{display:none}
+    .compare-mobile .mobile-comparison{padding:16px;background:var(--surface-alt);border-radius:13px;margin-bottom:16px}
+    .compare-mobile h3{font-size:18px}
+    .compare-mobile .detail-facts>div{grid-template-columns:90px minmax(0,1fr)}
+    .compare-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px;font-size:11px;color:var(--muted)}
+    .short-guide{display:grid;gap:20px}
+    .short-guide h3{font-size:16px;margin-bottom:7px}
+    .short-guide p{font-size:13px;color:var(--muted);line-height:1.75}
+    .shortcut{font-size:11px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--surface-alt)}
+    .print-area{display:none}
+    @media(hover:hover) and (pointer:fine){
+      .card{transition:border-color .15s,box-shadow .15s}
+      .card:hover{border-color:var(--accent);box-shadow:0 8px 30px #18312311}
+      .btn:not(:disabled):hover,.icon-btn:hover{border-color:var(--accent)}
+      .save-btn:hover{background:var(--surface-alt)}
+      .chip:hover{border-color:var(--accent)}
+    }
+    @media(min-width:1500px){.cards{grid-template-columns:repeat(4,minmax(0,1fr))}.card{padding:19px}.product-heading h3{font-size:16px}.card-buttons .btn{padding-inline:10px}}
+    @media(max-width:1100px){
+      .shell{width:calc(100% - 48px)}
+      .hero{gap:36px}
+      .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .nav-note{display:none}
+    }
+    @media(max-width:760px){
+      .shell{width:calc(100% - 32px)}
+      .topbar{padding-block:10px}
+      .brand{font-size:14px}
+      .brand small{font-size:9px}
+      .edition{display:none}
+      .hero{grid-template-columns:1fr;gap:14px;padding-block:18px 16px}
+      .eyebrow{margin-bottom:10px;font-size:10px}
+      h1{font-size:clamp(1.7rem,6.8vw,2.4rem)}
+      .hero-copy>p{font-size:13px;margin-top:12px;max-width:590px}
+      .hero-meta{margin-top:14px;gap:12px;font-size:11px}
+      .hero-meta span:last-child{display:none}
+      .learn>summary{padding:13px 16px;font-size:12px;min-height:48px}
+      .learn-content{padding:0 16px 16px}
+      .browser-visual{display:none}
+      .catalog-nav{padding-top:0}
+      .catalog-nav-inner{min-height:54px}
+      .tabs{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+      .tab{justify-content:center;gap:7px;padding:13px 0;font-size:13px;min-height:53px}
+      .tab .icon{width:17px;height:17px}
+      .workspace{padding-top:18px}
+      .search-row{gap:8px}
+      .search-row>.btn{padding:11px;font-size:12px;min-width:48px}
+      .search-row>.btn .filter-button-word{display:none}
+      .search-box{gap:8px;padding-left:12px}
+      .search-box input{font-size:16px}
+      .search-box input::placeholder{font-size:13px}
+      .quick-row{align-items:flex-start;flex-wrap:wrap;gap:6px;margin-top:12px;justify-content:flex-start}
+      .quick-filters{display:contents}
+      .chip{font-size:11px;padding:9px 10px}
+      .favorites-toggle{font-size:10px}
+      .favorites-toggle .mobile-optional{display:none}
+      .favorites-toggle{min-height:44px}
+      .filter-panel{grid-template-columns:1fr 1fr;padding:15px;gap:12px}
+      .filter-panel select{font-size:16px}
+      .filter-explainer{display:block}
+      .filter-explainer .link-btn{padding-left:0;margin-top:6px}
+      .results-bar{margin-block:18px 12px;align-items:center}
+      .results-bar h2{font-size:13px}
+      .results-bar p{font-size:10px}
+      .sort-control>span{display:none}
+      .sort-control select{font-size:11px;max-width:129px}
+      .view-toggle{display:none}
+      .card{padding:19px}
+      .product-heading h3{font-size:16px}
+      .watch-grid{grid-template-columns:1fr}
+      .practical{grid-template-columns:1fr;gap:20px;padding-top:6px}
+      .tip{max-width:600px}
+      footer{display:block}
+      footer .link-btn{margin-top:8px;padding-left:0}
+      .compare-tray{gap:8px;padding:11px 12px}
+      .tray-info span{font-size:10px}
+      .compare-tray .btn{font-size:12px;padding:10px 12px}
+      .dialog-head{padding:15px 16px}
+      .dialog-body{padding:18px 16px}
+      .compare-table{display:none}
+      .compare-mobile{display:block}
+      .compare-footer{align-items:flex-start;flex-direction:column}
+    }
+    @media(max-width:580px){
+      .cards,.cards.compact{grid-template-columns:1fr}
+      .card{padding:20px}
+      .product-heading h3{font-size:18px}
+      .card-description{font-size:13px}
+      .card-tagline{font-size:13px}
+      .card-facts div{font-size:12px}
+      .tag{font-size:10px}
+      .card-buttons .btn{min-height:46px}
+      .card-head .product-mark{width:46px;height:46px}
+      .filter-panel{grid-template-columns:1fr}
+      .quick-row{display:flex}
+      .favorites-toggle{margin-top:0}
+      .learn-pair{gap:12px;grid-template-columns:1fr}
+      .detail-facts>div{grid-template-columns:1fr;gap:4px}
+      .compare-mobile .detail-facts>div{grid-template-columns:1fr;gap:4px}
+      .dialog-head p{display:none}
+      .detail-actions>.btn{flex:1 1 130px}
+      .detail-actions>.btn-primary{flex-basis:100%}
+      .detail-header h3{font-size:22px}
+      .compare-tray{width:calc(100% - 20px);bottom:max(10px,env(safe-area-inset-bottom))}
+      .compare-tray .icon-btn{width:40px}
+      .tray-info span{display:none}
+      .compare-tray .btn{min-height:44px}
+      .tray-info strong{font-size:12px}
+      .results-bar{gap:6px}
+      .sort-control select{max-width:125px}
+    }
+    @media(max-width:350px){
+      .shell{width:calc(100% - 24px)}
+      .topbar{gap:7px}
+      .top-actions{gap:4px}
+      .top-actions .icon-btn{width:42px;height:44px}
+      .brand{gap:7px;font-size:12px}
+      .brand-mark{width:32px;height:34px}
+      .brand small{font-size:8px;letter-spacing:.05em}
+      h1{font-size:1.8rem}
+      .hero-meta{gap:9px;font-size:10px}
+      .hero-meta .icon{width:14px;height:14px}
+      .tab{font-size:12px;gap:5px}
+      .tabs{gap:8px}
+      .card{padding:17px}
+      .card-buttons .btn{padding-inline:10px}
+      .quick-filters{gap:5px}
+      .chip{padding-inline:10px}
+      .compare-tray{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:7px}
+      .tray-info{grid-column:1/-1}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+    @media(forced-colors:active){button,a,.card,.learn{border:1px solid CanvasText}.tab[aria-selected="true"],.chip[aria-pressed="true"]{outline:2px solid Highlight}.product-mark{border:1px solid CanvasText}.icon{stroke:CanvasText}}
+    @media print{
+      @page{margin:15mm;size:A4}
+      :root,:root[data-theme="dark"]{color-scheme:light;--bg:#fff;--surface:#fff;--surface-alt:#f1f3f0;--ink:#18231c;--muted:#465348;--line:#b8c2b6;--accent:#235c47}
+      body{padding:0!important;font-size:10pt;background:white}
+      body>*:not(.print-area){display:none!important}
+      dialog::backdrop{display:none!important}
+      .print-area{display:block!important;color:#18231c}
+      .print-area h1{font-size:22pt;margin-bottom:5mm}
+      .print-area>p{font-size:10pt;margin-bottom:6mm}
+      .print-card{page-break-inside:avoid;border:1px solid #b8c2b6;border-radius:9px;padding:5mm;margin-bottom:5mm}
+      .print-card h2{font-size:15pt;margin-bottom:2mm}
+      .print-card p{margin-top:2mm;font-size:9pt;line-height:1.55}
+      .print-card a{color:#235c47;font-size:8pt;overflow-wrap:anywhere}
+      .print-card .print-sources{font-size:8pt}
+    }
+  </style>
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden">
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m16 8-2.5 5.5L8 16l2.5-5.5L16 8Z"/></symbol>
+    <symbol id="i-browser" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4V4Z"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h7m4 0h5M4 17h2m4 0h10"/><circle cx="13" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-compare" viewBox="0 0 24 24"><rect x="3" y="5" width="7" height="14" rx="2"/><rect x="14" y="5" width="7" height="14" rx="2"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6m0-6L10 14M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></symbol>
+    <symbol id="i-device" viewBox="0 0 24 24"><rect x="2" y="4" width="14" height="11" rx="2"/><path d="M5 19h8m-4-4v4"/><rect x="17" y="10" width="5" height="10" rx="1"/></symbol>
+    <symbol id="i-price" viewBox="0 0 24 24"><path d="m3 4 9-1 9 9-9 9-9-9V4Z"/><circle cx="7.5" cy="7.5" r="1"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9S4 17 4 12V6l8-3Z"/><path d="m8 11 3 3 5-5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14A8.5 8.5 0 0 1 10 4a8.5 8.5 0 1 0 10 10Z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4m0 3h.01"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="m3 3 18 18M8 7a14 14 0 0 1 13 1M3 8l2-1m2 5 2-1m4 0a9 9 0 0 1 4 1m-7 4a4 4 0 0 1 4 0m-2 4h.01"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H3V9h18v9h-3M6 14h12v7H6v-7Z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></symbol>
+  </svg>
+  <a class="skip" href="#catalog">Saltar al catálogo</a>
+  <header class="shell" id="top">
+    <div class="topbar">
+      <a class="brand" href="#top" aria-label="Inicio de Navegadores y buscadores">
+        <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-compass"/></svg></span>
+        <span>Explora la web<small>Navegadores y buscadores</small></span>
+      </a>
+      <div class="top-actions">
+        <span class="edition">Revisión · 19 oct 2026</span>
+        <button class="icon-btn" id="helpButton" type="button" aria-label="Cómo usar esta guía"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
+        <button class="icon-btn" id="themeButton" type="button" aria-label="Activar tema oscuro" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="dot"></span>Guía revisada · 19 oct 2026</div>
+        <h1>Navegadores<br><span>y buscadores.</span></h1>
+        <p>Encuentra y compara opciones para tu dispositivo. Guarda las que te interesan.</p>
+        <div class="hero-meta">
+          <span><strong id="totalCount">28</strong> herramientas</span>
+          <span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Fuentes oficiales</span>
+          <span><svg class="icon" aria-hidden="true"><use href="#i-device"/></svg>Consulta sin conexión</span>
+        </div>
+      </div>
+      <details class="learn" id="learnBox">
+        <summary>¿Qué diferencia hay entre ambos? <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <div class="learn-content">
+          <div class="browser-visual" aria-hidden="true">
+            <div class="window-top"><i></i><i></i><i></i><span class="window-tab">Firefox · el navegador</span></div>
+            <div class="window-body"><div class="mock-input"><svg class="icon"><use href="#i-search"/></svg>Buscar con DuckDuckGo</div><div class="mock-lines"><span></span><span></span><span></span></div></div>
+          </div>
+          <div class="learn-pair">
+            <p><strong>El navegador abre páginas</strong>Es el programa que usas en tu equipo, como Chrome, Firefox o Safari.</p>
+            <p><strong>El buscador encuentra información</strong>Es un servicio que consultas desde el navegador, como Google, Bing o DuckDuckGo.</p>
+          </div>
+          <p class="learn-example"><strong>Puedes combinarlos.</strong> Por ejemplo, usar Firefox con Google o Brave Search. Los servicios de respuestas con IA también pueden buscar en la web.</p>
+        </div>
+      </details>
+    </div>
+  </header>
+  <main id="mainContent">
+    <section aria-label="Catálogo de herramientas" id="catalog">
+      <div class="catalog-nav">
+        <div class="shell catalog-nav-inner">
+          <div class="tabs" role="tablist" aria-label="Tipo de herramienta">
+            <button class="tab" id="browserTab" type="button" role="tab" aria-selected="true" aria-controls="browserPanel" tabindex="0" data-kind="browser"><svg class="icon" aria-hidden="true"><use href="#i-browser"/></svg><span class="tab-word">Navegadores</span> <span class="count" id="browserCount">15</span></button>
+            <button class="tab" id="searchTab" type="button" role="tab" aria-selected="false" aria-controls="searchPanel" tabindex="-1" data-kind="search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="tab-word">Buscadores</span> <span class="count" id="searchCount">13</span></button>
+          </div>
+          <span class="nav-note"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>Los enlaces externos abren una pestaña nueva</span>
+        </div>
+      </div>
+      <div class="shell workspace">
+        <div id="networkNote" class="network-note" role="status" hidden><svg class="icon" aria-hidden="true"><use href="#i-wifi-off"/></svg>Sin conexión detectada. Puedes consultar, filtrar y comparar; los sitios externos necesitan internet.</div>
+        <div class="search-row">
+          <div class="search-block">
+            <label class="field-label" for="catalogSearch">Buscar en este catálogo</label>
+            <div class="search-box">
+              <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+              <input id="catalogSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Nombre, función o dispositivo…" aria-controls="browserPanel searchPanel" maxlength="160">
+              <button class="clear-search" id="clearSearch" type="button" aria-label="Borrar búsqueda" hidden><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+            </div>
+          </div>
+          <button class="btn" id="filtersButton" type="button" aria-expanded="false" aria-controls="filterPanel" aria-label="Mostrar filtros avanzados"><svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg><span class="filter-button-word">Filtros</span><span class="filter-count" id="filterCount" hidden>0</span></button>
+        </div>
+        <div class="quick-row">
+          <div class="quick-filters" id="quickFilters" role="group" aria-label="Filtrar por interés">
+            <button class="chip" type="button" data-focus="all" aria-pressed="true">Todos</button>
+            <button class="chip" type="button" data-focus="privacy" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>Privacidad</button>
+            <button class="chip" type="button" data-focus="ai" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>Con IA</button>
+            <button class="chip" type="button" data-focus="rewards" aria-pressed="false">Recompensas</button>
+            <button class="chip" type="button" data-focus="added" aria-pressed="false">Añadidos</button>
+          </div>
+          <button class="chip favorites-toggle" id="favoritesToggle" type="button" aria-pressed="false" aria-label="Mostrar mis guardados"><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg><span><span class="mobile-optional">Mis </span>guardados</span> <span id="favoriteCount">0</span></button>
+        </div>
+        <div class="filter-panel" id="filterPanel" hidden>
+          <div><label class="field-label" for="platformFilter">Tu dispositivo</label><select id="platformFilter"><option value="all">Cualquier dispositivo</option><option value="Android">Android</option><option value="iOS">iPhone / iPad</option><option value="Windows">Windows</option><option value="macOS">Mac</option><option value="Linux">Linux</option></select></div>
+          <div><label class="field-label" for="priceFilter">Acceso y coste</label><select id="priceFilter"><option value="all">Cualquier modalidad</option><option value="free">Tiene uso gratuito</option><option value="freemium">Gratis + opciones de pago</option><option value="paid">Requiere suscripción</option><option value="technical">Software para instancias</option></select></div>
+          <div><label class="field-label" for="vpnFilter">VPN del navegador</label><select id="vpnFilter"><option value="all">Cualquier opción</option><option value="free">Gratuita, con sus condiciones</option><option value="paid">Opcional de pago</option><option value="none">Sin VPN propia incluida</option></select></div>
+          <div><label class="field-label" for="interestFilter">Otras características</label><select id="interestFilter"><option value="all">Cualquiera</option><option value="opensource">Código abierto</option><option value="customize">Personalización</option><option value="focus">Concentración</option><option value="gaming">Videojuegos</option><option value="independent">Índice web propio</option><option value="eco">Enfoque ambiental</option></select></div>
+          <div class="filter-explainer"><p id="filterHelp">Las funciones pueden variar por país, equipo y cuenta. Una VPN gratuita del navegador no siempre protege las demás aplicaciones.</p><button class="link-btn" type="button" data-action="reset">Restablecer filtros</button></div>
+        </div>
+        <div class="results-bar">
+          <div><h2 id="resultsTitle">Navegadores</h2><p id="resultsHint">Selecciona hasta 3 para comparar</p></div>
+          <div class="result-controls">
+            <label class="sort-control"><span>Ordenar</span><select id="sortSelect" aria-label="Ordenar resultados"><option value="catalog">Catálogo</option><option value="name">Nombre A–Z</option><option value="new">Añadidos</option></select></label>
+            <div class="view-toggle" role="group" aria-label="Densidad de las fichas">
+              <button id="normalView" type="button" aria-pressed="true" aria-label="Vista completa"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg></button>
+              <button id="compactView" type="button" aria-pressed="false" aria-label="Vista compacta"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div id="resultsStatus" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+        <div id="browserPanel" role="tabpanel" aria-labelledby="browserTab" tabindex="0"><div class="cards" id="browserGrid"></div></div>
+        <div id="searchPanel" role="tabpanel" aria-labelledby="searchTab" tabindex="0" hidden><div class="cards" id="searchGrid"></div></div>
+        <div class="empty" id="emptyState" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><h3 id="emptyTitle">No hay coincidencias</h3>
+          <p id="emptyDescription">Prueba otro término o quita los filtros para ver más opciones.</p>
+          <div class="empty-actions"><button class="btn btn-primary" type="button" data-action="reset">Ver todo el catálogo</button><button class="btn" type="button" id="otherCatalog">Buscar en la otra sección</button></div>
+        </div>
+        <p class="source-note">“Añadido” significa incorporado a esta edición. Los datos de cada ficha incluyen su fuente y sus condiciones. <button class="link-btn" id="printCatalog" type="button"><svg class="icon" aria-hidden="true"><use href="#i-print"/></svg>Imprimir selección visible</button></p>
+      </div>
+    </section>
+    <section class="shell" aria-label="Cambios y orientaciones">
+      <details class="updates" id="updates">
+        <summary>Novedades y cambios de estado · octubre de 2026</summary>
+        <div class="updates-body">
+          <p class="updates-intro">La edición incorpora Comet, Dia, Zen, Opera Air y Opera Neon, junto con otras opciones que faltaban. También actualiza las condiciones de IA y VPN. Arc figura con mantenimiento limitado, tal como informa su fabricante.</p>
+          <div class="watch-grid">
+            <article class="watch-card"><span class="tag tag-status">En desarrollo</span><h3>Ladybird</h3><p>Construye un motor de navegador independiente. Su web mantiene la primera alfa como objetivo de 2026 para Linux y macOS; no se presenta aquí como una descarga lista para el uso cotidiano.</p><a href="https://ladybird.org/" target="_blank" rel="noopener noreferrer" aria-label="Conocer el proyecto Ladybird, abre una pestaña nueva">Conocer el proyecto <svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></a></article>
+            <article class="watch-card"><span class="tag tag-status">Retirado</span><h3>ChatGPT Atlas</h3><p>La ayuda oficial de OpenAI informa que Atlas fue retirado y ya no recibe actualizaciones. Se conserva esta referencia histórica; ChatGPT Search continúa siendo un servicio distinto.</p><a href="https://help.openai.com/en/articles/20001371-chatgpt-atlas-retirement" target="_blank" rel="noopener noreferrer" aria-label="Consultar el aviso de retiro de Atlas, abre una pestaña nueva">Consultar el aviso oficial <svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></a></article>
+          </div>
+        </div>
+      </details>
+      <div class="practical">
+        <article class="tip"><h3><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>Comprueba las respuestas de IA</h3><p>Abre los enlaces citados y contrasta la fecha y el contenido. Que una respuesta incluya fuentes no garantiza que su interpretación sea correcta.</p></article>
+        <article class="tip"><h3><svg class="icon" aria-hidden="true"><use href="#i-price"/></svg>Recompensas con condiciones</h3><p>Son programas opcionales. La cuenta, el país, las actividades admitidas y las reglas de canje determinan la elegibilidad; no equivalen a un ingreso garantizado.</p></article>
+        <article class="tip"><h3><svg class="icon" aria-hidden="true"><use href="#i-device"/></svg>Elige para tu dispositivo</h3><p>Consulta la ficha antes de instalar. Una misma marca puede ofrecer funciones distintas en escritorio y móvil, incluso cuando ambas versiones son gratuitas.</p></article>
+      </div>
+      <footer>
+        <p>Guía independiente revisada el <strong>19 de octubre de 2026</strong>. La selección no es un ranking. Las condiciones pueden cambiar; consulta las fuentes de cada ficha. El catálogo, los filtros y la comparación funcionan sin conexión una vez descargado este HTML. Para visitar los sitios necesitas internet.</p>
+        <button class="link-btn" id="aboutButton" type="button">Sobre esta guía y tus datos <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      </footer>
+    </section>
+    <noscript><div class="shell network-note">Activa JavaScript para usar el catálogo interactivo. Los enlaces de referencia de la sección de novedades siguen disponibles.</div></noscript>
+  </main>
+  <aside class="compare-tray" id="compareTray" aria-label="Herramientas seleccionadas para comparar" hidden>
+    <div class="tray-info"><strong id="trayCount">1 herramienta seleccionada</strong><span id="trayNames">Elige otra ficha para comparar</span></div>
+    <button class="btn" type="button" id="openCompare" disabled><svg class="icon" aria-hidden="true"><use href="#i-compare"/></svg>Comparar</button>
+    <button class="icon-btn" id="clearCompare" type="button" aria-label="Vaciar selección de comparación"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+  </aside>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="detailDialog" aria-labelledby="detailTitle">
+    <div class="dialog-head"><div><h2 id="detailTitle">Ficha de la herramienta</h2><p>Datos y fuentes revisados el 19 de octubre de 2026</p></div><button class="icon-btn" type="button" data-close="detailDialog" aria-label="Cerrar ficha"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="dialog-toast" data-modal-status role="status" aria-live="polite" hidden></div>
+    <div class="dialog-body" id="detailBody"></div>
+  </dialog>
+  <dialog id="compareDialog" aria-labelledby="compareTitle">
+    <div class="dialog-head"><div><h2 id="compareTitle">Compara tus opciones</h2><p>Las condiciones se refieren a la edición del 19 de octubre de 2026</p></div><button class="icon-btn" type="button" data-close="compareDialog" aria-label="Cerrar comparación"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="dialog-toast" data-modal-status role="status" aria-live="polite" hidden></div>
+    <div class="dialog-body" id="compareBody"></div>
+  </dialog>
+  <dialog id="helpDialog" aria-labelledby="helpTitle">
+    <div class="dialog-head"><h2 id="helpTitle">Una guía para elegir con calma</h2><button class="icon-btn" type="button" data-close="helpDialog" aria-label="Cerrar ayuda"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="dialog-toast" data-modal-status role="status" aria-live="polite" hidden></div>
+    <div class="dialog-body short-guide">
+      <section><h3>1. Encuentra opciones</h3><p>Elige Navegadores o Buscadores. Escribe un nombre, una función como “Leo”, o un dispositivo como “Android”. La búsqueda reconoce palabras sin tilde. Los filtros avanzados combinan dispositivo, coste y otras características.</p></section>
+      <section><h3>2. Revisa y compara</h3><p>Abre “Ver ficha” para leer las condiciones y consultar las fuentes. Marca “Comparar” en dos o tres herramientas de la misma sección. Cada sección conserva su propia selección durante la sesión.</p></section>
+      <section><h3>3. Guarda lo que te interesa</h3><p>El botón con marcador añade una herramienta a “Mis guardados”. Los favoritos, el tema y la densidad se guardan en este navegador cuando el almacenamiento está disponible; no se envían a ningún servidor.</p></section>
+      <section><h3>Consulta sin conexión</h3><p>Descarga el archivo HTML completo y ábrelo con un navegador. El catálogo y sus herramientas locales no cargan fuentes, imágenes ni librerías de internet. Las páginas de los fabricantes y los servicios de búsqueda necesitan conexión. Una vista previa de archivos del teléfono puede no ejecutar JavaScript.</p></section>
+      <section><h3>Qué significan las etiquetas</h3><p>“Añadido” indica una incorporación a esta edición, no necesariamente un lanzamiento reciente. “Con IA” señala funciones disponibles con las condiciones de cada ficha. “Tiene uso gratuito” incluye opciones con planes adicionales de pago. Los buscadores web pueden abrirse desde distintos dispositivos sin instalar otro navegador.</p></section>
+      <section><h3>Lectura, teclado e impresión</h3><p>Usa las flechas izquierda y derecha para cambiar entre las pestañas. <span class="shortcut">Esc</span> cierra una ficha o comparación. El modo oscuro se activa con el botón superior. “Imprimir” permite usar la impresora o la opción de guardar como PDF de tu navegador.</p></section>
+      <section><h3>Alcance de la revisión</h3><p>Se consultaron páginas oficiales y documentación de soporte el 19 de octubre de 2026. Esta copia no se actualiza automáticamente. No se asignan estrellas, cuotas de mercado ni puntuaciones de velocidad sin una metodología comparable.</p></section>
+    </div>
+  </dialog>
+  <div class="print-area" id="printArea"></div>
+  <script id="catalogData" type="application/json">[{"id":"chrome","kind":"browser","name":"Google Chrome","monogram":"Ch","accent":"#245ba1","added":false,"status":"active","subtype":"Navegador","tagline":"Sincronización y herramientas de Google","description":"Organiza pestañas, sincroniza tus datos y utiliza extensiones. Integra funciones de Gemini para trabajar con páginas y búsquedas en los dispositivos y cuentas compatibles.","platforms":["Windows","macOS","Linux","Android","iOS"],"focus":["general","ai"],"access":"freemium","priceLabel":"Gratis + extras de IA","priceDetails":"La navegación es gratuita. Algunas funciones avanzadas de Gemini requieren un plan de Google AI y disponibilidad regional.","hasAI":true,"aiDetails":"Gemini en Chrome. Su disponibilidad depende del país, idioma, dispositivo y cuenta; las acciones de navegación automática tienen requisitos adicionales.","vpn":"none","vpnDetails":"No incluye una VPN propia como función general del navegador.","rewards":"Sin programa de recompensas propio por navegar.","caution":"No todas las funciones de Gemini están disponibles en todos los equipos o cuentas educativas.","suitable":"Usar servicios de Google y sincronizar varios dispositivos.","officialUrl":"https://www.google.com/chrome/","actionLabel":"Sitio y descarga","sources":[{"label":"Chrome y funciones de Gemini","url":"https://www.google.com/chrome/"}]},{"id":"firefox","kind":"browser","name":"Mozilla Firefox","monogram":"Fx","accent":"#aa451a","added":false,"status":"active","subtype":"Navegador","tagline":"Código abierto y control de la navegación","description":"Navegador de Mozilla con protección contra rastreadores, extensiones y personalización. En escritorio permite elegir un chatbot en la barra lateral y controlar las funciones de IA.","platforms":["Windows","macOS","Linux","Android","iOS"],"focus":["privacy","opensource","customize","ai"],"access":"free","priceLabel":"Gratis","priceDetails":"Firefox es gratuito. Los chatbots de terceros y la aplicación independiente Mozilla VPN pueden tener sus propios planes.","hasAI":true,"aiDetails":"Acceso opcional a chatbots de terceros en la barra lateral de escritorio y otras funciones de IA configurables. Las capacidades cambian según la plataforma.","vpn":"conditional","vpnDetails":"VPN integrada gratuita para el tráfico del navegador, con 50 GB al mes, cuenta Mozilla y despliegue por regiones. Es distinta de la aplicación Mozilla VPN de pago.","rewards":"Sin programa de recompensas propio por navegar.","caution":"La VPN integrada se está habilitando por etapas; puede no aparecer aunque tengas Firefox actualizado.","suitable":"Controlar la privacidad y personalizar un navegador de código abierto.","officialUrl":"https://www.firefox.com/","actionLabel":"Sitio y descarga","sources":[{"label":"Firefox","url":"https://www.firefox.com/"},{"label":"Chatbots opcionales","url":"https://support.mozilla.org/en-US/kb/ai-chatbot"},{"label":"VPN integrada y condiciones","url":"https://support.mozilla.org/en-US/kb/built-in-vpn"}]},{"id":"edge","kind":"browser","name":"Microsoft Edge","monogram":"Ed","accent":"#076a73","added":false,"status":"active","subtype":"Navegador","tagline":"Copilot y herramientas de Microsoft","description":"Reúne navegación, lectura de documentos y asistencia de Copilot. Permite acceder a Microsoft Rewards con una cuenta elegible y realizar búsquedas con Bing.","platforms":["Windows","macOS","Linux","Android","iOS"],"focus":["general","ai","rewards"],"access":"freemium","priceLabel":"Gratis + servicios opcionales","priceDetails":"El navegador es gratuito. Algunos servicios de Microsoft o funciones avanzadas de IA pueden requerir una suscripción.","hasAI":true,"aiDetails":"Copilot y funciones de IA según plataforma, cuenta, región y configuración.","vpn":"conditional","vpnDetails":"Edge Secure Network ofrece 5 GB al mes para tráfico del navegador con cuenta personal de Microsoft; comprueba su disponibilidad en tu versión.","rewards":"Microsoft Rewards ofrece puntos por actividades elegibles. Las ofertas y los canjes dependen del país y la cuenta; los puntos no son efectivo.","caution":"Usar Edge no garantiza recompensas. La disponibilidad y las funciones de Copilot cambian entre versiones.","suitable":"Trabajar con servicios de Microsoft y consultar documentos.","officialUrl":"https://www.microsoft.com/edge","actionLabel":"Sitio y descarga","sources":[{"label":"Microsoft Edge","url":"https://www.microsoft.com/en-us/edge"},{"label":"Secure Network","url":"https://www.microsoft.com/en-us/edge/features/edge-secure-network-vpn"},{"label":"Condiciones de Rewards","url":"https://support.microsoft.com/en-us/accounts-billing/rewards/how-to-earn-microsoft-rewards-points"}]},{"id":"brave","kind":"browser","name":"Brave Browser","monogram":"Br","accent":"#a84120","added":false,"status":"active","subtype":"Navegador","tagline":"Bloqueo de rastreadores desde el inicio","description":"Incluye protección frente a anuncios y rastreadores, el asistente Leo y un programa opcional de recompensas. Su VPN se contrata por separado.","platforms":["Windows","macOS","Linux","Android","iOS"],"focus":["privacy","ai","rewards","opensource"],"access":"freemium","priceLabel":"Gratis + extras opcionales","priceDetails":"Navegar es gratis. Leo Premium y Brave Firewall + VPN son servicios opcionales de pago.","hasAI":true,"aiDetails":"Leo ofrece un nivel gratuito y opciones Premium con otros límites de uso.","vpn":"paid","vpnDetails":"Brave Firewall + VPN es de pago y protege el tráfico del dispositivo en Windows, macOS, Android e iOS. La página oficial aún no anuncia soporte de VPN para Linux.","rewards":"Brave Rewards puede otorgar BAT por anuncios elegibles. Requiere activación y cumplir las condiciones de cuenta, plataforma, región y cobro.","caution":"Brave Browser y Brave Search son productos distintos. Los anuncios del buscador no dan Brave Rewards.","suitable":"Reducir rastreadores con protecciones integradas.","officialUrl":"https://brave.com/","actionLabel":"Sitio y descarga","sources":[{"label":"Brave Browser","url":"https://brave.com/"},{"label":"VPN y plataformas","url":"https://brave.com/firewall-vpn/"},{"label":"Brave Rewards","url":"https://brave.com/brave-rewards/"}]},{"id":"safari","kind":"browser","name":"Safari","monogram":"Sa","accent":"#1e638e","added":true,"status":"active","subtype":"Navegador","tagline":"Integrado en los dispositivos Apple","description":"Navegador de Apple con grupos de pestañas, modo de lectura y protección contra seguimiento. Sincroniza la navegación dentro del ecosistema Apple.","platforms":["macOS","iOS"],"focus":["general","privacy"],"access":"free","priceLabel":"Incluido en equipos Apple","priceDetails":"Safari viene incluido en macOS, iOS e iPadOS. Algunos servicios de iCloud se ofrecen mediante suscripción.","hasAI":true,"aiDetails":"Funciones de Apple Intelligence, como resúmenes, en equipos, idiomas y regiones compatibles. No equivale a disponer de un agente web en todos los dispositivos.","vpn":"none","vpnDetails":"No incluye una VPN completa. iCloud Private Relay es un servicio distinto de iCloud+ y tiene requisitos propios.","rewards":"Sin programa de recompensas propio por navegar.","caution":"No hay una versión actual de Safari para Windows o Android. Se actualiza mediante el sistema de Apple.","suitable":"Navegar y leer desde iPhone, iPad y Mac.","officialUrl":"https://www.apple.com/safari/","actionLabel":"Conocer Safari","sources":[{"label":"Safari y requisitos","url":"https://www.apple.com/safari/"},{"label":"Resúmenes con Apple Intelligence en iPhone","url":"https://support.apple.com/en-ca/guide/iphone/iph1fbef4daa/ios"}]},{"id":"vivaldi","kind":"browser","name":"Vivaldi","monogram":"Vi","accent":"#a8333d","added":true,"status":"active","subtype":"Navegador","tagline":"Personaliza pestañas, paneles y espacios","description":"Ofrece agrupación de pestañas, vista dividida, paneles y espacios de trabajo. Su versión de escritorio añade correo, calendario y lector de noticias.","platforms":["Windows","macOS","Linux","Android","iOS"],"focus":["customize","privacy"],"access":"free","priceLabel":"Gratis","priceDetails":"El navegador es gratuito. Los servicios externos integrados pueden ofrecer planes adicionales.","hasAI":false,"aiDetails":"No destaca un asistente generativo propio. Puedes usar servicios web o extensiones compatibles.","vpn":"conditional","vpnDetails":"Integra acceso a Proton VPN en escritorio, con cuenta y nivel gratuito. Los planes de Proton y su alcance dependen del servicio.","rewards":"Sin programa de recompensas propio por navegar.","caution":"Correo, calendario y algunas herramientas de organización son funciones de escritorio; no todas están en móvil.","suitable":"Organizar muchas páginas y adaptar la interfaz al trabajo.","officialUrl":"https://vivaldi.com/","actionLabel":"Sitio y descarga","sources":[{"label":"Vivaldi y funciones","url":"https://vivaldi.com/"},{"label":"Integración de Proton VPN","url":"https://vivaldi.com/protonvpn/"}]},{"id":"duckduckgo-browser","kind":"browser","name":"DuckDuckGo Browser","monogram":"Dg","accent":"#a74622","added":true,"status":"active","subtype":"Navegador","tagline":"Privacidad con controles sencillos","description":"Bloquea rastreadores y facilita borrar pestañas e historial con un botón. Integra el buscador DuckDuckGo y acceso opcional a Duck.ai.","platforms":["Windows","macOS","Android","iOS"],"focus":["privacy","ai"],"access":"freemium","priceLabel":"Gratis + extras opcionales","priceDetails":"El navegador es gratuito. La suscripción añade VPN y otros servicios sujetos a disponibilidad.","hasAI":true,"aiDetails":"Duck.ai es opcional y ofrece acceso gratuito con límites; la suscripción amplía las opciones.","vpn":"paid","vpnDetails":"VPN opcional mediante suscripción de DuckDuckGo. Comprueba países y dispositivos admitidos.","rewards":"Sin programa de recompensas propio por navegar.","caution":"El navegador y el buscador son productos diferentes. Sus protecciones reducen el rastreo, pero no garantizan anonimato absoluto.","suitable":"Usar controles de privacidad sencillos en móvil y ordenador.","officialUrl":"https://duckduckgo.com/app","actionLabel":"Sitio y descarga","sources":[{"label":"Navegador, plataformas y servicios","url":"https://duckduckgo.com/app"}]},{"id":"opera","kind":"browser","name":"Opera One","monogram":"Op","accent":"#a32e45","added":false,"status":"active","subtype":"Navegador","tagline":"Pestañas, IA y VPN para navegar","description":"La edición de escritorio de Opera organiza pestañas y reúne herramientas en la barra lateral. Incluye asistencia de Opera AI y una VPN gratuita para el navegador.","platforms":["Windows","macOS","Linux"],"focus":["ai","customize"],"access":"freemium","priceLabel":"Gratis + extras opcionales","priceDetails":"Navegador gratuito. Opera VPN Pro es un servicio opcional distinto de la VPN gratuita.","hasAI":true,"aiDetails":"Opera AI, anteriormente Aria, ofrece asistencia integrada; funciones y límites varían según versión. Las condiciones de Opera AI exigen tener al menos 18 años.","vpn":"free","vpnDetails":"VPN gratuita para el tráfico del navegador. No protege por sí sola las demás aplicaciones del equipo.","rewards":"Sin programa general de recompensas propio por navegar.","caution":"Opera One es la edición de escritorio. Opera Browser tiene versiones para Android e iOS con funciones diferentes.","suitable":"Reunir herramientas y organización de pestañas en un solo lugar.","officialUrl":"https://www.opera.com/","actionLabel":"Sitio y descarga","sources":[{"label":"Opera y versiones","url":"https://www.opera.com/es-419/opera"},{"label":"Alcance de la VPN gratuita","url":"https://www.opera.com/features/free-vpn"},{"label":"Opera AI, versiones y requisitos","url":"https://help.opera.com/en/browser-ai-faq/"}]},{"id":"opera-gx","kind":"browser","name":"Opera GX","monogram":"GX","accent":"#9b2758","added":false,"status":"active","subtype":"Navegador","tagline":"Personalización para videojuegos","description":"Combina temas, sonidos e integraciones para jugadores. La versión de escritorio permite controlar el uso de recursos mediante GX Control.","platforms":["Windows","macOS","Android","iOS"],"focus":["gaming","customize","ai"],"access":"free","priceLabel":"Gratis","priceDetails":"La descarga del navegador es gratuita. Servicios de terceros o extras pueden tener sus propias condiciones.","hasAI":true,"aiDetails":"Asistencia de Opera AI en las versiones compatibles; no todas las funciones están en móvil. Las condiciones de Opera AI exigen tener al menos 18 años.","vpn":"free","vpnDetails":"VPN gratuita para la navegación en las versiones de escritorio compatibles. No se debe asumir la misma función en GX Mobile.","rewards":"Sin programa general de recompensas propio por navegar.","caution":"Los controles de CPU, RAM y red corresponden a la versión de escritorio; GX Mobile ofrece una experiencia distinta.","suitable":"Personalizar la apariencia y gestionar recursos en escritorio.","officialUrl":"https://www.opera.com/gx","actionLabel":"Sitio y descarga","sources":[{"label":"Opera GX","url":"https://www.opera.com/gx"},{"label":"VPN de GX en Windows","url":"https://www.opera.com/es-419/gx/features/free-vpn-windows"},{"label":"Opera AI, versiones y requisitos","url":"https://help.opera.com/en/browser-ai-faq/"}]},{"id":"comet","kind":"browser","name":"Comet","monogram":"Co","accent":"#216c70","added":true,"status":"active","subtype":"Navegador con IA","tagline":"La búsqueda de Perplexity en tus pestañas","description":"Integra búsqueda con Perplexity y herramientas de IA para consultar páginas, comparar información y trabajar con el contenido de las pestañas.","platforms":["Windows","macOS","Android","iOS"],"focus":["ai"],"access":"freemium","priceLabel":"Gratis + IA según plan","priceDetails":"Descargar Comet es gratis. El acceso al asistente y al agente del navegador depende del plan de Perplexity.","hasAI":true,"aiDetails":"Búsqueda con IA y herramientas para tareas web. La tabla de planes del 8 de octubre de 2026 no incluye Browser Agent / Comet Assistant en Free.","vpn":"none","vpnDetails":"No se anuncia una VPN propia incluida como función general.","rewards":"Sin programa general de recompensas propio por navegar.","caution":"La descarga gratuita no incluye necesariamente todas las acciones del agente. Revisa el plan antes de elegir por esas funciones.","suitable":"Consultar e investigar información con Perplexity.","officialUrl":"https://www.perplexity.ai/comet","actionLabel":"Sitio y descarga","sources":[{"label":"Comet y plataformas","url":"https://www.perplexity.ai/comet"},{"label":"Planes y funciones","url":"https://www.perplexity.ai/help-center/en/articles/11187416-which-perplexity-subscription-plan-is-right-for-you"}]},{"id":"dia","kind":"browser","name":"Dia","monogram":"Di","accent":"#3e568c","added":true,"status":"active","subtype":"Navegador con IA","tagline":"Organiza el trabajo y consulta tus pestañas","description":"Navegador de The Browser Company con perfiles, grupos de pestañas y vista dividida. Sus funciones de IA ayudan a reunir información de páginas y herramientas conectadas.","platforms":["Windows","macOS"],"focus":["ai","customize"],"access":"freemium","priceLabel":"Gratis + IA según cuenta","priceDetails":"Hay navegación gratuita y planes de IA. El despliegue de pago comienza por nuevos usuarios de Mac; las condiciones difieren en Windows y cuentas existentes.","hasAI":true,"aiDetails":"Consultas con contexto de pestañas y herramientas conectadas. Los planes de IA tienen límites de uso.","vpn":"none","vpnDetails":"No se anuncia una VPN propia incluida como función general.","rewards":"Sin programa de recompensas propio por navegar.","caution":"No se anuncia una versión móvil. Verifica los planes vigentes para tu plataforma y cuenta.","suitable":"Organizar tareas y consultar el contexto de varias pestañas.","officialUrl":"https://www.diabrowser.com/","actionLabel":"Sitio y descarga","sources":[{"label":"Dia y descarga","url":"https://www.diabrowser.com/"},{"label":"Planes y despliegue por plataforma","url":"https://www.diabrowser.com/plans"}]},{"id":"zen","kind":"browser","name":"Zen Browser","monogram":"Ze","accent":"#835b24","added":true,"status":"beta","subtype":"Navegador en beta","tagline":"Espacios de trabajo con base Firefox","description":"Navegador gratuito de código abierto con pestañas verticales, espacios de trabajo y vista dividida. Su interfaz se centra en organizar varias páginas con menos distracciones.","platforms":["Windows","macOS","Linux"],"focus":["customize","opensource"],"access":"free","priceLabel":"Gratis","priceDetails":"Código abierto y uso gratuito. Sigue en fase beta.","hasAI":false,"aiDetails":"No destaca un asistente de IA propio como función central.","vpn":"none","vpnDetails":"No se anuncia una VPN propia incluida. No se deben dar por heredadas todas las funciones de Firefox.","rewards":"Sin programa de recompensas propio por navegar.","caution":"Está en beta. Algunos servicios de streaming con DRM no funcionan en Windows o macOS. No tiene versión móvil.","suitable":"Organizar pestañas y probar una alternativa de código abierto.","officialUrl":"https://zen-browser.app/","actionLabel":"Conocer y descargar","sources":[{"label":"Zen Browser","url":"https://zen-browser.app/"},{"label":"Estado de las descargas","url":"https://zen-browser.app/download/"},{"label":"Móviles y limitaciones DRM","url":"https://docs.zen-browser.app/faq"}]},{"id":"opera-air","kind":"browser","name":"Opera Air","monogram":"Ai","accent":"#556929","added":true,"status":"active","subtype":"Navegador","tagline":"Menos distracciones, más concentración","description":"Propone una interfaz minimalista, sonidos ambientales y pausas guiadas. Permite reducir las distracciones mientras conserva herramientas de navegación de Opera.","platforms":["Windows","macOS"],"focus":["focus","ai"],"access":"free","priceLabel":"Gratis","priceDetails":"Navegador gratuito con herramientas de concentración y VPN para la navegación.","hasAI":true,"aiDetails":"Opera AI disponible como herramienta opcional. El diseño reduce la presencia de funciones secundarias. Las condiciones de Opera AI exigen tener al menos 18 años.","vpn":"free","vpnDetails":"VPN gratuita integrada para el tráfico del navegador; no sustituye una VPN para todo el equipo.","rewards":"Sin programa de recompensas propio por navegar.","caution":"Se ofrece para Windows y macOS. No se anuncia una versión móvil de Opera Air.","suitable":"Leer o trabajar con una interfaz de pocas distracciones.","officialUrl":"https://www.opera.com/air","actionLabel":"Sitio y descarga","sources":[{"label":"Opera Air","url":"https://www.opera.com/air"},{"label":"Plataformas de descarga","url":"https://www.opera.com/es/download"},{"label":"Opera AI, versiones y requisitos","url":"https://help.opera.com/en/browser-ai-faq/"}]},{"id":"opera-neon","kind":"browser","name":"Opera Neon","monogram":"Ne","accent":"#674ab0","added":true,"status":"experimental","subtype":"Navegador experimental","tagline":"Agentes para realizar tareas en la web","description":"Integra agentes que pueden investigar y actuar sobre páginas. Su propuesta combina el contexto de la navegación con herramientas para desarrollar tareas.","platforms":["Windows","macOS"],"focus":["ai"],"access":"freemium","priceLabel":"Gratis + funciones avanzadas de pago","priceDetails":"El plan gratuito permite navegar, usar el chat básico y conectar agentes externos. La navegación autónoma, la investigación profunda y otras capacidades avanzadas integradas requieren suscripción.","hasAI":true,"aiDetails":"Agentes para investigación y acciones en la web. Las funciones de IA incluidas, cuotas y conexiones dependen del plan.","vpn":"free","vpnDetails":"La página oficial incluye una VPN gratuita para el navegador.","rewards":"Sin programa de recompensas propio por navegar.","caution":"Las conexiones con agentes externos utilizan las condiciones y límites de esos servicios. Comprueba qué funciones incluye cada plan.","suitable":"Probar tareas asistidas por agentes desde un navegador de escritorio.","officialUrl":"https://www.operaneon.com/","actionLabel":"Ver producto y planes","sources":[{"label":"Neon y funciones","url":"https://www.operaneon.com/"},{"label":"Planes vigentes y chat básico gratuito","url":"https://www.operaneon.com/subscription"},{"label":"Anuncio del plan Free, agosto de 2026","url":"https://www.operaneon.com/de/news/your-ai-agents-can-use-opera-neon-free-of-charge"}]},{"id":"arc","kind":"browser","name":"Arc Browser","monogram":"Ar","accent":"#6b4a98","added":false,"status":"maintenance","subtype":"Navegador","tagline":"Espacios con mantenimiento limitado","description":"Organiza páginas en espacios y perfiles con vista dividida. The Browser Company ha trasladado el desarrollo principal a Dia.","platforms":["Windows","macOS"],"focus":["customize","ai"],"access":"free","priceLabel":"Gratis","priceDetails":"La descarga de Arc es gratuita. Su mantenimiento actual es limitado.","hasAI":true,"aiDetails":"Arc Max incluye funciones opcionales de IA, con disponibilidad según plataforma.","vpn":"none","vpnDetails":"No se anuncia una VPN propia incluida como función general.","rewards":"Sin programa de recompensas propio por navegar.","caution":"La portada informa que Arc recibe únicamente actualizaciones de Chromium. Arc Search es un producto móvil distinto para Android e iOS.","suitable":"Consultar una alternativa centrada en espacios, teniendo en cuenta su mantenimiento.","officialUrl":"https://arc.net/","actionLabel":"Consultar estado y descarga","sources":[{"label":"Estado actual de Arc","url":"https://arc.net/"},{"label":"Arc Max","url":"https://arc.net/max"},{"label":"Arc Search para móviles","url":"https://arc.net/search"}]},{"id":"google-search","kind":"search","name":"Google","monogram":"GO","accent":"#1859a8","added":false,"status":"active","subtype":"Buscador web","actionLabel":"Abrir buscador","tagline":"Búsqueda general, visual y con IA","description":"Encuentra páginas, imágenes, videos y noticias desde una misma búsqueda. Sus herramientas visuales y respuestas con IA permiten explorar preguntas de diferentes maneras, con resultados y funciones que pueden cambiar según el país y la cuenta.","platforms":["Web"],"focus":["general","ai"],"access":"freemium","priceLabel":"Gratis + extras de IA","priceDetails":"La búsqueda general es gratuita. Algunas funciones avanzadas de IA tienen requisitos o límites y pueden depender de una suscripción.","hasAI":true,"aiDetails":"Incluye AI Overviews y AI Mode. Colombia figura entre los países admitidos; la disponibilidad concreta depende de la función, el idioma y la cuenta.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar.","caution":"Los anuncios y los resultados orgánicos son distintos. Comprueba las fuentes de las respuestas con IA, especialmente en preguntas importantes.","suitable":"Consultas generales, imágenes y búsqueda visual.","officialUrl":"https://www.google.com/","sources":[{"label":"AI Mode: funciones y disponibilidad","url":"https://support.google.com/websearch/answer/16011537?co=GENIE.Platform%3DAndroid&hl=en"},{"label":"AI Overviews: funcionamiento y disponibilidad","url":"https://support.google.com/websearch/answer/14901683?co=GENIE.Platform%3DAndroid&hl=en"}]},{"id":"bing-search","kind":"search","name":"Bing","monogram":"BI","accent":"#087e8b","added":false,"status":"active","subtype":"Buscador web","actionLabel":"Abrir buscador","tagline":"Resultados web y respuestas con fuentes","description":"El buscador de Microsoft combina páginas, imágenes, videos y herramientas visuales con respuestas de IA. Puedes continuar una consulta mediante preguntas relacionadas y participar, si cumples las condiciones, en el programa opcional Microsoft Rewards.","platforms":["Web"],"focus":["general","ai","rewards"],"access":"free","priceLabel":"Gratis","priceDetails":"La búsqueda es gratuita. Microsoft Rewards requiere cuenta y condiciones de elegibilidad; participar en el programa no equivale a cobrar por cada búsqueda.","hasAI":true,"aiDetails":"La información oficial actual presenta AI Overview y AI Mode como evolución de Copilot Search, con resúmenes, conversación y referencias.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Microsoft Rewards puede conceder puntos por actividades elegibles. Está disponible en Colombia, pero las ofertas y canjes varían; los puntos no tienen valor en efectivo.","caution":"El catálogo de recompensas depende de la región y puede cambiar. Las respuestas con IA deben contrastarse con los enlaces citados.","suitable":"Búsqueda visual, investigación general y usuarios de Microsoft.","officialUrl":"https://www.bing.com/","sources":[{"label":"Bing: búsqueda con IA","url":"https://explore.microsoft.com/en-us/bing/ai"},{"label":"Regiones de Microsoft Rewards","url":"https://support.microsoft.com/en-us/accounts-billing/rewards/microsoft-rewards-regions"},{"label":"Cómo funcionan los puntos Rewards","url":"https://support.microsoft.com/en-us/accounts-billing/rewards/how-to-earn-microsoft-rewards-points"}]},{"id":"duckduckgo-search","kind":"search","name":"DuckDuckGo","monogram":"DD","accent":"#b64a22","added":false,"status":"active","subtype":"Buscador web","actionLabel":"Abrir buscador","tagline":"Privacidad y control sobre la IA","description":"Busca páginas y otros contenidos con protección de la privacidad, sin crear un historial personal para orientar los resultados. Sus funciones de IA son opcionales y ofrece una dirección específica para buscar con ellas desactivadas.","platforms":["Web"],"focus":["privacy","ai","general"],"access":"freemium","priceLabel":"Gratis + servicios opcionales","priceDetails":"La búsqueda web es gratuita. Duck.ai tiene límites de uso; existen planes opcionales que amplían servicios y capacidades.","hasAI":true,"aiDetails":"Search Assist y Duck.ai son opcionales. Puedes desactivarlos en ajustes o usar noai.duckduckgo.com, que también filtra imágenes generadas con IA.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar.","caution":"La protección de tus búsquedas no controla la información que entregas a las páginas que luego visitas. El filtrado de imágenes con IA puede ser imperfecto.","suitable":"Búsqueda cotidiana con privacidad y opción de evitar IA.","officialUrl":"https://duckduckgo.com/","sources":[{"label":"Funciones opcionales de IA","url":"https://duckduckgo.com/duckduckgo-help-pages/optional-ai"},{"label":"DuckDuckGo sin IA","url":"https://noai.duckduckgo.com/"},{"label":"Límites de uso de Duck.ai","url":"https://duckduckgo.com/duckduckgo-help-pages/duckai/usage-limits"}]},{"id":"ecosia-search","kind":"search","name":"Ecosia","monogram":"EC","accent":"#287040","added":false,"status":"active","subtype":"Buscador web","actionLabel":"Abrir buscador","tagline":"Búsqueda que financia acción climática","description":"Busca información con un servicio que destina sus beneficios a proyectos de acción climática. Trabaja con distintos proveedores de resultados y desarrolla un índice europeo junto con Qwant; permite controlar las funciones de IA disponibles.","platforms":["Web"],"focus":["eco","ai","general"],"access":"free","priceLabel":"Gratis","priceDetails":"La búsqueda es gratuita y se financia principalmente mediante publicidad. Sus proyectos climáticos se sostienen con el modelo de negocio del servicio.","hasAI":true,"aiDetails":"Ofrece AI Overviews y AI Chat en países admitidos y una opción para desactivar toda la IA. Colombia no figura en sus listas actuales de disponibilidad de estas funciones.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar.","caution":"No cada búsqueda equivale a plantar un árbol. El proveedor de resultados y las funciones de IA dependen de la región y de su despliegue.","suitable":"Quienes quieren vincular sus búsquedas con acción climática.","officialUrl":"https://www.ecosia.org/","sources":[{"label":"Ecosia: IA y disponibilidad por país","url":"https://support.ecosia.org/article/1006-ai-search"},{"label":"Opción de búsqueda sin IA, julio de 2026","url":"https://blog.ecosia.org/ai-free-search/"},{"label":"EUSP llega a Alemania, julio de 2026","url":"https://blog.ecosia.org/eusp-germany-rollout/"}]},{"id":"presearch-search","kind":"search","name":"Presearch","monogram":"PR","accent":"#335c9c","added":false,"status":"active","subtype":"Buscador web","actionLabel":"Abrir buscador","tagline":"Búsqueda comunitaria y recompensas opcionales","description":"Buscador que utiliza una red de nodos operados por su comunidad para procesar consultas. Ofrece búsqueda gratuita y un programa opcional de recompensas en tokens PRE, sujeto a reglas de uso, validación y requisitos de retiro.","platforms":["Web"],"focus":["privacy","rewards","ai"],"access":"free","priceLabel":"Búsqueda gratis","priceDetails":"Puede utilizarse con o sin cuenta. Las recompensas requieren cuenta, actividad elegible y cumplir las condiciones del programa.","hasAI":true,"aiDetails":"Su interfaz incluye Presearch AI. La disponibilidad de respuestas puede variar y el propio servicio advierte que pueden contener información incorrecta.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Recompensas opcionales en PRE por actividad elegible. Reclamar o retirar exige alcanzar el mínimo vigente y puede requerir revisión manual; no es un pago garantizado por cada búsqueda.","caution":"Un saldo de tokens no equivale a dinero disponible para retirar. Revisa los requisitos vigentes antes de participar y verifica las respuestas con IA.","suitable":"Explorar búsqueda comunitaria y entender recompensas digitales.","officialUrl":"https://presearch.com/","sources":[{"label":"Cómo funcionan los nodos de Presearch","url":"https://docs.presearch.io/nodes/overview"},{"label":"Condiciones para reclamar recompensas","url":"https://docs.presearch.io/search-staking-and-usage-rewards/what-are-usage-rewards/how-to-claim-search-rewards"},{"label":"Interfaz de búsqueda con Presearch AI","url":"https://presearch.com/search?q=cl"}]},{"id":"perplexity-search","kind":"search","name":"Perplexity","monogram":"PX","accent":"#126777","added":false,"status":"active","subtype":"Respuestas con IA","actionLabel":"Abrir servicio","tagline":"Preguntas, respuestas y fuentes consultables","description":"Investiga preguntas en lenguaje natural mediante respuestas que reúnen información de la web y muestran referencias. Puedes continuar la conversación, profundizar en un tema y utilizar funciones de investigación adicionales según el plan y sus límites.","platforms":["Web"],"focus":["ai","general"],"access":"freemium","priceLabel":"Gratis + planes de pago","priceDetails":"El plan Standard permite búsquedas básicas y acceso limitado a funciones avanzadas. Pro, Max y otros planes amplían capacidades y límites.","hasAI":true,"aiDetails":"La IA organiza y sintetiza información recuperada de la web. El acceso a modelos, investigación avanzada y archivos cambia según el plan.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar.","caution":"Una respuesta con citas también puede interpretar mal una fuente. Abre las referencias y comprueba que sostengan la afirmación que necesitas.","suitable":"Investigar preguntas y encontrar fuentes para profundizar.","officialUrl":"https://www.perplexity.ai/","sources":[{"label":"Planes de Perplexity, revisados en octubre de 2026","url":"https://www.perplexity.ai/help-center/en/articles/11187416-which-perplexity-subscription-plan-is-right-for-you"},{"label":"Servicio de respuestas Perplexity","url":"https://www.perplexity.ai/"}]},{"id":"brave-search","kind":"search","name":"Brave Search","monogram":"BS","accent":"#b84820","added":true,"status":"active","subtype":"Buscador web","actionLabel":"Abrir buscador","tagline":"Índice propio y conversación con Ask Brave","description":"Buscador con índice propio que combina enlaces web con respuestas de IA. Ask Brave permite hacer preguntas de seguimiento desde la búsqueda; puedes utilizarlo en cualquier navegador sin instalar Brave Browser ni cambiar de dispositivo.","platforms":["Web"],"focus":["privacy","independent","ai"],"access":"freemium","priceLabel":"Gratis + Premium opcional","priceDetails":"La búsqueda con anuncios y Ask Brave son gratuitos. Brave Search Premium ofrece una experiencia sin anuncios mediante suscripción.","hasAI":true,"aiDetails":"Ask Brave reúne búsqueda y conversación; ofrece respuestas con enlaces y contenidos relacionados, además de permitir preguntas de seguimiento.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar. Los anuncios de Brave Search no son elegibles para Brave Rewards según su información oficial actual.","caution":"Brave Search es un servicio distinto de Brave Browser. Sus respuestas con IA y sus resultados deben evaluarse a partir de las fuentes.","suitable":"Buscar con un índice alternativo y usar IA opcional.","officialUrl":"https://search.brave.com/","sources":[{"label":"Brave Search: índice, planes y recompensas","url":"https://brave.com/search/"},{"label":"Presentación de Ask Brave","url":"https://brave.com/blog/ask-brave/"}]},{"id":"kagi-search","kind":"search","name":"Kagi","monogram":"KA","accent":"#68501e","added":true,"status":"active","subtype":"Buscador web","actionLabel":"Abrir buscador","tagline":"Búsqueda sin anuncios financiada por usuarios","description":"Buscador por suscripción que elimina los anuncios y ofrece controles para adaptar los resultados a tus necesidades. Integra herramientas de IA y personalización, con una prueba limitada que permite valorar el servicio antes de contratar.","platforms":["Web"],"focus":["privacy","ai"],"access":"paid","priceLabel":"De pago; prueba limitada","priceDetails":"Ofrece una prueba con un número limitado de búsquedas y distintos planes de suscripción. Los límites de búsqueda y de IA dependen del plan.","hasAI":true,"aiDetails":"Incluye herramientas como Kagi Assistant. La modalidad de IA, los modelos y el uso permitido cambian según la suscripción.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar.","caution":"La prueba gratuita no es un plan gratuito permanente. Revisa los límites, impuestos y condiciones vigentes antes de contratar.","suitable":"Quienes prefieren pagar para buscar sin anuncios.","officialUrl":"https://kagi.com/","sources":[{"label":"Kagi: funciones de búsqueda","url":"https://kagi.com/"},{"label":"Planes y prueba de Kagi","url":"https://kagi.com/pricing"},{"label":"Tipos de planes y límites","url":"https://help.kagi.com/kagi/plans/plan-types.html"}]},{"id":"startpage-search","kind":"search","name":"Startpage","monogram":"SP","accent":"#3a479a","added":true,"status":"active","subtype":"Buscador web","actionLabel":"Abrir buscador","tagline":"Resultados conocidos con una capa de privacidad","description":"Actúa como intermediario entre tu consulta y proveedores de resultados como Google y Bing. Devuelve resultados sin personalizarlos a partir de un historial individual, con publicidad contextual que permite mantener gratuita la búsqueda para el usuario.","platforms":["Web"],"focus":["privacy","general"],"access":"free","priceLabel":"Gratis","priceDetails":"La búsqueda se financia con anuncios contextuales relacionados con la consulta, sin necesidad de pagar una suscripción para buscar.","hasAI":false,"aiDetails":"Esta ficha corresponde al buscador Startpage. Vanish, su servicio de IA, es un producto separado.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar.","caution":"Startpage utiliza resultados de proveedores externos; no debe confundirse con un índice web independiente. Algunas consultas pueden activar verificaciones contra abuso.","suitable":"Buscar con privacidad usando resultados de grandes proveedores.","officialUrl":"https://www.startpage.com/","sources":[{"label":"De dónde proceden los resultados","url":"https://support.startpage.com/hc/en-us/articles/4455379504788-Why-do-I-get-different-results-with-Startpage"},{"label":"Publicidad contextual y búsqueda gratuita","url":"https://www.startpage.com/privacy-please/"},{"label":"Protección frente a consultas automatizadas","url":"https://support.startpage.com/hc/en-us/articles/4455380450836-How-does-Startpage-prevent-scraping-and-abuse-without-recording-IP-addresses"}]},{"id":"mojeek-search","kind":"search","name":"Mojeek","monogram":"MJ","accent":"#42713a","added":true,"status":"active","subtype":"Buscador web","actionLabel":"Abrir buscador","tagline":"Una mirada distinta con índice web propio","description":"Busca con un índice web y un sistema de clasificación desarrollados por Mojeek. Su política evita el rastreo personal y sus resultados pueden aportar perspectivas distintas, con herramientas para ajustar búsquedas y consultar resúmenes opcionales.","platforms":["Web"],"focus":["privacy","independent","ai"],"access":"free","priceLabel":"Búsqueda gratis","priceDetails":"El buscador web es gratuito. Sus APIs para aplicaciones y otros servicios profesionales tienen condiciones comerciales independientes.","hasAI":true,"aiDetails":"Dispone de resúmenes opcionales generados con IA a partir de resultados, acompañados de citas. Se gestionan desde las opciones de búsqueda.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar.","caution":"Su cobertura y orden de resultados pueden diferir de otros motores. La independencia de su índice se refiere a resultados web; otros contenidos pueden proceder de proveedores.","suitable":"Contrastar resultados con un índice web alternativo.","officialUrl":"https://www.mojeek.com/","sources":[{"label":"Mojeek y su índice independiente","url":"https://www.mojeek.com/about/why-mojeek"},{"label":"Buscador Mojeek","url":"https://www.mojeek.com/"},{"label":"Resúmenes opcionales con IA","url":"https://blog.mojeek.com/2024/04/mojeek-search-summary.html"}]},{"id":"qwant-search","kind":"search","name":"Qwant","monogram":"QW","accent":"#27539d","added":true,"status":"active","subtype":"Buscador web","actionLabel":"Abrir buscador","tagline":"Búsqueda europea con respuestas opcionales de IA","description":"Buscador francés alojado en Europa que combina resultados web y anuncios contextuales con respuestas de IA para determinadas consultas. Permite desactivar sus Flash Answers y ofrece acceso a Qwant Junior, una opción separada orientada a niños.","platforms":["Web"],"focus":["privacy","ai","general"],"access":"free","priceLabel":"Gratis","priceDetails":"La búsqueda gratuita se financia con publicidad contextual. Algunas funciones y preferencias adicionales pueden requerir una cuenta.","hasAI":true,"aiDetails":"Flash Answers genera resúmenes con fuentes para consultas elegibles; también existe AI Chat. Los resúmenes pueden desactivarse desde los ajustes.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar.","caution":"Las respuestas con IA no aparecen en todas las consultas y conviene contrastarlas. Los anuncios están identificados y forman parte de su modelo gratuito.","suitable":"Explorar una alternativa europea con controles de IA.","officialUrl":"https://www.qwant.com/","sources":[{"label":"Qwant y acceso a Qwant Junior","url":"https://www.qwant.com/"},{"label":"Flash Answers: qué son y cuándo aparecen","url":"https://help.qwant.com/hc/en-us/articles/48074559771153-What-is-Qwant-s-Flash-Answer"},{"label":"Cómo se financia Qwant con publicidad","url":"https://help.qwant.com/hc/en-us/articles/49002871054481-Qwant-Ads-How-It-Works"}]},{"id":"searxng-search","kind":"search","name":"SearXNG","monogram":"SX","accent":"#285e73","added":true,"status":"active","subtype":"Metabuscador","actionLabel":"Elegir instancia","tagline":"Combina motores con software libre","description":"Metabuscador de software libre que reúne resultados de otros servicios. Puedes elegir una instancia pública mantenida por terceros o instalar la tuya; las fuentes, los ajustes y la disponibilidad dependen de la instancia que utilices.","platforms":["Web"],"focus":["privacy","opensource"],"access":"technical","priceLabel":"Software libre; elegir instancia","priceDetails":"El software es gratuito. Las instancias públicas tienen condiciones propias y alojar una instalación personal puede implicar costes y mantenimiento.","hasAI":false,"aiDetails":"El proyecto se presenta como metabuscador. Las integraciones adicionales que incorpore un administrador dependen de cada instancia.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar.","caution":"No existe un único servicio central: debes elegir una instancia y confiar en su administrador. Su disponibilidad y los motores activos pueden variar.","suitable":"Comparar motores y aprender sobre metabúsqueda y software libre.","officialUrl":"https://searx.space/","sources":[{"label":"Qué es SearXNG","url":"https://docs.searxng.org/user/about.html"},{"label":"Documentación oficial y enlace al directorio de instancias","url":"https://docs.searxng.org/user/index.html"},{"label":"Directorio de instancias públicas","url":"https://searx.space/"}]},{"id":"chatgpt-search","kind":"search","name":"ChatGPT Search","monogram":"CG","accent":"#14725a","added":true,"status":"active","subtype":"Respuestas con IA","actionLabel":"Abrir servicio","tagline":"Búsqueda web dentro de una conversación","description":"Busca información actual en la web y la integra en respuestas que puedes ampliar mediante preguntas de seguimiento. Los enlaces permiten consultar las fuentes utilizadas; la búsqueda está disponible en la web y en las aplicaciones de ChatGPT.","platforms":["Web"],"focus":["ai","general"],"access":"freemium","priceLabel":"Gratis + planes de pago","priceDetails":"La búsqueda está disponible en el plan gratuito y también sin iniciar sesión, con límites de uso. Las suscripciones ofrecen condiciones y capacidades adicionales.","hasAI":true,"aiDetails":"ChatGPT puede buscar automáticamente o cuando seleccionas la herramienta de búsqueda. Sus respuestas pueden incluir citas y una lista de fuentes.","vpn":"none","vpnDetails":"No aplica a un buscador web.","rewards":"Sin programa de recompensas al buscar.","caution":"ChatGPT Search es una función de búsqueda, distinta del navegador ChatGPT Atlas. Las citas y respuestas pueden estar incompletas o contener errores; abre las fuentes para comprobarlas.","suitable":"Investigar preguntas y aclarar información en una conversación.","officialUrl":"https://chatgpt.com/","sources":[{"label":"Búsqueda web en ChatGPT: disponibilidad y fuentes","url":"https://help.openai.com/en/articles/9237897-searching-the-web-with-chatgpt"},{"label":"Presentación de ChatGPT Search","url":"https://openai.com/index/introducing-chatgpt-search/"}]}]</script>
+  <script>
+  (function () {
+    'use strict';
+    var DATA = JSON.parse(document.getElementById('catalogData').textContent);
+    var KEY = 'explora-web-v2';
+    var byId = new Map(DATA.map(function (item) { return [item.id,item]; }));
+    var cardCache = new Map();
+    var storageWorks = true;
+    var persisted = {};
+    try { persisted = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (error) { storageWorks = false; }
+    if (typeof persisted !== 'object' || Array.isArray(persisted)) persisted = {};
+    var favoriteSet = new Set(Array.isArray(persisted.favorites) ? persisted.favorites.filter(function(id) { return typeof id === 'string' && byId.has(id); }) : []);
+    var mediaDark = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+    var theme = persisted.theme === 'dark' || persisted.theme === 'light' ? persisted.theme : (mediaDark && mediaDark.matches ? 'dark' : 'light');
+    var density = persisted.density === 'compact' ? 'compact' : 'normal';
+    function defaults() { return { query:'', focus:'all', platform:'all', price:'all', vpn:'all', interest:'all', favorites:false, sort:'catalog' }; }
+    var state = { kind:'browser', filters:{browser:defaults(),search:defaults()}, compare:{browser:[],search:[]} };
+    var visibleItems = [];
+    var queryTimer, announceTimer, toastTimer;
+    var lastTrigger = new Map();
+    var currentModal = null;
+    var e = function(id) { return document.getElementById(id); };
+    function safe(value) { return String(value == null ? '' : value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];}); }
+    function icon(name) { return '<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-' + name + '"></use></svg>'; }
+    function clean(value) { return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim(); }
+    var focusLabels={general:'Uso general',privacy:'Privacidad',ai:'Con IA',rewards:'Recompensas',opensource:'Código abierto',customize:'Personalización',focus:'Concentración',gaming:'Videojuegos',independent:'Índice propio',eco:'Enfoque ambiental'};
+    var statusLabels={active:'Disponible',beta:'Beta',experimental:'Experimental',maintenance:'Mantenimiento limitado'};
+    var vpnLabels={none:'Sin VPN propia incluida',free:'VPN gratuita del navegador',conditional:'VPN gratuita con condiciones',paid:'VPN opcional de pago'};
+    DATA.forEach(function(item) {
+      item.searchIndex = clean([item.name,item.tagline,item.description,item.subtype,item.priceLabel,item.priceDetails,item.aiDetails,item.vpnDetails,item.rewards,item.suitable,item.caution,item.platforms.join(' '),item.platforms.indexOf('iOS')>=0?'iphone ipad':'',item.focus.map(function(f){return focusLabels[f]||f;}).join(' '),item.hasAI?'inteligencia artificial ia':'',statusLabels[item.status]||''].join(' '));
+    });
+    function f() { return state.filters[state.kind]; }
+    function remember() {
+      try { localStorage.setItem(KEY,JSON.stringify({version:2,favorites:Array.from(favoriteSet),theme:theme,density:density})); storageWorks=true; return true; }
+      catch (error) { storageWorks=false; return false; }
+    }
+    function announce(message) {
+      clearTimeout(announceTimer);
+      announceTimer=setTimeout(function(){e('resultsStatus').textContent=message;},160);
+    }
+    function toast(message) {
+      clearTimeout(toastTimer);
+      e('toast').hidden=true;document.querySelectorAll('[data-modal-status]').forEach(function(n){n.hidden=true;});
+      var output=currentModal?e(currentModal).querySelector('[data-modal-status]'):e('toast');
+      output.textContent=message;output.hidden=false;
+      toastTimer=setTimeout(function(){output.hidden=true;},3800);
+    }
+    function applyTheme() {
+      document.documentElement.dataset.theme=theme;
+      e('themeButton').innerHTML=icon(theme==='dark'?'sun':'moon');
+      e('themeButton').setAttribute('aria-label',theme==='dark'?'Activar tema claro':'Activar tema oscuro');
+      e('themeButton').setAttribute('aria-pressed',String(theme==='dark'));
+      document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#141c19':'#f5f6f0';
+    }
+    function countFilters() {
+      var x=f(), keys=['platform','price','vpn','interest'];
+      return keys.reduce(function(n,k){return n+(x[k]!=='all'?1:0);},0);
+    }
+    function platformText(item) { return item.platforms.map(function(p){return p==='iOS'?'iPhone / iPad':p;}).join(' · '); }
+    function mark(item) { return '<span class="product-mark" style="--logo:'+safe(item.accent)+'" aria-hidden="true">'+safe(item.monogram)+'</span>'; }
+    function external(url,label,cls,context) {
+      return '<a class="'+(cls||'')+'" href="'+safe(url)+'" target="_blank" rel="noopener noreferrer" aria-label="'+safe(label+(context?' de '+context:''))+', abre una pestaña nueva">'+safe(label)+' '+icon('external')+'</a>';
+    }
+    function favoriteButton(item,full) {
+      return '<button type="button" class="'+(full?'btn':'save-btn')+'" data-action="favorite" data-id="'+safe(item.id)+'" aria-pressed="'+favoriteSet.has(item.id)+'" aria-label="'+(favoriteSet.has(item.id)?'Quitar de guardados: ':'Guardar: ')+safe(item.name)+'">'+icon('bookmark')+(full?'<span>'+(favoriteSet.has(item.id)?'Guardado':'Guardar')+'</span>':'')+'</button>';
+    }
+    function compareButton(item) {
+      var selected=state.compare[item.kind].indexOf(item.id)!==-1;
+      return '<button type="button" class="btn compare-pick" data-action="compare" data-id="'+safe(item.id)+'" aria-pressed="'+selected+'" aria-label="'+(selected?'Quitar de comparación: ':'Comparar: ')+safe(item.name)+'">'+icon(selected?'check':'plus')+'<span>'+(selected?'Añadido':'Comparar')+'</span></button>';
+    }
+    function createCard(item) {
+      var card=document.createElement('article');
+      card.className='card';card.dataset.id=item.id;card.setAttribute('aria-labelledby','name-'+item.id);
+      var tags=[];
+      if(item.added) tags.push('<span class="tag tag-new">Añadido</span>');
+      if(item.status!=='active') tags.push('<span class="tag tag-status">'+safe(statusLabels[item.status])+'</span>');
+      if(item.hasAI) tags.push('<span class="tag">Con IA</span>');
+      var focus=item.focus.filter(function(x){return x!=='general'&&x!=='ai';})[0];
+      if(focus) tags.push('<span class="tag">'+safe(focusLabels[focus])+'</span>');
+      card.innerHTML='<div class="card-head">'+mark(item)+'<div class="product-heading"><h3 id="name-'+safe(item.id)+'">'+safe(item.name)+'</h3><p>'+safe(item.subtype||'Navegador')+'</p></div>'+favoriteButton(item,false)+'</div>'+
+        '<p class="card-tagline">'+safe(item.tagline)+'</p><p class="card-description">'+safe(item.description)+'</p>'+
+        '<div class="tags">'+tags.join('')+'</div>'+
+        '<div class="card-facts"><div>'+icon('device')+'<span>'+safe(platformText(item))+'</span></div><div class="price">'+icon('price')+'<span>'+safe(item.priceLabel)+'</span></div></div>'+
+        '<div class="card-buttons">'+external(item.officialUrl,item.id==='searxng-search'?'Elegir instancia':item.kind==='browser'?'Sitio oficial':item.subtype==='Respuestas con IA'?'Abrir servicio':'Abrir buscador','btn btn-soft',item.name)+'<button type="button" class="btn" data-action="detail" data-id="'+safe(item.id)+'" aria-label="Ver ficha de '+safe(item.name)+'">Ver ficha</button></div>'+
+        '<div class="card-footnote">'+compareButton(item)+'<span class="source-stamp">'+icon('check')+'Fuentes en la ficha</span></div>';
+      return card;
+    }
+    function syncControls() {
+      var x=f();
+      e('catalogSearch').value=x.query;
+      e('clearSearch').hidden=!x.query;
+      document.querySelectorAll('[data-focus]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.focus===x.focus));});
+      e('platformFilter').value=x.platform;e('priceFilter').value=x.price;e('vpnFilter').value=x.vpn;e('interestFilter').value=x.interest;e('sortSelect').value=x.sort;
+      e('favoritesToggle').setAttribute('aria-pressed',String(x.favorites));
+      e('favoritesToggle').setAttribute('aria-label',x.favorites?'Mostrar todas las herramientas':'Mostrar mis guardados');
+      e('platformFilter').disabled=state.kind==='search';
+      e('vpnFilter').disabled=state.kind==='search';
+      e('filterHelp').textContent=state.kind==='search'?'Los servicios web pueden abrirse desde cualquier navegador compatible. La VPN corresponde al navegador o al dispositivo; no es una función del buscador.':'Las funciones pueden variar por país, equipo y cuenta. Una VPN gratuita del navegador no siempre protege las demás aplicaciones.';
+      var n=countFilters();e('filterCount').textContent=n;e('filterCount').hidden=!n;
+      e('filtersButton').setAttribute('aria-label',(e('filterPanel').hidden?'Mostrar':'Ocultar')+' filtros avanzados'+(n?', '+n+' activos':''));
+      var kind=state.kind;
+      document.querySelectorAll('.tab').forEach(function(b){var on=b.dataset.kind===kind;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;});
+      e('browserPanel').hidden=kind!=='browser';e('searchPanel').hidden=kind!=='search';
+      e('normalView').setAttribute('aria-pressed',String(density==='normal'));e('compactView').setAttribute('aria-pressed',String(density==='compact'));
+    }
+    function updateCounts() {
+      e('favoriteCount').textContent=DATA.filter(function(i){return i.kind===state.kind&&favoriteSet.has(i.id);}).length;
+    }
+    function render() {
+      syncControls();updateCounts();
+      var x=f(), words=clean(x.query).split(' ').filter(Boolean);
+      visibleItems=DATA.filter(function(item){
+        if(item.kind!==state.kind)return false;
+        if(words.length&&!words.every(function(w){return item.searchIndex.indexOf(w)!==-1;}))return false;
+        if(x.favorites&&!favoriteSet.has(item.id))return false;
+        if(x.focus==='added'&&!item.added)return false;
+        if(x.focus==='ai'&&!item.hasAI)return false;
+        if(x.focus!=='all'&&x.focus!=='added'&&x.focus!=='ai'&&item.focus.indexOf(x.focus)===-1)return false;
+        if(state.kind==='browser'&&x.platform!=='all'&&item.platforms.indexOf(x.platform)===-1)return false;
+        if(x.price==='free'&&['free','freemium','technical'].indexOf(item.access)===-1)return false;
+        if(x.price!=='all'&&x.price!=='free'&&item.access!==x.price)return false;
+        if(state.kind==='browser'&&x.vpn==='free'&&['free','conditional'].indexOf(item.vpn)===-1)return false;
+        if(state.kind==='browser'&&x.vpn!=='all'&&x.vpn!=='free'&&item.vpn!==x.vpn)return false;
+        if(x.interest!=='all'&&item.focus.indexOf(x.interest)===-1)return false;
+        return true;
+      });
+      if(x.sort==='name')visibleItems.sort(function(a,b){return a.name.localeCompare(b.name,'es',{sensitivity:'base'});});
+      if(x.sort==='new')visibleItems.sort(function(a,b){return Number(b.added)-Number(a.added);});
+      var grid=e(state.kind+'Grid'), fragment=document.createDocumentFragment();
+      visibleItems.forEach(function(item){if(!cardCache.has(item.id))cardCache.set(item.id,createCard(item));fragment.appendChild(cardCache.get(item.id));});
+      grid.replaceChildren(fragment);grid.classList.toggle('compact',density==='compact');
+      var label=state.kind==='browser'?'navegadores':'buscadores y servicios';
+      e('resultsTitle').textContent=visibleItems.length+' '+label+(x.favorites?' guardados':'');
+      var isFiltering=Boolean(x.query||x.focus!=='all'||x.favorites||countFilters());
+      e('resultsHint').textContent=isFiltering?'Filtros aplicados · '+DATA.filter(function(i){return i.kind===state.kind;}).length+' opciones en esta sección':'Selecciona hasta 3 para comparar';
+      e('emptyState').hidden=visibleItems.length!==0;
+      e('emptyTitle').textContent=x.favorites?'No hay guardados que coincidan':'No hay coincidencias';
+      e('emptyDescription').textContent=x.favorites?'Guarda herramientas con el marcador de cada ficha o quita los filtros para ver tus guardados.':'Prueba otro término, quita los filtros o busca en la otra sección.';
+      e('otherCatalog').textContent='Buscar en '+(state.kind==='browser'?'Buscadores':'Navegadores');
+      announce(visibleItems.length+' resultados en '+label+(isFiltering?', con filtros aplicados':''));
+      syncTray();
+    }
+    function updateButtons(id) {
+      var item=byId.get(id);if(!item)return;
+      document.querySelectorAll('[data-action="favorite"][data-id="'+id+'"]').forEach(function(b){
+        var on=favoriteSet.has(id);b.setAttribute('aria-pressed',String(on));b.setAttribute('aria-label',(on?'Quitar de guardados: ':'Guardar: ')+item.name);
+        var span=b.querySelector('span');if(span)span.textContent=on?'Guardado':'Guardar';
+      });
+      document.querySelectorAll('[data-action="compare"][data-id="'+id+'"]').forEach(function(b){
+        var on=state.compare[item.kind].indexOf(id)!==-1;b.setAttribute('aria-pressed',String(on));b.setAttribute('aria-label',(on?'Quitar de comparación: ':'Comparar: ')+item.name);
+        b.innerHTML=icon(on?'check':'plus')+'<span>'+(on?'Añadido':'Comparar')+'</span>';
+      });
+      var cached=cardCache.get(id);
+      if(cached&&!cached.isConnected){
+        var save=cached.querySelector('[data-action="favorite"]'),pick=cached.querySelector('[data-action="compare"]'),on=favoriteSet.has(id),cmp=state.compare[item.kind].indexOf(id)!==-1;
+        save.setAttribute('aria-pressed',String(on));save.setAttribute('aria-label',(on?'Quitar de guardados: ':'Guardar: ')+item.name);
+        pick.setAttribute('aria-pressed',String(cmp));pick.setAttribute('aria-label',(cmp?'Quitar de comparación: ':'Comparar: ')+item.name);pick.innerHTML=icon(cmp?'check':'plus')+'<span>'+(cmp?'Añadido':'Comparar')+'</span>';
+      }
+    }
+    function toggleFavorite(id) {
+      var item=byId.get(id);if(!item)return;
+      var on=!favoriteSet.has(id);if(on)favoriteSet.add(id);else favoriteSet.delete(id);
+      var saved=remember();updateButtons(id);updateCounts();
+      if(f().favorites&&!on&&item.kind===state.kind){
+        var active=document.activeElement;render();
+        if(!currentModal&&(!active||!active.isConnected))e('favoritesToggle').focus();
+      }
+      toast((on?item.name+' guardado':item.name+' eliminado de guardados')+(saved?'':'. Solo en esta sesión: el navegador no permite guardar preferencias.'));
+    }
+    function syncTray() {
+      var selected=state.compare[state.kind];
+      e('compareTray').hidden=!selected.length;document.body.classList.toggle('has-selection',selected.length>0);
+      e('trayCount').textContent=selected.length+' de 3 para comparar';
+      e('trayNames').textContent=selected.length<2?'Elige otra ficha de esta sección':selected.map(function(id){return byId.get(id).name;}).join(' · ');
+      e('openCompare').disabled=selected.length<2;
+    }
+    function toggleCompare(id) {
+      var item=byId.get(id);if(!item)return;
+      var list=state.compare[item.kind],index=list.indexOf(id);
+      if(index<0&&list.length>=3){toast('Puedes comparar hasta 3. Quita una herramienta para añadir otra.');return;}
+      if(index>=0)list.splice(index,1);else list.push(id);
+      updateButtons(id);syncTray();
+      announce((index>=0?'Quitado de comparación: ':'Añadido a comparación: ')+item.name+'. '+list.length+' seleccionadas.');
+    }
+    function setKind(kind,keepQuery) {
+      if(kind!== 'browser'&&kind!=='search')return;
+      clearTimeout(queryTimer);
+      var q=f().query;state.kind=kind;if(keepQuery)state.filters[kind].query=q;
+      e('filterPanel').hidden=true;e('filtersButton').setAttribute('aria-expanded','false');
+      render();
+      var catalogTop=e('catalog').getBoundingClientRect().top;
+      if(catalogTop<-80)window.scrollTo({top:Math.max(0,window.scrollY+catalogTop-8),behavior:'auto'});
+    }
+    function resetFilters() {
+      clearTimeout(queryTimer);
+      state.filters[state.kind]=defaults();render();e('catalogSearch').focus();
+    }
+    function showDialog(id) {
+      var dialog=e(id);
+      if(currentModal&&currentModal!==id)closeDialog(currentModal);
+      lastTrigger.set(id,document.activeElement);currentModal=id;
+      dialog.querySelector('[data-modal-status]').hidden=true;
+      document.body.classList.add('modal-open');
+      if(typeof dialog.showModal==='function')dialog.showModal();
+      else {dialog.setAttribute('open','');dialog.classList.add('fallback-dialog');setBackgroundInert(true);}
+      dialog.scrollTop=0;
+      var close=dialog.querySelector('[data-close]');if(close)close.focus({preventScroll:true});
+    }
+    function setBackgroundInert(on) {
+      [document.querySelector('header'),e('mainContent'),e('compareTray')].forEach(function(el){if(!el)return;if(on)el.setAttribute('inert','');else el.removeAttribute('inert');});
+    }
+    function afterClose(id) {
+      setBackgroundInert(false);e(id).classList.remove('fallback-dialog');
+      document.body.classList.remove('modal-open');if(currentModal===id)currentModal=null;
+      var trigger=lastTrigger.get(id);
+      if(trigger&&trigger.isConnected&&!trigger.closest('[hidden]')&&!trigger.disabled)trigger.focus({preventScroll:true});
+      else e(state.kind+'Tab').focus({preventScroll:true});
+    }
+    function closeDialog(id) {
+      if(!e(id).open)return;
+      if(typeof e(id).close==='function')e(id).close();
+      else{e(id).removeAttribute('open');afterClose(id);}
+    }
+    function openDetail(id) {
+      var item=byId.get(id);if(!item)return;
+      e('detailTitle').textContent='Ficha de '+item.name;
+      var rows=[
+        ['Para qué puede servir',item.suitable],['Dispositivos',platformText(item)],['Acceso y coste',item.priceDetails],['Inteligencia artificial',item.aiDetails],
+        [item.kind==='browser'?'VPN':'Tipo de servicio',item.kind==='browser'?item.vpnDetails:item.subtype],
+        ['Recompensas',item.rewards],['Estado',statusLabels[item.status]||'Disponible']
+      ];
+      e('detailBody').innerHTML='<div class="detail-header">'+mark(item)+'<div><h3>'+safe(item.name)+'</h3><p>'+safe(item.tagline)+'</p></div></div>'+
+        '<div class="tags">'+(item.added?'<span class="tag tag-new">Añadido a esta edición</span>':'')+(item.status!=='active'?'<span class="tag tag-status">'+safe(statusLabels[item.status])+'</span>':'')+'</div>'+
+        '<p class="detail-description">'+safe(item.description)+'</p><dl class="detail-facts">'+rows.map(function(row){return '<div><dt>'+safe(row[0])+'</dt><dd>'+safe(row[1])+'</dd></div>';}).join('')+'</dl>'+
+        '<p class="detail-notice">'+safe(item.caution)+'</p><div class="detail-actions">'+external(item.officialUrl,item.actionLabel||'Sitio oficial','btn btn-primary')+favoriteButton(item,true)+compareButton(item)+'</div>'+
+        '<div class="sources"><h3>Fuentes oficiales de esta ficha</h3><p>Consultadas el 19 de octubre de 2026. Los enlaces necesitan internet y abren otra pestaña.</p><ul>'+item.sources.map(function(s){return '<li>'+external(s.url,s.label,'')+'</li>';}).join('')+'</ul></div>';
+      showDialog('detailDialog');
+    }
+    function comparisonRows() {
+      return [
+        ['Dispositivos',function(i){return platformText(i);}],
+        ['Acceso y coste',function(i){return i.priceDetails;}],
+        ['Inteligencia artificial',function(i){return i.aiDetails;}],
+        [state.kind==='browser'?'VPN':'Tipo',function(i){return state.kind==='browser'?i.vpnDetails:i.subtype;}],
+        ['Recompensas',function(i){return i.rewards;}],
+        ['Antes de elegir',function(i){return i.caution;}],
+        ['Estado',function(i){return statusLabels[i.status]||'Disponible';}]
+      ];
+    }
+    function renderComparison() {
+      var selected=state.compare[state.kind].map(function(id){return byId.get(id);}), rows=comparisonRows();
+      var desktop='<table class="compare-table"><caption class="sr-only">Comparación de '+selected.map(function(i){return safe(i.name);}).join(', ')+'</caption><thead><tr><th scope="col">Característica</th>'+
+        selected.map(function(item){return '<th scope="col">'+mark(item)+safe(item.name)+'<small>'+safe(item.subtype)+'</small><button type="button" class="link-btn" data-action="remove-comparison" data-id="'+item.id+'" aria-label="Quitar '+safe(item.name)+' de esta comparación">Quitar</button></th>';}).join('')+'</tr></thead><tbody>'+
+        rows.map(function(row){return '<tr><th scope="row">'+safe(row[0])+'</th>'+selected.map(function(item){return '<td>'+safe(row[1](item))+'</td>';}).join('')+'</tr>';}).join('')+
+        '<tr><th scope="row">Fuente principal</th>'+selected.map(function(item){return '<td>'+external(item.officialUrl,item.actionLabel||'Sitio oficial','btn btn-soft')+'</td>';}).join('')+'</tr></tbody></table>';
+      var mobile='<div class="compare-mobile">'+selected.map(function(item){
+        return '<article class="mobile-comparison"><div class="card-head">'+mark(item)+'<h3>'+safe(item.name)+'</h3></div><dl class="detail-facts">'+rows.map(function(row){return '<div><dt>'+safe(row[0])+'</dt><dd>'+safe(row[1](item))+'</dd></div>';}).join('')+'</dl>'+external(item.officialUrl,item.actionLabel||'Sitio oficial','btn btn-soft')+'<button type="button" class="link-btn" data-action="remove-comparison" data-id="'+item.id+'" aria-label="Quitar '+safe(item.name)+' de esta comparación">Quitar</button></article>';
+      }).join('')+'</div>';
+      e('compareBody').innerHTML='<p class="compare-intro">Compara funciones y condiciones. No se asignan puntuaciones ni un ganador automático.</p>'+desktop+mobile+
+        '<div class="compare-footer"><span>Revisión del 19 de octubre de 2026 · Consulta las fuentes completas en cada ficha.</span><button class="btn" type="button" data-action="print-compare">'+icon('print')+'Imprimir comparación</button></div>';
+      preparePrint(selected,true);
+    }
+    function openComparison() {
+      if(state.compare[state.kind].length<2){toast('Selecciona al menos 2 herramientas de esta sección.');return;}
+      renderComparison();showDialog('compareDialog');
+    }
+    function preparePrint(items,isComparison) {
+      e('printArea').innerHTML='<h1>'+ (isComparison?'Comparación de herramientas':'Navegadores y buscadores')+'</h1><p>'+items.length+' opciones · Información revisada el 19 de octubre de 2026.</p>'+
+        items.map(function(item){return '<article class="print-card"><h2>'+safe(item.name)+'</h2><p>'+safe(item.description)+'</p><p><strong>Dispositivos</strong> · '+safe(platformText(item))+'</p><p><strong>Acceso</strong> · '+safe(item.priceDetails)+'</p><p><strong>IA</strong> · '+safe(item.aiDetails)+'</p>'+(item.kind==='browser'?'<p><strong>VPN</strong> · '+safe(item.vpnDetails)+'</p>':'')+'<p><strong>Recompensas</strong> · '+safe(item.rewards)+'</p><p><strong>Antes de elegir</strong> · '+safe(item.caution)+'</p><p class="print-sources"><strong>Fuentes oficiales</strong><br>'+item.sources.map(function(s){return safe(s.label)+' · <a href="'+safe(s.url)+'">'+safe(s.url)+'</a>';}).join('<br>')+'</p></article>';}).join('');
+    }
+    document.addEventListener('click',function(event){
+      var button=event.target.closest('button');if(!button)return;
+      if(button.dataset.close){closeDialog(button.dataset.close);return;}
+      var action=button.dataset.action,id=button.dataset.id;
+      if(action==='detail')openDetail(id);
+      if(action==='favorite')toggleFavorite(id);
+      if(action==='compare')toggleCompare(id);
+      if(action==='reset')resetFilters();
+      if(action==='remove-comparison'){
+        toggleCompare(id);
+        if(state.compare[state.kind].length<2){closeDialog('compareDialog');toast('Selecciona otra herramienta para seguir comparando.');}
+        else {renderComparison();e('compareDialog').querySelector('[data-close]').focus({preventScroll:true});}
+      }
+      if(action==='print-compare'){preparePrint(state.compare[state.kind].map(function(x){return byId.get(x);}),true);window.print();}
+    });
+    document.querySelectorAll('.tab').forEach(function(button){
+      button.addEventListener('click',function(){setKind(button.dataset.kind,false);});
+      button.addEventListener('keydown',function(event){
+        if(['ArrowRight','ArrowLeft','Home','End'].indexOf(event.key)<0)return;
+        event.preventDefault();
+        var kind=event.key==='Home'?'browser':event.key==='End'?'search':state.kind==='browser'?'search':'browser';
+        setKind(kind,false);e(kind+'Tab').focus();
+      });
+    });
+    e('quickFilters').addEventListener('click',function(event){var b=event.target.closest('[data-focus]');if(!b)return;f().focus=b.dataset.focus;render();});
+    e('catalogSearch').addEventListener('input',function(){f().query=e('catalogSearch').value;e('clearSearch').hidden=!f().query;clearTimeout(queryTimer);queryTimer=setTimeout(render,100);});
+    e('clearSearch').addEventListener('click',function(){clearTimeout(queryTimer);f().query='';render();e('catalogSearch').focus();});
+    e('filtersButton').addEventListener('click',function(){var open=e('filterPanel').hidden;e('filterPanel').hidden=!open;e('filtersButton').setAttribute('aria-expanded',String(open));syncControls();});
+    [['platformFilter','platform'],['priceFilter','price'],['vpnFilter','vpn'],['interestFilter','interest'],['sortSelect','sort']].forEach(function(pair){e(pair[0]).addEventListener('change',function(){f()[pair[1]]=e(pair[0]).value;render();});});
+    e('favoritesToggle').addEventListener('click',function(){f().favorites=!f().favorites;render();});
+    e('otherCatalog').addEventListener('click',function(){var q=f().query,kind=state.kind==='browser'?'search':'browser';state.filters[kind]=defaults();state.filters[kind].query=q;setKind(kind,false);e('catalogSearch').focus();});
+    e('themeButton').addEventListener('click',function(){theme=theme==='light'?'dark':'light';applyTheme();remember();});
+    e('helpButton').addEventListener('click',function(){showDialog('helpDialog');});
+    e('aboutButton').addEventListener('click',function(){showDialog('helpDialog');});
+    e('openCompare').addEventListener('click',openComparison);
+    e('clearCompare').addEventListener('click',function(){var old=state.compare[state.kind].slice();state.compare[state.kind]=[];old.forEach(updateButtons);syncTray();e(state.kind+'Tab').focus({preventScroll:true});announce('Selección de comparación vacía.');});
+    e('normalView').addEventListener('click',function(){density='normal';remember();render();});
+    e('compactView').addEventListener('click',function(){density='compact';remember();render();});
+    e('printCatalog').addEventListener('click',function(){if(!visibleItems.length){toast('No hay fichas visibles para imprimir.');return;}preparePrint(visibleItems,false);window.print();});
+    document.querySelectorAll('dialog').forEach(function(dialog){
+      dialog.addEventListener('close',function(){afterClose(dialog.id);});
+      dialog.addEventListener('click',function(event){if(event.target!==dialog)return;var rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)closeDialog(dialog.id);});
+      dialog.addEventListener('keydown',function(event){
+        if(event.key==='Escape'&&dialog.classList.contains('fallback-dialog')){event.preventDefault();closeDialog(dialog.id);}
+        if(event.key!=='Tab')return;
+        var nodes=Array.from(dialog.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),[tabindex="0"]')).filter(function(el){return !!el.getClientRects().length;});
+        if(!nodes.length)return;var first=nodes[0],last=nodes[nodes.length-1];
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+        if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+      });
+    });
+    function networkStatus(){e('networkNote').hidden=navigator.onLine!==false;}
+    window.addEventListener('online',networkStatus);window.addEventListener('offline',networkStatus);
+    window.addEventListener('beforeprint',function(){if(currentModal==='compareDialog')preparePrint(state.compare[state.kind].map(function(id){return byId.get(id);}),true);else preparePrint(visibleItems,false);});
+    window.addEventListener('storage',function(event){
+      if(event.key!==KEY)return;
+      try {var incoming=JSON.parse(event.newValue||'{}');if(Array.isArray(incoming.favorites)){favoriteSet=new Set(incoming.favorites.filter(function(id){return byId.has(id);}));DATA.forEach(function(i){updateButtons(i.id);});render();}}catch(error){}
+    });
+    e('totalCount').textContent=DATA.length;
+    e('browserCount').textContent=DATA.filter(function(i){return i.kind==='browser';}).length;
+    e('searchCount').textContent=DATA.filter(function(i){return i.kind==='search';}).length;
+    if(window.matchMedia&&window.matchMedia('(min-width:761px)').matches)e('learnBox').open=true;
+    applyTheme();networkStatus();render();
+  })();
+  </script>
+</body>
+</html>
