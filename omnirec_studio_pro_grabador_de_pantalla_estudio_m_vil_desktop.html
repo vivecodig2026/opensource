@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>OmniRec Studio Pro — Grabador de Pantalla & Estudio Móvil/Desktop</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        brand: {
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #090d16;
+            color: #f8fafc;
+            overscroll-behavior: none;
+            overflow-x: hidden;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.5);
+            border-radius: 9999px;
+        }
+        .stage-canvas-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.6);
+        }
+        #compositorCanvas {
+            max-width: 100%;
+            max-height: 62vh;
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65);
+            touch-action: none;
+            cursor: crosshair;
+            background: #0f172a;
+            transition: box-shadow 0.25s ease;
+        }
+        #compositorCanvas.recording-glow {
+            box-shadow: 0 0 0 2px #ef4444, 0 0 30px rgba(239, 68, 68, 0.35);
+        }
+        @media (min-width: 1024px) {
+            #compositorCanvas {
+                max-height: 68vh;
+            }
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.92); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.92); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .rec-pulse {
+            animation: pulse-ring 1.8s infinite;
+        }
+        /* Floating XRecorder / Loom style touch ball */
+        #floatingDock {
+            touch-action: none;
+            user-select: none;
+            transition: opacity 0.2s ease, transform 0.15s ease;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        input[type="range"] {
+            accent-color: #6366f1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between select-none">
+
+    <!-- Top App Bar -->
+    <header class="sticky top-0 z-30 glass-panel border-b border-slate-800/80 px-3 sm:px-6 py-2.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+            <!-- Brand & Mode Badge -->
+            <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-rose-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+                        <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+                    </svg>
+                </div>
+                <div class="truncate">
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-sm sm:text-base font-bold tracking-tight text-white truncate">OmniRec Studio</h1>
+                        <span id="deviceBadge" class="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Móvil / PC</span>
+                    </div>
+                    <p id="statusSubtitle" class="text-[11px] text-slate-400 truncate">Motor híbrido: Pantalla + Táctil + Cámara PiP</p>
+                </div>
+            </div>
+
+            <!-- Live Recording Status Pill & Orientation Quick Switch -->
+            <div class="flex items-center gap-2 shrink-0">
+                <!-- Aspect Ratio Quick Selector (9:16 Vertical / 16:9 Horizontal / 1:1) -->
+                <div class="flex items-center bg-slate-900/90 p-0.5 rounded-lg border border-slate-800" role="group" aria-label="Orientación del lienzo">
+                    <button type="button" id="btnRatioVertical" class="px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 transition-all bg-indigo-600 text-white shadow" title="Vertical 9:16 (Móvil / Reels / TikTok)">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2" stroke-width="2"/></svg>
+                        <span>9:16</span>
+                    </button>
+                    <button type="button" id="btnRatioHorizontal" class="px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 transition-all text-slate-400 hover:text-white" title="Horizontal 16:9 (PC / YouTube)">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2" stroke-width="2"/></svg>
+                        <span>16:9</span>
+                    </button>
+                    <button type="button" id="btnRatioSquare" class="px-2 py-1 rounded-md text-xs font-medium hidden sm:flex items-center gap-1 transition-all text-slate-400 hover:text-white" title="Cuadrado 1:1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" stroke-width="2"/></svg>
+                        <span>1:1</span>
+                    </button>
+                </div>
+
+                <!-- Live Timer Pill -->
+                <div id="headerTimerPill" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono font-semibold text-slate-200">
+                    <span id="headerStatusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                    <span id="headerTimerText">00:00:00</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Responsive Grid (Vertical Stack on Mobile, Studio 12-Col on Desktop) -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-3 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
+        <!-- Left / Center Column: Live Interactive Stage + Touch Annotation Bar -->
+        <section class="lg:col-span-8 flex flex-col gap-3 w-full">
+
+            <!-- Source Mode Selector Strip -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <button type="button" id="srcModeScreen" class="source-mode-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-indigo-500/60 bg-indigo-500/15 text-left transition-all">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/25 text-indigo-300 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-xs font-semibold text-white truncate">Pantalla Sistema</div>
+                        <div id="screenSupportLabel" class="text-[10px] text-indigo-300 truncate">Auto-adaptable</div>
+                    </div>
+                </button>
+
+                <button type="button" id="srcModeBoard" class="source-mode-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 bg-slate-900/70 hover:bg-slate-800/60 text-left transition-all">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-xs font-semibold text-white truncate">Pizarra Móvil</div>
+                        <div class="text-[10px] text-slate-400 truncate">100% Táctil + Voz</div>
+                    </div>
+                </button>
+
+                <button type="button" id="srcModeMedia" class="source-mode-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 bg-slate-900/70 hover:bg-slate-800/60 text-left transition-all">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-xs font-semibold text-white truncate">Imagen / Fondo</div>
+                        <div class="text-[10px] text-slate-400 truncate">Subir captura/foto</div>
+                    </div>
+                </button>
+
+                <button type="button" id="srcModeCameraFull" class="source-mode-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 bg-slate-900/70 hover:bg-slate-800/60 text-left transition-all">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-xs font-semibold text-white truncate">Cámara Vlog</div>
+                        <div class="text-[10px] text-slate-400 truncate">Frontal / Trasera</div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Hidden file input for background image/screenshot -->
+            <input type="file" id="bgImageInput" accept="image/*" class="hidden">
+
+            <!-- Stage Canvas Container -->
+            <div class="stage-canvas-wrapper p-2 sm:p-4 min-h-[340px] sm:min-h-[430px]" id="stageContainer">
+                <!-- Live Compositor Canvas (Everything drawn here is recorded in 60fps!) -->
+                <canvas id="compositorCanvas" width="720" height="1280"></canvas>
+
+                <!-- Countdown Overlay (3 - 2 - 1) -->
+                <div id="countdownOverlay" class="hidden absolute inset-0 bg-slate-950/80 backdrop-blur-md z-20 flex flex-col items-center justify-center">
+                    <div id="countdownNumber" class="text-7xl sm:text-8xl font-extrabold text-white tracking-tighter animate-bounce">3</div>
+                    <p class="mt-3 text-sm font-medium text-indigo-300">Preparando captura de alta definición...</p>
+                </div>
+
+                <!-- Top-Left Live Badges inside Stage -->
+                <div class="absolute top-3 left-3 flex flex-wrap items-center gap-1.5 pointer-events-none z-10">
+                    <span id="stageResBadge" class="px-2 py-0.5 rounded-md bg-slate-950/75 text-[10px] font-mono text-slate-300 border border-white/10">720×1280 (9:16)</span>
+                    <span id="stageFpsBadge" class="px-2 py-0.5 rounded-md bg-slate-950/75 text-[10px] font-mono text-emerald-400 border border-white/10">30 FPS</span>
+                    <span id="zoomActiveBadge" class="hidden px-2 py-0.5 rounded-md bg-indigo-600/90 text-[10px] font-semibold text-white">🔍 Zoom 1.8x Activo</span>
+                </div>
+
+                <!-- Top-Right Quick Actions on Stage (Snapshot, Fullscreen, Clear Draw) -->
+                <div class="absolute top-3 right-3 flex items-center gap-1.5 z-10">
+                    <button type="button" id="btnSnapshot" class="p-2 rounded-lg bg-slate-900/85 hover:bg-slate-800 text-slate-200 border border-white/10 shadow" title="Capturar Fotograma (Screenshot PNG)">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><circle cx="12" cy="13" r="3" stroke-width="2"/></svg>
+                    </button>
+                    <button type="button" id="btnTogglePiPPreview" class="p-2 rounded-lg bg-slate-900/85 hover:bg-slate-800 text-slate-200 border border-white/10 shadow" title="Mini ventana flotante (Picture-in-Picture)">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Touch Annotation & Laser Toolbar (Cloned from Loom / XRecorder / ScreenStudio) -->
+            <div class="glass-panel rounded-2xl p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mr-1 hidden sm:inline">Táctil:</span>
+
+                    <button type="button" data-tool="pointer" class="tool-btn px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 bg-indigo-600 text-white shadow">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
+                        <span>Mover / Cursor</span>
+                    </button>
+
+                    <button type="button" data-tool="laser" class="tool-btn px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 bg-slate-800/80 text-slate-300 hover:text-white">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]"></span>
+                        <span>Láser</span>
+                    </button>
+
+                    <button type="button" data-tool="pen" class="tool-btn px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 bg-slate-800/80 text-slate-300 hover:text-white">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                        <span>Lápiz</span>
+                    </button>
+
+                    <button type="button" data-tool="highlighter" class="tool-btn px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 bg-slate-800/80 text-slate-300 hover:text-white">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+                        <span>Marcador</span>
+                    </button>
+
+                    <button type="button" data-tool="arrow" class="tool-btn px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 bg-slate-800/80 text-slate-300 hover:text-white">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        <span>Flecha</span>
+                    </button>
+
+                    <button type="button" id="btnZoomToggle" class="px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 bg-slate-800/80 text-slate-300 hover:text-white border border-transparent" title="Doble toque o botón para hacer Zoom cinemático (estilo ScreenStudio)">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+                        <span>Zoom Touch</span>
+                    </button>
+                </div>
+
+                <!-- Color Swatches + Undo / Clear -->
+                <div class="flex items-center gap-1.5">
+                    <div class="flex items-center gap-1 bg-slate-900/90 px-2 py-1 rounded-lg border border-slate-800">
+                        <button type="button" data-color="#f43f5e" class="color-swatch w-5 h-5 rounded-full bg-rose-500 ring-2 ring-white scale-110 transition-transform" aria-label="Color Rojo"></button>
+                        <button type="button" data-color="#facc15" class="color-swatch w-5 h-5 rounded-full bg-yellow-400 opacity-75 hover:opacity-100 transition-transform" aria-label="Color Amarillo"></button>
+                        <button type="button" data-color="#34d399" class="color-swatch w-5 h-5 rounded-full bg-emerald-400 opacity-75 hover:opacity-100 transition-transform" aria-label="Color Verde"></button>
+                        <button type="button" data-color="#38bdf8" class="color-swatch w-5 h-5 rounded-full bg-sky-400 opacity-75 hover:opacity-100 transition-transform" aria-label="Color Azul"></button>
+                        <button type="button" data-color="#ffffff" class="color-swatch w-5 h-5 rounded-full bg-white opacity-75 hover:opacity-100 transition-transform" aria-label="Color Blanco"></button>
+                    </div>
+
+                    <button type="button" id="btnUndoDraw" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" title="Deshacer último trazo">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                    </button>
+                    <button type="button" id="btnClearDraw" class="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/60 text-slate-300 hover:text-rose-200" title="Limpiar todos los dibujos">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Primary Recording Action Bar (Thumb-friendly on mobile vertical!) -->
+            <div class="glass-panel rounded-2xl p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-[220px]">
+                    <button type="button" id="btnMainStart" class="flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-rose-600 to-red-500 hover:from-rose-500 hover:to-red-400 active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2.5 transition-all">
+                        <span class="w-3.5 h-3.5 rounded-full bg-white animate-pulse"></span>
+                        <span>Iniciar Grabación</span>
+                    </button>
+
+                    <button type="button" id="btnMainPause" class="hidden flex-1 py-3 px-4 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-200 font-semibold text-sm flex items-center justify-center gap-2 transition-all">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        <span id="pauseBtnText">Pausar</span>
+                    </button>
+
+                    <button type="button" id="btnMainStop" class="hidden flex-1 py-3 px-5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 transition-all">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                        <span>Detener y Guardar</span>
+                    </button>
+                </div>
+
+                <!-- Quick Toggles on Action Bar (Mic, Facecam, Floating Ball) -->
+                <div class="flex items-center gap-2 justify-end w-full sm:w-auto">
+                    <button type="button" id="btnQuickMic" class="flex-1 sm:flex-initial px-3 py-2.5 rounded-xl border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all" title="Activar/Desactivar Micrófono">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                        <span id="quickMicText">Mic ON</span>
+                    </button>
+
+                    <button type="button" id="btnQuickCam" class="flex-1 sm:flex-initial px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800/80 text-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all" title="Activar/Desactivar Burbuja de Cámara (Arrastrable con el dedo)">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        <span id="quickCamText">Cámara PiP</span>
+                    </button>
+
+                    <button type="button" id="btnToggleFloatingBall" class="px-3 py-2.5 rounded-xl border border-indigo-500/40 bg-indigo-500/15 text-indigo-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all" title="Mostrar/Ocultar Bola Flotante Táctil (estilo XRecorder)">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+                        <span class="hidden md:inline">Bola Táctil</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: Studio Controls, Audio Mixer, Teleprompter & Saved Recordings -->
+        <aside class="lg:col-span-4 flex flex-col gap-4 w-full">
+
+            <!-- Tabbed Control Panel -->
+            <div class="glass-panel rounded-2xl overflow-hidden">
+                <!-- Tabs Header -->
+                <div class="grid grid-cols-3 border-b border-slate-800 bg-slate-950/50 text-xs font-semibold">
+                    <button type="button" data-tab="tabSettings" class="studio-tab py-3 px-2 text-center border-b-2 border-indigo-500 text-white bg-indigo-500/10">
+                        ⚙️ Estudio
+                    </button>
+                    <button type="button" data-tab="tabPrompter" class="studio-tab py-3 px-2 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                        📜 Guion / Notas
+                    </button>
+                    <button type="button" data-tab="tabRecordings" class="studio-tab py-3 px-2 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1">
+                        <span>🎬 Videos</span>
+                        <span id="recordingsCountBadge" class="px-1.5 py-0.2 rounded-full text-[10px] bg-indigo-600 text-white">0</span>
+                    </button>
+                </div>
+
+                <!-- TAB 1: Audio, Video & Camera PiP Settings -->
+                <div id="tabSettings" class="tab-pane p-4 space-y-4">
+                    <!-- Audio Mixer Section -->
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Mezclador de Audio</span>
+                            <span id="audioStatusLabel" class="text-[11px] text-emerald-400 font-medium">WebAudio Activo</span>
+                        </div>
+
+                        <!-- Mic Device Select -->
+                        <div>
+                            <label for="micDeviceSelect" class="block text-[11px] text-slate-400 mb-1">Fuente de Micrófono</label>
+                            <select id="micDeviceSelect" class="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                                <option value="default">Micrófono predeterminado del dispositivo</option>
+                            </select>
+                        </div>
+
+                        <!-- Live Audio Spectrum Meter -->
+                        <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 space-y-2">
+                            <div class="flex items-center justify-between text-[11px]">
+                                <span class="text-slate-300 font-medium">Nivel de Entrada (Voz)</span>
+                                <span id="micDbText" class="font-mono text-emerald-400">-∞ dB</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden p-0.5">
+                                <div id="micMeterBar" class="h-full w-0 rounded-full bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500 transition-all duration-75"></div>
+                            </div>
+                            <div class="flex items-center justify-between gap-2 pt-1">
+                                <span class="text-[11px] text-slate-400">Ganancia Mic</span>
+                                <input id="micGainSlider" type="range" min="0" max="200" value="100" class="w-36 h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+                                <span id="micGainValue" class="text-[11px] font-mono text-slate-300 w-9 text-right">100%</span>
+                            </div>
+                        </div>
+
+                        <!-- System Audio + Touch Ripples Toggles -->
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/70 border border-slate-800 cursor-pointer">
+                                <div>
+                                    <div class="text-xs font-medium text-slate-200">Audio Sistema</div>
+                                    <div class="text-[10px] text-slate-400">Sonido interno</div>
+                                </div>
+                                <input type="checkbox" id="chkSystemAudio" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-0">
+                            </label>
+
+                            <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/70 border border-slate-800 cursor-pointer">
+                                <div>
+                                    <div class="text-xs font-medium text-slate-200">Toque Visual</div>
+                                    <div class="text-[10px] text-slate-400">Ondas al tocar</div>
+                                </div>
+                                <input type="checkbox" id="chkTouchRipple" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-0">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Facecam PiP Customization -->
+                    <div class="pt-2 border-t border-slate-800/80 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Cámara Flotante (Facecam)</span>
+                            <button type="button" id="btnFlipCamera" class="text-[11px] text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                <span>Cambiar Frontal/Trasera</span>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label for="pipShapeSelect" class="block text-[10px] text-slate-400 mb-1">Forma PiP</label>
+                                <select id="pipShapeSelect" class="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-2 py-1.5 text-xs text-slate-200">
+                                    <option value="circle">Círculo (Loom)</option>
+                                    <option value="portrait">Vertical 9:16</option>
+                                    <option value="rounded">Cuadrado</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="pipSizeSelect" class="block text-[10px] text-slate-400 mb-1">Tamaño PiP</label>
+                                <select id="pipSizeSelect" class="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-2 py-1.5 text-xs text-slate-200">
+                                    <option value="0.22">Compacto</option>
+                                    <option value="0.28" selected>Mediano</option>
+                                    <option value="0.36">Grande</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="countdownSelect" class="block text-[10px] text-slate-400 mb-1">Cuenta atrás</label>
+                                <select id="countdownSelect" class="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-2 py-1.5 text-xs text-slate-200">
+                                    <option value="3" selected>3 segundos</option>
+                                    <option value="5">5 segundos</option>
+                                    <option value="0">Instantáneo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Video Quality, Frame Rate & Format -->
+                    <div class="pt-2 border-t border-slate-800/80 space-y-2.5">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">Calidad y Codificación</span>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label for="qualityPresetSelect" class="block text-[10px] text-slate-400 mb-1">Resolución / Bitrate</label>
+                                <select id="qualityPresetSelect" class="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-200">
+                                    <option value="1080">Full HD (1080p • 8 Mbps)</option>
+                                    <option value="720" selected>HD Móvil (720p • 5 Mbps)</option>
+                                    <option value="540">Ligero (540p • 2.5 Mbps)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="fpsSelect" class="block text-[10px] text-slate-400 mb-1">Fluidez (FPS)</label>
+                                <select id="fpsSelect" class="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-200">
+                                    <option value="60">60 FPS (Ultra fluido)</option>
+                                    <option value="30" selected>30 FPS (Estándar móvil)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="boardThemeSelect" class="block text-[10px] text-slate-400 mb-1">Tema de Pizarra / Fondo del Lienzo</label>
+                            <select id="boardThemeSelect" class="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-200">
+                                <option value="dark-grid">Oscuro Puntos (Estilo Estudio)</option>
+                                <option value="phone-mockup">Marco Móvil Interactivo (App Demo)</option>
+                                <option value="chalkboard">Pizarra Verde Clásica</option>
+                                <option value="light-paper">Papel Blanco Cuadriculado</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: Teleprompter / Interactive Script Overlay -->
+                <div id="tabPrompter" class="tab-pane hidden p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300">Teleprompter & Tarjeta en Vivo</h3>
+                            <p class="text-[11px] text-slate-400">Lee tu guion mientras grabas o muéstralo en pantalla</p>
+                        </div>
+                        <label class="flex items-center gap-1.5 text-xs text-indigo-300 cursor-pointer">
+                            <input type="checkbox" id="chkBurnPrompter" class="rounded text-indigo-600">
+                            <span>Incluir en video</span>
+                        </label>
+                    </div>
+
+                    <textarea id="prompterText" rows="5" class="w-full rounded-xl bg-slate-900 border border-slate-700/80 p-3 text-xs text-slate-100 leading-relaxed focus:outline-none focus:border-indigo-500" placeholder="Escribe aquí los puntos clave de tu tutorial o presentación...">👋 ¡Hola! En este video veremos:
+1. Cómo grabar en formato vertical 9:16 desde cualquier móvil.
+2. Cómo señalar con el puntero láser táctil y dibujar en vivo.
+3. Cómo arrastrar la cámara PiP con el dedo a cualquier esquina.</textarea>
+
+                    <div class="flex items-center justify-between gap-2">
+                        <button type="button" id="btnAddStickyText" class="flex-1 py-2 px-3 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-indigo-200 text-xs font-semibold">
+                            📌 Estampar Título en Lienzo
+                        </button>
+                        <button type="button" id="btnLoadSampleSlide" class="py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium">
+                            Subir Imagen
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TAB 3: Recordings & Snapshots Vault -->
+                <div id="tabRecordings" class="tab-pane hidden p-4 space-y-3 max-h-[460px] overflow-y-auto">
+                    <div id="emptyRecordingsState" class="text-center py-8 px-4">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-800/80 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-300">Aún no hay grabaciones ni capturas</p>
+                        <p class="text-[11px] text-slate-500 mt-1">Tus videos (.mp4 / .webm) y capturas aparecerán aquí listos para descargar o compartir.</p>
+                    </div>
+                    <div id="recordingsVaultList" class="space-y-2.5"></div>
+                </div>
+            </div>
+
+            <!-- Clean-Room Mobile Compatibility Guide Card -->
+            <div class="glass-panel rounded-2xl p-3.5 border border-indigo-500/20 bg-gradient-to-br from-indigo-950/30 to-slate-900/60">
+                <div class="flex items-start gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div class="text-[11px] text-slate-300 leading-relaxed">
+                        <span class="font-semibold text-white">Ingeniería de Sala Limpia (Móvil + PC):</span>
+                        En PC captura ventanas o pantallas completas con <code class="text-indigo-300">getDisplayMedia</code>. En móviles (donde el navegador restringe capturar otras apps), el <strong class="text-indigo-300">Motor Compositor 9:16</strong> graba a 60 FPS tu pizarra táctil, capturas subidas, cámara PiP arrastrable y micrófono en formato compatible nativo.
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Draggable Floating Touch Assistive Ball (XRecorder / AZ Recorder clone) -->
+    <div id="floatingDock" class="fixed bottom-20 right-4 z-40 flex items-center gap-1.5 p-1.5 rounded-full glass-panel shadow-2xl border border-indigo-500/40">
+        <!-- Main Drag & Expand Trigger -->
+        <button type="button" id="btnFloatMain" class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-rose-600 text-white flex flex-col items-center justify-center shadow-lg font-mono text-[10px] font-bold leading-tight" title="Arrastra a cualquier borde o toca para abrir controles rápidos">
+            <span id="floatDot" class="w-2.5 h-2.5 rounded-full bg-white mb-0.5"></span>
+            <span id="floatTimeLabel">REC</span>
+        </button>
+
+        <!-- Expandable Quick Radial/Pill Actions -->
+        <div id="floatMenuActions" class="hidden items-center gap-1 pr-2">
+            <button type="button" id="btnFloatRecordToggle" class="p-2 rounded-full bg-rose-600 text-white hover:bg-rose-500" title="Iniciar / Detener">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg>
+            </button>
+            <button type="button" id="btnFloatPauseToggle" class="p-2 rounded-full bg-slate-800 text-amber-300 hover:bg-slate-700" title="Pausar / Reanudar">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </button>
+            <button type="button" id="btnFloatPenToggle" class="p-2 rounded-full bg-slate-800 text-indigo-300 hover:bg-slate-700" title="Alternar Lápiz / Mover">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            </button>
+            <button type="button" id="btnFloatSnap" class="p-2 rounded-full bg-slate-800 text-emerald-300 hover:bg-slate-700" title="Capturar Foto">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89L18.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- In-App Video Preview Modal (No window.open or alert blocking!) -->
+    <div id="previewModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl max-w-2xl w-full overflow-hidden border border-slate-700 shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                <h3 id="modalVideoTitle" class="text-sm font-bold text-white truncate">Vista previa de grabación</h3>
+                <button type="button" id="btnCloseModal" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="p-4 bg-black flex-1 flex items-center justify-center overflow-hidden">
+                <video id="modalVideoPlayer" controls playsinline class="max-h-[65vh] max-w-full rounded-lg"></video>
+                <img id="modalImagePreview" alt="Vista previa de captura" class="hidden max-h-[65vh] max-w-full rounded-lg object-contain">
+            </div>
+            <div class="px-4 py-3 border-t border-slate-800 flex items-center justify-between gap-2 bg-slate-900/90">
+                <span id="modalMetaInfo" class="text-xs text-slate-400 truncate"></span>
+                <div class="flex items-center gap-2">
+                    <button type="button" id="modalDownloadBtn" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold">
+                        Descargar Archivo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none w-full max-w-sm px-4"></div>
+
+    <!-- Hidden Media Elements Feeds for Compositor -->
+    <video id="hiddenScreenVideo" muted playsinline class="hidden"></video>
+    <video id="hiddenCamVideo" muted playsinline class="hidden"></video>
+
+    <script>
+        (function () {
+            'use strict';
+
+            // --- Application State ---
+            const state = {
+                aspectRatio: '9:16', // '9:16' (vertical mobile default), '16:9', '1:1'
+                qualityHeight: 720,  // base short-side resolution
+                fps: 30,
+                sourceMode: 'board', // 'screen', 'board', 'media', 'camera'
+                boardTheme: 'phone-mockup',
+                isRecording: false,
+                isPaused: false,
+                micEnabled: true,
+                sysAudioEnabled: true,
+                camEnabled: false,
+                camFacingMode: 'user', // 'user' or 'environment'
+                pipShape: 'circle',
+                pipScale: 0.28,
+                pipPos: { x: 0.78, y: 0.78 }, // Normalized 0..1 coordinates
+                isDraggingPip: false,
+                tool: 'pointer', // 'pointer', 'laser', 'pen', 'highlighter', 'arrow'
+                drawColor: '#f43f5e',
+                strokes: [],
+                currentStroke: null,
+                laserPoints: [],
+                touchRipples: [],
+                touchRippleEnabled: true,
+                zoomActive: false,
+                zoomCenter: { x: 0.5, y: 0.5 },
+                zoomFactor: 1.0,
+                targetZoom: 1.0,
+                burnPrompter: false,
+                stickyBannerText: '',
+                bgImage: null,
+                pointerPos: { x: -100, y: -100, active: false },
+                lastTapTime: 0,
+                startTime: 0,
+                pausedAccumulated: 0,
+                pauseStartedAt: 0,
+                timerInterval: null,
+                recordings: [],
+                canDisplayMedia: Boolean(navigator.mediaDevices && typeof navigator.mediaDevices.getDisplayMedia === 'function')
+            };
+
+            // Streams & WebAudio
+            let screenStream = null;
+            let camStream = null;
+            let micStream = null;
+            let audioCtx = null;
+            let audioDestination = null;
+            let micGainNode = null;
+            let micAnalyser = null;
+            let mediaRecorder = null;
+            let recordedChunks = [];
+
+            // DOM Elements
+            const canvas = document.getElementById('compositorCanvas');
+            const ctx = canvas.getContext('2d');
+            const hiddenScreenVideo = document.getElementById('hiddenScreenVideo');
+            const hiddenCamVideo = document.getElementById('hiddenCamVideo');
+
+            const btnRatioVertical = document.getElementById('btnRatioVertical');
+            const btnRatioHorizontal = document.getElementById('btnRatioHorizontal');
+            const btnRatioSquare = document.getElementById('btnRatioSquare');
+
+            const srcModeScreen = document.getElementById('srcModeScreen');
+            const srcModeBoard = document.getElementById('srcModeBoard');
+            const srcModeMedia = document.getElementById('srcModeMedia');
+            const srcModeCameraFull = document.getElementById('srcModeCameraFull');
+            const bgImageInput = document.getElementById('bgImageInput');
+
+            const btnMainStart = document.getElementById('btnMainStart');
+            const btnMainPause = document.getElementById('btnMainPause');
+            const pauseBtnText = document.getElementById('pauseBtnText');
+            const btnMainStop = document.getElementById('btnMainStop');
+
+            const btnQuickMic = document.getElementById('btnQuickMic');
+            const quickMicText = document.getElementById('quickMicText');
+            const btnQuickCam = document.getElementById('btnQuickCam');
+            const quickCamText = document.getElementById('quickCamText');
+            const btnToggleFloatingBall = document.getElementById('btnToggleFloatingBall');
+
+            const headerTimerText = document.getElementById('headerTimerText');
+            const headerStatusDot = document.getElementById('headerStatusDot');
+            const stageResBadge = document.getElementById('stageResBadge');
+            const stageFpsBadge = document.getElementById('stageFpsBadge');
+            const zoomActiveBadge = document.getElementById('zoomActiveBadge');
+
+            const micDeviceSelect = document.getElementById('micDeviceSelect');
+            const micMeterBar = document.getElementById('micMeterBar');
+            const micDbText = document.getElementById('micDbText');
+            const micGainSlider = document.getElementById('micGainSlider');
+            const micGainValue = document.getElementById('micGainValue');
+
+            const chkSystemAudio = document.getElementById('chkSystemAudio');
+            const chkTouchRipple = document.getElementById('chkTouchRipple');
+            const pipShapeSelect = document.getElementById('pipShapeSelect');
+            const pipSizeSelect = document.getElementById('pipSizeSelect');
+            const countdownSelect = document.getElementById('countdownSelect');
+            const qualityPresetSelect = document.getElementById('qualityPresetSelect');
+            const fpsSelect = document.getElementById('fpsSelect');
+            const boardThemeSelect = document.getElementById('boardThemeSelect');
+            const btnFlipCamera = document.getElementById('btnFlipCamera');
+
+            const prompterText = document.getElementById('prompterText');
+            const chkBurnPrompter = document.getElementById('chkBurnPrompter');
+            const btnAddStickyText = document.getElementById('btnAddStickyText');
+            const btnLoadSampleSlide = document.getElementById('btnLoadSampleSlide');
+
+            const recordingsCountBadge = document.getElementById('recordingsCountBadge');
+            const emptyRecordingsState = document.getElementById('emptyRecordingsState');
+            const recordingsVaultList = document.getElementById('recordingsVaultList');
+
+            const floatingDock = document.getElementById('floatingDock');
+            const btnFloatMain = document.getElementById('btnFloatMain');
+            const floatMenuActions = document.getElementById('floatMenuActions');
+            const floatTimeLabel = document.getElementById('floatTimeLabel');
+            const btnFloatRecordToggle = document.getElementById('btnFloatRecordToggle');
+            const btnFloatPauseToggle = document.getElementById('btnFloatPauseToggle');
+            const btnFloatPenToggle = document.getElementById('btnFloatPenToggle');
+            const btnFloatSnap = document.getElementById('btnFloatSnap');
+
+            const previewModal = document.getElementById('previewModal');
+            const modalVideoTitle = document.getElementById('modalVideoTitle');
+            const modalVideoPlayer = document.getElementById('modalVideoPlayer');
+            const modalImagePreview = document.getElementById('modalImagePreview');
+            const modalMetaInfo = document.getElementById('modalMetaInfo');
+            const modalDownloadBtn = document.getElementById('modalDownloadBtn');
+            const btnCloseModal = document.getElementById('btnCloseModal');
+
+            // --- Toast Notification Helper ---
+            function showToast(message, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                const colors = {
+                    info: 'bg-slate-900/95 border-indigo-500/50 text-slate-100',
+                    success: 'bg-emerald-950/95 border-emerald-500/50 text-emerald-100',
+                    warn: 'bg-amber-950/95 border-amber-500/50 text-amber-100',
+                    error: 'bg-rose-950/95 border-rose-500/50 text-rose-100'
+                };
+                toast.className = `px-4 py-2.5 rounded-xl border shadow-xl text-xs font-medium backdrop-blur-md transition-all duration-300 ${colors[type] || colors.info}`;
+                toast.textContent = message;
+                container.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(-8px)';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3200);
+            }
+
+            // --- Synthesized Audio Cue (Countdown Beep) ---
+            function playBeep(freq = 660, duration = 0.09) {
+                try {
+                    const Ctx = window.AudioContext || window.webkitAudioContext;
+                    if (!Ctx) return;
+                    const tempCtx = new Ctx();
+                    const osc = tempCtx.createOscillator();
+                    const gain = tempCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.12, tempCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, tempCtx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(tempCtx.destination);
+                    osc.start();
+                    osc.stop(tempCtx.currentTime + duration);
+                    setTimeout(() => tempCtx.close().catch(() => {}), 250);
+                } catch (e) {
+                    // Ignore audio cue errors before gesture
+                }
+            }
+
+            // --- Environment & Orientation Detection ---
+            function detectEnvironment() {
+                const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth < 768;
+                const isPortrait = window.innerHeight >= window.innerWidth;
+                const deviceBadge = document.getElementById('deviceBadge');
+                const screenSupportLabel = document.getElementById('screenSupportLabel');
+
+                if (isMobile) {
+                    deviceBadge.textContent = isPortrait ? '📱 Móvil Vertical' : '📱 Móvil Horizontal';
+                } else {
+                    deviceBadge.textContent = '💻 Estudio Desktop';
+                }
+
+                if (!state.canDisplayMedia || isMobile) {
+                    screenSupportLabel.textContent = state.canDisplayMedia ? 'Soportado / Híbrido' : 'Usa Lienzo Móvil';
+                    // Default to vertical 9:16 and interactive mobile board on mobile portrait
+                    setAspectRatio(isPortrait ? '9:16' : '16:9');
+                    setSourceMode('board', false);
+                } else {
+                    screenSupportLabel.textContent = 'Captura Nativa PC';
+                    setAspectRatio(isPortrait ? '9:16' : '16:9');
+                    setSourceMode('board', false);
+                }
+            }
+
+            // --- Set Aspect Ratio & Resolution ---
+            function setAspectRatio(ratio) {
+                state.aspectRatio = ratio;
+                const shortSide = parseInt(qualityPresetSelect.value, 10) || 720;
+                const longSide = Math.round((shortSide * 16) / 9);
+
+                if (ratio === '9:16') {
+                    canvas.width = shortSide;
+                    canvas.height = longSide;
+                } else if (ratio === '16:9') {
+                    canvas.width = longSide;
+                    canvas.height = shortSide;
+                } else {
+                    canvas.width = shortSide;
+                    canvas.height = shortSide;
+                }
+
+                stageResBadge.textContent = `${canvas.width}×${canvas.height} (${ratio})`;
+
+                // Update buttons active style
+                const pairs = [
+                    [btnRatioVertical, '9:16'],
+                    [btnRatioHorizontal, '16:9'],
+                    [btnRatioSquare, '1:1']
+                ];
+                pairs.forEach(([btn, r]) => {
+                    if (!btn) return;
+                    if (r === ratio) {
+                        btn.className = 'px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 transition-all bg-indigo-600 text-white shadow';
+                    } else {
+                        btn.className = 'px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 transition-all text-slate-400 hover:text-white';
+                    }
+                });
+            }
+
+            // --- Switch Source Mode ---
+            async function setSourceMode(mode, triggerPermission = true) {
+                state.sourceMode = mode;
+                const modeButtons = [
+                    [srcModeScreen, 'screen'],
+                    [srcModeBoard, 'board'],
+                    [srcModeMedia, 'media'],
+                    [srcModeCameraFull, 'camera']
+                ];
+                modeButtons.forEach(([btn, m]) => {
+                    if (m === mode) {
+                        btn.className = 'source-mode-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-indigo-500 bg-indigo-500/15 text-left transition-all shadow';
+                    } else {
+                        btn.className = 'source-mode-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 bg-slate-900/70 hover:bg-slate-800/60 text-left transition-all';
+                    }
+                });
+
+                if (mode === 'screen' && triggerPermission) {
+                    if (!state.canDisplayMedia) {
+                        showToast('En navegadores móviles la captura de pantalla de sistema está restringida por el SO. ¡Activamos Pizarra Táctil + Cámara PiP!', 'warn');
+                        setSourceMode('board', false);
+                        return;
+                    }
+                    try {
+                        screenStream = await navigator.mediaDevices.getDisplayMedia({
+                            video: { cursor: 'always', frameRate: { ideal: state.fps } },
+                            audio: state.sysAudioEnabled
+                        });
+                        hiddenScreenVideo.srcObject = screenStream;
+                        await hiddenScreenVideo.play();
+                        const settings = screenStream.getVideoTracks()[0].getSettings();
+                        if (settings.width && settings.height) {
+                            if (settings.height > settings.width) {
+                                setAspectRatio('9:16');
+                            } else {
+                                setAspectRatio('16:9');
+                            }
+                        }
+                        screenStream.getVideoTracks()[0].onended = () => {
+                            showToast('Se detuvo la compartición de pantalla.', 'info');
+                            if (state.isRecording) stopRecording();
+                            setSourceMode('board', false);
+                        };
+                        showToast('Pantalla conectada al estudio en vivo', 'success');
+                    } catch (err) {
+                        showToast('Captura de pantalla cancelada o no disponible en este dispositivo. Usando Pizarra Móvil.', 'warn');
+                        setSourceMode('board', false);
+                    }
+                } else if (mode === 'media' && triggerPermission) {
+                    bgImageInput.click();
+                } else if (mode === 'camera' && triggerPermission) {
+                    await ensureCameraStream(true);
+                }
+            }
+
+            // --- Camera Stream (PiP or Full) ---
+            async function ensureCameraStream(forceEnable = false) {
+                if (camStream) {
+                    if (forceEnable) {
+                        state.camEnabled = true;
+                        updateQuickCamUI();
+                    }
+                    return true;
+                }
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    showToast('Cámara no soportada en este navegador', 'error');
+                    return false;
+                }
+                try {
+                    camStream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: state.camFacingMode,
+                            width: { ideal: 640 },
+                            height: { ideal: 640 }
+                        },
+                        audio: false
+                    });
+                    hiddenCamVideo.srcObject = camStream;
+                    await hiddenCamVideo.play();
+                    state.camEnabled = true;
+                    updateQuickCamUI();
+                    showToast('Cámara activa (puedes arrastrar la burbuja con el dedo)', 'success');
+                    return true;
+                } catch (err) {
+                    showToast('No se pudo acceder a la cámara: verifica permisos', 'warn');
+                    state.camEnabled = false;
+                    updateQuickCamUI();
+                    return false;
+                }
+            }
+
+            function stopCameraStream() {
+                if (camStream) {
+                    camStream.getTracks().forEach(t => t.stop());
+                    camStream = null;
+                }
+                state.camEnabled = false;
+                updateQuickCamUI();
+            }
+
+            function updateQuickCamUI() {
+                if (state.camEnabled) {
+                    btnQuickCam.className = 'flex-1 sm:flex-initial px-3 py-2.5 rounded-xl border border-indigo-500/50 bg-indigo-500/20 text-indigo-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all';
+                    quickCamText.textContent = 'PiP ON';
+                } else {
+                    btnQuickCam.className = 'flex-1 sm:flex-initial px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800/80 text-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all';
+                    quickCamText.textContent = 'Cámara PiP';
+                }
+            }
+
+            // --- Microphone & WebAudio Mixer ---
+            async function initMicrophone() {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+                try {
+                    if (micStream) {
+                        micStream.getTracks().forEach(t => t.stop());
+                    }
+                    const deviceId = micDeviceSelect.value;
+                    const constraints = {
+                        audio: deviceId && deviceId !== 'default'
+                            ? { deviceId: { exact: deviceId }, echoCancellation: true, noiseSuppression: true }
+                            : { echoCancellation: true, noiseSuppression: true }
+                    };
+                    micStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+                    const Ctx = window.AudioContext || window.webkitAudioContext;
+                    if (!audioCtx && Ctx) {
+                        audioCtx = new Ctx();
+                    }
+                    if (audioCtx) {
+                        if (audioCtx.state === 'suspended') {
+                            await audioCtx.resume();
+                        }
+                        const micSource = audioCtx.createMediaStreamSource(micStream);
+                        micGainNode = audioCtx.createGain();
+                        micGainNode.gain.value = (parseInt(micGainSlider.value, 10) || 100) / 100;
+                        micAnalyser = audioCtx.createAnalyser();
+                        micAnalyser.fftSize = 256;
+                        micSource.connect(micGainNode);
+                        micGainNode.connect(micAnalyser);
+                    }
+
+                    // Populate device list
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    const mics = devices.filter(d => d.kind === 'audioinput');
+                    if (mics.length > 0) {
+                        const currentVal = micDeviceSelect.value;
+                        micDeviceSelect.innerHTML = '';
+                        mics.forEach((m, i) => {
+                            const opt = document.createElement('option');
+                            opt.value = m.deviceId || 'default';
+                            opt.textContent = m.label || `Micrófono ${i + 1}`;
+                            micDeviceSelect.appendChild(opt);
+                        });
+                        if (currentVal && Array.from(micDeviceSelect.options).some(o => o.value === currentVal)) {
+                            micDeviceSelect.value = currentVal;
+                        }
+                    }
+                } catch (err) {
+                    // User hasn't granted mic yet or no mic present
+                    document.getElementById('audioStatusLabel').textContent = 'Sin permiso Mic';
+                }
+            }
+
+            function updateMicMeter() {
+                if (micAnalyser && state.micEnabled) {
+                    const data = new Uint8Array(micAnalyser.frequencyBinCount);
+                    micAnalyser.getByteFrequencyData(data);
+                    let sum = 0;
+                    for (let i = 0; i < data.length; i++) sum += data[i];
+                    const avg = sum / data.length;
+                    const pct = Math.min(100, Math.round((avg / 110) * 100));
+                    micMeterBar.style.width = `${pct}%`;
+                    const db = pct > 1 ? Math.round(-45 + (pct * 0.45)) : -60;
+                    micDbText.textContent = pct > 1 ? `${db} dB` : '-∞ dB';
+                } else {
+                    micMeterBar.style.width = '0%';
+                    micDbText.textContent = 'MUTE';
+                }
+            }
+
+            // --- Compositor Render Loop (60 FPS Canvas Engine) ---
+            function renderCompositorFrame() {
+                const w = canvas.width;
+                const h = canvas.height;
+                const now = performance.now();
+
+                ctx.save();
+
+                // Smooth Cinematic Zoom interpolation (ScreenStudio style)
+                state.targetZoom = state.zoomActive ? 1.8 : 1.0;
+                state.zoomFactor += (state.targetZoom - state.zoomFactor) * 0.14;
+                if (Math.abs(state.zoomFactor - 1.0) > 0.01) {
+                    const zx = state.zoomCenter.x * w;
+                    const zy = state.zoomCenter.y * h;
+                    ctx.translate(zx, zy);
+                    ctx.scale(state.zoomFactor, state.zoomFactor);
+                    ctx.translate(-zx, -zy);
+                }
+
+                // 1. Draw Background / Base Scene
+                if (state.sourceMode === 'screen' && screenStream && hiddenScreenVideo.readyState >= 2) {
+                    ctx.fillStyle = '#090d16';
+                    ctx.fillRect(0, 0, w, h);
+                    drawVideoContain(ctx, hiddenScreenVideo, 0, 0, w, h);
+                } else if (state.sourceMode === 'camera' && camStream && hiddenCamVideo.readyState >= 2) {
+                    drawVideoCover(ctx, hiddenCamVideo, 0, 0, w, h, state.camFacingMode === 'user');
+                } else if (state.sourceMode === 'media' && state.bgImage) {
+                    ctx.fillStyle = '#0f172a';
+                    ctx.fillRect(0, 0, w, h);
+                    drawImageContain(ctx, state.bgImage, 0, 0, w, h);
+                } else {
+                    drawInteractiveBoardBackground(ctx, w, h);
+                }
+
+                // 2. Optional Sticky Banner Title
+                if (state.stickyBannerText) {
+                    ctx.save();
+                    const bannerH = Math.max(48, Math.round(h * 0.065));
+                    ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+                    roundRect(ctx, w * 0.06, h * 0.05, w * 0.88, bannerH, 14);
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(99, 102, 241, 0.6)';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = `700 ${Math.round(bannerH * 0.42)}px Inter, sans-serif`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(state.stickyBannerText, w * 0.5, h * 0.05 + bannerH / 2, w * 0.82);
+                    ctx.restore();
+                }
+
+                // 3. Optional Teleprompter Burn-in
+                if (state.burnPrompter && prompterText.value.trim()) {
+                    ctx.save();
+                    const boxW = w * 0.88;
+                    const boxH = h * 0.22;
+                    const boxX = w * 0.06;
+                    const boxY = h * 0.14;
+                    ctx.fillStyle = 'rgba(9, 13, 22, 0.78)';
+                    roundRect(ctx, boxX, boxY, boxW, boxH, 16);
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#f8fafc';
+                    const fontSize = Math.max(15, Math.round(w * 0.026));
+                    ctx.font = `500 ${fontSize}px Inter, sans-serif`;
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'top';
+                    const lines = wrapLines(ctx, prompterText.value, boxW - 32);
+                    lines.slice(0, 6).forEach((line, idx) => {
+                        ctx.fillText(line, boxX + 16, boxY + 16 + idx * (fontSize * 1.4));
+                    });
+                    ctx.restore();
+                }
+
+                // 4. Draw Persistent Touch/Mouse Strokes (Pen, Highlighter, Arrows)
+                state.strokes.forEach(stroke => renderStroke(ctx, stroke, w, h));
+                if (state.currentStroke) {
+                    renderStroke(ctx, state.currentStroke, w, h);
+                }
+
+                // 5. Draw Laser Trail (fades after 1.2s)
+                state.laserPoints = state.laserPoints.filter(p => now - p.time < 1100);
+                if (state.laserPoints.length > 1) {
+                    ctx.save();
+                    for (let i = 1; i < state.laserPoints.length; i++) {
+                        const p0 = state.laserPoints[i - 1];
+                        const p1 = state.laserPoints[i];
+                        const age = (now - p1.time) / 1100;
+                        const alpha = Math.max(0, 1 - age);
+                        ctx.beginPath();
+                        ctx.moveTo(p0.x * w, p0.y * h);
+                        ctx.lineTo(p1.x * w, p1.y * h);
+                        ctx.strokeStyle = `rgba(244, 63, 94, ${alpha})`;
+                        ctx.lineWidth = Math.max(4, w * 0.009) * (1 - age * 0.5);
+                        ctx.lineCap = 'round';
+                        ctx.shadowColor = '#f43f5e';
+                        ctx.shadowBlur = 12;
+                        ctx.stroke();
+                    }
+                    const head = state.laserPoints[state.laserPoints.length - 1];
+                    ctx.beginPath();
+                    ctx.arc(head.x * w, head.y * h, Math.max(6, w * 0.011), 0, Math.PI * 2);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.shadowColor = '#f43f5e';
+                    ctx.shadowBlur = 16;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                // 6. Draw Touch Ripples (Visual Touch Feedback for mobile tutorials)
+                state.touchRipples = state.touchRipples.filter(r => now - r.time < 550);
+                state.touchRipples.forEach(r => {
+                    const progress = (now - r.time) / 550;
+                    const radius = (Math.min(w, h) * 0.02) + progress * (Math.min(w, h) * 0.065);
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(r.x * w, r.y * h, radius, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(99, 102, 241, ${1 - progress})`;
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(r.x * w, r.y * h, radius * 0.45, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(244, 63, 94, ${(1 - progress) * 0.45})`;
+                    ctx.fill();
+                    ctx.restore();
+                });
+
+                // 7. Draw Draggable Facecam PiP Bubble (Loom / XRecorder style)
+                if (state.camEnabled && state.sourceMode !== 'camera' && camStream && hiddenCamVideo.readyState >= 2) {
+                    drawFacecamPiP(ctx, w, h);
+                }
+
+                ctx.restore();
+
+                // Update Mic VU meter
+                updateMicMeter();
+
+                requestAnimationFrame(renderCompositorFrame);
+            }
+
+            // --- Helper: Draw Interactive Board Themes ---
+            function drawInteractiveBoardBackground(ctx, w, h) {
+                const theme = state.boardTheme;
+                if (theme === 'light-paper') {
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+                    ctx.lineWidth = 1;
+                    const step = Math.round(Math.min(w, h) / 18);
+                    for (let x = step; x < w; x += step) {
+                        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+                    }
+                    for (let y = step; y < h; y += step) {
+                        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+                    }
+                } else if (theme === 'chalkboard') {
+                    const grad = ctx.createLinearGradient(0, 0, w, h);
+                    grad.addColorStop(0, '#064e3b');
+                    grad.addColorStop(1, '#022c22');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(0, 0, w, h);
+                } else if (theme === 'phone-mockup') {
+                    // Sleek dark background with interactive mobile card guide
+                    const grad = ctx.createLinearGradient(0, 0, w, h);
+                    grad.addColorStop(0, '#0f172a');
+                    grad.addColorStop(1, '#1e1b4b');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(0, 0, w, h);
+
+                    // Subtle dot matrix
+                    ctx.fillStyle = 'rgba(148, 163, 184, 0.14)';
+                    const step = Math.round(Math.min(w, h) / 16);
+                    for (let x = step; x < w; x += step) {
+                        for (let y = step; y < h; y += step) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    // If user hasn't drawn yet and no image loaded, show interactive starter card
+                    if (state.strokes.length === 0 && !state.burnPrompter && !state.stickyBannerText) {
+                        ctx.save();
+                        const cardW = w * 0.84;
+                        const cardH = h * 0.42;
+                        const cardX = (w - cardW) / 2;
+                        const cardY = (h - cardH) / 2;
+                        ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';
+                        roundRect(ctx, cardX, cardY, cardW, cardH, 22);
+                        ctx.fill();
+                        ctx.strokeStyle = 'rgba(99, 102, 241, 0.35)';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+
+                        ctx.fillStyle = '#a5b4fc';
+                        ctx.font = `700 ${Math.max(16, Math.round(w * 0.036))}px Inter, sans-serif`;
+                        ctx.textAlign = 'center';
+                        ctx.fillText('LIENZO TÁCTIL EN VIVO', w / 2, cardY + cardH * 0.25);
+
+                        ctx.fillStyle = '#cbd5e1';
+                        ctx.font = `500 ${Math.max(13, Math.round(w * 0.025))}px Inter, sans-serif`;
+                        ctx.fillText('• Dibuja o usa el Láser con tu dedo aquí', w / 2, cardY + cardH * 0.45);
+                        ctx.fillText('• Activa "Cámara PiP" y arrástrala', w / 2, cardY + cardH * 0.58);
+                        ctx.fillText('• Doble toque para Zoom 1.8x', w / 2, cardY + cardH * 0.71);
+                        ctx.restore();
+                    }
+                } else {
+                    // dark-grid
+                    ctx.fillStyle = '#0b1120';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.fillStyle = 'rgba(148, 163, 184, 0.16)';
+                    const step = Math.round(Math.min(w, h) / 16);
+                    for (let x = step; x < w; x += step) {
+                        for (let y = step; y < h; y += step) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                }
+            }
+
+            // --- Helper: Draw Facecam PiP ---
+            function drawFacecamPiP(ctx, w, h) {
+                const baseSize = Math.min(w, h) * state.pipScale;
+                const pipW = state.pipShape === 'portrait' ? baseSize * 0.78 : baseSize;
+                const pipH = state.pipShape === 'portrait' ? baseSize * 1.25 : baseSize;
+                const cx = state.pipPos.x * w;
+                const cy = state.pipPos.y * h;
+                const x = cx - pipW / 2;
+                const y = cy - pipH / 2;
+
+                ctx.save();
+                ctx.beginPath();
+                if (state.pipShape === 'circle') {
+                    ctx.arc(cx, cy, baseSize / 2, 0, Math.PI * 2);
+                } else {
+                    roundRect(ctx, x, y, pipW, pipH, 22);
+                }
+                ctx.closePath();
+
+                // Glow border
+                ctx.save();
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
+                ctx.shadowBlur = 18;
+                ctx.strokeStyle = '#6366f1';
+                ctx.lineWidth = Math.max(4, w * 0.007);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.clip();
+                drawVideoCover(ctx, hiddenCamVideo, x, y, pipW, pipH, state.camFacingMode === 'user');
+                ctx.restore();
+            }
+
+            // --- Stroke Renderer ---
+            function renderStroke(ctx, stroke, w, h) {
+                if (!stroke.points || stroke.points.length === 0) return;
+                ctx.save();
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.strokeStyle = stroke.color;
+
+                if (stroke.tool === 'highlighter') {
+                    ctx.globalAlpha = 0.38;
+                    ctx.lineWidth = Math.max(14, w * 0.028);
+                } else {
+                    ctx.globalAlpha = 1.0;
+                    ctx.lineWidth = Math.max(4, w * 0.008);
+                }
+
+                if (stroke.tool === 'arrow' && stroke.points.length >= 2) {
+                    const start = stroke.points[0];
+                    const end = stroke.points[stroke.points.length - 1];
+                    const x1 = start.x * w, y1 = start.y * h;
+                    const x2 = end.x * w, y2 = end.y * h;
+                    const headLen = Math.max(16, w * 0.03);
+                    const angle = Math.atan2(y2 - y1, x2 - x1);
+
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.moveTo(x2, y2);
+                    ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+                    ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+                    ctx.closePath();
+                    ctx.fillStyle = stroke.color;
+                    ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    stroke.points.forEach((pt, idx) => {
+                        if (idx === 0) ctx.moveTo(pt.x * w, pt.y * h);
+                        else ctx.lineTo(pt.x * w, pt.y * h);
+                    });
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+
+            // --- Geometry & Image Helpers ---
+            function roundRect(ctx, x, y, width, height, radius) {
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + width - radius, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                ctx.lineTo(x + width, y + height - radius);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                ctx.lineTo(x + radius, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+            }
+
+            function drawVideoContain(ctx, video, x, y, w, h) {
+                const vw = video.videoWidth || w;
+                const vh = video.videoHeight || h;
+                const scale = Math.min(w / vw, h / vh);
+                const dw = vw * scale;
+                const dh = vh * scale;
+                ctx.drawImage(video, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+            }
+
+            function drawImageContain(ctx, img, x, y, w, h) {
+                const iw = img.width || w;
+                const ih = img.height || h;
+                const scale = Math.min(w / iw, h / ih);
+                const dw = iw * scale;
+                const dh = ih * scale;
+                ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+            }
+
+            function drawVideoCover(ctx, video, x, y, w, h, mirror = false) {
+                const vw = video.videoWidth || w;
+                const vh = video.videoHeight || h;
+                const scale = Math.max(w / vw, h / vh);
+                const dw = vw * scale;
+                const dh = vh * scale;
+                const dx = x + (w - dw) / 2;
+                const dy = y + (h - dh) / 2;
+                ctx.save();
+                if (mirror) {
+                    ctx.translate(x + w / 2, y + h / 2);
+                    ctx.scale(-1, 1);
+                    ctx.translate(-(x + w / 2), -(y + h / 2));
+                }
+                ctx.drawImage(video, dx, dy, dw, dh);
+                ctx.restore();
+            }
+
+            function wrapLines(ctx, text, maxWidth) {
+                const rawLines = text.split('\n');
+                const result = [];
+                rawLines.forEach(paragraph => {
+                    const words = paragraph.split(' ');
+                    let line = '';
+                    words.forEach(word => {
+                        const test = line ? `${line} ${word}` : word;
+                        if (ctx.measureText(test).width > maxWidth && line) {
+                            result.push(line);
+                            line = word;
+                        } else {
+                            line = test;
+                        }
+                    });
+                    if (line) result.push(line);
+                });
+                return result;
+            }
+
+            // --- Unified Touch & Pointer Events on Stage Canvas ---
+            function getNormalizedCanvasCoords(clientX, clientY) {
+                const rect = canvas.getBoundingClientRect();
+                const nx = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                const ny = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+                return { x: nx, y: ny };
+            }
+
+            function isPointInsidePiP(nx, ny) {
+                if (!state.camEnabled || state.sourceMode === 'camera') return false;
+                const dx = nx - state.pipPos.x;
+                const dy = ny - state.pipPos.y;
+                const radius = state.pipScale * 0.6;
+                return (dx * dx + dy * dy) <= (radius * radius);
+            }
+
+            canvas.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                canvas.setPointerCapture(e.pointerId);
+                const pt = getNormalizedCanvasCoords(e.clientX, e.clientY);
+                const now = performance.now();
+
+                // Check double-tap for Zoom
+                if (now - state.lastTapTime < 280 && state.tool === 'pointer') {
+                    state.zoomActive = !state.zoomActive;
+                    state.zoomCenter = { x: pt.x, y: pt.y };
+                    zoomActiveBadge.classList.toggle('hidden', !state.zoomActive);
+                    document.getElementById('btnZoomToggle').classList.toggle('border-indigo-500', state.zoomActive);
+                }
+                state.lastTapTime = now;
+
+                // Spawn touch ripple if enabled
+                if (state.touchRippleEnabled) {
+                    state.touchRipples.push({ x: pt.x, y: pt.y, time: now });
+                }
+
+                // Check if dragging Facecam PiP
+                if (isPointInsidePiP(pt.x, pt.y) && state.tool === 'pointer') {
+                    state.isDraggingPip = true;
+                    return;
+                }
+
+                if (state.tool === 'laser') {
+                    state.laserPoints.push({ x: pt.x, y: pt.y, time: now });
+                } else if (state.tool === 'pen' || state.tool === 'highlighter' || state.tool === 'arrow') {
+                    state.currentStroke = {
+                        tool: state.tool,
+                        color: state.drawColor,
+                        points: [pt]
+                    };
+                } else if (state.zoomActive) {
+                    state.zoomCenter = { x: pt.x, y: pt.y };
+                }
+            });
+
+            canvas.addEventListener('pointermove', (e) => {
+                if (!e.buttons && e.pointerType === 'mouse') return;
+                const pt = getNormalizedCanvasCoords(e.clientX, e.clientY);
+                const now = performance.now();
+
+                if (state.isDraggingPip) {
+                    const margin = state.pipScale * 0.45;
+                    state.pipPos.x = Math.max(margin, Math.min(1 - margin, pt.x));
+                    state.pipPos.y = Math.max(margin, Math.min(1 - margin, pt.y));
+                    return;
+                }
+
+                if (state.tool === 'laser') {
+                    state.laserPoints.push({ x: pt.x, y: pt.y, time: now });
+                } else if (state.currentStroke) {
+                    state.currentStroke.points.push(pt);
+                } else if (state.zoomActive && state.tool === 'pointer') {
+                    state.zoomCenter = { x: pt.x, y: pt.y };
+                }
+            });
+
+            function finishPointerGesture() {
+                state.isDraggingPip = false;
+                if (state.currentStroke) {
+                    state.strokes.push(state.currentStroke);
+                    state.currentStroke = null;
+                }
+            }
+            canvas.addEventListener('pointerup', finishPointerGesture);
+            canvas.addEventListener('pointercancel', finishPointerGesture);
+
+            // --- Recording Engine (Canvas Stream + WebAudio Mix) ---
+            function getSupportedMimeInfo() {
+                const candidates = [
+                    { mime: 'video/mp4;codecs=avc1.42E01E,mp4a.40.2', ext: 'mp4', label: 'MP4 (H.264)' },
+                    { mime: 'video/mp4', ext: 'mp4', label: 'MP4 Nativo' },
+                    { mime: 'video/webm;codecs=vp9,opus', ext: 'webm', label: 'WebM (VP9)' },
+                    { mime: 'video/webm;codecs=vp8,opus', ext: 'webm', label: 'WebM (VP8)' },
+                    { mime: 'video/webm', ext: 'webm', label: 'WebM' }
+                ];
+                if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported) {
+                    for (const item of candidates) {
+                        if (MediaRecorder.isTypeSupported(item.mime)) return item;
+                    }
+                }
+                return { mime: '', ext: 'webm', label: 'Video Estándar' };
+            }
+
+            async function startRecordingWithCountdown() {
+                if (state.isRecording) return;
+
+                // Ensure microphone is initialized if enabled
+                if (state.micEnabled && !micStream) {
+                    await initMicrophone();
+                }
+
+                const countdownSec = parseInt(countdownSelect.value, 10) || 0;
+                if (countdownSec > 0) {
+                    const overlay = document.getElementById('countdownOverlay');
+                    const numEl = document.getElementById('countdownNumber');
+                    overlay.classList.remove('hidden');
+                    for (let i = countdownSec; i >= 1; i--) {
+                        numEl.textContent = String(i);
+                        playBeep(i === 1 ? 880 : 587, 0.1);
+                        await new Promise(r => setTimeout(r, 950));
+                    }
+                    overlay.classList.add('hidden');
+                }
+                playBeep(1046, 0.14);
+                beginMediaRecorder();
+            }
+
+            function beginMediaRecorder() {
+                try {
+                    const fps = parseInt(fpsSelect.value, 10) || 30;
+                    const canvasStream = canvas.captureStream(fps);
+                    const finalTracks = [...canvasStream.getVideoTracks()];
+
+                    // Mix Audio Tracks via Web Audio API so both Mic and System Audio record together
+                    const Ctx = window.AudioContext || window.webkitAudioContext;
+                    if (Ctx) {
+                        if (!audioCtx) audioCtx = new Ctx();
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        audioDestination = audioCtx.createMediaStreamDestination();
+                        let hasAudioSource = false;
+
+                        if (state.micEnabled && micStream && micStream.getAudioTracks().length > 0) {
+                            const micSrc = audioCtx.createMediaStreamSource(micStream);
+                            const gain = audioCtx.createGain();
+                            gain.gain.value = (parseInt(micGainSlider.value, 10) || 100) / 100;
+                            micSrc.connect(gain);
+                            gain.connect(audioDestination);
+                            hasAudioSource = true;
+                        }
+
+                        if (state.sysAudioEnabled && screenStream && screenStream.getAudioTracks().length > 0) {
+                            const sysSrc = audioCtx.createMediaStreamSource(new MediaStream(screenStream.getAudioTracks()));
+                            sysSrc.connect(audioDestination);
+                            hasAudioSource = true;
+                        }
+
+                        if (hasAudioSource) {
+                            finalTracks.push(...audioDestination.stream.getAudioTracks());
+                        }
+                    }
+
+                    const combinedStream = new MediaStream(finalTracks);
+                    const mimeInfo = getSupportedMimeInfo();
+                    const heightVal = parseInt(qualityPresetSelect.value, 10) || 720;
+                    const bitrate = heightVal >= 1080 ? 8000000 : (heightVal >= 720 ? 5000000 : 2500000);
+
+                    const options = { videoBitsPerSecond: bitrate };
+                    if (mimeInfo.mime) options.mimeType = mimeInfo.mime;
+
+                    mediaRecorder = new MediaRecorder(combinedStream, options);
+                    recordedChunks = [];
+
+                    mediaRecorder.ondataavailable = (ev) => {
+                        if (ev.data && ev.data.size > 0) {
+                            recordedChunks.push(ev.data);
+                        }
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        finalizeRecording(mimeInfo);
+                    };
+
+                    mediaRecorder.start(500);
+                    state.isRecording = true;
+                    state.isPaused = false;
+                    state.startTime = Date.now();
+                    state.pausedAccumulated = 0;
+
+                    startTimerLoop();
+                    updateRecordingUI();
+                    showToast(`Grabando en ${canvas.width}×${canvas.height} (${mimeInfo.label})`, 'success');
+                } catch (err) {
+                    showToast('Error al iniciar grabador: ' + err.message, 'error');
+                }
+            }
+
+            function pauseOrResumeRecording() {
+                if (!mediaRecorder || !state.isRecording) return;
+                if (mediaRecorder.state === 'recording') {
+                    mediaRecorder.pause();
+                    state.isPaused = true;
+                    state.pauseStartedAt = Date.now();
+                    pauseBtnText.textContent = 'Reanudar';
+                    headerStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
+                    showToast('Grabación en pausa', 'warn');
+                } else if (mediaRecorder.state === 'paused') {
+                    mediaRecorder.resume();
+                    state.isPaused = false;
+                    state.pausedAccumulated += (Date.now() - state.pauseStartedAt);
+                    pauseBtnText.textContent = 'Pausar';
+                    headerStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500 rec-pulse';
+                    showToast('Grabación reanudada', 'info');
+                }
+            }
+
+            function stopRecording() {
+                if (!mediaRecorder || !state.isRecording) return;
+                try {
+                    if (mediaRecorder.state !== 'inactive') {
+                        mediaRecorder.stop();
+                    }
+                } catch (e) {}
+                state.isRecording = false;
+                state.isPaused = false;
+                clearInterval(state.timerInterval);
+                updateRecordingUI();
+            }
+
+            function finalizeRecording(mimeInfo) {
+                if (recordedChunks.length === 0) return;
+                const blob = new Blob(recordedChunks, { type: mimeInfo.mime || 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const now = new Date();
+                const stamp = `${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}-${now.getSeconds().toString().padStart(2, '0')}`;
+                const item = {
+                    id: Date.now(),
+                    type: 'video',
+                    title: `OmniRec_${state.aspectRatio.replace(':', 'x')}_${stamp}.${mimeInfo.ext}`,
+                    url: url,
+                    blob: blob,
+                    duration: headerTimerText.textContent,
+                    resolution: `${canvas.width}×${canvas.height}`,
+                    size: formatBytes(blob.size),
+                    ext: mimeInfo.ext,
+                    mimeLabel: mimeInfo.label
+                };
+                state.recordings.unshift(item);
+                renderRecordingsList();
+                switchTab('tabRecordings');
+                openPreviewModal(item);
+                headerTimerText.textContent = '00:00:00';
+                floatTimeLabel.textContent = 'REC';
+                showToast('¡Video guardado y listo para descargar o compartir!', 'success');
+            }
+
+            // --- Take Instant PNG Snapshot ---
+            function takeCanvasSnapshot() {
+                canvas.toBlob((blob) => {
+                    if (!blob) return;
+                    const url = URL.createObjectURL(blob);
+                    const now = new Date();
+                    const stamp = `${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}-${now.getSeconds().toString().padStart(2, '0')}`;
+                    const item = {
+                        id: Date.now(),
+                        type: 'image',
+                        title: `Captura_${state.aspectRatio.replace(':', 'x')}_${stamp}.png`,
+                        url: url,
+                        blob: blob,
+                        duration: 'Foto PNG',
+                        resolution: `${canvas.width}×${canvas.height}`,
+                        size: formatBytes(blob.size),
+                        ext: 'png',
+                        mimeLabel: 'Imagen PNG'
+                    };
+                    state.recordings.unshift(item);
+                    renderRecordingsList();
+                    showToast('📸 Fotograma capturado en la galería', 'success');
+                }, 'image/png');
+            }
+
+            // --- Timer & UI Sync ---
+            function startTimerLoop() {
+                clearInterval(state.timerInterval);
+                state.timerInterval = setInterval(() => {
+                    if (!state.isRecording || state.isPaused) return;
+                    const elapsed = Date.now() - state.startTime - state.pausedAccumulated;
+                    const totalSec = Math.floor(elapsed / 1000);
+                    const hrs = Math.floor(totalSec / 3600).toString().padStart(2, '0');
+                    const mins = Math.floor((totalSec % 3600) / 60).toString().padStart(2, '0');
+                    const secs = (totalSec % 60).toString().padStart(2, '0');
+                    headerTimerText.textContent = `${hrs}:${mins}:${secs}`;
+                    floatTimeLabel.textContent = `${mins}:${secs}`;
+                }, 250);
+            }
+
+            function updateRecordingUI() {
+                if (state.isRecording) {
+                    btnMainStart.classList.add('hidden');
+                    btnMainPause.classList.remove('hidden');
+                    btnMainStop.classList.remove('hidden');
+                    canvas.classList.add('recording-glow');
+                    headerStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500 rec-pulse';
+                    document.getElementById('floatDot').className = 'w-2.5 h-2.5 rounded-full bg-rose-300 animate-ping mb-0.5';
+                } else {
+                    btnMainStart.classList.remove('hidden');
+                    btnMainPause.classList.add('hidden');
+                    btnMainStop.classList.add('hidden');
+                    canvas.classList.remove('recording-glow');
+                    headerStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+                    document.getElementById('floatDot').className = 'w-2.5 h-2.5 rounded-full bg-white mb-0.5';
+                }
+            }
+
+            function formatBytes(bytes) {
+                if (!bytes) return '0 KB';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return `${(bytes / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`;
+            }
+
+            // --- Recordings Vault List & Preview Modal ---
+            function renderRecordingsList() {
+                recordingsCountBadge.textContent = String(state.recordings.length);
+                if (state.recordings.length === 0) {
+                    emptyRecordingsState.classList.remove('hidden');
+                    recordingsVaultList.innerHTML = '';
+                    return;
+                }
+                emptyRecordingsState.classList.add('hidden');
+                recordingsVaultList.innerHTML = '';
+
+                state.recordings.forEach((rec) => {
+                    const card = document.createElement('div');
+                    card.className = 'p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between gap-2';
+
+                    const info = document.createElement('div');
+                    info.className = 'min-w-0 flex-1';
+                    info.innerHTML = `
+                        <div class="text-xs font-semibold text-white truncate">${rec.title}</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">${rec.resolution} • ${rec.duration} • ${rec.size}</div>
+                    `;
+
+                    const actions = document.createElement('div');
+                    actions.className = 'flex items-center gap-1.5 shrink-0';
+
+                    const btnPlay = document.createElement('button');
+                    btnPlay.type = 'button';
+                    btnPlay.className = 'px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200';
+                    btnPlay.textContent = 'Ver';
+                    btnPlay.addEventListener('click', () => openPreviewModal(rec));
+
+                    const btnDl = document.createElement('a');
+                    btnDl.href = rec.url;
+                    btnDl.download = rec.title;
+                    btnDl.className = 'px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white';
+                    btnDl.textContent = 'Bajar';
+
+                    const btnShare = document.createElement('button');
+                    btnShare.type = 'button';
+                    btnShare.className = 'p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300';
+                    btnShare.title = 'Compartir en móvil';
+                    btnShare.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>';
+                    btnShare.addEventListener('click', async () => {
+                        if (navigator.share && rec.blob) {
+                            try {
+                                const file = new File([rec.blob], rec.title, { type: rec.blob.type });
+                                await navigator.share({ title: rec.title, files: [file] });
+                            } catch (e) {
+                                showToast('Usa el botón "Bajar" para guardar directamente en tu dispositivo', 'info');
+                            }
+                        } else {
+                            btnDl.click();
+                        }
+                    });
+
+                    const btnDel = document.createElement('button');
+                    btnDel.type = 'button';
+                    btnDel.className = 'p-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/60 text-slate-400 hover:text-rose-200';
+                    btnDel.title = 'Eliminar';
+                    btnDel.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+                    btnDel.addEventListener('click', () => {
+                        URL.revokeObjectURL(rec.url);
+                        state.recordings = state.recordings.filter(r => r.id !== rec.id);
+                        renderRecordingsList();
+                    });
+
+                    actions.append(btnPlay, btnDl, btnShare, btnDel);
+                    card.append(info, actions);
+                    recordingsVaultList.appendChild(card);
+                });
+            }
+
+            function openPreviewModal(rec) {
+                modalVideoTitle.textContent = rec.title;
+                modalMetaInfo.textContent = `${rec.resolution} • ${rec.duration} • ${rec.size} (${rec.mimeLabel})`;
+                modalDownloadBtn.onclick = () => {
+                    const a = document.createElement('a');
+                    a.href = rec.url;
+                    a.download = rec.title;
+                    a.click();
+                };
+
+                if (rec.type === 'image') {
+                    modalVideoPlayer.pause();
+                    modalVideoPlayer.classList.add('hidden');
+                    modalImagePreview.src = rec.url;
+                    modalImagePreview.classList.remove('hidden');
+                } else {
+                    modalImagePreview.classList.add('hidden');
+                    modalVideoPlayer.src = rec.url;
+                    modalVideoPlayer.classList.remove('hidden');
+                    modalVideoPlayer.play().catch(() => {});
+                }
+                previewModal.classList.remove('hidden');
+            }
+
+            btnCloseModal.addEventListener('click', () => {
+                modalVideoPlayer.pause();
+                previewModal.classList.add('hidden');
+            });
+
+            // --- Tabs Navigation ---
+            function switchTab(tabId) {
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+                const target = document.getElementById(tabId);
+                if (target) target.classList.remove('hidden');
+
+                document.querySelectorAll('.studio-tab').forEach(btn => {
+                    if (btn.getAttribute('data-tab') === tabId) {
+                        btn.className = 'studio-tab py-3 px-2 text-center border-b-2 border-indigo-500 text-white bg-indigo-500/10 flex items-center justify-center gap-1';
+                    } else {
+                        btn.className = 'studio-tab py-3 px-2 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1';
+                    }
+                });
+            }
+
+            document.querySelectorAll('.studio-tab').forEach(btn => {
+                btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
+            });
+
+            // --- Draggable Floating Touch Ball Logic ---
+            let floatDrag = { active: false, moved: false, startX: 0, startY: 0, origRight: 16, origBottom: 80 };
+            btnFloatMain.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                btnFloatMain.setPointerCapture(e.pointerId);
+                const rect = floatingDock.getBoundingClientRect();
+                floatDrag.active = true;
+                floatDrag.moved = false;
+                floatDrag.startX = e.clientX;
+                floatDrag.startY = e.clientY;
+                floatDrag.origRight = window.innerWidth - rect.right;
+                floatDrag.origBottom = window.innerHeight - rect.bottom;
+            });
+
+            btnFloatMain.addEventListener('pointermove', (e) => {
+                if (!floatDrag.active) return;
+                const dx = e.clientX - floatDrag.startX;
+                const dy = e.clientY - floatDrag.startY;
+                if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+                    floatDrag.moved = true;
+                }
+                const newRight = Math.max(8, Math.min(window.innerWidth - 64, floatDrag.origRight - dx));
+                const newBottom = Math.max(8, Math.min(window.innerHeight - 64, floatDrag.origBottom - dy));
+                floatingDock.style.right = `${newRight}px`;
+                floatingDock.style.bottom = `${newBottom}px`;
+            });
+
+            btnFloatMain.addEventListener('pointerup', () => {
+                if (floatDrag.active && !floatDrag.moved) {
+                    floatMenuActions.classList.toggle('hidden');
+                    floatMenuActions.classList.toggle('flex');
+                }
+                floatDrag.active = false;
+            });
+
+            btnFloatRecordToggle.addEventListener('click', () => {
+                if (state.isRecording) stopRecording();
+                else startRecordingWithCountdown();
+            });
+            btnFloatPauseToggle.addEventListener('click', pauseOrResumeRecording);
+            btnFloatPenToggle.addEventListener('click', () => {
+                const next = state.tool === 'pen' ? 'pointer' : 'pen';
+                selectAnnotationTool(next);
+                showToast(next === 'pen' ? '✏️ Modo Lápiz Táctil activo' : '👆 Modo Mover / Cursor activo', 'info');
+            });
+            btnFloatSnap.addEventListener('click', takeCanvasSnapshot);
+
+            // --- Wire All UI Controls ---
+            btnRatioVertical.addEventListener('click', () => setAspectRatio('9:16'));
+            btnRatioHorizontal.addEventListener('click', () => setAspectRatio('16:9'));
+            btnRatioSquare.addEventListener('click', () => setAspectRatio('1:1'));
+
+            srcModeScreen.addEventListener('click', () => setSourceMode('screen', true));
+            srcModeBoard.addEventListener('click', () => setSourceMode('board', true));
+            srcModeMedia.addEventListener('click', () => setSourceMode('media', true));
+            srcModeCameraFull.addEventListener('click', () => setSourceMode('camera', true));
+
+            bgImageInput.addEventListener('change', (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        state.bgImage = img;
+                        state.sourceMode = 'media';
+                        // Auto-match orientation to uploaded image
+                        if (img.height > img.width) setAspectRatio('9:16');
+                        else if (img.width > img.height) setAspectRatio('16:9');
+                        showToast('Imagen cargada en el lienzo. ¡Puedes dibujar y grabar sobre ella!', 'success');
+                    };
+                    img.src = ev.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            function selectAnnotationTool(toolName) {
+                state.tool = toolName;
+                document.querySelectorAll('.tool-btn').forEach(btn => {
+                    if (btn.getAttribute('data-tool') === toolName) {
+                        btn.className = 'tool-btn px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 bg-indigo-600 text-white shadow';
+                    } else {
+                        btn.className = 'tool-btn px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 bg-slate-800/80 text-slate-300 hover:text-white';
+                    }
+                });
+            }
+
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.addEventListener('click', () => selectAnnotationTool(btn.getAttribute('data-tool')));
+            });
+
+            document.querySelectorAll('.color-swatch').forEach(sw => {
+                sw.addEventListener('click', () => {
+                    state.drawColor = sw.getAttribute('data-color');
+                    document.querySelectorAll('.color-swatch').forEach(s => {
+                        s.classList.remove('ring-2', 'ring-white', 'scale-110');
+                        s.classList.add('opacity-75');
+                    });
+                    sw.classList.add('ring-2', 'ring-white', 'scale-110');
+                    sw.classList.remove('opacity-75');
+                });
+            });
+
+            document.getElementById('btnUndoDraw').addEventListener('click', () => {
+                state.strokes.pop();
+            });
+            document.getElementById('btnClearDraw').addEventListener('click', () => {
+                state.strokes = [];
+                state.stickyBannerText = '';
+                showToast('Lienzo limpio', 'info');
+            });
+
+            document.getElementById('btnZoomToggle').addEventListener('click', () => {
+                state.zoomActive = !state.zoomActive;
+                zoomActiveBadge.classList.toggle('hidden', !state.zoomActive);
+                document.getElementById('btnZoomToggle').classList.toggle('border-indigo-500', state.zoomActive);
+            });
+
+            btnMainStart.addEventListener('click', startRecordingWithCountdown);
+            btnMainPause.addEventListener('click', pauseOrResumeRecording);
+            btnMainStop.addEventListener('click', stopRecording);
+
+            btnQuickMic.addEventListener('click', async () => {
+                state.micEnabled = !state.micEnabled;
+                if (state.micEnabled && !micStream) {
+                    await initMicrophone();
+                }
+                if (state.micEnabled) {
+                    btnQuickMic.className = 'flex-1 sm:flex-initial px-3 py-2.5 rounded-xl border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all';
+                    quickMicText.textContent = 'Mic ON';
+                } else {
+                    btnQuickMic.className = 'flex-1 sm:flex-initial px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800/80 text-slate-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all';
+                    quickMicText.textContent = 'Mic OFF';
+                }
+            });
+
+            btnQuickCam.addEventListener('click', async () => {
+                if (state.camEnabled) {
+                    stopCameraStream();
+                } else {
+                    await ensureCameraStream(true);
+                }
+            });
+
+            btnToggleFloatingBall.addEventListener('click', () => {
+                floatingDock.classList.toggle('hidden');
+            });
+
+            document.getElementById('btnSnapshot').addEventListener('click', takeCanvasSnapshot);
+
+            document.getElementById('btnTogglePiPPreview').addEventListener('click', async () => {
+                try {
+                    if (document.pictureInPictureElement) {
+                        await document.exitPictureInPicture();
+                    } else if (canvas.captureStream) {
+                        const tempVid = document.createElement('video');
+                        tempVid.muted = true;
+                        tempVid.srcObject = canvas.captureStream(30);
+                        await tempVid.play();
+                        if (tempVid.requestPictureInPicture) {
+                            await tempVid.requestPictureInPicture();
+                        } else {
+                            showToast('Picture-in-Picture no disponible en este navegador', 'warn');
+                        }
+                    }
+                } catch (e) {
+                    showToast('La ventana flotante externa requiere soporte PiP del navegador', 'info');
+                }
+            });
+
+            micDeviceSelect.addEventListener('change', () => initMicrophone());
+            micGainSlider.addEventListener('input', () => {
+                const v = parseInt(micGainSlider.value, 10) || 100;
+                micGainValue.textContent = `${v}%`;
+                if (micGainNode) micGainNode.gain.value = v / 100;
+            });
+
+            chkSystemAudio.addEventListener('change', () => {
+                state.sysAudioEnabled = chkSystemAudio.checked;
+            });
+            chkTouchRipple.addEventListener('change', () => {
+                state.touchRippleEnabled = chkTouchRipple.checked;
+            });
+            pipShapeSelect.addEventListener('change', () => {
+                state.pipShape = pipShapeSelect.value;
+            });
+            pipSizeSelect.addEventListener('change', () => {
+                state.pipScale = parseFloat(pipSizeSelect.value) || 0.28;
+            });
+            qualityPresetSelect.addEventListener('change', () => {
+                setAspectRatio(state.aspectRatio);
+            });
+            fpsSelect.addEventListener('change', () => {
+                state.fps = parseInt(fpsSelect.value, 10) || 30;
+                stageFpsBadge.textContent = `${state.fps} FPS`;
+            });
+            boardThemeSelect.addEventListener('change', () => {
+                state.boardTheme = boardThemeSelect.value;
+            });
+
+            btnFlipCamera.addEventListener('click', async () => {
+                state.camFacingMode = state.camFacingMode === 'user' ? 'environment' : 'user';
+                if (camStream) {
+                    stopCameraStream();
+                    await ensureCameraStream(true);
+                } else {
+                    await ensureCameraStream(true);
+                }
+            });
+
+            chkBurnPrompter.addEventListener('change', () => {
+                state.burnPrompter = chkBurnPrompter.checked;
+            });
+
+            btnAddStickyText.addEventListener('click', () => {
+                const firstLine = prompterText.value.split('\n')[0] || 'Tutorial en Vivo';
+                state.stickyBannerText = state.stickyBannerText ? '' : firstLine.slice(0, 48);
+                showToast(state.stickyBannerText ? 'Título fijado en la parte superior del video' : 'Título ocultado', 'info');
+            });
+
+            btnLoadSampleSlide.addEventListener('click', () => bgImageInput.click());
+
+            // Boot Application
+            window.addEventListener('load', () => {
+                detectEnvironment();
+                initMicrophone();
+                requestAnimationFrame(renderCompositorFrame);
+            });
+        })();
+    </script>
+</body>
+</html>
