@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-c3/iCLiVuc0dQ5G/EwObKFWrbVy3cNKraPBJOnOo93s=' 'sha256-VopPBuMlv3Uh30oIKWlPswiGPCDzJh9vJFGrOj9h9V8='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-VZ1kHBG/6DzydtkVSmmAjflqV9U6RDuiNnwd/cCiVJk=' 'sha256-XNVnGnOGs3qh2d/LAYQ++xuIFClk7hWUnASbuSWj9Us='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08786d">
@@ -122,7 +122,7 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script id="siteConfig" type="application/json">
 {
-  "version": 10,
+  "version": 11,
   "owner": "vivecodig2026",
   "repo": "opensource",
   "branch": "main",
@@ -747,7 +747,10 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
       "publicationCommit": "0290086f3ee7a18ae2d02b875508e0e6ed95ce6e",
       "assetFile": "orbita-guardianes-puntuacion.html",
       "size": 79270,
-      "sha256": "aa37489ca2c8abcd5d1831b01232ea4fdc25381f9b79b7d4360528dfed1b8281"
+      "sha256": "aa37489ca2c8abcd5d1831b01232ea4fdc25381f9b79b7d4360528dfed1b8281",
+      "preview": "previews/orbita.jpg",
+      "previewSmall": "previews/orbita-480.webp",
+      "previewMedium": "previews/orbita-800.webp"
     },
     {
       "id": "docentepro",
@@ -937,7 +940,10 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
       "size": 3246897,
       "publishedAt": "2026-10-20T16:10:13Z",
       "publicationCommit": "e824788ef91410e96da18ee3849bc804226e3782",
-      "assetFile": "LibroLigero_Studio_Offline.html"
+      "assetFile": "LibroLigero_Studio_Offline.html",
+      "preview": "previews/libroligero.jpg",
+      "previewSmall": "previews/libroligero-480.webp",
+      "previewMedium": "previews/libroligero-800.webp"
     },
     {
       "id": "nexo-convert",
@@ -965,7 +971,10 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
       "requirements": "Los archivos grandes requieren memoria suficiente. Los formatos disponibles dependen del motor y del navegador.",
       "size": 13756313,
       "publishedAt": "2026-10-20T17:27:36Z",
-      "publicationCommit": "6b54f3e536d329de36096bf6c0fc6a99fc99319f"
+      "publicationCommit": "6b54f3e536d329de36096bf6c0fc6a99fc99319f",
+      "preview": "previews/nexo-convert.jpg",
+      "previewSmall": "previews/nexo-convert-480.webp",
+      "previewMedium": "previews/nexo-convert-800.webp"
     },
     {
       "id": "sierra-audio",
@@ -993,7 +1002,10 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
       "requirements": "La grabación requiere permiso de micrófono. La importación de medios depende de los formatos compatibles con el navegador.",
       "size": 1058285,
       "publishedAt": "2026-10-20T17:27:36Z",
-      "publicationCommit": "6b54f3e536d329de36096bf6c0fc6a99fc99319f"
+      "publicationCommit": "6b54f3e536d329de36096bf6c0fc6a99fc99319f",
+      "preview": "previews/sierra-audio.jpg",
+      "previewSmall": "previews/sierra-audio-480.webp",
+      "previewMedium": "previews/sierra-audio-800.webp"
     },
     {
       "id": "ia-studio",
@@ -1083,7 +1095,10 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
       "requirements": "Recursos principales integrados para trabajar con archivos locales. Esta edición conserva una ficha y un contador independientes de PDF Pro Studio anterior.",
       "size": 2318790,
       "publishedAt": "2026-10-20T17:26:32Z",
-      "publicationCommit": "ca6fa4df2d70600054873050ea73309f55958a37"
+      "publicationCommit": "ca6fa4df2d70600054873050ea73309f55958a37",
+      "preview": "previews/pdf-pro-3.jpg",
+      "previewSmall": "previews/pdf-pro-3-480.webp",
+      "previewMedium": "previews/pdf-pro-3-800.webp"
     }
   ]
 }
@@ -1107,7 +1122,7 @@ const APPS=CONFIG.apps,byId=new Map(APPS.map(a=>[a.id,a])),byFile=new Map(APPS.m
 const API=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
 const REPO=`https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
 const RAW=`https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/`;
-const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v3`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v10`;
+const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v3`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v11`;
 const stats=new Map(),health=new Map(APPS.map(a=>[a.id,{available:a.available!==false,size:a.size,reason:a.unavailableReason||""}]));
 const MAX_FILE=60*1024*1024,CACHE_TTL=15*60*1000;
 let category='all',statsState='loading',statsTime=0,statsComplete=true,statsBusy=null,lastAttempt=0,toastTimer=null,detailApp=null,modalOpener=null;
