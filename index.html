@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-VZ1kHBG/6DzydtkVSmmAjflqV9U6RDuiNnwd/cCiVJk=' 'sha256-XNVnGnOGs3qh2d/LAYQ++xuIFClk7hWUnASbuSWj9Us='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-VrYogHeuMe67r1pec1EV6G/1dLTl4SUPjD75qTxk71o=' 'sha256-OaGwkyTZ945zE4FJz2tdgFZTdRmoz4wVuG40quEByw8='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08786d">
@@ -39,7 +39,7 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 .card-content>.download-status{order:1}.card-content>.card-meta{order:2}.card-content>.card-buttons{order:3}.card-content>.card-bottom{order:4}
 .app-dates{order:2;display:grid;gap:3px;color:var(--muted);font-size:11px;margin-top:auto;padding:12px 0}.card-content>.card-meta{margin-top:0}.support-wrap p+p{margin-top:14px}.support-promise{font-weight:650}.stats-table{min-width:650px}
 .preview-button picture{display:block;width:100%;height:100%}
-</style>
+.download-count{font-weight:750;color:var(--green);font-size:14px}</style>
 </head>
 <body>
 <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden"><defs>
@@ -82,7 +82,7 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 </div><div class="bench-footer"><span data-icon="file"></span> Elige una herramienta y hazla parte de tu día.</div></div>
 </div></section>
 <div class="model-strip" aria-label="Cómo se sostiene el proyecto"><div class="model-item"><span data-icon="download"></span><div><strong>Las apps son gratuitas</strong><small>Úsalas sin pagar una suscripción.</small></div></div><div class="model-item"><span data-icon="settings"></span><div><strong>El trabajo a medida se cotiza</strong><small>Financia desarrollo y herramientas de IA.</small></div></div><div class="model-item"><span data-icon="heart"></span><div><strong>Tu aporte es voluntario</strong><small>Ayuda a cubrir las suscripciones de IA.</small></div></div></div>
-<section id="catalogo" aria-labelledby="catalogTitle"><div class="section-head"><div><div class="eyebrow">Hechas para usarse</div><h2 id="catalogTitle">Encuentra tu próxima herramienta.</h2><p>Solo proyectos publicados. Revisa su tamaño y si necesitan conexión antes de descargar.</p></div><span class="count-pill" id="catalogCount">30 proyectos</span></div>
+<section id="catalogo" aria-labelledby="catalogTitle"><div class="section-head"><div><div class="eyebrow">Hechas para usarse</div><h2 id="catalogTitle">Encuentra tu próxima herramienta.</h2><p>Solo proyectos publicados. Revisa su tamaño y si necesitan conexión antes de descargar.</p></div><span class="count-pill" id="catalogCount">32 proyectos</span></div>
 <div class="catalog-tools"><div class="searchbox"><label for="search" class="sr-only">Buscar aplicaciones</label><span data-icon="search"></span><input id="search" type="search" placeholder="Busca una app o lo que necesitas hacer…" autocomplete="off" maxlength="120"></div><label class="sort" for="sort">Ordenar por <select id="sort"><option value="recommended">Recomendadas</option><option value="name">Nombre</option><option value="downloads" selected>Más descargadas</option><option value="size">Menor tamaño</option></select></label></div>
 <div class="filters"><div class="chips" role="group" aria-label="Categorías"><button class="chip" data-category="all" aria-pressed="true">Todas</button><button class="chip" data-category="educacion" aria-pressed="false">Educación</button><button class="chip" data-category="productividad" aria-pressed="false">Productividad</button><button class="chip" data-category="creatividad" aria-pressed="false">Creatividad</button></div><label class="offline-filter"><input id="offlineOnly" type="checkbox"> Solo para usar sin conexión</label></div>
 <div id="appGrid" class="app-grid"></div><p id="resultAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
@@ -122,7 +122,7 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script id="siteConfig" type="application/json">
 {
-  "version": 11,
+  "version": 12,
   "owner": "vivecodig2026",
   "repo": "opensource",
   "branch": "main",
@@ -228,39 +228,6 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
       "publicationCommit": "9dfa49c40a812e4ec9f9ff540990f5b42c67f6cf",
       "previewSmall": "previews/corte-studio-480.webp",
       "previewMedium": "previews/corte-studio-800.webp"
-    },
-    {
-      "id": "animsketch",
-      "name": "AnimSketch",
-      "file": "Draw_Animation_CleanRoom_Pro.html",
-      "category": "creatividad",
-      "categoryLabel": "Creatividad",
-      "icon": "pen",
-      "tone": "#f9eddc",
-      "ink": "#875b25",
-      "offline": true,
-      "rank": 4,
-      "description": "Dibuja, organiza objetos y dale movimiento a tus ideas con herramientas de animación.",
-      "tags": [
-        "dibujar",
-        "dibujo",
-        "animacion",
-        "svg",
-        "gif",
-        "personajes"
-      ],
-      "features": [
-        "Dibujo y edición de objetos seleccionables.",
-        "Poses, movimiento y herramientas de animación.",
-        "Exportación de imágenes y animaciones según el formato elegido."
-      ],
-      "requirements": "El archivo de AnimSketch publicado actualmente contiene OmniWord. Pendiente de reponer el archivo correcto.",
-      "size": 9173021,
-      "catalogIssue": "El archivo de AnimSketch publicado actualmente contiene OmniWord. Pendiente de reponer el archivo correcto.",
-      "available": false,
-      "unavailableReason": "El archivo de AnimSketch publicado actualmente contiene OmniWord. Pendiente de reponer el archivo correcto.",
-      "publishedAt": "2026-10-14T18:10:32Z",
-      "publicationCommit": "c6e7bb3194053c44d5ffe985c5affa4e52be3976"
     },
     {
       "id": "toby-vocales",
@@ -1099,8 +1066,578 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
       "preview": "previews/pdf-pro-3.jpg",
       "previewSmall": "previews/pdf-pro-3-480.webp",
       "previewMedium": "previews/pdf-pro-3-800.webp"
+    },
+    {
+      "id": "edubingo-offline",
+      "name": "EduBingo Pro Studio · Offline",
+      "file": "edubingo_pro_studio_offline.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "school",
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "offline": true,
+      "rank": 31,
+      "description": "Edición con recursos integrados para usar sin conexión. Crea cartones de bingo pedagógico y dirige una tómbola interactiva en clase.",
+      "tags": [
+        "bingo",
+        "cartones",
+        "tombola",
+        "docente",
+        "pdf"
+      ],
+      "features": [
+        "Cartones de 3×3, 4×4 y 5×5 con temas curriculares.",
+        "Modo directo o de asociación, banco de palabras y fichas docentes.",
+        "Tómbola en vivo y generación de cartones PDF."
+      ],
+      "requirements": "Bibliotecas principales incorporadas en este HTML. Abrir enlaces externos requiere internet.",
+      "size": 886921,
+      "preview": "previews/edubingo.jpg",
+      "publishedAt": "2026-10-21T14:05:03Z",
+      "publicationCommit": "2514f49cda2d49a6832c333e450a26a240fe8644",
+      "previewSmall": "previews/edubingo-480.webp",
+      "previewMedium": "previews/edubingo-800.webp"
+    },
+    {
+      "id": "sigoi-offline",
+      "name": "SIGOI v8.0 · Organización institucional · Offline",
+      "file": "sigoi_v8_0_offline.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "school",
+      "description": "Edición con recursos integrados para usar sin conexión. Organiza el gobierno escolar, los comités, las áreas de gestión y los documentos de tu institución.",
+      "tags": [
+        "sigoi",
+        "institucional",
+        "gobierno escolar",
+        "comites",
+        "gestion",
+        "colegio"
+      ],
+      "features": [
+        "Estructura institucional en seis ramas con integrantes y responsables.",
+        "Agenda de sesiones, actas y seguimiento de documentos y planes.",
+        "Contexto de la institución configurable, búsqueda y copias de respaldo JSON."
+      ],
+      "requirements": "Bibliotecas principales incorporadas en este HTML. Abrir enlaces externos requiere internet.",
+      "tone": "#e9edfa",
+      "ink": "#4057a1",
+      "offline": true,
+      "rank": 32,
+      "size": 289434,
+      "publishedAt": "2026-10-21T14:15:15Z",
+      "preview": "previews/sigoi.jpg",
+      "previewSmall": "previews/sigoi-480.webp",
+      "previewMedium": "previews/sigoi-800.webp",
+      "publicationCommit": "9431cb5eafb07077881743178aab17aacd37d4a4"
+    },
+    {
+      "id": "toby-vocales-offline",
+      "name": "Toby y las vocales · Offline",
+      "file": "toby_el_sabueso_de_las_vocales_3d_offline.html",
+      "category": "educacion",
+      "categoryLabel": "Educación",
+      "icon": "game",
+      "tone": "#e6eef8",
+      "ink": "#3f6192",
+      "offline": true,
+      "rank": 33,
+      "description": "Edición con recursos integrados para usar sin conexión. Un juego 3D para explorar las vocales con Toby, aprender y avanzar entre niveles.",
+      "tags": [
+        "juego",
+        "vocales",
+        "ninos",
+        "lectura",
+        "3d",
+        "toby"
+      ],
+      "features": [
+        "Exploración de letras en un escenario 3D.",
+        "Niveles y guía de vocales y consonantes.",
+        "Controles del juego y apoyo de voz del navegador."
+      ],
+      "requirements": "Bibliotecas principales incorporadas en este HTML. El escenario 3D requiere WebGL y aceleración gráfica compatibles.",
+      "size": 749573,
+      "sha256": "6d3dc1c4ae2a4637f9fc303b09682fb8f459e500e2f9b04b41170f8e4f52e27f",
+      "preview": "previews/toby-vocales.jpg",
+      "publishedAt": "2026-10-21T13:31:09Z",
+      "publicationCommit": "e548f726c2367e2f8d4d866cb0fd3c89733c9ccf",
+      "previewSmall": "previews/toby-vocales-480.webp",
+      "previewMedium": "previews/toby-vocales-800.webp"
     }
-  ]
+  ],
+  "statsSnapshot": {
+    "version": 1,
+    "time": 1792592263622,
+    "complete": true,
+    "items": [
+      [
+        "apa-word-studio",
+        {
+          "count": 0,
+          "versions": 7,
+          "latest": {
+            "id": "662737948",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/APA_Word_Studio_SuperApp_Offline.html",
+            "size": 2694513,
+            "count": 0,
+            "date": 1792592164000,
+            "digest": "sha256:07421fde01fdb5c906bd2cade013d6f7d3ac1af2ba6f375854c88a87db72388b"
+          },
+          "measuredSince": 1792518196000
+        }
+      ],
+      [
+        "arboria",
+        {
+          "count": 0,
+          "versions": 34,
+          "latest": {
+            "id": "662736827",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/arboria-super-studio.html",
+            "size": 120776,
+            "count": 0,
+            "date": 1792592140000,
+            "digest": "sha256:0f7dbd650e606fd76a40745099a1d1a22b68205eda46cb906826ab1e668d4817"
+          },
+          "measuredSince": 1792158464000
+        }
+      ],
+      [
+        "aula-magica",
+        {
+          "count": 30,
+          "versions": 44,
+          "latest": {
+            "id": "662736388",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/AulaMagica.html",
+            "size": 357243,
+            "count": 0,
+            "date": 1792592130000,
+            "digest": "sha256:e44741673bf600643d302bc686fc3c6def84cc4cce5ed72ec8547bab4039d6c5"
+          },
+          "measuredSince": 1792009867000
+        }
+      ],
+      [
+        "b64-studio",
+        {
+          "count": 0,
+          "versions": 27,
+          "latest": {
+            "id": "662737224",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/b64_studio_max_superapp_almac_n_inerte.html",
+            "size": 134327,
+            "count": 0,
+            "date": 1792592149000,
+            "digest": "sha256:38204ac7ce0017a4fc54d4b33d02b8c05e469f6baaf8ff063a5eebe3e42d74e7"
+          },
+          "measuredSince": 1792294224000
+        }
+      ],
+      [
+        "corte-studio",
+        {
+          "count": 11,
+          "versions": 44,
+          "latest": {
+            "id": "662736511",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/Corte_Studio_Final.html",
+            "size": 13968438,
+            "count": 0,
+            "date": 1792592133000,
+            "digest": "sha256:ad8d2927f66c23e2df87ed165c4bff71dfc6064cd59b22eb2964205d80a67f33"
+          },
+          "measuredSince": 1792009867000
+        }
+      ],
+      [
+        "cumulo",
+        {
+          "count": 7,
+          "versions": 44,
+          "latest": {
+            "id": "662736687",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/Cumulo_Nubes_de_Palabras.html",
+            "size": 182919,
+            "count": 0,
+            "date": 1792592137000,
+            "digest": "sha256:08481d4937b27029058613c2da7d35c4e4ef1e09aa378fc215d92af3a3aa1857"
+          },
+          "measuredSince": 1792009867000
+        }
+      ],
+      [
+        "docentepro",
+        {
+          "count": 1,
+          "versions": 15,
+          "latest": {
+            "id": "662737636",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/DocentePRO_1278_SuperApp_2026.html",
+            "size": 94642,
+            "count": 0,
+            "date": 1792592158000,
+            "digest": "sha256:29fea31f7b7e876b774aa9359910661b646276c9380dd06bc15313877f9c9a85"
+          },
+          "measuredSince": 1792465895000
+        }
+      ],
+      [
+        "edubingo",
+        {
+          "count": 3,
+          "versions": 34,
+          "latest": {
+            "id": "662736866",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/edubingo_pro_studio_multigenerador.html",
+            "size": 193373,
+            "count": 0,
+            "date": 1792592141000,
+            "digest": "sha256:36abb2cc974b3a76d32bd722fcc010d2e85f46a2fb04c63195b9821ab73605b9"
+          },
+          "measuredSince": 1792158464000
+        }
+      ],
+      [
+        "edulab",
+        {
+          "count": 4,
+          "versions": 21,
+          "latest": {
+            "id": "662737351",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/EduLab_60_laboratorios_interactivos.html",
+            "size": 201159,
+            "count": 0,
+            "date": 1792592152000,
+            "digest": "sha256:4d690d3764d0e5a47b92a4ed497a03e1fdf18c47e78979377bce9bfc16f81d91"
+          },
+          "measuredSince": 1792377598000
+        }
+      ],
+      [
+        "electrolab",
+        {
+          "count": 2,
+          "versions": 21,
+          "latest": {
+            "id": "662737413",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/ElectroLab_Studio_v4_Offline_Auditado.html",
+            "size": 236282,
+            "count": 0,
+            "date": 1792592154000,
+            "digest": "sha256:ca9161562acb6de13db63ddac209dd4fecf78b425c20def3f1f083bdeb1d6dac"
+          },
+          "measuredSince": 1792377598000
+        }
+      ],
+      [
+        "fruitquest",
+        {
+          "count": 1,
+          "versions": 15,
+          "latest": {
+            "id": "662737711",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/FruitQuest_English_Offline_SuperApp.html",
+            "size": 1360881,
+            "count": 0,
+            "date": 1792592159000,
+            "digest": "sha256:7584ead84a9ed3d1c4432577baa155599b994a00ebde1f3d5a19bf0a11bb2278"
+          },
+          "measuredSince": 1792465895000
+        }
+      ],
+      [
+        "gantt",
+        {
+          "count": 4,
+          "versions": 34,
+          "latest": {
+            "id": "662736767",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/Gantt_Studio.html",
+            "size": 131984,
+            "count": 0,
+            "date": 1792592138000,
+            "digest": "sha256:2d588b68166e9ca05003b2c2efeffb032f6ccf3880a233f6bd2fa298b609df69"
+          },
+          "measuredSince": 1792158464000
+        }
+      ],
+      [
+        "guardianes",
+        {
+          "count": 9,
+          "versions": 34,
+          "latest": {
+            "id": "662736928",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/guardianes_del_saber_videojuego_educativo_2d_offline.html",
+            "size": 91046,
+            "count": 0,
+            "date": 1792592143000,
+            "digest": "sha256:8a5cea5c92c4012220948c1a2b1eced13ca9d5e2561c7011e22497ed5e6b093a"
+          },
+          "measuredSince": 1792158464000
+        }
+      ],
+      [
+        "libroligero",
+        {
+          "count": 0,
+          "versions": 5,
+          "latest": {
+            "id": "662738034",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/LibroLigero_Studio_Offline.html",
+            "size": 3246897,
+            "count": 0,
+            "date": 1792592166000,
+            "digest": "sha256:e31081db03d2f912f764d0817358b2e24d7fc7ef9943146c6040b0c7c9c37098"
+          },
+          "measuredSince": 1792518379000
+        }
+      ],
+      [
+        "navegadores",
+        {
+          "count": 0,
+          "versions": 15,
+          "latest": {
+            "id": "662737879",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/navegadopresYbuscadores.html",
+            "size": 122331,
+            "count": 0,
+            "date": 1792592162000,
+            "digest": "sha256:b0b8f39c54806dec13bd0dd4480c3d155f2d63851bf8196fc8c733b2ae5e645f"
+          },
+          "measuredSince": 1792465895000
+        }
+      ],
+      [
+        "nexo",
+        {
+          "count": 2,
+          "versions": 21,
+          "latest": {
+            "id": "662737479",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/Nexo_Circuitos_Laboratorio_Offline.html",
+            "size": 95532,
+            "count": 0,
+            "date": 1792592155000,
+            "digest": "sha256:3ccc18c0d67a38036546a76bd85837ede40b4e9e0e7b8c64c3f487e5cf294d23"
+          },
+          "measuredSince": 1792377598000
+        }
+      ],
+      [
+        "nexo-convert",
+        {
+          "count": 0,
+          "versions": 7,
+          "latest": {
+            "id": "662738143",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/Nexo_Convert_Studio_Offline.html",
+            "size": 13756313,
+            "count": 0,
+            "date": 1792592168000,
+            "digest": "sha256:b383a0578826e56e60c2ae111eacfd7765e917bb5eaefb7a7a3b0fe5ccb33bac"
+          },
+          "measuredSince": 1792518196000
+        }
+      ],
+      [
+        "omnirec",
+        {
+          "count": 0,
+          "versions": 7,
+          "latest": {
+            "id": "662738419",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/omnirec_studio_pro_grabador_de_pantalla_estudio_m_vil_desktop.html",
+            "size": 118506,
+            "count": 0,
+            "date": 1792592174000,
+            "digest": "sha256:dee7e0ce73aad2dbdca19a5292af89ac58925a7d5ccce739618e526bfbb77e60"
+          },
+          "measuredSince": 1792518196000
+        }
+      ],
+      [
+        "omniword",
+        {
+          "count": 8,
+          "versions": 43,
+          "latest": {
+            "id": "662736438",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/OmniWord_SuperApp_Office_Pro.html",
+            "size": 9170315,
+            "count": 0,
+            "date": 1792592131000,
+            "digest": "sha256:8ef77ec27b560776364e7e0968a7efc75610b0176e3b766efa7fac6f7d5bac05"
+          },
+          "measuredSince": 1792010415000
+        }
+      ],
+      [
+        "orbita",
+        {
+          "count": 0,
+          "versions": 21,
+          "latest": {
+            "id": "662737545",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/orbita-guardianes-puntuacion.html",
+            "size": 79270,
+            "count": 0,
+            "date": 1792592157000,
+            "digest": "sha256:aa37489ca2c8abcd5d1831b01232ea4fdc25381f9b79b7d4360528dfed1b8281"
+          },
+          "measuredSince": 1792377598000
+        }
+      ],
+      [
+        "sigoi",
+        {
+          "count": 1,
+          "versions": 27,
+          "latest": {
+            "id": "662737264",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/organizaci_n_institucional_de_colombia_sigoi_v8_0.html",
+            "size": 191987,
+            "count": 0,
+            "date": 1792592151000,
+            "digest": "sha256:e99f0d6f58b077081fb57626b5d16ab47a11278a41a47d0e1191c5602d700201"
+          },
+          "measuredSince": 1792294224000
+        }
+      ],
+      [
+        "pdf-pro-3",
+        {
+          "count": 0,
+          "versions": 7,
+          "latest": {
+            "id": "662738526",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/pdf_pro_studio_3.html",
+            "size": 2318790,
+            "count": 0,
+            "date": 1792592176000,
+            "digest": "sha256:dc1162884ee037ba9b2188dee3eac4dcae3be5c47351a6285cf03fcbe45b3d04"
+          },
+          "measuredSince": 1792518196000
+        }
+      ],
+      [
+        "pdf",
+        {
+          "count": 8,
+          "versions": 34,
+          "latest": {
+            "id": "662737024",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/pdf_pro_studio_suite_offline.html",
+            "size": 160820,
+            "count": 0,
+            "date": 1792592145000,
+            "digest": "sha256:0ca364f981155b2d3c6158502b18ec1a44ce3e33085700dd61c4db3b0bde9bb8"
+          },
+          "measuredSince": 1792158464000
+        }
+      ],
+      [
+        "serpiente-full",
+        {
+          "count": 1,
+          "versions": 34,
+          "latest": {
+            "id": "662737146",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/serpienteSabiaFull.html",
+            "size": 161854,
+            "count": 0,
+            "date": 1792592148000,
+            "digest": "sha256:bd91f7a568c169f41aeddd76598aec46fbdc2d5312e746168fb3e55feb467dde"
+          },
+          "measuredSince": 1792158464000
+        }
+      ],
+      [
+        "sierra-audio",
+        {
+          "count": 0,
+          "versions": 7,
+          "latest": {
+            "id": "662738254",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/Sierra_Audio_Studio_Offline.html",
+            "size": 1058285,
+            "count": 0,
+            "date": 1792592170000,
+            "digest": "sha256:43723603889060534034bfd00d4b9067c58ec855e04d90acf2f769aed592456d"
+          },
+          "measuredSince": 1792518196000
+        }
+      ],
+      [
+        "serpiente-clasica",
+        {
+          "count": 1,
+          "versions": 34,
+          "latest": {
+            "id": "662737087",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/s_per_serpiente_sabia_aventura_educativa.html",
+            "size": 67475,
+            "count": 0,
+            "date": 1792592146000,
+            "digest": "sha256:4f2099e42af86f1be1670cfdc53f2bcc7b9696c13442015bd534c17c7d819d73"
+          },
+          "measuredSince": 1792158464000
+        }
+      ],
+      [
+        "ia-studio",
+        {
+          "count": 0,
+          "versions": 7,
+          "latest": {
+            "id": "662738345",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/TecnoEducaTics_IA_Studio.html",
+            "size": 31359,
+            "count": 0,
+            "date": 1792592172000,
+            "digest": "sha256:351b2419966e79965393a1bacf0ae2d5ff3867871914a35a3895a4a35102c423"
+          },
+          "measuredSince": 1792518196000
+        }
+      ],
+      [
+        "toby-vocales",
+        {
+          "count": 4,
+          "versions": 44,
+          "latest": {
+            "id": "662736628",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/toby_el_sabueso_de_las_vocales_3d.html",
+            "size": 90284,
+            "count": 0,
+            "date": 1792592136000,
+            "digest": "sha256:6d3dc1c4ae2a4637f9fc303b09682fb8f459e500e2f9b04b41170f8e4f52e27f"
+          },
+          "measuredSince": 1792009867000
+        }
+      ],
+      [
+        "vibestage",
+        {
+          "count": 0,
+          "versions": 15,
+          "latest": {
+            "id": "662737809",
+            "url": "https://github.com/vivecodig2026/opensource/releases/download/apps-9431cb5eafb07077881743178aab17aacd37d4a4/VibeStage_Studio_Pro_Offline.html",
+            "size": 73273,
+            "count": 0,
+            "date": 1792592161000,
+            "digest": "sha256:6584a2bec70c1c549672c40c9af57258301388c6d96b70ff8356fe622bc58dbd"
+          },
+          "measuredSince": 1792465895000
+        }
+      ]
+    ]
+  }
 }
 </script>
 <script>'use strict';
@@ -1122,7 +1659,7 @@ const APPS=CONFIG.apps,byId=new Map(APPS.map(a=>[a.id,a])),byFile=new Map(APPS.m
 const API=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
 const REPO=`https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
 const RAW=`https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/`;
-const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v3`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v11`;
+const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v3`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v12`;
 const stats=new Map(),health=new Map(APPS.map(a=>[a.id,{available:a.available!==false,size:a.size,reason:a.unavailableReason||""}]));
 const MAX_FILE=60*1024*1024,CACHE_TTL=15*60*1000;
 let category='all',statsState='loading',statsTime=0,statsComplete=true,statsBusy=null,lastAttempt=0,toastTimer=null,detailApp=null,modalOpener=null;
@@ -1151,7 +1688,7 @@ function dateLabel(value){const d=new Date(value);return value&&Number.isFinite(
 function measuredLabel(app){const d=stats.get(app.id)?.measuredSince;return d?(statsComplete?'Registro desde ':'Registro disponible desde ')+dateLabel(d):statsState==='loading'?'Consultando inicio del registro…':'Inicio del registro no disponible';}
 function appDates(app){const saved=['cached','stale'].includes(statsState);return '<div class="app-dates"><span>Publicada el '+esc(dateLabel(app.publishedAt))+'</span><span>'+esc(measuredLabel(app))+'</span>'+(stats.has(app.id)&&statsTime?'<span>'+(saved?'Consulta guardada: ':'Contador consultado: ')+esc(new Date(statsTime).toLocaleString('es-CO',{timeZone:'America/Bogota'}))+' · Colombia</span>':'')+'</div>';}
 
-function card(app,index=0){const available=!app.catalogIssue&&health.get(app.id).available,asset=stats.get(app.id)?.latest,canDownload=!app.catalogIssue&&(available||!!asset),size=asset?.size||health.get(app.id).size;const badge=!canDownload?'En actualización':app.offline?'Offline':'Necesita internet';const className=!canDownload?'unavailable':app.offline?'':'online';const sourceTitle=app.offline?'Recursos principales incluidos. Consulta las funciones que dependen del navegador.':'Esta versión carga bibliotecas externas y necesita conexión.';let art=app.id==='omniword'?'<span class="art-word">Aa</span>':app.id==='toby-vocales'?'<span class="art-word">A e i</span>':'<span class="art-bar"></span>'.repeat(4);return `<article class="app-card" data-app="${app.id}" style="--tone:${app.tone};--tone-ink:${app.ink}">${app.preview?`<button class="card-visual preview-button" data-detail="${app.id}" aria-label="Ver captura y detalles de ${esc(app.name)}"><picture><source type="image/webp" srcset="${esc(app.previewSmall)} 480w, ${esc(app.previewMedium)} 800w" sizes="(max-width:720px) calc(100vw - 36px), (max-width:1050px) calc((100vw - 84px)/2), (max-width:1256px) calc((100vw - 104px)/3), 384px"><img src="${esc(app.preview)}" alt="Captura real de ${esc(app.name)} abierta" loading="${index<3?'eager':'lazy'}" fetchpriority="${index===0?'high':'auto'}" decoding="async" width="1363" height="936"></picture><span class="preview-label">Vista real · Ampliar</span></button>`:`<div class="card-visual" aria-hidden="true"><span class="app-mark">${icon(app.icon)}</span><span class="card-art">${art}</span></div>`}<div class="card-content"><div class="card-topline"><span>${esc(app.categoryLabel)}</span><span class="state-badge ${className}" title="${esc(sourceTitle)}"><span class="state-dot"></span>${badge}</span></div>${popularityBadge(app)}<h3 class="card-title">${esc(app.name)}</h3><p class="app-description">${esc(app.description)}</p>${appDates(app)}<div class="card-meta"><span>${icon('file')}HTML · ${bytes(size)}</span><span title="Registros públicos de GitHub Releases; no visitas ni personas únicas.">${icon('download')}${metric(app)}</span></div><div class="card-buttons"><button class="btn primary" data-download="${app.id}" ${canDownload?'':'disabled'}>${icon('download')}<span>${canDownload?'Descargar gratis':'No disponible'}</span></button>${available?`<a class="btn secondary" href="${esc(appURL(app))}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${esc(app.name)} en otra pestaña">Abrir ${icon('external')}</a>`:`<button class="btn secondary" disabled>Demo pendiente</button>`}</div><p class="download-status" id="download-${app.id}" role="status">${!canDownload?esc(app.catalogIssue||health.get(app.id).reason||"Archivo pendiente de publicación."):""}</p><div class="card-bottom"><button class="text-btn" data-custom="${app.id}">Personalizar ${icon('arrow')}</button><button class="text-btn muted" data-detail="${app.id}">Ver detalles</button></div></div></article>`;}
+function card(app,index=0){const available=!app.catalogIssue&&health.get(app.id).available,asset=stats.get(app.id)?.latest,canDownload=!app.catalogIssue&&(available||!!asset),size=asset?.size||health.get(app.id).size;const badge=!canDownload?'Archivo no disponible':app.offline?'Offline':'Necesita internet';const className=!canDownload?'unavailable':app.offline?'':'online';const sourceTitle=app.offline?'Recursos principales incluidos. Consulta las funciones que dependen del navegador.':'Esta versión carga bibliotecas externas y necesita conexión.';let art=app.id==='omniword'?'<span class="art-word">Aa</span>':app.id==='toby-vocales'?'<span class="art-word">A e i</span>':'<span class="art-bar"></span>'.repeat(4);return `<article class="app-card" data-app="${app.id}" style="--tone:${app.tone};--tone-ink:${app.ink}">${app.preview?`<button class="card-visual preview-button" data-detail="${app.id}" aria-label="Ver captura y detalles de ${esc(app.name)}"><picture><source type="image/webp" srcset="${esc(app.previewSmall)} 480w, ${esc(app.previewMedium)} 800w" sizes="(max-width:720px) calc(100vw - 36px), (max-width:1050px) calc((100vw - 84px)/2), (max-width:1256px) calc((100vw - 104px)/3), 384px"><img src="${esc(app.preview)}" alt="Captura real de ${esc(app.name)} abierta" loading="${index<3?'eager':'lazy'}" fetchpriority="${index===0?'high':'auto'}" decoding="async" width="1363" height="936"></picture><span class="preview-label">Vista real · Ampliar</span></button>`:`<div class="card-visual" aria-hidden="true"><span class="app-mark">${icon(app.icon)}</span><span class="card-art">${art}</span></div>`}<div class="card-content"><div class="card-topline"><span>${esc(app.categoryLabel)}</span><span class="state-badge ${className}" title="${esc(sourceTitle)}"><span class="state-dot"></span>${badge}</span></div>${popularityBadge(app)}<h3 class="card-title">${esc(app.name)}</h3><p class="app-description">${esc(app.description)}</p>${appDates(app)}<div class="card-meta"><span>${icon('file')}HTML · ${bytes(size)}</span><span class="download-count" title="Suma de descargas registradas por GitHub Releases en todas las versiones; no visitas ni personas únicas.">${icon('download')}${metric(app)}</span></div><div class="card-buttons"><button class="btn primary" data-download="${app.id}" ${canDownload?'':'disabled'}>${icon('download')}<span>${canDownload?'Descargar gratis':'No disponible'}</span></button>${available?`<a class="btn secondary" href="${esc(appURL(app))}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${esc(app.name)} en otra pestaña">Abrir ${icon('external')}</a>`:`<button class="btn secondary" disabled>Demo pendiente</button>`}</div><p class="download-status" id="download-${app.id}" role="status">${!canDownload?esc(app.catalogIssue||health.get(app.id).reason||"Archivo pendiente de publicación."):""}</p><div class="card-bottom"><button class="text-btn" data-custom="${app.id}">Personalizar ${icon('arrow')}</button><button class="text-btn muted" data-detail="${app.id}">Ver detalles</button></div></div></article>`;}
 // Preserve preview nodes and browser image state through stats refreshes, sorting and filtering.
 const cardNodes=new Map();
 function reconcileCards(items){const grid=$('#appGrid'),wanted=[];
@@ -1165,7 +1702,7 @@ if(!items.length)grid.innerHTML='<div class="empty"><h3>No encontramos esa herra
 function renderApps(announce=true){const items=currentApps(),focused=document.activeElement?.dataset;const active=focused?.download?['download',focused.download]:focused?.detail?['detail',focused.detail]:focused?.custom?['custom',focused.custom]:null;reconcileCards(items);if(items.length===APPS.length&&category==='all'&&!$('#search').value&&!$('#offlineOnly').checked)$('#appGrid').insertAdjacentHTML('beforeend',`<aside class="custom-card"><span class="circle">${icon('plus')}</span><h3>¿Y si hacemos<br>la tuya?</h3><p>Tu idea puede convertirse en una herramienta útil para tu trabajo o tu comunidad.</p><button class="text-btn" data-request="new">Cuéntame qué necesitas ${icon('arrow')}</button></aside>`);$('#catalogCount').textContent=items.length+' de '+APPS.length+' proyectos';if(announce)$('#resultAnnouncement').textContent=items.length+' aplicaciones encontradas.';for(const id of busyDownloads){for(const button of $$(`[data-download="${id}"]`)){button.disabled=true;button.querySelector('span').textContent='Preparando…';}}if(active)$(`[data-${active[0]}="${active[1]}"]`)?.focus({preventScroll:true});}
 function updateMetrics(){let text;if(statsState==='loading')text='Consultando el historial de descargas…';else if(!stats.size)text=statsState==='empty'||statsState==='cached'?'Aún no hay historial medido de descargas.':statsState==='offline'?'Sin conexión · historial de descargas no disponible.':'Estadísticas no disponibles temporalmente.';else{const total=[...stats.values()].reduce((s,v)=>s+v.count,0);text=(statsComplete?'':'Al menos ')+total.toLocaleString('es-CO')+' descargas registradas en GitHub'+(['stale','cached'].includes(statsState)?' · consulta guardada, pendiente de actualizar.':'.')+(statsTime?' Consulta: '+new Date(statsTime).toLocaleString('es-CO',{timeZone:'America/Bogota'})+' · Colombia.':'');}$('#metricsStatus').textContent=text;}
 async function directDownload(app,status){const local=location.protocol==='file:';if(local){const a=document.createElement('a');a.href=appURL(app);a.download=app.file;a.click();status('Descarga local. Este HTML debe estar junto al index; no se suma al contador global.');return;}const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),90000);try{const r=await fetch(appURL(app),{signal:controller.signal,credentials:'omit'});if(!r.ok)throw Error('El archivo no está disponible ('+r.status+').');const encoding=(r.headers.get('content-encoding')||'identity').toLowerCase();const length=encoding==='identity'?Number(r.headers.get('content-length')):0;if(length>MAX_FILE)throw Error('El archivo supera el tamaño previsto. Ábrelo desde GitHub.');const reader=r.body?.getReader();let chunks=[],received=0,last=0;if(reader){for(;;){const {value,done}=await reader.read();if(done)break;received+=value.byteLength;if(received>MAX_FILE){await reader.cancel();throw Error('El archivo supera el límite de descarga.');}chunks.push(value);if(Date.now()-last>250){status('Descargando '+bytes(received)+(length?' de '+bytes(length):'')+'…');last=Date.now();}}}else{const buf=await r.arrayBuffer();received=buf.byteLength;chunks=[new Uint8Array(buf)];}if(length&&received!==length)throw Error('La transferencia quedó incompleta. Vuelve a intentar la descarga.');if(received<256||received>MAX_FILE)throw Error('El archivo está vacío o incompleto. Inténtalo más tarde.');const blob=new Blob(chunks,{type:'text/html;charset=utf-8'}),begin=await blob.slice(0,8192).text();if(!/<(?:!doctype\s+html|html\b)/i.test(begin))throw Error('El servidor no devolvió una aplicación HTML.');const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=app.file;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);status('Archivo entregado al navegador. Descarga directa, sin registro global.');toast('Guarda '+app.file+' y ábrelo con tu navegador.');}finally{clearTimeout(timer);}}
-async function downloadApp(id){const app=byId.get(id);if(!app||busyDownloads.has(id))return;if(app.catalogIssue){toast(app.catalogIssue);return;}const status=message=>{const el=$('#download-'+id);if(el)el.textContent=message;if($('#detailDialog').open&&detailApp?.id===id){const detail=$('#detailDownloadStatus');if(detail)detail.textContent=message;}};busyDownloads.add(id);for(const button of $$(`[data-download="${id}"]`)){button.disabled=true;button.querySelector('span').textContent='Preparando…';}try{if(statsBusy){status('Buscando la versión publicada…');await statsBusy;}const asset=stats.get(id)?.latest;if(asset){const a=document.createElement('a');a.href=asset.url;a.rel='noopener noreferrer';a.download=app.file;document.body.appendChild(a);a.click();a.remove();status('Descarga solicitada a GitHub. El contador se actualiza después de su registro.');}else{if(!health.get(id).available)throw Error('Esta herramienta está en actualización.');await directDownload(app,status);}}catch(e){status(e.name==='AbortError'?'La descarga tardó demasiado. Puedes volver a intentarlo.':e.message);toast('No se pudo descargar '+app.name+'. '+(e.name==='AbortError'?'Revisa tu conexión.':e.message));}finally{busyDownloads.delete(id);for(const b of $$(`[data-download="${id}"]`)){b.disabled=!(health.get(id).available||stats.has(id));b.querySelector('span').textContent=b.disabled?'No disponible':'Descargar gratis';}}}
+async function downloadApp(id){const app=byId.get(id);if(!app||busyDownloads.has(id))return;if(app.catalogIssue){toast(app.catalogIssue);return;}const status=message=>{const el=$('#download-'+id);if(el)el.textContent=message;if($('#detailDialog').open&&detailApp?.id===id){const detail=$('#detailDownloadStatus');if(detail)detail.textContent=message;}};busyDownloads.add(id);for(const button of $$(`[data-download="${id}"]`)){button.disabled=true;button.querySelector('span').textContent='Preparando…';}try{if(statsBusy){status('Buscando la versión publicada…');await statsBusy;}const asset=stats.get(id)?.latest;if(asset){const a=document.createElement('a');a.href=asset.url;a.rel='noopener noreferrer';a.download=app.file;document.body.appendChild(a);a.click();a.remove();status('Descarga solicitada a GitHub. El contador se actualiza después de su registro.');}else{if(!health.get(id).available)throw Error('El archivo no está disponible en este momento.');await directDownload(app,status);}}catch(e){status(e.name==='AbortError'?'La descarga tardó demasiado. Puedes volver a intentarlo.':e.message);toast('No se pudo descargar '+app.name+'. '+(e.name==='AbortError'?'Revisa tu conexión.':e.message));}finally{busyDownloads.delete(id);for(const b of $$(`[data-download="${id}"]`)){b.disabled=!(health.get(id).available||stats.has(id));b.querySelector('span').textContent=b.disabled?'No disponible':'Descargar gratis';}}}
 function showDialog(id){const dialog=$('#'+id);for(const d of $$('dialog[open]'))d.close();modalOpener=document.activeElement;dialog.showModal();}
 for(const dialog of $$('dialog')){dialog.addEventListener('click',e=>{if(e.target.closest('[data-close]'))dialog.close();if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});dialog.addEventListener('close',()=>{if(modalOpener?.isConnected)modalOpener.focus({preventScroll:true});});}
 function renderDetail(app){const s=stats.get(app.id),h=health.get(app.id),available=!app.catalogIssue&&(h.available||!!s);$('#detailTitle').textContent=app.name;$('#detailCategory').textContent=app.categoryLabel+' · Gratis';$('#detailBody').innerHTML=`${app.preview?`<figure class="detail-preview"><a href="${esc(app.preview)}" target="_blank" rel="noopener noreferrer"><img src="${esc(app.preview)}" alt="Captura real de ${esc(app.name)} abierta" width="1363" height="936"></a><figcaption>Captura de la aplicación abierta. Selecciona la imagen para ampliarla.</figcaption></figure>`:''}<p>${esc(app.description)}</p><ul class="app-features">${app.features.map(f=>'<li>'+esc(f)+'</li>').join('')}</ul><div class="notice">${!available?'El archivo publicado no está listo para descargarse. Se mantiene visible el proyecto para que puedas conocerlo. ':''}${esc(app.requirements)}</div><dl class="detail-meta"><div><dt>Publicada en el repositorio</dt><dd>${esc(dateLabel(app.publishedAt))}</dd></div><div><dt>Inicio del registro de descargas</dt><dd>${esc(measuredLabel(app))}</dd></div><div><dt>Uso sin conexión</dt><dd>${app.offline?'Recursos principales incluidos':'Necesita internet'}</dd></div><div><dt>Tamaño del HTML</dt><dd>${bytes(s?.latest.size||h.size)}${app.offline?'':' + recursos externos'}</dd></div><div><dt>Descargas registradas</dt><dd>${metric(app)}</dd></div><div><dt>Archivo</dt><dd>${esc(app.file)}</dd></div></dl><div class="actions"><button class="btn primary" data-download="${app.id}" ${available?'':'disabled'}>${icon('download')}<span>Descargar gratis</span></button><a class="btn secondary" href="${sourceURL(app)}" target="_blank" rel="noopener noreferrer">${icon('code')}Ver código</a><button class="btn ghost" data-custom="${app.id}">Personalizar</button></div><p id="detailDownloadStatus" class="download-status" role="status"></p><p class="form-note">${s?'Se descargará la versión publicada en GitHub Releases; la demo puede tener cambios posteriores.':'La descarga directa funciona cuando el archivo está disponible. Su uso no se suma a un contador global.'}</p>`;}
@@ -1222,7 +1759,7 @@ $('#mainNav').addEventListener('click',e=>{if(e.target.closest('a')){$('#mainNav
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#mainNav').classList.remove('open');$('#menuToggle').setAttribute('aria-expanded','false');$('#menuToggle').setAttribute('aria-label','Abrir menú');}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-lastAttempt>=300000)loadStats();});
 window.addEventListener('online',()=>loadStats());
-applyCachedStats(storageRead(cacheKey));renderApps(false);updateMetrics();loadStats();loadCatalogHealth();
+const savedStats=storageRead(cacheKey);applyCachedStats(CONFIG.statsSnapshot);if(savedStats?.time>statsTime)applyCachedStats(savedStats);renderApps(false);updateMetrics();loadStats();loadCatalogHealth();
 </script>
 </body></html>
 
