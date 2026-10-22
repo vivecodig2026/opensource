@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-KuaLwkoGjB6PXHpwV3dHsymbb/3W/Gd4BXJgglBOYcs=' 'sha256-8LR1wU77cgLdi/37qOntz8lOXmyX+ekB7Ju4PwPcrz8='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-puand9F6YjsIbHTIT/bRhCGPilkW4m34mA0nIx3zkKs=' 'sha256-4/iAR82BIVCwkOH7lEG9QANURBGq0hS8haW7qspm/sk='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08786d">
@@ -122,7 +122,7 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script id="siteConfig" type="application/json">
 {
-  "version": 15,
+  "version": 16,
   "owner": "vivecodig2026",
   "repo": "opensource",
   "branch": "main",
@@ -844,7 +844,7 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
     },
     {
       "id": "sierra-audio",
-      "name": "Sierra Audio Studio",
+      "name": "Sierra AudioUnir Fusión",
       "file": "Sierra_Audio_Studio_Offline.html",
       "category": "creatividad",
       "categoryLabel": "Creatividad",
@@ -853,20 +853,21 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
       "ink": "#1d6d58",
       "offline": true,
       "rank": 27,
-      "description": "Edita audio en varias pistas, recorta y combina clips, graba voz y exporta tus proyectos desde el navegador.",
+      "description": "Une notas de voz y audios, edita en varias pistas, organiza recortes y exporta tu mezcla sin conexión.",
       "tags": [
         "audio",
-        "musica",
+        "unir audios",
+        "notas de voz",
         "grabacion",
         "multipista"
       ],
       "features": [
-        "Edición por pistas, cortes y selección de fragmentos.",
-        "Normalización, duplicación e inversión de clips.",
-        "Proyectos locales y exportación MP3 con motor integrado."
+        "Hasta 64 pistas, unión en fila y biblioteca de recortes con transiciones.",
+        "Mezclador con volumen, panorama, ecualización y compresión.",
+        "Exportación MP3 y WAV integrada, conversión por lotes y proyectos locales."
       ],
-      "requirements": "La grabación requiere permiso de micrófono. La importación de medios depende de los formatos compatibles con el navegador.",
-      "size": 1058285,
+      "requirements": "El micrófono requiere permiso. La importación y la exportación OGG, WebM o M4A dependen de los códecs del navegador. MP3 y WAV funcionan sin conexión.",
+      "size": 1207498,
       "publishedAt": "2026-10-20T17:27:36Z",
       "publicationCommit": "6b54f3e536d329de36096bf6c0fc6a99fc99319f",
       "preview": "previews/sierra-audio.jpg",
@@ -1575,7 +1576,7 @@ const APPS=CONFIG.apps,byId=new Map(APPS.map(a=>[a.id,a])),byFile=new Map(APPS.m
 const API=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
 const REPO=`https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
 const RAW=`https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/`;
-const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v3`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v15`;
+const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v3`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v16`;
 const stats=new Map(),health=new Map(APPS.map(a=>[a.id,{available:a.available!==false,size:a.size,reason:a.unavailableReason||""}]));
 const MAX_FILE=60*1024*1024,CACHE_TTL=15*60*1000;
 let category='all',statsState='loading',statsTime=0,statsComplete=true,statsBusy=null,lastAttempt=0,toastTimer=null,detailApp=null,modalOpener=null;
