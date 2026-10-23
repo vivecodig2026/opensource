@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-qa6dYofy+k5bpFpmfC/IjqD/fskC1wmUtNxbhDQQUeA=' 'sha256-4/iAR82BIVCwkOH7lEG9QANURBGq0hS8haW7qspm/sk='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-qa6dYofy+k5bpFpmfC/IjqD/fskC1wmUtNxbhDQQUeA=' 'sha256-53xDxHJTH5OSrqrCLtEGqHXOzctmOF8ZXaTU8qoDtVc='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08786d">
@@ -39,7 +39,9 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 .card-content>.download-status{order:1}.card-content>.card-meta{order:2}.card-content>.card-buttons{order:3}.card-content>.card-bottom{order:4}
 .app-dates{order:2;display:grid;gap:3px;color:var(--muted);font-size:11px;margin-top:auto;padding:12px 0}.card-content>.card-meta{margin-top:0}.support-wrap p+p{margin-top:14px}.support-promise{font-weight:650}.stats-table{min-width:650px}
 .preview-button picture{display:block;width:100%;height:100%}
-.download-count{font-weight:750;color:var(--green);font-size:14px}</style>
+.download-count{font-weight:750;color:var(--green);font-size:14px}
+.course-card h2{font-size:clamp(26px,2.7vw,34px);line-height:1.15}.course-card .bench-caption{margin-bottom:16px;align-items:center}.course-card .bench-caption svg{width:22px;height:22px}.course-intro{font-size:14px;line-height:1.6;color:var(--muted);margin-top:14px}.course-benefits{list-style:none;padding:0;margin:22px 0;display:grid;gap:15px}.course-benefits li{display:flex;gap:12px;align-items:flex-start}.course-benefits li>svg{width:22px;height:22px;color:var(--green);margin-top:3px}.course-benefits strong,.course-benefits div>span{display:block}.course-benefits strong{font-size:14px}.course-benefits div>span{font-size:13px;color:var(--muted);line-height:1.5;margin-top:2px}.course-offer{border-top:1px solid var(--line);padding-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.course-offer>span{font-size:13px;font-weight:650}.course-offer>strong{font-size:32px;letter-spacing:-.04em;line-height:1.2}.course-offer small{font-size:12px;letter-spacing:0}.course-card .course-cta{width:100%;margin-top:17px;min-height:48px}.course-note{font-size:12px;line-height:1.5;text-align:center;color:var(--muted);margin-top:10px}
+</style>
 </head>
 <body>
 <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden"><defs>
@@ -75,11 +77,19 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 <main id="inicio" class="shell">
 <section class="hero" aria-labelledby="heroTitle"><div class="hero-grid">
 <div class="hero-copy"><div class="eyebrow">Pequeñas herramientas. Más posibilidades.</div><h1 id="heroTitle">Apps gratuitas.<br>Tu trabajo,<br><em>más sencillo.</em></h1><p>Herramientas para enseñar, crear y organizarte desde el navegador. Descarga la que necesitas y, si tu idea va más allá, la desarrollamos a tu medida.</p><div class="hero-actions"><a class="btn primary" href="#catalogo">Explorar las apps <span data-icon="arrow"></span></a><button class="btn secondary" data-request="new">Solicitar una app</button></div><div class="hero-proof"><span><span data-icon="check"></span> Sin registro</span><span><span data-icon="check"></span> Descarga gratuita</span><span><span data-icon="check"></span> Código disponible</span></div></div>
-<div class="workbench" aria-label="Herramientas destacadas del catálogo"><div class="bench-caption"><span>TU CAJA DE HERRAMIENTAS</span><span>.HTML</span></div><div class="file-stack">
-<a class="file-tile" href="#catalogo" data-feature="aula-magica"><span class="file-icon" data-icon="school"></span><span><strong>Una clase más organizada</strong><small>Aula Mágica · Educación</small></span><span class="file-ext">.html</span></a>
-<a class="file-tile" href="#catalogo" data-feature="omniword"><span class="file-icon" data-icon="document"></span><span><strong>Ideas que toman forma</strong><small>OmniWord · Documentos</small></span><span class="file-ext">.html</span></a>
-<a class="file-tile" href="#catalogo" data-feature="corte-studio"><span class="file-icon" data-icon="video"></span><span><strong>Historias en movimiento</strong><small>Corte Studio · Video</small></span><span class="file-ext">.html</span></a>
-</div><div class="bench-footer"><span data-icon="file"></span> Elige una herramienta y hazla parte de tu día.</div></div>
+<aside class="workbench course-card" aria-labelledby="courseTitle">
+<div class="bench-caption"><span>APRENDE A CREAR CON IA</span><span data-icon="school"></span></div>
+<h2 id="courseTitle">Tus ideas pueden convertirse en herramientas.</h2>
+<p class="course-intro">Aprende a crear tus propios recursos educativos y aplicaciones con ayuda de la inteligencia artificial.</p>
+<ul class="course-benefits">
+<li><span data-icon="video"></span><div><strong>Videos pregrabados</strong><span>Avanza a tu ritmo, según tu disponibilidad.</span></div></li>
+<li><span data-icon="document"></span><div><strong>Recursos para tus necesidades</strong><span>Dale forma a ideas para tus clases, proyectos o trabajo.</span></div></li>
+<li><span data-icon="chat"></span><div><strong>4 mentorías online de 30 minutos</strong><span>Una por semana durante un mes. Pueden ser grupales o individuales.</span></div></li>
+</ul>
+<div class="course-offer"><span>Curso + 4 mentorías</span><strong>$50.000 <small>COP</small></strong></div>
+<a class="btn primary course-cta" id="courseContact" href="#a-medida" target="_blank" rel="noopener noreferrer">Quiero aprender a crear <span data-icon="arrow"></span></a>
+<p class="course-note">Escríbeme por WhatsApp para conocer el contenido y coordinar tu inscripción.</p>
+</aside>
 </div></section>
 <div class="model-strip" aria-label="Cómo se sostiene el proyecto"><div class="model-item"><span data-icon="download"></span><div><strong>Las apps son gratuitas</strong><small>Úsalas sin pagar una suscripción.</small></div></div><div class="model-item"><span data-icon="settings"></span><div><strong>El trabajo a medida se cotiza</strong><small>Financia desarrollo y herramientas de IA.</small></div></div><div class="model-item"><span data-icon="heart"></span><div><strong>Tu aporte es voluntario</strong><small>Ayuda a cubrir las suscripciones de IA.</small></div></div></div>
 <section id="catalogo" aria-labelledby="catalogTitle"><div class="section-head"><div><div class="eyebrow">Hechas para usarse</div><h2 id="catalogTitle">Encuentra tu próxima herramienta.</h2><p>Aplicaciones con recursos principales integrados. Descarga el HTML completo y úsalo sin conexión.</p></div><span class="count-pill" id="catalogCount">30 proyectos</span></div>
@@ -1627,6 +1637,7 @@ function openDetail(id){const app=byId.get(id);if(!app)return;detailApp=app;rend
 function setRequestType(){const kind=$('#requestType').value;$('#appField').hidden=kind==='new';$('#requestTitle').textContent=kind==='new'?'Construyamos tu aplicación.':kind==='feedback'?'Ayúdame a mejorar la app.':'Adaptemos una herramienta.';$('#needLabel').textContent=kind==='feedback'?'¿Qué ocurrió y cómo podemos reproducirlo?':'¿Qué necesitas resolver?';}
 function openRequest(kind='new',id){$('#requestForm').hidden=false;$('#requestReview').hidden=true;$('#requestError').textContent='';$('#requestType').value=['new','custom','feedback'].includes(kind)?kind:'new';if(id&&byId.has(id))$('#requestApp').value=id;setRequestType();showDialog('requestDialog');}
 function whatsapp(message){const phone=[110,108,104,107,107,99,111,109,107,104,105,108].map(n=>String.fromCharCode(n^91)).join('');return 'https://wa.me/'+phone+'?text='+encodeURIComponent(message);}
+$('#courseContact').href=whatsapp('Hola, Rubén. Me interesa el curso de creación de recursos con IA por $50.000 COP, con videos pregrabados y 4 mentorías online de 30 minutos, una por semana durante un mes, grupales o individuales. Quisiera conocer el contenido y coordinar mi inscripción.');
 $('#requestApp').innerHTML=APPS.map(a=>'<option value="'+a.id+'">'+esc(a.name)+'</option>').join('');
 $('#requestType').addEventListener('change',setRequestType);
 $('#requestForm').addEventListener('submit',e=>{e.preventDefault();const need=$('#requestNeed').value.trim();if(need.length<12){$('#requestError').textContent='Describe un poco más tu necesidad, al menos 12 caracteres.';$('#requestNeed').focus();return;}const kind=$('#requestType').value,name=$('#requestName').value.trim(),app=byId.get($('#requestApp').value);const label=kind==='new'?'una aplicación nueva':kind==='custom'?'una personalización':'reportar un error o una sugerencia';const lines=['Hola Rubén. Te contacto desde VibeCoding Lab para '+label+'.',name?'Nombre / organización: '+name:'',kind!=='new'?'Aplicación: '+app.name:'','Necesidad: '+need,'Equipo: '+$('#requestDevice').value,'Conexión: '+$('#requestConnection').value,kind==='feedback'?'Gracias por revisar el caso.':'Me gustaría revisar contigo el alcance, el presupuesto y la fecha de entrega.'].filter(Boolean);const text=lines.join('\n\n');$('#requestSummary').textContent=text;$('#requestSend').href=whatsapp(text);$('#requestForm').hidden=true;$('#requestReview').hidden=false;$('#requestSend').focus();});
