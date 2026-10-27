@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-qa6dYofy+k5bpFpmfC/IjqD/fskC1wmUtNxbhDQQUeA=' 'sha256-53xDxHJTH5OSrqrCLtEGqHXOzctmOF8ZXaTU8qoDtVc='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-BirJu5dm943TXcmpAYInLGgyLM/937GkOf9k8n0XKEw=' 'sha256-8uCQTNotTp51DNQQbfJ0bTpgZNkJVYt2LbjzgUvdVvY='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://vivecodig2026.github.io; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08786d">
@@ -92,7 +92,7 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 </aside>
 </div></section>
 <div class="model-strip" aria-label="Cómo se sostiene el proyecto"><div class="model-item"><span data-icon="download"></span><div><strong>Las apps son gratuitas</strong><small>Úsalas sin pagar una suscripción.</small></div></div><div class="model-item"><span data-icon="settings"></span><div><strong>El trabajo a medida se cotiza</strong><small>Financia desarrollo y herramientas de IA.</small></div></div><div class="model-item"><span data-icon="heart"></span><div><strong>Tu aporte es voluntario</strong><small>Ayuda a cubrir las suscripciones de IA.</small></div></div></div>
-<section id="catalogo" aria-labelledby="catalogTitle"><div class="section-head"><div><div class="eyebrow">Hechas para usarse</div><h2 id="catalogTitle">Encuentra tu próxima herramienta.</h2><p>Aplicaciones con recursos principales integrados. Descarga el HTML completo y úsalo sin conexión.</p></div><span class="count-pill" id="catalogCount">30 proyectos</span></div>
+<section id="catalogo" aria-labelledby="catalogTitle"><div class="section-head"><div><div class="eyebrow">Hechas para usarse</div><h2 id="catalogTitle">Encuentra tu próxima herramienta.</h2><p>Aplicaciones con recursos principales integrados. Descarga el HTML completo y úsalo sin conexión.</p></div><span class="count-pill" id="catalogCount">32 proyectos</span></div>
 <div class="catalog-tools"><div class="searchbox"><label for="search" class="sr-only">Buscar aplicaciones</label><span data-icon="search"></span><input id="search" type="search" placeholder="Busca una app o lo que necesitas hacer…" autocomplete="off" maxlength="120"></div><label class="sort" for="sort">Ordenar por <select id="sort"><option value="recommended">Recomendadas</option><option value="name">Nombre</option><option value="downloads" selected>Más descargadas</option><option value="size">Menor tamaño</option></select></label></div>
 <div class="filters"><div class="chips" role="group" aria-label="Categorías"><button class="chip" data-category="all" aria-pressed="true">Todas</button><button class="chip" data-category="educacion" aria-pressed="false">Educación</button><button class="chip" data-category="productividad" aria-pressed="false">Productividad</button><button class="chip" data-category="creatividad" aria-pressed="false">Creatividad</button></div><span class="offline-filter">Todas funcionan sin conexión</span></div>
 <div id="appGrid" class="app-grid"></div><p id="resultAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
@@ -132,7 +132,7 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script id="siteConfig" type="application/json">
 {
-  "version": 16,
+  "version": 17,
   "owner": "vivecodig2026",
   "repo": "opensource",
   "branch": "main",
@@ -1108,6 +1108,69 @@ html[data-theme=dark] .workbench,html[data-theme=dark] .custom-card{background:#
       "preview": "previews/omnirec.jpg",
       "previewSmall": "previews/omnirec-480.webp",
       "previewMedium": "previews/omnirec-800.webp"
+    },
+    {
+      "id": "creador-poster",
+      "name": "Creador de póster",
+      "file": "Creador_de_poster (3).html",
+      "assetFile": "Creador_de_poster_Offline.html",
+      "category": "creatividad",
+      "categoryLabel": "Creatividad",
+      "icon": "document",
+      "description": "Convierte una imagen en un póster para imprimir en varias hojas, con cuadrículas, medidas y guías de montaje.",
+      "tags": [
+        "poster",
+        "impresion",
+        "mural",
+        "imagen"
+      ],
+      "features": [
+        "Cuadrículas personalizadas, ancho en centímetros y orientación automática.",
+        "Exportación PDF por hojas o de una sola pieza, con márgenes y solapamiento.",
+        "Conserva la resolución original; la calidad de ampliación depende de la imagen."
+      ],
+      "requirements": "Admite JPG, PNG y WebP. Hasta 40 millones de píxeles y 200 hojas por PDF. En celulares conviene usar imágenes más pequeñas.",
+      "offline": true,
+      "rank": 31,
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "size": 34149,
+      "publishedAt": "2026-10-27T02:16:25Z",
+      "publicationCommit": "41f230ef56b07207052f1f26b94ed98f5b5c02b3",
+      "preview": "previews/creador-poster.jpg",
+      "previewSmall": "previews/creador-poster-480.webp",
+      "previewMedium": "previews/creador-poster-800.webp"
+    },
+    {
+      "id": "pdf-libre",
+      "name": "PDF Libre",
+      "file": "PDF_Libre_Offline.html",
+      "category": "productividad",
+      "categoryLabel": "Productividad",
+      "icon": "document",
+      "description": "Guarda una copia de tu PDF sin contraseña usando la clave que ya conoces, sin subir el documento a internet.",
+      "tags": [
+        "pdf",
+        "contraseña",
+        "desbloquear",
+        "documentos"
+      ],
+      "features": [
+        "Motor QPDF integrado para procesar el documento localmente.",
+        "Conserva las páginas como documento PDF, sin convertirlas en imágenes.",
+        "Descarga una copia sin modificar el archivo original."
+      ],
+      "requirements": "Necesitas conocer la contraseña si el PDF la exige. Hasta 100 MB por archivo. Requiere WebAssembly y Web Workers. Reescribir un PDF firmado puede invalidar sus firmas.",
+      "offline": true,
+      "rank": 32,
+      "tone": "#e0f3eb",
+      "ink": "#1d6d58",
+      "size": 1793034,
+      "publishedAt": "2026-10-26T20:28:37Z",
+      "publicationCommit": "6b26e6ba377a2cbe55e0fcf99e5ff345e2159b5c",
+      "preview": "previews/pdf-libre.jpg",
+      "previewSmall": "previews/pdf-libre-480.webp",
+      "previewMedium": "previews/pdf-libre-800.webp"
     }
   ],
   "statsSnapshot": {
@@ -1586,7 +1649,7 @@ const APPS=CONFIG.apps,byId=new Map(APPS.map(a=>[a.id,a])),byFile=new Map(APPS.m
 const API=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
 const REPO=`https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
 const RAW=`https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/`;
-const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v3`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v16`;
+const cacheKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:downloads:v3`,catalogKey=`vcl:${CONFIG.owner}:${CONFIG.repo}:catalog:v17`;
 const stats=new Map(),health=new Map(APPS.map(a=>[a.id,{available:a.available!==false,size:a.size,reason:a.unavailableReason||""}]));
 const MAX_FILE=60*1024*1024,CACHE_TTL=15*60*1000;
 let category='all',statsState='loading',statsTime=0,statsComplete=true,statsBusy=null,lastAttempt=0,toastTimer=null,detailApp=null,modalOpener=null;
