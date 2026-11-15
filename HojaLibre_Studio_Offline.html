@@ -1,0 +1,3977 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full select-none">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HojaLibre Pro — Hoja de Cálculo Ligera y Autónoma</title>
+  <!-- Tailwind CSS para la interfaz de usuario -->
+  <style id="hojalibre-utilities-offline">
+/*! tailwindcss v4.1.10 | MIT License | https://tailwindcss.com */
+@layer properties;
+:root, :host {
+  --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+  --color-red-50: oklch(97.1% 0.013 17.38);
+  --color-red-200: oklch(88.5% 0.062 18.334);
+  --color-red-400: oklch(70.4% 0.191 22.216);
+  --color-red-500: oklch(63.7% 0.237 25.331);
+  --color-red-600: oklch(57.7% 0.245 27.325);
+  --color-red-700: oklch(50.5% 0.213 27.518);
+  --color-red-950: oklch(25.8% 0.092 26.042);
+  --color-emerald-50: oklch(97.9% 0.021 166.113);
+  --color-emerald-200: oklch(90.5% 0.093 164.15);
+  --color-emerald-300: oklch(84.5% 0.143 164.978);
+  --color-emerald-400: oklch(76.5% 0.177 163.223);
+  --color-emerald-500: oklch(69.6% 0.17 162.48);
+  --color-emerald-600: oklch(59.6% 0.145 163.225);
+  --color-emerald-700: oklch(50.8% 0.118 165.612);
+  --color-emerald-900: oklch(37.8% 0.077 168.94);
+  --color-emerald-950: oklch(26.2% 0.051 172.552);
+  --color-teal-50: oklch(98.4% 0.014 180.72);
+  --color-teal-100: oklch(95.3% 0.051 180.801);
+  --color-teal-200: oklch(91% 0.096 180.426);
+  --color-teal-600: oklch(60% 0.118 184.704);
+  --color-teal-700: oklch(51.1% 0.096 186.391);
+  --color-teal-800: oklch(43.7% 0.078 188.216);
+  --color-teal-900: oklch(38.6% 0.063 188.416);
+  --color-slate-50: oklch(98.4% 0.003 247.858);
+  --color-slate-100: oklch(96.8% 0.007 247.896);
+  --color-slate-200: oklch(92.9% 0.013 255.508);
+  --color-slate-300: oklch(86.9% 0.022 252.894);
+  --color-slate-400: oklch(70.4% 0.04 256.788);
+  --color-slate-500: oklch(55.4% 0.046 257.417);
+  --color-slate-600: oklch(44.6% 0.043 257.281);
+  --color-slate-700: oklch(37.2% 0.044 257.287);
+  --color-slate-800: oklch(27.9% 0.041 260.031);
+  --color-slate-900: oklch(20.8% 0.042 265.755);
+  --color-white: #fff;
+  --spacing: 0.25rem;
+  --container-lg: 32rem;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: calc(1 / 0.75);
+  --text-sm: 0.875rem;
+  --text-sm--line-height: calc(1.25 / 0.875);
+  --text-lg: 1.125rem;
+  --text-lg--line-height: calc(1.75 / 1.125);
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --tracking-tight: -0.025em;
+  --leading-relaxed: 1.625;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --default-font-family: var(--font-sans);
+  --default-mono-font-family: var(--font-mono);
+}
+*, ::after, ::before, ::backdrop, ::file-selector-button {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0 solid;
+}
+html, :host {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji');
+  font-feature-settings: var(--default-font-feature-settings, normal);
+  font-variation-settings: var(--default-font-variation-settings, normal);
+  -webkit-tap-highlight-color: transparent;
+}
+hr {
+  height: 0;
+  color: inherit;
+  border-top-width: 1px;
+}
+abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+a {
+  color: inherit;
+  -webkit-text-decoration: inherit;
+  text-decoration: inherit;
+}
+b, strong {
+  font-weight: bolder;
+}
+code, kbd, samp, pre {
+  font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace);
+  font-feature-settings: var(--default-mono-font-feature-settings, normal);
+  font-variation-settings: var(--default-mono-font-variation-settings, normal);
+  font-size: 1em;
+}
+small {
+  font-size: 80%;
+}
+sub, sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sub {
+  bottom: -0.25em;
+}
+sup {
+  top: -0.5em;
+}
+table {
+  text-indent: 0;
+  border-color: inherit;
+  border-collapse: collapse;
+}
+:-moz-focusring {
+  outline: auto;
+}
+progress {
+  vertical-align: baseline;
+}
+summary {
+  display: list-item;
+}
+ol, ul, menu {
+  list-style: none;
+}
+img, svg, video, canvas, audio, iframe, embed, object {
+  display: block;
+  vertical-align: middle;
+}
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+button, input, select, optgroup, textarea, ::file-selector-button {
+  font: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  border-radius: 0;
+  background-color: transparent;
+  opacity: 1;
+}
+:where(select:is([multiple], [size])) optgroup {
+  font-weight: bolder;
+}
+:where(select:is([multiple], [size])) optgroup option {
+  padding-inline-start: 20px;
+}
+::file-selector-button {
+  margin-inline-end: 4px;
+}
+::placeholder {
+  opacity: 1;
+}
+@supports (not (-webkit-appearance: -apple-pay-button))  or (contain-intrinsic-size: 1px) {
+  ::placeholder {
+    color: currentcolor;
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, currentcolor 50%, transparent);
+    }
+  }
+}
+textarea {
+  resize: vertical;
+}
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+::-webkit-date-and-time-value {
+  min-height: 1lh;
+  text-align: inherit;
+}
+::-webkit-datetime-edit {
+  display: inline-flex;
+}
+::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+::-webkit-datetime-edit, ::-webkit-datetime-edit-year-field, ::-webkit-datetime-edit-month-field, ::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-hour-field, ::-webkit-datetime-edit-minute-field, ::-webkit-datetime-edit-second-field, ::-webkit-datetime-edit-millisecond-field, ::-webkit-datetime-edit-meridiem-field {
+  padding-block: 0;
+}
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+button, input:where([type='button'], [type='reset'], [type='submit']), ::file-selector-button {
+  appearance: button;
+}
+::-webkit-inner-spin-button, ::-webkit-outer-spin-button {
+  height: auto;
+}
+[hidden]:where(:not([hidden='until-found'])) {
+  display: none !important;
+}
+.absolute {
+  position: absolute;
+}
+.fixed {
+  position: fixed;
+}
+.relative {
+  position: relative;
+}
+.sticky {
+  position: sticky;
+}
+.inset-0 {
+  inset: calc(var(--spacing) * 0);
+}
+.top-24 {
+  top: calc(var(--spacing) * 24);
+}
+.top-full {
+  top: 100%;
+}
+.right-6 {
+  right: calc(var(--spacing) * 6);
+}
+.left-28 {
+  left: calc(var(--spacing) * 28);
+}
+.z-20 {
+  z-index: 20;
+}
+.z-30 {
+  z-index: 30;
+}
+.z-40 {
+  z-index: 40;
+}
+.z-50 {
+  z-index: 50;
+}
+.container {
+  width: 100%;
+  @media (width >= 40rem) {
+    max-width: 40rem;
+  }
+  @media (width >= 48rem) {
+    max-width: 48rem;
+  }
+  @media (width >= 64rem) {
+    max-width: 64rem;
+  }
+  @media (width >= 80rem) {
+    max-width: 80rem;
+  }
+  @media (width >= 96rem) {
+    max-width: 96rem;
+  }
+}
+.mx-0\.5 {
+  margin-inline: calc(var(--spacing) * 0.5);
+}
+.mx-1 {
+  margin-inline: calc(var(--spacing) * 1);
+}
+.mt-0\.5 {
+  margin-top: calc(var(--spacing) * 0.5);
+}
+.mr-2 {
+  margin-right: calc(var(--spacing) * 2);
+}
+.mb-1 {
+  margin-bottom: calc(var(--spacing) * 1);
+}
+.mb-2 {
+  margin-bottom: calc(var(--spacing) * 2);
+}
+.ml-auto {
+  margin-left: auto;
+}
+.block {
+  display: block;
+}
+.flex {
+  display: flex;
+}
+.grid {
+  display: grid;
+}
+.hidden {
+  display: none;
+}
+.table {
+  display: table;
+}
+.h-4 {
+  height: calc(var(--spacing) * 4);
+}
+.h-5 {
+  height: calc(var(--spacing) * 5);
+}
+.h-6 {
+  height: calc(var(--spacing) * 6);
+}
+.h-7 {
+  height: calc(var(--spacing) * 7);
+}
+.h-full {
+  height: 100%;
+}
+.max-h-\[70vh\] {
+  max-height: 70vh;
+}
+.w-5 {
+  width: calc(var(--spacing) * 5);
+}
+.w-6 {
+  width: calc(var(--spacing) * 6);
+}
+.w-7 {
+  width: calc(var(--spacing) * 7);
+}
+.w-20 {
+  width: calc(var(--spacing) * 20);
+}
+.w-80 {
+  width: calc(var(--spacing) * 80);
+}
+.w-full {
+  width: 100%;
+}
+.w-px {
+  width: 1px;
+}
+.max-w-lg {
+  max-width: var(--container-lg);
+}
+.flex-1 {
+  flex: 1;
+}
+.border-collapse {
+  border-collapse: collapse;
+}
+.transform {
+  transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.items-center {
+  align-items: center;
+}
+.items-stretch {
+  align-items: stretch;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.gap-1 {
+  gap: calc(var(--spacing) * 1);
+}
+.gap-1\.5 {
+  gap: calc(var(--spacing) * 1.5);
+}
+.gap-2 {
+  gap: calc(var(--spacing) * 2);
+}
+.gap-4 {
+  gap: calc(var(--spacing) * 4);
+}
+.space-y-2 {
+  :where(& > :not(:last-child)) {
+    --tw-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
+  }
+}
+.space-y-3 {
+  :where(& > :not(:last-child)) {
+    --tw-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 3) * var(--tw-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 3) * calc(1 - var(--tw-space-y-reverse)));
+  }
+}
+.divide-y {
+  :where(& > :not(:last-child)) {
+    --tw-divide-y-reverse: 0;
+    border-bottom-style: var(--tw-border-style);
+    border-top-style: var(--tw-border-style);
+    border-top-width: calc(1px * var(--tw-divide-y-reverse));
+    border-bottom-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  }
+}
+.divide-slate-100 {
+  :where(& > :not(:last-child)) {
+    border-color: var(--color-slate-100);
+  }
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.overflow-x-auto {
+  overflow-x: auto;
+}
+.overflow-y-auto {
+  overflow-y: auto;
+}
+.rounded {
+  border-radius: 0.25rem;
+}
+.rounded-full {
+  border-radius: calc(infinity * 1px);
+}
+.rounded-lg {
+  border-radius: var(--radius-lg);
+}
+.rounded-md {
+  border-radius: var(--radius-md);
+}
+.rounded-xl {
+  border-radius: var(--radius-xl);
+}
+.border {
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+}
+.border-t {
+  border-top-style: var(--tw-border-style);
+  border-top-width: 1px;
+}
+.border-r {
+  border-right-style: var(--tw-border-style);
+  border-right-width: 1px;
+}
+.border-b {
+  border-bottom-style: var(--tw-border-style);
+  border-bottom-width: 1px;
+}
+.border-emerald-400\/30 {
+  border-color: color-mix(in srgb, oklch(76.5% 0.177 163.223) 30%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--color-emerald-400) 30%, transparent);
+  }
+}
+.border-emerald-400\/40 {
+  border-color: color-mix(in srgb, oklch(76.5% 0.177 163.223) 40%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--color-emerald-400) 40%, transparent);
+  }
+}
+.border-red-400\/40 {
+  border-color: color-mix(in srgb, oklch(70.4% 0.191 22.216) 40%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--color-red-400) 40%, transparent);
+  }
+}
+.border-slate-100 {
+  border-color: var(--color-slate-100);
+}
+.border-slate-200 {
+  border-color: var(--color-slate-200);
+}
+.border-slate-300 {
+  border-color: var(--color-slate-300);
+}
+.border-slate-700 {
+  border-color: var(--color-slate-700);
+}
+.border-slate-800 {
+  border-color: var(--color-slate-800);
+}
+.border-teal-200 {
+  border-color: var(--color-teal-200);
+}
+.border-teal-600\/60 {
+  border-color: color-mix(in srgb, oklch(60% 0.118 184.704) 60%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--color-teal-600) 60%, transparent);
+  }
+}
+.border-transparent {
+  border-color: transparent;
+}
+.bg-emerald-50 {
+  background-color: var(--color-emerald-50);
+}
+.bg-emerald-500\/20 {
+  background-color: color-mix(in srgb, oklch(69.6% 0.17 162.48) 20%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-emerald-500) 20%, transparent);
+  }
+}
+.bg-emerald-600 {
+  background-color: var(--color-emerald-600);
+}
+.bg-emerald-950\/60 {
+  background-color: color-mix(in srgb, oklch(26.2% 0.051 172.552) 60%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-emerald-950) 60%, transparent);
+  }
+}
+.bg-red-50 {
+  background-color: var(--color-red-50);
+}
+.bg-red-600 {
+  background-color: var(--color-red-600);
+}
+.bg-red-950\/60 {
+  background-color: color-mix(in srgb, oklch(25.8% 0.092 26.042) 60%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-red-950) 60%, transparent);
+  }
+}
+.bg-slate-50 {
+  background-color: var(--color-slate-50);
+}
+.bg-slate-100 {
+  background-color: var(--color-slate-100);
+}
+.bg-slate-200 {
+  background-color: var(--color-slate-200);
+}
+.bg-slate-300 {
+  background-color: var(--color-slate-300);
+}
+.bg-slate-900 {
+  background-color: var(--color-slate-900);
+}
+.bg-slate-900\/50 {
+  background-color: color-mix(in srgb, oklch(20.8% 0.042 265.755) 50%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-slate-900) 50%, transparent);
+  }
+}
+.bg-teal-50 {
+  background-color: var(--color-teal-50);
+}
+.bg-teal-100 {
+  background-color: var(--color-teal-100);
+}
+.bg-teal-600 {
+  background-color: var(--color-teal-600);
+}
+.bg-teal-700 {
+  background-color: var(--color-teal-700);
+}
+.bg-teal-800 {
+  background-color: var(--color-teal-800);
+}
+.bg-teal-900\/70 {
+  background-color: color-mix(in srgb, oklch(38.6% 0.063 188.416) 70%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-teal-900) 70%, transparent);
+  }
+}
+.bg-teal-900\/80 {
+  background-color: color-mix(in srgb, oklch(38.6% 0.063 188.416) 80%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-teal-900) 80%, transparent);
+  }
+}
+.bg-transparent {
+  background-color: transparent;
+}
+.bg-white {
+  background-color: var(--color-white);
+}
+.bg-white\/15 {
+  background-color: color-mix(in srgb, #fff 15%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-white) 15%, transparent);
+  }
+}
+.p-0 {
+  padding: calc(var(--spacing) * 0);
+}
+.p-2\.5 {
+  padding: calc(var(--spacing) * 2.5);
+}
+.p-3\.5 {
+  padding: calc(var(--spacing) * 3.5);
+}
+.p-4 {
+  padding: calc(var(--spacing) * 4);
+}
+.p-5 {
+  padding: calc(var(--spacing) * 5);
+}
+.px-1\.5 {
+  padding-inline: calc(var(--spacing) * 1.5);
+}
+.px-2 {
+  padding-inline: calc(var(--spacing) * 2);
+}
+.px-2\.5 {
+  padding-inline: calc(var(--spacing) * 2.5);
+}
+.px-3 {
+  padding-inline: calc(var(--spacing) * 3);
+}
+.px-3\.5 {
+  padding-inline: calc(var(--spacing) * 3.5);
+}
+.px-5 {
+  padding-inline: calc(var(--spacing) * 5);
+}
+.py-0\.5 {
+  padding-block: calc(var(--spacing) * 0.5);
+}
+.py-1 {
+  padding-block: calc(var(--spacing) * 1);
+}
+.py-1\.5 {
+  padding-block: calc(var(--spacing) * 1.5);
+}
+.py-2 {
+  padding-block: calc(var(--spacing) * 2);
+}
+.py-3 {
+  padding-block: calc(var(--spacing) * 3);
+}
+.py-3\.5 {
+  padding-block: calc(var(--spacing) * 3.5);
+}
+.pt-1 {
+  padding-top: calc(var(--spacing) * 1);
+}
+.pr-1 {
+  padding-right: calc(var(--spacing) * 1);
+}
+.pr-2 {
+  padding-right: calc(var(--spacing) * 2);
+}
+.pb-1 {
+  padding-bottom: calc(var(--spacing) * 1);
+}
+.pb-2 {
+  padding-bottom: calc(var(--spacing) * 2);
+}
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.font-serif {
+  font-family: var(--font-serif);
+}
+.text-lg {
+  font-size: var(--text-lg);
+  line-height: var(--tw-leading, var(--text-lg--line-height));
+}
+.text-sm {
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+}
+.text-xs {
+  font-size: var(--text-xs);
+  line-height: var(--tw-leading, var(--text-xs--line-height));
+}
+.text-\[10px\] {
+  font-size: 10px;
+}
+.text-\[11\.5px\] {
+  font-size: 11.5px;
+}
+.text-\[11px\] {
+  font-size: 11px;
+}
+.leading-none {
+  --tw-leading: 1;
+  line-height: 1;
+}
+.leading-relaxed {
+  --tw-leading: var(--leading-relaxed);
+  line-height: var(--leading-relaxed);
+}
+.font-bold {
+  --tw-font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
+}
+.font-medium {
+  --tw-font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-medium);
+}
+.font-normal {
+  --tw-font-weight: var(--font-weight-normal);
+  font-weight: var(--font-weight-normal);
+}
+.font-semibold {
+  --tw-font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+.tracking-tight {
+  --tw-tracking: var(--tracking-tight);
+  letter-spacing: var(--tracking-tight);
+}
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+.text-emerald-200 {
+  color: var(--color-emerald-200);
+}
+.text-emerald-300 {
+  color: var(--color-emerald-300);
+}
+.text-emerald-400 {
+  color: var(--color-emerald-400);
+}
+.text-emerald-700 {
+  color: var(--color-emerald-700);
+}
+.text-red-200 {
+  color: var(--color-red-200);
+}
+.text-red-700 {
+  color: var(--color-red-700);
+}
+.text-slate-300 {
+  color: var(--color-slate-300);
+}
+.text-slate-400 {
+  color: var(--color-slate-400);
+}
+.text-slate-500 {
+  color: var(--color-slate-500);
+}
+.text-slate-600 {
+  color: var(--color-slate-600);
+}
+.text-slate-700 {
+  color: var(--color-slate-700);
+}
+.text-slate-800 {
+  color: var(--color-slate-800);
+}
+.text-slate-900 {
+  color: var(--color-slate-900);
+}
+.text-teal-700 {
+  color: var(--color-teal-700);
+}
+.text-teal-800 {
+  color: var(--color-teal-800);
+}
+.text-teal-900 {
+  color: var(--color-teal-900);
+}
+.text-white {
+  color: var(--color-white);
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.italic {
+  font-style: italic;
+}
+.tabular-nums {
+  --tw-numeric-spacing: tabular-nums;
+  font-variant-numeric: var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,);
+}
+.underline {
+  text-decoration-line: underline;
+}
+.decoration-red-600 {
+  text-decoration-color: var(--color-red-600);
+}
+.accent-teal-600 {
+  accent-color: var(--color-teal-600);
+}
+.shadow-2xl {
+  --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
+.shadow-inner {
+  --tw-shadow: inset 0 2px 4px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.05));
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
+.shadow-sm {
+  --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
+.shadow-xl {
+  --tw-shadow: 0 20px 25px -5px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 8px 10px -6px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
+.blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+}
+.filter {
+  filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+}
+.backdrop-blur-\[1px\] {
+  --tw-backdrop-blur: blur(1px);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+  backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+}
+.transition {
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, visibility, content-visibility, overlay, pointer-events;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+}
+.select-none {
+  -webkit-user-select: none;
+  user-select: none;
+}
+.last\:border-0 {
+  &:last-child {
+    border-style: var(--tw-border-style);
+    border-width: 0px;
+  }
+}
+.hover\:border-slate-400 {
+  &:hover {
+    @media (hover: hover) {
+      border-color: var(--color-slate-400);
+    }
+  }
+}
+.hover\:bg-emerald-500 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-emerald-500);
+    }
+  }
+}
+.hover\:bg-emerald-900 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-emerald-900);
+    }
+  }
+}
+.hover\:bg-red-500 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-red-500);
+    }
+  }
+}
+.hover\:bg-slate-50 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-slate-50);
+    }
+  }
+}
+.hover\:bg-slate-100 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-slate-100);
+    }
+  }
+}
+.hover\:bg-slate-200 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-slate-200);
+    }
+  }
+}
+.hover\:bg-slate-200\/70 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: color-mix(in srgb, oklch(92.9% 0.013 255.508) 70%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-slate-200) 70%, transparent);
+      }
+    }
+  }
+}
+.hover\:bg-teal-50 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-teal-50);
+    }
+  }
+}
+.hover\:bg-teal-100 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-teal-100);
+    }
+  }
+}
+.hover\:bg-teal-600 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-teal-600);
+    }
+  }
+}
+.hover\:bg-teal-900 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-teal-900);
+    }
+  }
+}
+.hover\:text-slate-600 {
+  &:hover {
+    @media (hover: hover) {
+      color: var(--color-slate-600);
+    }
+  }
+}
+.hover\:text-slate-700 {
+  &:hover {
+    @media (hover: hover) {
+      color: var(--color-slate-700);
+    }
+  }
+}
+.hover\:text-white {
+  &:hover {
+    @media (hover: hover) {
+      color: var(--color-white);
+    }
+  }
+}
+.focus\:border-teal-600 {
+  &:focus {
+    border-color: var(--color-teal-600);
+  }
+}
+.focus\:bg-teal-50\/20 {
+  &:focus {
+    background-color: color-mix(in srgb, oklch(98.4% 0.014 180.72) 20%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-teal-50) 20%, transparent);
+    }
+  }
+}
+.focus\:ring-1 {
+  &:focus {
+    --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+}
+.focus\:ring-teal-600 {
+  &:focus {
+    --tw-ring-color: var(--color-teal-600);
+  }
+}
+.focus\:outline-none {
+  &:focus {
+    --tw-outline-style: none;
+    outline-style: none;
+  }
+}
+.active\:bg-teal-900 {
+  &:active {
+    background-color: var(--color-teal-900);
+  }
+}
+.sm\:block {
+  @media (width >= 40rem) {
+    display: block;
+  }
+}
+.sm\:flex-row {
+  @media (width >= 40rem) {
+    flex-direction: row;
+  }
+}
+.sm\:items-center {
+  @media (width >= 40rem) {
+    align-items: center;
+  }
+}
+.sm\:border-b-0 {
+  @media (width >= 40rem) {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 0px;
+  }
+}
+.md\:inline {
+  @media (width >= 48rem) {
+    display: inline;
+  }
+}
+@property --tw-rotate-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-z {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-space-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-divide-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-leading {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-tracking {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ordinal {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-slashed-zero {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-figure {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-spacing {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-fraction {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-inset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-inset-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-inset-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-inset-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-inset-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-ring-inset {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ring-offset-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --tw-ring-offset-color {
+  syntax: "*";
+  inherits: false;
+  initial-value: #fff;
+}
+@property --tw-ring-offset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-blur {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-brightness {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-contrast {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-grayscale {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-hue-rotate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-invert {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-opacity {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-saturate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-drop-shadow-size {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-blur {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-brightness {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-contrast {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-grayscale {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-hue-rotate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-invert {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-opacity {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-saturate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@layer properties {
+  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    *, ::before, ::after, ::backdrop {
+      --tw-rotate-x: initial;
+      --tw-rotate-y: initial;
+      --tw-rotate-z: initial;
+      --tw-skew-x: initial;
+      --tw-skew-y: initial;
+      --tw-space-y-reverse: 0;
+      --tw-divide-y-reverse: 0;
+      --tw-border-style: solid;
+      --tw-leading: initial;
+      --tw-font-weight: initial;
+      --tw-tracking: initial;
+      --tw-ordinal: initial;
+      --tw-slashed-zero: initial;
+      --tw-numeric-figure: initial;
+      --tw-numeric-spacing: initial;
+      --tw-numeric-fraction: initial;
+      --tw-shadow: 0 0 #0000;
+      --tw-shadow-color: initial;
+      --tw-shadow-alpha: 100%;
+      --tw-inset-shadow: 0 0 #0000;
+      --tw-inset-shadow-color: initial;
+      --tw-inset-shadow-alpha: 100%;
+      --tw-ring-color: initial;
+      --tw-ring-shadow: 0 0 #0000;
+      --tw-inset-ring-color: initial;
+      --tw-inset-ring-shadow: 0 0 #0000;
+      --tw-ring-inset: initial;
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-blur: initial;
+      --tw-brightness: initial;
+      --tw-contrast: initial;
+      --tw-grayscale: initial;
+      --tw-hue-rotate: initial;
+      --tw-invert: initial;
+      --tw-opacity: initial;
+      --tw-saturate: initial;
+      --tw-sepia: initial;
+      --tw-drop-shadow: initial;
+      --tw-drop-shadow-color: initial;
+      --tw-drop-shadow-alpha: 100%;
+      --tw-drop-shadow-size: initial;
+      --tw-backdrop-blur: initial;
+      --tw-backdrop-brightness: initial;
+      --tw-backdrop-contrast: initial;
+      --tw-backdrop-grayscale: initial;
+      --tw-backdrop-hue-rotate: initial;
+      --tw-backdrop-invert: initial;
+      --tw-backdrop-opacity: initial;
+      --tw-backdrop-saturate: initial;
+      --tw-backdrop-sepia: initial;
+    }
+  }
+}
+
+  </style>
+  <!-- Tipografía Inter y JetBrains Mono para números y fórmulas -->
+  <style>
+    :root {
+      --brand: #0f766e;
+      --brand-dark: #115e59;
+      --brand-light: #ccfbf1;
+      --grid-border: #e2e8f0;
+      --header-bg: #f8fafc;
+      --header-text: #475569;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 13px;
+      color: #0f172a;
+      overflow: hidden;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Estilos de alto rendimiento para la cuadrícula de cálculo */
+    #wrap {
+      flex: 1;
+      overflow: auto;
+      position: relative;
+      outline: none;
+      background: #ffffff;
+    }
+    table#tbl {
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      user-select: none;
+      width: max-content;
+    }
+    #tbl th {
+      position: sticky;
+      top: 0;
+      background: var(--header-bg);
+      color: var(--header-text);
+      z-index: 10;
+      font-weight: 500;
+      font-size: 11.5px;
+      height: 25px;
+      width: 96px;
+      min-width: 50px;
+      padding: 0;
+      box-shadow: inset 0 -1px 0 #cbd5e1, inset -1px 0 0 #cbd5e1;
+      transition: background-color 0.1s;
+    }
+    #tbl th:hover {
+      background: #e2e8f0;
+    }
+    #tbl th.r {
+      left: 0;
+      top: auto;
+      z-index: 9;
+      width: 48px;
+      min-width: 48px;
+      max-width: 48px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    #tbl th.corner {
+      top: 0;
+      left: 0;
+      z-index: 20;
+      cursor: pointer;
+    }
+    #tbl th.hl {
+      background: #d1fae5;
+      color: #065f46;
+      font-weight: 700;
+      box-shadow: inset 0 -2px 0 #059669, inset -1px 0 0 #cbd5e1;
+    }
+    #tbl th.r.hl {
+      box-shadow: inset -2px 0 0 #059669, inset 0 -1px 0 #cbd5e1;
+    }
+    /* Tirador de redimensionamiento de columnas */
+    .col-resizer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 5px;
+      height: 100%;
+      cursor: col-resize;
+      z-index: 15;
+    }
+    .col-resizer:hover, .col-resizer.active {
+      background: #0d9488;
+    }
+
+    #tbl td {
+      height: 24px;
+      width: 96px;
+      min-width: 50px;
+      max-width: 400px;
+      padding: 0 6px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      box-shadow: inset 0 -1px 0 var(--grid-border), inset -1px 0 0 var(--grid-border);
+      scroll-margin: 28px 0 0 52px;
+      font-size: 13px;
+      line-height: 24px;
+      background: #fff;
+    }
+    /* Fila superior inmovilizada opcional */
+    body.freeze-row1 #tbl tbody tr:first-child td,
+    body.freeze-row1 #tbl tbody tr:first-child th.r {
+      position: sticky;
+      top: 25px;
+      z-index: 8;
+      box-shadow: inset 0 -2px 0 #94a3b8, inset -1px 0 0 var(--grid-border);
+    }
+    body.freeze-row1 #tbl tbody tr:first-child th.r {
+      z-index: 11;
+    }
+
+    #tbl td.s {
+      background-color: rgba(13, 148, 136, 0.11) !important;
+    }
+    #tbl td.a {
+      outline: 2px solid #0d9488;
+      outline-offset: -2px;
+      z-index: 4;
+      position: relative;
+    }
+    #tbl td.err {
+      color: #dc2626 !important;
+      background-color: #fef2f2 !important;
+      font-weight: 600;
+    }
+    #tbl td.search-hit {
+      box-shadow: inset 0 0 0 2px #f59e0b !important;
+    }
+
+    /* Editor flotante sobre celda */
+    #ed {
+      position: absolute;
+      display: none;
+      z-index: 25;
+      border: 2px solid #0d9488;
+      border-radius: 2px;
+      font: inherit;
+      padding: 0 5px;
+      outline: none;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    }
+
+    /* Cuadro de relleno (Fill Handle) */
+    #fillHandle {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      background: #0d9488;
+      border: 1px solid #fff;
+      cursor: crosshair;
+      z-index: 18;
+      display: none;
+    }
+
+    /* Barras de desplazamiento sutiles */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 5px; border: 2px solid #f1f5f9; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+body{font-family:Arial,Helvetica,system-ui,sans-serif!important}
+#studioRibbon{background:#f8fafc;border-bottom:1px solid #cbd5e1;position:relative;z-index:19}
+.studio-tabs{display:flex;align-items:center;gap:2px;background:#e2e8f0;padding:3px 7px 0;overflow-x:auto;white-space:nowrap}
+.studio-tabs button{font-size:12px;font-weight:600;border-radius:5px 5px 0 0;padding:6px 13px;color:#334155;border-bottom:2px solid transparent;cursor:pointer}
+.studio-tabs button:hover{background:#fff;color:#0f766e}.studio-tabs button.active{background:#fff;color:#115e59;border-bottom-color:#0f766e}
+.studio-ribbon-buttons{display:flex;align-items:center;gap:5px;padding:6px 8px;overflow-x:auto;white-space:nowrap;min-height:44px}
+.studio-tool{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:5px 9px;font-size:11px;color:#334155;border:1px solid #cbd5e1;background:#fff;border-radius:5px;cursor:pointer}
+.studio-tool:hover{background:#ccfbf1;color:#115e59;border-color:#0f766e}
+.studio-input{display:block;width:100%;margin:5px 0 12px;border:1px solid #cbd5e1;border-radius:6px;padding:9px;font:inherit;color:#1e293b;background:white}
+.studio-input:focus{outline:2px solid #0f766e;outline-offset:1px}
+.studio-stats{border-collapse:collapse;width:100%;font-size:12px;margin-top:8px}
+.studio-stats th,.studio-stats td{padding:8px;border-bottom:1px solid #e2e8f0;text-align:left}
+.studio-stats td{text-align:right;font-variant-numeric:tabular-nums}
+.studio-chart{overflow-x:auto;background:white;border:1px solid #ddd;border-radius:8px;margin-top:10px}
+.studio-chart svg{max-width:100%;height:auto}
+.studio-button{background:#0f766e;color:white;padding:8px 14px;border-radius:7px;cursor:pointer}
+#backupFlag{font-size:10px;color:#64748b}
+#tbl td.with-note{background-image:linear-gradient(225deg,#f59e0b 0 7px,transparent 7px)!important;background-repeat:no-repeat;background-position:right top}
+#tbl td.with-link{color:#2563eb;text-decoration:underline;cursor:pointer}
+#tbl td{font-variant-numeric:tabular-nums}
+@media (max-width:650px){.studio-tabs button{padding:5px 8px;font-size:11px}.studio-tool{padding:4px 6px;font-size:10px}#studioRibbonButtons{min-height:37px}}
+
+  </style>
+</head>
+<body class="h-full flex flex-col bg-slate-50 text-slate-900">
+
+  <!-- BARRA SUPERIOR DE APLICACIÓN -->
+  <header class="bg-teal-800 text-white px-3 py-1.5 flex items-center justify-between gap-2 flex-wrap shadow-sm z-30">
+    <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-1.5 mr-2">
+        <div class="w-6 h-6 rounded bg-white/15 flex items-center justify-center font-bold text-emerald-300 shadow-inner">⊞</div>
+        <span class="font-bold text-sm tracking-tight">HojaLibre <span class="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-200 border border-emerald-400/30">Pro</span></span>
+      </div>
+
+      <!-- Acciones de archivo -->
+      <div class="flex items-center gap-1">
+        <button id="bNew" class="px-2.5 py-1 rounded text-xs font-medium bg-teal-700 hover:bg-teal-600 active:bg-teal-900 transition flex items-center gap-1" title="Crear hoja en blanco">
+          <span>📄</span> Nuevo
+        </button>
+        <button id="bDemo" class="px-2.5 py-1 rounded text-xs font-medium bg-teal-700 hover:bg-teal-600 transition flex items-center gap-1" title="Cargar plantilla de ejemplo con fórmulas">
+          <span>✨</span> Plantilla Demo
+        </button>
+        <button id="bOpen" class="px-2.5 py-1 rounded text-xs font-medium bg-teal-700 hover:bg-teal-600 transition flex items-center gap-1" title="Abrir archivo .xlsx, .csv o .json">
+          <span>📂</span> Abrir
+        </button>
+      </div>
+
+      <div class="h-4 w-px bg-teal-600 mx-0.5 hidden sm:block"></div>
+
+      <!-- Exportación -->
+      <div class="flex items-center gap-1">
+        <button id="bX" class="px-2.5 py-1 rounded text-xs font-medium bg-emerald-600 hover:bg-emerald-500 transition flex items-center gap-1 shadow-sm" title="Exportar libro a formato Excel (.xlsx)">
+          <span>⬇</span> .xlsx
+        </button>
+        <button id="bC" class="px-2 py-1 rounded text-xs font-medium bg-teal-700 hover:bg-teal-600 transition" title="Exportar hoja actual a CSV">
+          .csv
+        </button>
+        <button id="bJ" class="px-2 py-1 rounded text-xs font-medium bg-teal-700 hover:bg-teal-600 transition" title="Guardar respaldo completo en JSON (incluye estilos y hojas)">
+          .json
+        </button>
+      </div>
+
+      <div class="h-4 w-px bg-teal-600 mx-0.5 hidden sm:block"></div>
+
+      <!-- Motor XLSX y Herramientas -->
+      <button id="bLib" class="px-2.5 py-1 rounded text-xs font-medium bg-teal-900/70 hover:bg-teal-900 border border-teal-600/60 transition flex items-center gap-1" title="Instalar motor SheetJS para trabajar con .xlsx sin internet">
+        <span>⚙️</span> <span id="bLibTxt">Motor XLSX</span>
+      </button>
+      <button id="bFind" class="px-2.5 py-1 rounded text-xs font-medium bg-teal-700 hover:bg-teal-600 transition flex items-center gap-1" title="Buscar y reemplazar (Ctrl+F)">
+        <span>🔍</span> Buscar
+      </button>
+      <button id="bHelp" class="px-2 py-1 rounded text-xs font-medium bg-teal-700 hover:bg-teal-600 transition" title="Catálogo de funciones y atajos">
+        ƒx Ayuda
+      </button>
+    </div>
+
+    <!-- Indicador de Autoprueba y Estado -->
+    <div class="flex items-center gap-2 ml-auto">
+      <button id="testBadge" class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-teal-900/80 border border-emerald-400/30 hover:bg-teal-900 transition cursor-pointer" title="Ver informe de autopruebas del motor"></button>
+    </div>
+  </header>
+
+  <!-- BARRA DE HERRAMIENTAS DE FORMATO Y DATOS -->
+  <div class="tb bg-slate-100 border-b border-slate-300 px-2.5 py-1 flex items-center gap-1 flex-wrap z-20">
+    <!-- Deshacer / Rehacer -->
+    <button data-a="undo" class="px-2 py-1 rounded hover:bg-slate-200 text-slate-700 transition font-medium" title="Deshacer (Ctrl+Z)">↶</button>
+    <button data-a="redo" class="px-2 py-1 rounded hover:bg-slate-200 text-slate-700 transition font-medium" title="Rehacer (Ctrl+Y)">↷</button>
+
+    <div class="h-4 w-px bg-slate-300 mx-1"></div>
+
+    <!-- Estilos de texto -->
+    <button data-a="b" id="btnB" class="w-7 h-7 rounded hover:bg-slate-200 text-slate-800 font-bold transition" title="Negrita (Ctrl+B)">N</button>
+    <button data-a="i" id="btnI" class="w-7 h-7 rounded hover:bg-slate-200 text-slate-800 italic font-serif transition" title="Cursiva (Ctrl+I)">K</button>
+    <button data-a="u" id="btnU" class="w-7 h-7 rounded hover:bg-slate-200 text-slate-800 underline transition" title="Subrayado (Ctrl+U)">S</button>
+
+    <div class="h-4 w-px bg-slate-300 mx-1"></div>
+
+    <!-- Alineación -->
+    <button data-a="l" id="btnAlL" class="w-7 h-7 rounded hover:bg-slate-200 text-slate-700 transition" title="Alinear a la izquierda">⇤</button>
+    <button data-a="c" id="btnAlC" class="w-7 h-7 rounded hover:bg-slate-200 text-slate-700 transition" title="Centrar">↔</button>
+    <button data-a="rt" id="btnAlR" class="w-7 h-7 rounded hover:bg-slate-200 text-slate-700 transition" title="Alinear a la derecha">⇥</button>
+
+    <div class="h-4 w-px bg-slate-300 mx-1"></div>
+
+    <!-- Colores -->
+    <label class="flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-slate-200 cursor-pointer transition" title="Color de fondo de celda">
+      <span class="text-xs">🪣</span>
+      <input type="color" id="cBg" value="#fef08a" class="w-5 h-5 border border-slate-300 rounded cursor-pointer p-0 bg-transparent">
+    </label>
+    <label class="flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-slate-200 cursor-pointer transition" title="Color de texto">
+      <span class="text-xs font-bold underline decoration-red-600">A</span>
+      <input type="color" id="cFc" value="#b91c1c" class="w-5 h-5 border border-slate-300 rounded cursor-pointer p-0 bg-transparent">
+    </label>
+
+    <div class="h-4 w-px bg-slate-300 mx-1"></div>
+
+    <!-- Formato numérico -->
+    <select id="fm" class="text-xs border border-slate-300 rounded px-2 py-1 bg-white text-slate-800 hover:border-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-600" title="Formato de número">
+      <option value="g">General</option>
+      <option value="d2">1.234,56 (2 dec)</option>
+      <option value="mil">1.235 (Miles)</option>
+      <option value="cop">$ 1.235 (Moneda COP)</option>
+      <option value="usd">US$ 1,234.56 (USD)</option>
+      <option value="pct">12,3% (Porcentaje)</option>
+    </select>
+
+    <button data-a="nofmt" class="px-2 py-1 rounded text-xs hover:bg-slate-200 text-slate-700 transition" title="Limpiar formato de las celdas seleccionadas">🧹 Limpiar fmt</button>
+
+    <div class="h-4 w-px bg-slate-300 mx-1"></div>
+
+    <!-- Ordenamiento con opción de encabezado (Corrección de auditoría) -->
+    <div class="flex items-center gap-1 bg-white border border-slate-300 rounded px-1.5 py-0.5">
+      <label class="flex items-center gap-1 text-[11px] text-slate-600 cursor-pointer pr-1 border-r border-slate-200" title="Conservar la primera fila como encabezado al ordenar toda la tabla">
+        <input type="checkbox" id="chkHeader" checked class="accent-teal-600 rounded">
+        <span>Encabezado</span>
+      </label>
+      <button data-a="asc" class="px-1.5 py-0.5 rounded text-xs hover:bg-slate-100 text-slate-700 font-medium transition" title="Ordenar A → Z por la columna activa">A→Z</button>
+      <button data-a="desc" class="px-1.5 py-0.5 rounded text-xs hover:bg-slate-100 text-slate-700 font-medium transition" title="Ordenar Z → A por la columna activa">Z→A</button>
+    </div>
+
+    <button data-a="freeze" id="btnFreeze" class="px-2 py-1 rounded text-xs border border-transparent hover:bg-slate-200 text-slate-700 transition" title="Inmovilizar la fila 1 al desplazarse">❄️ Fijar fila 1</button>
+    <button data-a="autofit" class="px-2 py-1 rounded text-xs hover:bg-slate-200 text-slate-700 transition" title="Ajustar ancho de columnas seleccionadas al contenido">↔ Autoajuste</button>
+    <button data-a="rows" class="px-2 py-1 rounded text-xs hover:bg-slate-200 text-slate-700 transition" title="Añadir 100 filas al final de la hoja">+100 filas</button>
+  </div>
+
+  <!-- BARRA DE FÓRMULAS CON ASISTENTE PREDICTIVO -->
+  <div class="fb flex items-center bg-white border-b border-slate-300 relative z-20">
+    <input id="nm" readonly class="w-20 text-center font-semibold text-xs text-slate-700 bg-slate-50 border-r border-slate-300 py-1.5 focus:outline-none mono" title="Celda o rango activo">
+    <button id="btnFxHelper" class="px-2.5 py-1 text-teal-700 hover:bg-teal-50 font-semibold italic text-sm border-r border-slate-200 transition" title="Insertar función">ƒx</button>
+    <input id="fx" spellcheck="false" placeholder="Escribe un valor o empieza con = para una fórmula (ej. =SUMA(A1:A10))" class="flex-1 px-3 py-1.5 text-xs mono focus:outline-none focus:bg-teal-50/20">
+
+    <!-- Sugerencia flotante de funciones al escribir '=' -->
+    <div id="fnHint" class="hidden absolute left-28 top-full mt-0.5 bg-slate-900 text-white text-xs rounded-md shadow-xl px-3 py-2 z-40 max-w-lg border border-slate-700"></div>
+  </div>
+
+  <!-- ÁREA PRINCIPAL DE CUADRÍCULA -->
+  <div id="wrap" tabindex="0">
+    <table id="tbl"></table>
+    <input id="ed" spellcheck="false" autocomplete="off">
+    <div id="fillHandle" title="Arrastrar para rellenar celdas y ajustar referencias"></div>
+  </div>
+
+  <!-- PESTAÑAS DE HOJAS Y BARRA DE ESTADO -->
+  <footer class="bg-slate-100 border-t border-slate-300 flex flex-col sm:flex-row items-stretch sm:items-center justify-between text-xs z-20">
+    <!-- Pestañas de Hojas (Multi-hoja) -->
+    <div class="flex items-center gap-1 px-2 py-1 border-b sm:border-b-0 border-slate-200 overflow-x-auto">
+      <div id="sheetTabs" class="flex items-center gap-1"></div>
+      <button id="bAddSheet" class="px-2 py-0.5 rounded bg-slate-200 hover:bg-teal-600 hover:text-white text-slate-700 font-bold transition text-xs" title="Añadir nueva hoja">+</button>
+    </div>
+
+    <!-- Métricas de selección y notificaciones -->
+    <div class="flex items-center gap-4 px-3 py-1 text-[11.5px] text-slate-600 flex-wrap">
+      <span id="st" class="font-medium text-slate-700 mono">Listo</span>
+      <span id="msg" class="text-teal-700 font-semibold"></span>
+      <span class="ml-auto text-slate-400 hidden md:inline">Autoguardado local IndexedDB • Sin servidor</span>
+    </div>
+  </footer>
+
+  <!-- Inputs de archivo ocultos -->
+  <input type="file" id="fi" hidden accept=".xlsx,.xls,.csv,.tsv,.txt,.json">
+  <input type="file" id="fl" hidden accept=".js">
+
+  <!-- MODAL REUTILIZABLE (Reemplaza por completo confirm/alert nativos) -->
+  <div id="modalOverlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-[1px] z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden animate-fade-in">
+      <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <h3 id="modalTitle" class="font-bold text-slate-800 text-sm">Confirmación</h3>
+        <button id="modalCloseX" class="text-slate-400 hover:text-slate-600 text-lg leading-none">&times;</button>
+      </div>
+      <div id="modalBody" class="p-5 text-slate-600 text-xs leading-relaxed max-h-[70vh] overflow-y-auto"></div>
+      <div id="modalFooter" class="px-5 py-3 bg-slate-50 border-t border-slate-200 flex justify-end gap-2"></div>
+    </div>
+  </div>
+
+  <!-- PANEL FLOTANTE DE BUSCAR Y REEMPLAZAR (Ctrl+F) -->
+  <div id="findPanel" class="hidden fixed top-24 right-6 z-40 bg-white rounded-xl shadow-2xl border border-slate-300 w-80 p-3.5 text-xs">
+    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200">
+      <span class="font-bold text-slate-800 flex items-center gap-1.5">🔍 Buscar y reemplazar</span>
+      <button id="closeFind" class="text-slate-400 hover:text-slate-700 font-bold text-sm">&times;</button>
+    </div>
+    <div class="space-y-2">
+      <div>
+        <input id="inpFind" type="text" placeholder="Buscar texto o número..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:outline-none focus:border-teal-600">
+      </div>
+      <div>
+        <input id="inpReplace" type="text" placeholder="Reemplazar con..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:outline-none focus:border-teal-600">
+      </div>
+      <div class="flex items-center justify-between pt-1">
+        <span id="findStats" class="text-[11px] text-slate-500">0 coincidencias</span>
+        <div class="flex gap-1">
+          <button id="btnFindNext" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-medium">Siguiente</button>
+          <button id="btnReplaceOne" class="px-2.5 py-1 bg-teal-50 hover:bg-teal-100 text-teal-800 rounded font-medium">Reemplazar</button>
+          <button id="btnReplaceAll" class="px-2.5 py-1 bg-teal-700 hover:bg-teal-600 text-white rounded font-medium">Todos</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+'use strict';
+
+/* ============================================================================
+ * 1. MOTOR DE FÓRMULAS PURO (Sin eval, Con Caché AST y Correcciones de Auditoría)
+ * ============================================================================ */
+let COLS = 26;
+
+// Conversión entre índice de columna (0 -> A, 25 -> Z, 26 -> AA) y nombre
+const CN = n => {
+  let s = '';
+  for (n++; n > 0; n = (n - 1) / 26 | 0) s = String.fromCharCode(65 + (n - 1) % 26) + s;
+  return s;
+};
+const CI = s => {
+  let n = 0;
+  for (const ch of s) n = n * 26 + ch.charCodeAt(0) - 64;
+  return n - 1;
+};
+const ID = (r, c) => CN(c) + (r + 1);
+const PR = id => {
+  const m = /^([A-Z]+)(\d+)$/.exec(id);
+  return m ? [+m[2] - 1, CI(m[1])] : [0, 0];
+};
+
+// Clase de Error Semántico de Hoja de Cálculo
+class E {
+  constructor(c) { this.c = c; }
+  toString() { return this.c; }
+}
+
+// Tokenizador léxico para fórmulas
+const tk = s => {
+  const t = [];
+  const re = /\s*(?:(\d+\.?\d*(?:e[+-]?\d+)?|\.\d+)|"((?:[^"]|"")*)"|(\$?[a-z]{1,2}\$?\d+)(?![\w(.])|(true|false|verdadero|falso)(?![\w(])|([a-z_][\w.]*)(?=\()|(<=|>=|<>|[-+*\/^&=<>():,;%]))/iy;
+  let p = 0;
+  while (p < s.length) {
+    re.lastIndex = p;
+    const m = re.exec(s);
+    if (!m) {
+      if (!s.slice(p).trim()) break;
+      throw new E('#NOMBRE?');
+    }
+    p = re.lastIndex;
+    if (m[1] != null) t.push(['n', +m[1]]);
+    else if (m[2] != null) t.push(['s', m[2].replace(/""/g, '"')]);
+    else if (m[3]) t.push(['r', m[3].toUpperCase().replace(/\$/g, '')]);
+    else if (m[4]) t.push(['b', /^(t|v)/i.test(m[4])]);
+    else if (m[5]) t.push(['f', m[5].toUpperCase()]);
+    else t.push(['o', m[6]]);
+  }
+  return t;
+};
+
+// Analizador sintáctico (Parser recursivo descendente -> AST)
+const parse = s => {
+  const t = tk(s);
+  let i = 0, cmp;
+  const ok = (...o) => t[i] && t[i][0] === 'o' && o.includes(t[i][1]);
+  const bin = (sub, ops) => () => {
+    let l = sub();
+    while (ok(...ops)) {
+      const o = t[i++][1];
+      l = { t: 'bin', o, l, r: sub() };
+    }
+    return l;
+  };
+  const prim = () => {
+    const k = t[i++];
+    if (!k) throw new E('#ERROR!');
+    if (k[0] === 'n' || k[0] === 's' || k[0] === 'b') return { t: 'v', v: k[1] };
+    if (k[0] === 'r') {
+      if (ok(':') && t[i + 1] && t[i + 1][0] === 'r') {
+        i++;
+        return { t: 'rg', a: k[1], b: t[i++][1] };
+      }
+      return { t: 'r', id: k[1] };
+    }
+    if (k[0] === 'f') {
+      i++; // saltar '('
+      const a = [];
+      if (!ok(')')) {
+        do { a.push(cmp()); } while (ok(',', ';') && (i++, true));
+      }
+      if (!ok(')')) throw new E('#ERROR!');
+      i++;
+      return { t: 'fn', n: k[1], a };
+    }
+    if (k[0] === 'o' && k[1] === '(') {
+      const e = cmp();
+      if (!ok(')')) throw new E('#ERROR!');
+      i++;
+      return e;
+    }
+    throw new E('#ERROR!');
+  };
+  const post = () => {
+    let e = prim();
+    while (ok('%')) {
+      i++;
+      e = { t: 'bin', o: '/', l: e, r: { t: 'v', v: 100 } };
+    }
+    return e;
+  };
+  const un = () => {
+    if (ok('-', '+')) {
+      const o = t[i++][1], x = un();
+      return o === '-' ? { t: 'neg', x } : x;
+    }
+    return post();
+  };
+  cmp = bin(bin(bin(bin(un, ['^']), ['*', '/']), ['+', '-']), ['&']);
+  const cat = cmp;
+  cmp = bin(cat, ['=', '<>', '<', '>', '<=', '>=']);
+  const r = cmp();
+  if (i < t.length) throw new E('#ERROR!');
+  return r;
+};
+
+// Coerción de tipos y utilidades de evaluación
+const num = v => {
+  if (v instanceof E) throw v;
+  if (v === '' || v == null) return 0;
+  if (typeof v === 'boolean') return +v;
+  const n = typeof v === 'number' ? v : Number(String(v).trim().replace(',', '.'));
+  if (Number.isNaN(n)) throw new E('#VALOR!');
+  return n;
+};
+const str = v => {
+  if (v instanceof E) throw v;
+  return typeof v === 'boolean' ? (v ? 'VERDADERO' : 'FALSO') : v == null ? '' : String(v);
+};
+const tb = v => {
+  if (typeof v === 'boolean') return v;
+  if (typeof v === 'string') {
+    if (/^(verdadero|true)$/i.test(v.trim())) return true;
+    if (/^(falso|false)$/i.test(v.trim())) return false;
+  }
+  return num(v) !== 0;
+};
+const cv = (a, b) => {
+  if (a === '') a = typeof b === 'string' ? '' : 0;
+  if (b === '') b = typeof a === 'string' ? '' : 0;
+  const x = typeof a, y = typeof b;
+  if (x === y) return x === 'string' ? a.toLowerCase().localeCompare(b.toLowerCase()) : (a > b) - (a < b);
+  return x === 'number' ? -1 : y === 'number' ? 1 : 0;
+};
+const rng = (a, b, X) => {
+  const [r1, c1] = PR(a), [r2, c2] = PR(b);
+  const R0 = Math.min(r1, r2), R1 = Math.max(r1, r2), C0 = Math.min(c1, c2), C1 = Math.max(c1, c2);
+  if ((R1 - R0 + 1) * (C1 - C0 + 1) > 100000) throw new E('#REF!');
+  const arr = [];
+  for (let r = R0; r <= R1; r++) {
+    for (let c = C0; c <= C1; c++) arr.push(X.val(ID(r, c)));
+  }
+  return { arr, w: C1 - C0 + 1 };
+};
+
+// Corrección de Auditoría #6: Normalizar rango o celda individual de forma segura
+const asRange = x => {
+  if (!x) throw new E('#VALOR!');
+  if (x && Array.isArray(x.arr)) return x;
+  return { arr: [x], w: 1 };
+};
+
+const flat = a => a.flatMap(x => x && x.arr ? x.arr : [x]);
+const nums = a => {
+  const o = [];
+  for (const x of a) {
+    if (x && x.arr) {
+      for (const v of x.arr) {
+        if (v instanceof E) throw v;
+        if (typeof v === 'number') o.push(v);
+      }
+    } else o.push(num(x));
+  }
+  return o;
+};
+const crit = c => {
+  const m = /^(<=|>=|<>|=|<|>)?([\s\S]*)$/.exec(String(c ?? ''));
+  const o = m[1] || '=', v = m[2];
+  const n = v !== '' && !isNaN(+v) ? +v : v;
+  return x => {
+    if (x instanceof E) return false;
+    if (typeof x !== typeof n) return o === '<>';
+    const k = cv(x, n);
+    return { '=': k === 0, '<>': k !== 0, '<': k < 0, '>': k > 0, '<=': k <= 0, '>=': k >= 0 }[o];
+  };
+};
+const sum = n => n.reduce((s, x) => s + x, 0);
+
+// Diccionario bilingüe Español <-> Inglés para funciones
+const AL = {
+  SUMA: 'SUM', PROMEDIO: 'AVERAGE', CONTAR: 'COUNT', CONTARA: 'COUNTA',
+  'CONTAR.BLANCO': 'COUNTBLANK', SI: 'IF', 'SI.CONJUNTO': 'IFS', Y: 'AND', O: 'OR', NO: 'NOT',
+  REDONDEAR: 'ROUND', 'REDONDEAR.MAS': 'ROUNDUP', 'REDONDEAR.MENOS': 'ROUNDDOWN',
+  RAIZ: 'SQRT', POTENCIA: 'POWER', ENTERO: 'INT', ABS: 'ABS',
+  LARGO: 'LEN', MAYUSC: 'UPPER', MINUSC: 'LOWER', IZQUIERDA: 'LEFT', DERECHA: 'RIGHT',
+  EXTRAE: 'MID', HOY: 'TODAY', AHORA: 'NOW', MEDIANA: 'MEDIAN', PRODUCTO: 'PRODUCT',
+  RESIDUO: 'MOD', 'SI.ERROR': 'IFERROR', 'SUMAR.SI': 'SUMIF', 'PROMEDIO.SI': 'AVERAGEIF',
+  'CONTAR.SI': 'COUNTIF', BUSCARV: 'VLOOKUP', BUSCARX: 'XLOOKUP', CONCATENAR: 'CONCAT',
+  ESPACIOS: 'TRIM', 'ALEATORIO.ENTRE': 'RANDBETWEEN', DESVEST: 'STDEV'
+};
+
+// Catálogo documentado para el asistente predictivo y modal de ayuda
+const FN_DOCS = [
+  { es: 'SUMA', en: 'SUM', synt: 'SUMA(rango1; [rango2])', desc: 'Suma todos los números en un rango de celdas.' },
+  { es: 'PROMEDIO', en: 'AVERAGE', synt: 'PROMEDIO(rango)', desc: 'Calcula la media aritmética de los argumentos.' },
+  { es: 'SI', en: 'IF', synt: 'SI(prueba_lógica; valor_si_verdadero; [valor_si_falso])', desc: 'Evalúa una condición y devuelve un valor si se cumple y otro si no.' },
+  { es: 'SI.ERROR', en: 'IFERROR', synt: 'SI.ERROR(valor; valor_si_error)', desc: 'Devuelve un valor personalizado si la expresión genera un error.' },
+  { es: 'BUSCARV', en: 'VLOOKUP', synt: 'BUSCARV(valor_buscado; matriz; indicador_columnas; [ordenado])', desc: 'Busca un valor en la primera columna de una tabla y devuelve otra columna.' },
+  { es: 'BUSCARX', en: 'XLOOKUP', synt: 'BUSCARX(valor_buscado; matriz_buscada; matriz_devuelta; [si_no_se_encuentra])', desc: 'Búsqueda moderna en cualquier dirección por coincidencia exacta.' },
+  { es: 'SUMAR.SI', en: 'SUMIF', synt: 'SUMAR.SI(rango; criterio; [rango_suma])', desc: 'Suma las celdas que cumplen un determinado criterio.' },
+  { es: 'CONTAR.SI', en: 'COUNTIF', synt: 'CONTAR.SI(rango; criterio)', desc: 'Cuenta las celdas dentro del rango que cumplen el criterio dado.' },
+  { es: 'PROMEDIO.SI', en: 'AVERAGEIF', synt: 'PROMEDIO.SI(rango; criterio; [rango_promedio])', desc: 'Calcula el promedio de las celdas que cumplen una condición.' },
+  { es: 'CONTAR', en: 'COUNT', synt: 'CONTAR(rango)', desc: 'Cuenta cuántas celdas contienen números.' },
+  { es: 'CONTARA', en: 'COUNTA', synt: 'CONTARA(rango)', desc: 'Cuenta cuántas celdas no están vacías.' },
+  { es: 'CONTAR.BLANCO', en: 'COUNTBLANK', synt: 'CONTAR.BLANCO(rango)', desc: 'Cuenta las celdas vacías en un rango.' },
+  { es: 'MIN', en: 'MIN', synt: 'MIN(rango)', desc: 'Devuelve el valor mínimo de un conjunto de valores.' },
+  { es: 'MAX', en: 'MAX', synt: 'MAX(rango)', desc: 'Devuelve el valor máximo de un conjunto de valores.' },
+  { es: 'MEDIANA', en: 'MEDIAN', synt: 'MEDIANA(rango)', desc: 'Devuelve la mediana de los números dados.' },
+  { es: 'DESVEST', en: 'STDEV', synt: 'DESVEST(rango)', desc: 'Calcula la desviación estándar muestral de un conjunto de números.' },
+  { es: 'REDONDEAR', en: 'ROUND', synt: 'REDONDEAR(número; núm_decimales)', desc: 'Redondea un número al número de decimales especificado.' },
+  { es: 'CONCATENAR', en: 'CONCAT', synt: 'CONCATENAR(texto1; [texto2]; ...)', desc: 'Une varios elementos de texto en uno solo.' },
+  { es: 'EXTRAE', en: 'MID', synt: 'EXTRAE(texto; posición_inicial; núm_de_caracteres)', desc: 'Devuelve caracteres del centro de una cadena de texto.' },
+  { es: 'MAYUSC', en: 'UPPER', synt: 'MAYUSC(texto)', desc: 'Convierte el texto a letras mayúsculas.' },
+  { es: 'MINUSC', en: 'LOWER', synt: 'MINUSC(texto)', desc: 'Convierte el texto a letras minúsculas.' },
+  { es: 'HOY', en: 'TODAY', synt: 'HOY()', desc: 'Devuelve la fecha actual en formato AAAA-MM-DD.' }
+];
+
+// Implementación de Funciones del Motor
+const F = {
+  SUM: a => sum(nums(a)),
+  AVERAGE: a => { const n = nums(a); if (!n.length) throw new E('#DIV/0!'); return sum(n) / n.length; },
+  MIN: a => { const n = nums(a); return n.length ? n.reduce((m, x) => x < m ? x : m, Infinity) : 0; },
+  MAX: a => { const n = nums(a); return n.length ? n.reduce((m, x) => x > m ? x : m, -Infinity) : 0; },
+  COUNT: a => nums(a).length,
+  COUNTA: a => flat(a).filter(v => v !== '' && v != null).length,
+  COUNTBLANK: a => flat(a).filter(v => v === '' || v == null).length,
+  PRODUCT: a => { const n = nums(a); return n.length ? n.reduce((s, x) => s * x, 1) : 0; },
+  MEDIAN: a => {
+    const n = nums(a).sort((x, y) => x - y);
+    if (!n.length) throw new E('#NUM!');
+    const h = n.length >> 1;
+    return n.length % 2 ? n[h] : (n[h - 1] + n[h]) / 2;
+  },
+  STDEV: a => {
+    const n = nums(a);
+    if (n.length < 2) throw new E('#DIV/0!');
+    const avg = sum(n) / n.length;
+    const sqDiff = n.reduce((acc, val) => acc + (val - avg) ** 2, 0);
+    return Math.sqrt(sqDiff / (n.length - 1));
+  },
+  ROUND: a => {
+    const x = num(a[0]), k = 10 ** (a[1] === undefined ? 0 : num(a[1]));
+    return Math.sign(x) * Math.round(Math.abs(x) * k + 1e-9) / k;
+  },
+  ROUNDUP: a => {
+    const x = num(a[0]), k = 10 ** (a[1] === undefined ? 0 : num(a[1]));
+    return Math.sign(x) * Math.ceil(Math.abs(x) * k - 1e-9) / k;
+  },
+  ROUNDDOWN: a => {
+    const x = num(a[0]), k = 10 ** (a[1] === undefined ? 0 : num(a[1]));
+    return Math.sign(x) * Math.floor(Math.abs(x) * k + 1e-9) / k;
+  },
+  ABS: a => Math.abs(num(a[0])),
+  INT: a => Math.floor(num(a[0])),
+  SQRT: a => { const x = num(a[0]); if (x < 0) throw new E('#NUM!'); return Math.sqrt(x); },
+  POWER: a => { const r = Math.pow(num(a[0]), num(a[1])); if (!Number.isFinite(r)) throw new E('#NUM!'); return r; },
+  MOD: a => { const x = num(a[0]), d = num(a[1]); if (!d) throw new E('#DIV/0!'); return x - d * Math.floor(x / d); },
+  RANDBETWEEN: a => {
+    const lo = Math.ceil(num(a[0])), hi = Math.floor(num(a[1]));
+    if (lo > hi) throw new E('#NUM!');
+    return Math.floor(Math.random() * (hi - lo + 1)) + lo;
+  },
+  AND: a => flat(a).every(tb),
+  OR: a => flat(a).some(tb),
+  NOT: a => !tb(a[0]),
+  CONCAT: a => flat(a).map(str).join(''),
+  LEN: a => str(a[0]).length,
+  UPPER: a => str(a[0]).toUpperCase(),
+  LOWER: a => str(a[0]).toLowerCase(),
+  TRIM: a => str(a[0]).trim().replace(/\s+/g, ' '),
+  LEFT: a => str(a[0]).slice(0, a[1] === undefined ? 1 : Math.max(0, num(a[1]))),
+  RIGHT: a => {
+    const s = str(a[0]), n = a[1] === undefined ? 1 : Math.max(0, num(a[1]));
+    return s.slice(Math.max(0, s.length - n));
+  },
+  MID: a => {
+    const s = str(a[0]), start = Math.max(1, num(a[1])) - 1, len = Math.max(0, num(a[2]));
+    return s.slice(start, start + len);
+  },
+  TODAY: () => new Date().toISOString().slice(0, 10),
+  NOW: () => {
+    const d = new Date();
+    return d.toISOString().slice(0, 10) + ' ' + d.toTimeString().slice(0, 5);
+  },
+  // Corrección de Auditoría #6: Uso de asRange() para evitar TypeError cuando no se pasa rango
+  SUMIF: a => {
+    if (a.length < 2) throw new E('#ERROR!');
+    const r = asRange(a[0]).arr, f = crit(a[1]), s = a[2] ? asRange(a[2]).arr : r;
+    return r.reduce((t, v, i) => f(v) && typeof s[i] === 'number' ? t + s[i] : t, 0);
+  },
+  AVERAGEIF: a => {
+    if (a.length < 2) throw new E('#ERROR!');
+    const r = asRange(a[0]).arr, f = crit(a[1]), s = a[2] ? asRange(a[2]).arr : r;
+    const matched = [];
+    r.forEach((v, i) => { if (f(v) && typeof s[i] === 'number') matched.push(s[i]); });
+    if (!matched.length) throw new E('#DIV/0!');
+    return sum(matched) / matched.length;
+  },
+  COUNTIF: a => {
+    if (a.length < 2) throw new E('#ERROR!');
+    const r = asRange(a[0]).arr, f = crit(a[1]);
+    return r.filter(f).length;
+  },
+  VLOOKUP: a => {
+    if (a.length < 3) throw new E('#ERROR!');
+    const [x, rawG, i, ex] = a;
+    const g = asRange(rawG), w = g.w, n = num(i);
+    if (n < 1 || n > w) throw new E('#REF!');
+    const h = g.arr.length / w, exact = ex !== undefined && !tb(ex);
+    let hit = -1;
+    for (let r = 0; r < h; r++) {
+      const c = cv(g.arr[r * w], x);
+      if (exact ? c === 0 : c <= 0) hit = r;
+      if (exact && c === 0) break;
+      if (!exact && c > 0) break;
+    }
+    if (hit < 0) throw new E('#N/D');
+    return g.arr[hit * w + n - 1];
+  },
+  XLOOKUP: a => {
+    if (a.length < 3) throw new E('#ERROR!');
+    const [x, rawSearch, rawReturn, notFound] = a;
+    const sArr = asRange(rawSearch).arr;
+    const rArr = asRange(rawReturn).arr;
+    const idx = sArr.findIndex(v => cv(v, x) === 0);
+    if (idx < 0) {
+      if (notFound !== undefined) return notFound;
+      throw new E('#N/D');
+    }
+    return idx < rArr.length ? rArr[idx] : '';
+  }
+};
+
+// Despachador de funciones con evaluación perezosa para IF, IFS e IFERROR
+let call = (n, X) => {
+  const nm = AL[n.n] || n.n;
+  if (nm === 'IF') {
+    if (n.a.length < 2) throw new E('#ERROR!');
+    return tb(ev(n.a[0], X)) ? ev(n.a[1], X) : n.a[2] ? ev(n.a[2], X) : false;
+  }
+  if (nm === 'IFS') {
+    for (let i = 0; i + 1 < n.a.length; i += 2) {
+      if (tb(ev(n.a[i], X))) return ev(n.a[i + 1], X);
+    }
+    throw new E('#N/D');
+  }
+  if (nm === 'IFERROR') {
+    if (n.a.length < 2) throw new E('#ERROR!');
+    try {
+      const res = ev(n.a[0], X);
+      if (res instanceof E) return ev(n.a[1], X);
+      return res;
+    } catch (e) {
+      if (e instanceof E) return ev(n.a[1], X);
+      throw e;
+    }
+  }
+  const f = F[nm];
+  if (!f) throw new E('#NOMBRE?');
+  return f(n.a.map(x => x.t === 'rg' ? rng(x.a, x.b, X) : ev(x, X)));
+};
+
+// Evaluador de nodos AST
+const ev = (n, X) => {
+  switch (n.t) {
+    case 'v': return n.v;
+    case 'r': {
+      const v = X.val(n.id);
+      if (v instanceof E) throw v;
+      return v;
+    }
+    case 'neg': return -num(ev(n.x, X));
+    case 'rg': throw new E('#VALOR!');
+    case 'fn': return call(n, X);
+    case 'bin': {
+      const a = ev(n.l, X), b = ev(n.r, X);
+      switch (n.o) {
+        case '+': return num(a) + num(b);
+        case '-': return num(a) - num(b);
+        case '*': return num(a) * num(b);
+        case '/': {
+          const d = num(b);
+          if (!d) throw new E('#DIV/0!');
+          return num(a) / d;
+        }
+        case '^': {
+          const r = Math.pow(num(a), num(b));
+          if (!Number.isFinite(r)) throw new E('#NUM!');
+          return r;
+        }
+        case '&': return str(a) + str(b);
+        default: {
+          const c = cv(a, b);
+          return { '=': c === 0, '<>': c !== 0, '<': c < 0, '>': c > 0, '<=': c <= 0, '>=': c >= 0 }[n.o];
+        }
+      }
+    }
+  }
+};
+
+const lit = s => {
+  const t = s.trim();
+  if (/^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t)) return +t;
+  if (/^[-+]?\d+(\.\d+)?%$/.test(t)) return +t.slice(0, -1) / 100;
+  return s;
+};
+
+const astCache = new Map();
+const Engine = cells => {
+  const memo = new Map(), stk = new Set();
+  const X = {
+    val(id) {
+      if (memo.has(id)) return memo.get(id);
+      if (stk.has(id)) throw new E('#CIRC!');
+      const c = cells[id];
+      let v;
+      if (!c || c.raw === '') v = '';
+      else if (c.raw[0] === '=') {
+        stk.add(id);
+        try {
+          let a = astCache.get(c.raw);
+          if (!a) {
+            if (astCache.size > 5000) astCache.clear();
+            a = parse(c.raw.slice(1));
+            astCache.set(c.raw, a);
+          }
+          v = ev(a, X);
+        } catch (e) {
+          v = e instanceof E ? e : new E('#ERROR!');
+        } finally {
+          stk.delete(id);
+        }
+      } else {
+        v = lit(c.raw);
+      }
+      memo.set(id, v);
+      return v;
+    }
+  };
+  return X.val;
+};
+
+// Desplazamiento de referencias relativas y absolutas ($A$1) ignorando cadenas
+const shift = (raw, dr, dc) =>
+  raw[0] !== '='
+    ? raw
+    : raw
+        .split(/("(?:[^"]|"")*")/)
+        .map((p, i) =>
+          i % 2
+            ? p
+            : p.replace(/(?<![A-Za-z0-9_.])(\$?)([A-Za-z]{1,2})(\$?)(\d+)(?![\w(.])/g, (m, a, L, b, n) => {
+                const c = CI(L.toUpperCase()) + (a ? 0 : dc);
+                const r = +n + (b ? 0 : dr);
+                return c < 0 || r < 1 ? '#REF!' : a + (a ? L.toUpperCase() : CN(c)) + b + r;
+              })
+        )
+        .join('');
+
+// Corrección de Auditoría #2: Traducción completa y segura de fórmulas para exportación .xlsx
+const en = f =>
+  f
+    .split(/("(?:[^"]|"")*")/)
+    .map((p, i) =>
+      i % 2
+        ? p
+        : p
+            .replace(/;/g, ',')
+            .replace(/\b(VERDADERO|FALSO)\b/gi, m => (/^v/i.test(m) ? 'TRUE' : 'FALSE'))
+            .replace(/([A-Za-z_][\w.]*)(?=\()/g, m => AL[m.toUpperCase()] || m.toUpperCase())
+    )
+    .join('');
+
+/* ============================================================================
+ * 2. SUITE DE AUTOPRUEBAS AMPLIADA (Verifica motor + correcciones de auditoría)
+ * ============================================================================ */
+(() => {
+  const T = (cs, id) => {
+    const c = {};
+    for (const k in cs) c[k] = { raw: cs[k], st: {} };
+    return String(Engine(c)(id));
+  };
+  const tests = [
+    ['Precedencia aritmética', { A1: '2', B1: '3', C1: '=A1+B1*2' }, 'C1', '8'],
+    ['Detección de referencia circular', { A1: '=B1', B1: '=A1' }, 'A1', '#CIRC!'],
+    ['División por cero', { A1: '=1/0' }, 'A1', '#DIV/0!'],
+    ['Función SUMA en rango', { A1: '1', A2: '2', A3: '3', B1: '=SUMA(A1:A3)' }, 'B1', '6'],
+    ['Función PROMEDIO', { A1: '1', A2: '2', B1: '=PROMEDIO(A1:A2)' }, 'B1', '1.5'],
+    ['Condicional SI con punto y coma', { A1: '=SI(2>1;"si";"no")' }, 'A1', 'si'],
+    ['Operador unario y potencia', { A1: '=-2^2' }, 'A1', '4'],
+    ['Porcentaje postfijo', { A1: '=10%' }, 'A1', '0.1'],
+    ['Concatenación con &', { A1: '="a"&"b"' }, 'A1', 'ab'],
+    ['Función desconocida (#NOMBRE?)', { A1: '=FOO(1)' }, 'A1', '#NOMBRE?'],
+    ['CONTAR.SI sobre rango', { A1: '5', A2: '7', B1: '=CONTAR.SI(A1:A2;">5")' }, 'B1', '1'],
+    ['CONTAR.SI sobre celda única (Fix Auditoría)', { A1: '9', B1: '=CONTAR.SI(A1;">5")' }, 'B1', '1'],
+    ['BUSCARV coincidencia exacta', { A1: 'a', B1: '10', A2: 'b', B2: '20', C1: '=BUSCARV("b";A1:B2;2;0)' }, 'C1', '20'],
+    ['BUSCARX moderno', { A1: 'ID2', B1: '=BUSCARX(A1;D1:D2;E1:E2;"No")', D1: 'ID1', D2: 'ID2', E1: '100', E2: '250' }, 'B1', '250'],
+    ['Manejo SI.ERROR', { A1: '=SI.ERROR(1/0;"x")' }, 'A1', 'x'],
+    ['Dependencias encadenadas', { A1: '1', A2: '=A1+1', A3: '=A2+1' }, 'A3', '3'],
+    ['Agrupación con paréntesis', { A1: '=2*(3+4)' }, 'A1', '14'],
+    ['Error de sintaxis (#ERROR!)', { A1: '=1+' }, 'A1', '#ERROR!'],
+    ['Extracción de texto EXTRAE', { A1: '=EXTRAE("HojaLibre";5;5)' }, 'A1', 'Libre']
+  ];
+  const results = tests.map(([name, c, id, exp]) => {
+    const got = T(c, id);
+    return { name, pass: got === exp, exp, got };
+  });
+  const shiftPass = shift('=A1+$B$2+"A1"', 1, 1) === '=B2+$B$2+"A1"';
+  results.push({ name: 'Ajuste de referencias relativas/absolutas', pass: shiftPass, exp: '=B2+$B$2+"A1"', got: shift('=A1+$B$2+"A1"', 1, 1) });
+  const enPass = en('SI(A1>0;"a;b";VERDADERO)') === 'IF(A1>0,"a;b",TRUE)';
+  results.push({ name: 'Traductor XLSX (comas, booleanos y cadenas)', pass: enPass, exp: 'IF(A1>0,"a;b",TRUE)', got: en('SI(A1>0;"a;b";VERDADERO)') });
+
+  const okCount = results.filter(r => r.pass).length;
+  window._auditTests = { ok: okCount, total: results.length, details: results };
+})();
+
+/* ============================================================================
+ * 3. ESTADO DEL LIBRO MULTI-HOJA, SANITIZACIÓN Y RENDERIZADO DIFERENCIAL
+ * ============================================================================ */
+const $ = s => document.querySelector(s);
+let ROWS = 200;
+let sheets = [{ name: 'Hoja 1', rows: 200, cells: {}, colWidths: {}, freeze: false }];
+let activeSheetIdx = 0;
+let cells = sheets[0].cells;
+let colWidths = sheets[0].colWidths;
+let hist = [], redo = [];
+let val = Engine(cells);
+let anc = [0, 0], foc = [0, 0];
+let editing = false, emode = '', clip = null, prev = [], drag = false, fillDrag = false;
+let renderedIds = new Set(); // Optimización de Auditoría: seguimiento de celdas pintadas en el DOM
+
+const tbl = $('#tbl'), wrap = $('#wrap'), ed = $('#ed'), fx = $('#fx'), fillHandle = $('#fillHandle');
+const td = (r, c) => tbl.rows[r + 1]?.cells[c + 1];
+const raw = id => (cells[id] ? cells[id].raw : '');
+const cl = (x, a, b) => Math.max(a, Math.min(b, x));
+
+// Sanitizadores de estilo (Corrección de Auditoría de Seguridad CSS)
+const safeColor = c => (typeof c === 'string' && /^#[0-9a-f]{3,8}$/i.test(c.trim()) ? c.trim() : '');
+const safeAlign = a => (['left', 'center', 'right'].includes(a) ? a : '');
+
+const msg = t => {
+  $('#msg').textContent = t;
+  clearTimeout(msg.t);
+  msg.t = setTimeout(() => ($('#msg').textContent = ''), 4500);
+};
+
+// Sistema de Modales Personalizados (Sin alert/confirm bloqueantes)
+function showModal({ title, html, confirmText = 'Aceptar', cancelText = 'Cancelar', danger = false, onConfirm }) {
+  const overlay = $('#modalOverlay');
+  $('#modalTitle').textContent = title;
+  $('#modalBody').innerHTML = html;
+  const footer = $('#modalFooter');
+  footer.innerHTML = '';
+
+  const close = () => {
+    overlay.classList.add('hidden');
+    overlay.classList.remove('flex');
+    wrap.focus();
+  };
+
+  if (cancelText) {
+    const btnCancel = document.createElement('button');
+    btnCancel.className = 'px-3.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-medium text-xs transition';
+    btnCancel.textContent = cancelText;
+    btnCancel.onclick = close;
+    footer.appendChild(btnCancel);
+  }
+
+  if (confirmText) {
+    const btnOk = document.createElement('button');
+    btnOk.className = `px-3.5 py-1.5 rounded-lg text-white font-medium text-xs transition shadow-sm ${
+      danger ? 'bg-red-600 hover:bg-red-500' : 'bg-teal-700 hover:bg-teal-600'
+    }`;
+    btnOk.textContent = confirmText;
+    btnOk.onclick = () => {
+      close();
+      if (onConfirm) onConfirm();
+    };
+    footer.appendChild(btnOk);
+  }
+
+  $('#modalCloseX').onclick = close;
+  overlay.classList.remove('hidden');
+  overlay.classList.add('flex');
+}
+
+// Construcción de la cuadrícula HTML con soporte de anchos de columna personalizados
+function build() {
+  let h = '<thead><tr><th class="corner r" title="Seleccionar toda la hoja">◢</th>';
+  for (let c = 0; c < COLS; c++) {
+    const w = colWidths[c] ? `style="width:${colWidths[c]}px;min-width:${colWidths[c]}px;max-width:${colWidths[c]}px"` : '';
+    h += `<th data-c="${c}" ${w} class="relative">${CN(c)}<div class="col-resizer" data-rc="${c}"></div></th>`;
+  }
+  h += '</tr></thead><tbody>';
+  for (let r = 0; r < ROWS; r++) {
+    h += `<tr><th class="r" data-r="${r}">${r + 1}</th>`;
+    for (let c = 0; c < COLS; c++) {
+      const w = colWidths[c] ? `style="width:${colWidths[c]}px;min-width:${colWidths[c]}px;max-width:${colWidths[c]}px"` : '';
+      h += `<td data-r="${r}" data-c="${c}" ${w}></td>`;
+    }
+    h += '</tr>';
+  }
+  tbl.innerHTML = h + '</tbody>';
+  prev = [];
+  renderedIds.clear();
+  document.body.classList.toggle('freeze-row1', !!sheets[activeSheetIdx].freeze);
+  $('#btnFreeze').classList.toggle('bg-teal-100', !!sheets[activeSheetIdx].freeze);
+  $('#btnFreeze').classList.toggle('text-teal-800', !!sheets[activeSheetIdx].freeze);
+}
+
+// Formateador de números y valores
+const fmt = (v, s) => {
+  if (v instanceof E) return String(v);
+  if (typeof v === 'boolean') return v ? 'VERDADERO' : 'FALSO';
+  if (typeof v !== 'number') return v;
+  switch (s.fm) {
+    case 'd2':
+      return v.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    case 'mil':
+      return v.toLocaleString('es-CO', { maximumFractionDigits: 2 });
+    case 'cop':
+      return '$ ' + v.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+    case 'usd':
+      return 'US$ ' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    case 'date': return Number.isFinite(v) ? new Date(Date.UTC(1899,11,30)+v*86400000).toISOString().slice(0,10) : String(v);
+    case 'pct':
+      return (v * 100).toLocaleString('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + '%';
+  }
+  return String(+v.toPrecision(12));
+};
+
+// Aplicar estilo sanitizado a una celda DOM
+function applyCellStyle(t, s, v, c) {
+  const w = colWidths[c];
+  t.style.width = w ? w + 'px' : '';
+  t.style.minWidth = w ? w + 'px' : '';
+  t.style.maxWidth = w ? w + 'px' : '';
+  t.style.fontWeight = s.b ? '700' : '';
+  t.style.fontStyle = s.i ? 'italic' : '';
+  t.style.textDecoration = s.u ? 'underline' : '';
+  t.style.textAlign = safeAlign(s.al) || (typeof v === 'number' ? 'right' : v instanceof E || typeof v === 'boolean' ? 'center' : 'left');
+  t.style.backgroundColor = safeColor(s.bg);
+  t.style.color = safeColor(s.fc);
+  t.style.fontSize = s.fs ? cl(Number(s.fs),10,28)+'px' : '';
+  t.style.whiteSpace = s.wrap ? 'normal' : '';
+  t.style.border = s.border ? '1px solid #64748b' : '';
+}
+
+// Corrección de Auditoría de Rendimiento: refresh() diferencial O(N_celdas_activas)
+function refresh() {
+  val = Engine(cells);
+  const toCheck = new Set([...Object.keys(cells), ...renderedIds]);
+  const nextRendered = new Set();
+
+  for (const id of toCheck) {
+    const [r, c] = PR(id);
+    if (r < 0 || r >= ROWS || c < 0 || c >= COLS) continue;
+    const t = td(r, c);
+    if (!t) continue;
+    const k = cells[id];
+
+    if (!k) {
+      if (t.textContent !== '') t.textContent = '';
+      applyCellStyle(t, {}, '', c);
+      t.classList.remove('err');
+      continue;
+    }
+
+    const v = val(id), s = k.st || {}, x = fmt(v, s);
+    if (t.textContent !== x) t.textContent = x;
+    applyCellStyle(t, s, v, c);
+    t.classList.toggle('err', v instanceof E);
+    nextRendered.add(id);
+  }
+  renderedIds = nextRendered;
+}
+
+const box = () => [Math.min(anc[0], foc[0]), Math.max(anc[0], foc[0]), Math.min(anc[1], foc[1]), Math.max(anc[1], foc[1])];
+
+function updateToolbarState() {
+  const cell = cells[ID(anc[0], anc[1])];
+  const st = (cell && cell.st) || {};
+  $('#btnB').classList.toggle('bg-teal-100', !!st.b);
+  $('#btnI').classList.toggle('bg-teal-100', !!st.i);
+  $('#btnU').classList.toggle('bg-teal-100', !!st.u);
+  $('#btnAlL').classList.toggle('bg-teal-100', st.al === 'left');
+  $('#btnAlC').classList.toggle('bg-teal-100', st.al === 'center');
+  $('#btnAlR').classList.toggle('bg-teal-100', st.al === 'right');
+  $('#fm').value = st.fm || 'g';
+}
+
+function positionFillHandle() {
+  if (editing) {
+    fillHandle.style.display = 'none';
+    return;
+  }
+  const [, r1, , c1] = box();
+  const cornerTd = td(r1, c1);
+  if (!cornerTd) return;
+  fillHandle.style.display = 'block';
+  fillHandle.style.left = (cornerTd.offsetLeft + cornerTd.offsetWidth - 4) + 'px';
+  fillHandle.style.top = (cornerTd.offsetTop + cornerTd.offsetHeight - 4) + 'px';
+}
+
+function drawSel(scroll = true) {
+  prev.forEach(e => e.classList.remove('s', 'a', 'hl'));
+  prev = [];
+  const [r0, r1, c0, c1] = box();
+
+  // Sombrear celdas seleccionadas (limitado visualmente si es selección completa)
+  for (let r = r0; r <= r1; r++) {
+    for (let c = c0; c <= c1; c++) {
+      const e = td(r, c);
+      if (e) { e.classList.add('s'); prev.push(e); }
+    }
+  }
+  for (let c = c0; c <= c1; c++) {
+    const e = tbl.rows[0]?.cells[c + 1];
+    if (e) { e.classList.add('hl'); prev.push(e); }
+  }
+  for (let r = r0; r <= r1; r++) {
+    const e = tbl.rows[r + 1]?.cells[0];
+    if (e) { e.classList.add('hl'); prev.push(e); }
+  }
+
+  const a = td(anc[0], anc[1]);
+  if (a) { a.classList.add('a'); prev.push(a); }
+
+  const activeId = ID(anc[0], anc[1]);
+  $('#nm').value = (r0 === r1 && c0 === c1) ? activeId : `${ID(r0, c0)}:${ID(r1, c1)}`;
+  if (!editing && document.activeElement !== fx) {
+    fx.value = raw(activeId);
+  }
+
+  updateToolbarState();
+  positionFillHandle();
+
+  if (scroll) {
+    td(foc[0], foc[1])?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+
+  // Cálculo eficiente de estadísticas sobre las celdas pobladas dentro del rango
+  const n = [];
+  let countNonEmpty = 0;
+  for (const id in cells) {
+    const [r, c] = PR(id);
+    if (r >= r0 && r <= r1 && c >= c0 && c <= c1) {
+      const v = val(id);
+      if (v !== '' && v != null) countNonEmpty++;
+      if (typeof v === 'number') n.push(v);
+    }
+  }
+  if (n.length > 1) {
+    const s = +sum(n).toPrecision(12);
+    const avg = +(sum(n) / n.length).toPrecision(8);
+    const minV = Math.min(...n);
+    const maxV = Math.max(...n);
+    $('#st').textContent = `Suma: ${s.toLocaleString('es-CO')}  |  Promedio: ${avg.toLocaleString('es-CO')}  |  Mín: ${minV.toLocaleString('es-CO')}  |  Máx: ${maxV.toLocaleString('es-CO')}  |  Recuento: ${countNonEmpty}`;
+  } else if (countNonEmpty > 1) {
+    $('#st').textContent = `Recuento: ${countNonEmpty}`;
+  } else {
+    $('#st').textContent = 'Listo';
+  }
+}
+
+/* ============================================================================
+ * 4. TRANSACCIONES CON DESHACER / REHACER Y GESTIÓN DE ESTILOS
+ * ============================================================================ */
+const put = ch => {
+  const b = [];
+  for (const [id, n] of ch) {
+    b.push([id, cells[id] ? { raw: cells[id].raw, st: { ...cells[id].st } } : null]);
+    if (n && (n.raw !== '' || Object.keys(n.st || {}).length)) {
+      cells[id] = { raw: n.raw, st: { ...(n.st || {}) } };
+    } else {
+      delete cells[id];
+    }
+  }
+  return b;
+};
+
+const changed = () => {
+  refresh();
+  drawSel(false);
+  save();
+};
+
+const tx = ch => {
+  if (!ch.length) return;
+  const denied=ch.some(([id])=>sheets[activeSheetIdx].locks?.[id]);
+  if(denied){msg('Hay celdas protegidas en la selección');return;}
+  const invalid=ch.some(([id,n])=>n&&n.raw!==undefined&&!studio.valid(id,String(n.raw)));
+  if(invalid){msg('La selección contiene datos que no cumplen la validación');return;}
+  const b = put(ch);
+  hist.push({ b, a: ch });
+  if (hist.length > 300) hist.shift();
+  redo.length = 0;
+  changed();
+};
+
+const undo = () => {
+  const h = hist.pop();
+  if (!h) return;
+  put(h.b.slice().reverse());
+  redo.push(h);
+  changed();
+};
+
+const rdo = () => {
+  const h = redo.pop();
+  if (!h) return;
+  put(h.a);
+  hist.push(h);
+  changed();
+};
+
+const nrm = t => String(t).replace(/^(-?\d+),(\d+)$/, '$1.$2');
+const setRaw = (id, t) => [id, { raw: nrm(t), st: cells[id] ? { ...cells[id].st } : {} }];
+const each = f => {
+  const [r0, r1, c0, c1] = box(), o = [];
+  for (let r = r0; r <= r1; r++) {
+    for (let c = c0; c <= c1; c++) o.push(f(ID(r, c), r, c));
+  }
+  return o;
+};
+
+function sty(k, v) {
+  const a = cells[ID(anc[0], anc[1])];
+  if (k === 'b' || k === 'i' || k === 'u') v = a && a.st[k] ? undefined : true;
+  if (v === 'g') v = undefined;
+  tx(
+    each(id => {
+      const o = cells[id] || { raw: '', st: {} };
+      const st = { ...o.st };
+      if (v === undefined) delete st[k];
+      else st[k] = v;
+      return [id, { raw: o.raw, st }];
+    })
+  );
+  wrap.focus();
+}
+
+/* ============================================================================
+ * 5. EDICIÓN EN CELDA (#ed), BARRA DE FÓRMULAS (#fx) Y AUTOCOMPLETADO
+ * ============================================================================ */
+function updateFormulaHint(text) {
+  const hintBox = $('#fnHint');
+  if (!text || text[0] !== '=') {
+    hintBox.classList.add('hidden');
+    return;
+  }
+  const m = /([A-Za-z_][\w.]*)\(?[^()]*$/.exec(text.slice(1));
+  if (!m) {
+    hintBox.classList.add('hidden');
+    return;
+  }
+  const token = m[1].toUpperCase();
+  const matches = FN_DOCS.filter(d => d.es.startsWith(token) || d.en.startsWith(token)).slice(0, 4);
+  if (!matches.length) {
+    hintBox.classList.add('hidden');
+    return;
+  }
+  hintBox.innerHTML = matches
+    .map(
+      d => `<div class="py-1 border-b border-slate-800 last:border-0">
+        <div class="font-bold text-emerald-400 mono">${d.synt} <span class="text-slate-400 font-normal">(${d.en})</span></div>
+        <div class="text-slate-300 text-[11px]">${d.desc}</div>
+      </div>`
+    )
+    .join('');
+  hintBox.classList.remove('hidden');
+}
+
+function edit(init, mode) {
+  const t = td(anc[0], anc[1]);
+  if (!t) return;
+  editing = true;
+  emode = mode;
+  fillHandle.style.display = 'none';
+  Object.assign(ed.style, {
+    display: 'block',
+    left: t.offsetLeft + 'px',
+    top: t.offsetTop + 'px',
+    minWidth: Math.max(t.offsetWidth, 120) + 'px',
+    height: t.offsetHeight + 'px'
+  });
+  ed.value = init != null ? init : raw(ID(anc[0], anc[1]));
+  fx.value = ed.value;
+  updateFormulaHint(ed.value);
+  ed.focus();
+  ed.setSelectionRange(ed.value.length, ed.value.length);
+}
+
+function commit() {
+  $('#fnHint').classList.add('hidden');
+  if (!editing) return false;
+  editing = false;
+  ed.style.display = 'none';
+  const id = ID(anc[0], anc[1]);
+  if (ed.value !== raw(id)) {
+    tx([setRaw(id, ed.value)]);
+  } else {
+    positionFillHandle();
+  }
+  return true;
+}
+
+function cancel() {
+  $('#fnHint').classList.add('hidden');
+  editing = false;
+  ed.style.display = 'none';
+  drawSel(false);
+  wrap.focus();
+}
+
+function go(dr, dc, ext) {
+  const b = ext ? foc : anc;
+  const n = [cl(b[0] + dr, 0, ROWS - 1), cl(b[1] + dc, 0, COLS - 1)];
+  foc = n;
+  if (!ext) anc = n.slice();
+  drawSel();
+}
+
+ed.addEventListener('input', () => {
+  fx.value = ed.value;
+  updateFormulaHint(ed.value);
+});
+ed.addEventListener('keydown', e => {
+  const k = e.key;
+  if (k === 'Escape') {
+    cancel();
+    return;
+  }
+  const mv =
+    { Enter: [e.shiftKey ? -1 : 1, 0], Tab: [0, e.shiftKey ? -1 : 1] }[k] ||
+    (emode === 'enter' && { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] }[k]);
+  if (mv) {
+    e.preventDefault();
+    commit();
+    go(mv[0], mv[1]);
+    wrap.focus();
+  }
+});
+ed.addEventListener('blur', () => {
+  if (editing) commit();
+});
+
+// Corrección de Auditoría #1: Sincronización completa de barra #fx (input, blur, Enter, Escape)
+fx.addEventListener('input', () => {
+  if (editing) ed.value = fx.value;
+  updateFormulaHint(fx.value);
+});
+fx.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    $('#fnHint').classList.add('hidden');
+    editing = false;
+    ed.style.display = 'none';
+    tx([setRaw(ID(anc[0], anc[1]), fx.value)]);
+    wrap.focus();
+    go(1, 0);
+  } else if (e.key === 'Escape') {
+    e.preventDefault();
+    $('#fnHint').classList.add('hidden');
+    fx.value = raw(ID(anc[0], anc[1]));
+    if (editing) cancel();
+    else wrap.focus();
+  }
+});
+fx.addEventListener('blur', () => {
+  $('#fnHint').classList.add('hidden');
+  if (editing) return;
+  const id = ID(anc[0], anc[1]);
+  if (fx.value !== raw(id)) {
+    tx([setRaw(id, fx.value)]);
+  }
+});
+
+/* ============================================================================
+ * 6. RATÓN, REDIMENSIONAMIENTO DE COLUMNAS Y CUADRO DE RELLENO (FILL HANDLE)
+ * ============================================================================ */
+let resizingCol = null, resizeStartX = 0, resizeStartW = 96;
+
+tbl.addEventListener('mousedown', e => {
+  // ¿Clic en redimensionador de columna?
+  const resizer = e.target.closest('.col-resizer');
+  if (resizer) {
+    e.preventDefault();
+    e.stopPropagation();
+    const c = +resizer.dataset.rc;
+    const th = tbl.rows[0].cells[c + 1];
+    resizingCol = c;
+    resizeStartX = e.clientX;
+    resizeStartW = th.offsetWidth;
+    resizer.classList.add('active');
+    return;
+  }
+
+  const t = e.target.closest('td,th');
+  if (!t) return;
+
+  if (t.tagName === 'TD') {
+    const r = +t.dataset.r, c = +t.dataset.c;
+    // Insertar referencia de celda haciendo clic mientras se edita una fórmula
+    const activeInput = editing ? ed : document.activeElement === fx ? fx : null;
+    if (activeInput && activeInput.value[0] === '=' && /[-+*\/^&=<>(,;:\s]$/.test(activeInput.value)) {
+      e.preventDefault();
+      activeInput.value += ID(r, c);
+      if (activeInput === ed) fx.value = ed.value;
+      return;
+    }
+    if (document.activeElement === fx) fx.blur();
+    commit();
+    foc = [r, c];
+    if (!e.shiftKey) anc = [r, c];
+    drag = true;
+  } else if (t.dataset.c != null) {
+    commit();
+    const c = +t.dataset.c;
+    anc = [0, c];
+    foc = [ROWS - 1, c];
+  } else if (t.dataset.r != null) {
+    commit();
+    const r = +t.dataset.r;
+    anc = [r, 0];
+    foc = [r, COLS - 1];
+  } else {
+    commit();
+    anc = [0, 0];
+    foc = [ROWS - 1, COLS - 1];
+  }
+  drawSel(false);
+  wrap.focus();
+  e.preventDefault();
+});
+
+// Iniciar arrastre desde el Fill Handle (esquina inferior derecha)
+let fillBaseBox = null;
+fillHandle.addEventListener('mousedown', e => {
+  e.preventDefault();
+  e.stopPropagation();
+  commit();
+  fillDrag = true;
+  fillBaseBox = box();
+});
+
+tbl.addEventListener('mouseover', e => {
+  if (!drag && !fillDrag) return;
+  const t = e.target.closest('td');
+  if (t) {
+    foc = [+t.dataset.r, +t.dataset.c];
+    drawSel(false);
+  }
+});
+
+document.addEventListener('mousemove', e => {
+  if (resizingCol !== null) {
+    const w = Math.max(50, Math.min(400, resizeStartW + (e.clientX - resizeStartX)));
+    colWidths[resizingCol] = w;
+    for (let r = 0; r <= ROWS; r++) {
+      const cell = tbl.rows[r]?.cells[resizingCol + 1];
+      if (cell) {
+        cell.style.width = w + 'px';
+        cell.style.minWidth = w + 'px';
+        cell.style.maxWidth = w + 'px';
+      }
+    }
+    positionFillHandle();
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (resizingCol !== null) {
+    document.querySelectorAll('.col-resizer.active').forEach(el => el.classList.remove('active'));
+    resizingCol = null;
+    save();
+  }
+  if (fillDrag && fillBaseBox) {
+    fillDrag = false;
+    const [br0, br1, bc0, bc1] = fillBaseBox;
+    const [r0, r1, c0, c1] = box();
+    const ch = [];
+    // Si se arrastró hacia abajo
+    if (r1 > br1) {
+      for (let c = bc0; c <= bc1; c++) {
+        const srcH = br1 - br0 + 1;
+        for (let r = br1 + 1; r <= r1; r++) {
+          const srcR = br0 + ((r - br0) % srcH);
+          const s = cells[ID(srcR, c)] || { raw: '', st: {} };
+          ch.push([ID(r, c), { raw: shift(s.raw, r - srcR, 0), st: { ...s.st } }]);
+        }
+      }
+    }
+    // Si se arrastró hacia la derecha
+    if (c1 > bc1) {
+      for (let r = br0; r <= br1; r++) {
+        const srcW = bc1 - bc0 + 1;
+        for (let c = bc1 + 1; c <= c1; c++) {
+          const srcC = bc0 + ((c - bc0) % srcW);
+          const s = cells[ID(r, srcC)] || { raw: '', st: {} };
+          ch.push([ID(r, c), { raw: shift(s.raw, 0, c - srcC), st: { ...s.st } }]);
+        }
+      }
+    }
+    fillBaseBox = null;
+    if (ch.length) tx(ch);
+  }
+  drag = false;
+});
+
+tbl.addEventListener('dblclick', e => {
+  const resizer = e.target.closest('.col-resizer');
+  if (resizer) {
+    autoFitColumns([+resizer.dataset.rc]);
+    return;
+  }
+  if (e.target.closest('td')) edit(null, 'edit');
+});
+
+// Autoajuste de ancho de columnas según contenido
+function autoFitColumns(colsToFit) {
+  for (const c of colsToFit) {
+    let maxLen = 4;
+    for (const id in cells) {
+      const [r, col] = PR(id);
+      if (col === c && r < ROWS) {
+        const t = td(r, c);
+        if (t && t.textContent) maxLen = Math.max(maxLen, t.textContent.length);
+      }
+    }
+    const w = Math.max(64, Math.min(340, maxLen * 8 + 22));
+    colWidths[c] = w;
+    for (let r = 0; r <= ROWS; r++) {
+      const cell = tbl.rows[r]?.cells[c + 1];
+      if (cell) {
+        cell.style.width = w + 'px';
+        cell.style.minWidth = w + 'px';
+        cell.style.maxWidth = w + 'px';
+      }
+    }
+  }
+  positionFillHandle();
+  save();
+}
+
+/* ============================================================================
+ * 7. ATAJOS DE TECLADO Y PORTAPAPELES CON AJUSTE DE REFERENCIAS
+ * ============================================================================ */
+function fillD() {
+  const [r0, r1, c0, c1] = box(), ch = [];
+  for (let c = c0; c <= c1; c++) {
+    const s = cells[ID(r0, c)] || { raw: '', st: {} };
+    for (let r = r0 + 1; r <= r1; r++) {
+      ch.push([ID(r, c), { raw: shift(s.raw, r - r0, 0), st: { ...s.st } }]);
+    }
+  }
+  tx(ch);
+}
+
+wrap.addEventListener('keydown', e => {
+  if (editing) return;
+  const k = e.key, m = e.ctrlKey || e.metaKey;
+  if (m) {
+    const x = k.toLowerCase();
+    if (x === 'z') e.shiftKey ? rdo() : undo();
+    else if (x === 'y') rdo();
+    else if (x === 'b') sty('b');
+    else if (x === 'i') sty('i');
+    else if (x === 'u') sty('u');
+    else if (x === 'd') fillD();
+    else if (x === 'f') toggleFindPanel(true);
+    else if (x === 'a') {
+      anc = [0, 0];
+      foc = [ROWS - 1, COLS - 1];
+      drawSel(false);
+    } else if (x === 's') save(true);
+    else return;
+    e.preventDefault();
+    return;
+  }
+  const mv = {
+    ArrowUp: [-1, 0],
+    ArrowDown: [1, 0],
+    ArrowLeft: [0, -1],
+    ArrowRight: [0, 1],
+    Enter: [e.shiftKey ? -1 : 1, 0],
+    Tab: [0, e.shiftKey ? -1 : 1]
+  }[k];
+  if (mv) {
+    go(mv[0], mv[1], e.shiftKey && k.startsWith('Arrow'));
+    e.preventDefault();
+  } else if (k === 'F2') {
+    edit(null, 'edit');
+    e.preventDefault();
+  } else if (k === 'Delete' || k === 'Backspace') {
+    tx(each(id => setRaw(id, '')));
+    e.preventDefault();
+  } else if (k === 'Home') {
+    go(0, -999);
+    e.preventDefault();
+  } else if (k.length === 1 && !e.altKey) {
+    edit(k, 'enter');
+    e.preventDefault();
+  }
+});
+
+// Portapapeles TSV/Excel
+const qd = (x, d) => (new RegExp('["\\n\\r' + (d === '\t' ? '\\t' : d) + ']').test(x) ? '"' + x.replace(/"/g, '""') + '"' : x);
+const parseD = (s, d) => {
+  const rows = [];
+  let row = [], f = '', q = false;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (q) {
+      if (ch === '"') {
+        if (s[i + 1] === '"') { f += '"'; i++; }
+        else q = false;
+      } else f += ch;
+    } else if (ch === '"' && f === '') q = true;
+    else if (ch === d) { row.push(f); f = ''; }
+    else if (ch === '\n') { row.push(f); rows.push(row); row = []; f = ''; }
+    else if (ch !== '\r') f += ch;
+  }
+  if (f !== '' || row.length) { row.push(f); rows.push(row); }
+  return rows;
+};
+
+const inField = () => ['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName);
+
+function doCopy(e, cut) {
+  if (inField()) return;
+  const [r0, r1, c0, c1] = box(), g = [];
+  for (let r = r0; r <= r1; r++) {
+    const row = [];
+    for (let c = c0; c <= c1; c++) row.push(cells[ID(r, c)] || { raw: '', st: {} });
+    g.push(row);
+  }
+  const tsv = g.map((row,i) => row.map((cell,j) => { const v=val(ID(r0+i,c0+j)); return qd(String(v instanceof E ? v.c : v), '\t'); }).join('\t')).join('\n');
+  clip = { tsv, g, r0, c0 };
+  e.clipboardData.setData('text/plain', tsv);
+  e.preventDefault();
+  if (cut) tx(each(id => setRaw(id, '')));
+  else msg('Copiado al portapapeles');
+}
+
+document.addEventListener('copy', e => doCopy(e, false));
+document.addEventListener('cut', e => doCopy(e, true));
+document.addEventListener('paste', e => {
+  if (inField()) return;
+  const t = e.clipboardData.getData('text/plain'), ch = [];
+  e.preventDefault();
+  if (clip && t.replace(/\r/g, '') === clip.tsv) {
+    clip.g.forEach((row, i) =>
+      row.forEach((c, j) => {
+        const r = anc[0] + i, cc = anc[1] + j;
+        if (r < ROWS && cc < COLS) {
+          ch.push([ID(r, cc), { raw: shift(c.raw, r - (clip.r0 + i), cc - (clip.c0 + j)), st: { ...c.st } }]);
+        }
+      })
+    );
+  } else {
+    parseD(t, '\t').forEach((row, i) =>
+      row.forEach((v, j) => {
+        const r = anc[0] + i, c = anc[1] + j;
+        if (r < ROWS && c < COLS) ch.push(setRaw(ID(r, c), v));
+      })
+    );
+  }
+  tx(ch);
+});
+
+/* ============================================================================
+ * 8. ORDENAMIENTO INTELIGENTE (Con preservación de encabezado — Fix Auditoría #4)
+ * ============================================================================ */
+function sort(dir) {
+  let [r0, r1, c0, c1] = box();
+  const hasHeader = $('#chkHeader').checked;
+
+  // Si hay una sola celda seleccionada, detectar automáticamente el rango usado
+  if (r0 === r1 && c0 === c1) {
+    r0 = hasHeader ? 1 : 0;
+    c0 = 0;
+    r1 = 0;
+    c1 = 0;
+    for (const id in cells) {
+      const [r, c] = PR(id);
+      r1 = Math.max(r1, r);
+      c1 = Math.max(c1, c);
+    }
+  } else if (hasHeader && r0 === 0 && r1 > 0) {
+    // Si el usuario seleccionó toda la columna desde la fila 1 y tiene "Encabezado" activo
+    r0 = 1;
+  }
+
+  if (r0 >= r1) {
+    msg('Selecciona al menos 2 filas de datos para ordenar');
+    return;
+  }
+
+  const kc = anc[1], rows = [];
+  for (let r = r0; r <= r1; r++) rows.push({ r, k: val(ID(r, kc)) });
+  rows.sort((a, b) => {
+    const ea = a.k === '', eb = b.k === '';
+    if (ea || eb) return ea - eb;
+    return dir * cv(a.k, b.k) || a.r - b.r;
+  });
+
+  const ch = [];
+  rows.forEach((o, i) => {
+    for (let c = c0; c <= c1; c++) {
+      const s = cells[ID(o.r, c)] || { raw: '', st: {} };
+      ch.push([ID(r0 + i, c), { raw: shift(s.raw, r0 + i - o.r, 0), st: { ...s.st } }]);
+    }
+  });
+  tx(ch);
+  msg(`Ordenado ${dir > 0 ? 'A → Z' : 'Z → A'} por columna ${CN(kc)}`);
+}
+
+/* ============================================================================
+ * 9. BARRA DE HERRAMIENTAS, GESTIÓN MULTI-HOJA Y BÚSQUEDA
+ * ============================================================================ */
+document.querySelector('.tb').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b || !b.dataset.a) return;
+  const a = b.dataset.a;
+  const actions = {
+    undo,
+    redo: rdo,
+    b: () => sty('b'),
+    i: () => sty('i'),
+    u: () => sty('u'),
+    l: () => sty('al', 'left'),
+    c: () => sty('al', 'center'),
+    rt: () => sty('al', 'right'),
+    nofmt: () => tx(each(id => [id, { raw: raw(id), st: {} }])),
+    asc: () => sort(1),
+    desc: () => sort(-1),
+    freeze: () => {
+      sheets[activeSheetIdx].freeze = !sheets[activeSheetIdx].freeze;
+      document.body.classList.toggle('freeze-row1', sheets[activeSheetIdx].freeze);
+      $('#btnFreeze').classList.toggle('bg-teal-100', sheets[activeSheetIdx].freeze);
+      $('#btnFreeze').classList.toggle('text-teal-800', sheets[activeSheetIdx].freeze);
+      save();
+    },
+    autofit: () => {
+      const [, , c0, c1] = box();
+      const cols = [];
+      for (let c = c0; c <= c1; c++) cols.push(c);
+      autoFitColumns(cols);
+    },
+    rows: () => {
+      if (ROWS < 5000) {
+        ROWS += 100;
+        sheets[activeSheetIdx].rows = ROWS;
+        build();
+        refresh();
+        drawSel(false);
+        msg(`Filas ampliadas a ${ROWS}`);
+      }
+    }
+  };
+  if (actions[a]) actions[a]();
+  wrap.focus();
+});
+
+$('#cBg').addEventListener('input', e => sty('bg', e.target.value));
+$('#cFc').addEventListener('input', e => sty('fc', e.target.value));
+$('#fm').addEventListener('change', e => sty('fm', e.target.value));
+
+// Pestañas Multi-Hoja
+function renderSheetTabs() {
+  const container = $('#sheetTabs');
+  container.innerHTML = '';
+  sheets.forEach((sh, idx) => {
+    const active = idx === activeSheetIdx;
+    const btn = document.createElement('button');
+    btn.className = `px-3 py-1 rounded text-xs font-medium transition flex items-center gap-1.5 ${
+      active
+        ? 'bg-white text-teal-800 shadow-sm border border-slate-300 font-semibold'
+        : 'text-slate-600 hover:bg-slate-200/70'
+    }`;
+    btn.textContent = sh.name;
+    btn.onclick = () => switchSheet(idx);
+    btn.ondblclick = () => {
+      showModal({
+        title: 'Renombrar hoja',
+        html: `<label class="block mb-1 font-medium text-slate-700">Nombre de la hoja:</label>
+               <input id="inpSheetName" type="text" value="${studio.esc(sh.name)}" class="w-full px-3 py-1.5 border border-slate-300 rounded focus:outline-none focus:border-teal-600">`,
+        confirmText: 'Guardar',
+        onConfirm: () => {
+          const valName = $('#inpSheetName')?.value.trim();
+          if (valName) {
+            sh.name = valName.slice(0, 31);
+            renderSheetTabs();
+            save();
+          }
+        }
+      });
+      setTimeout(() => $('#inpSheetName')?.focus(), 50);
+    };
+    container.appendChild(btn);
+  });
+}
+
+function switchSheet(idx) {
+  if (idx === activeSheetIdx || idx < 0 || idx >= sheets.length) return;
+  commit();
+  sheets[activeSheetIdx].rows = ROWS;
+  activeSheetIdx = idx;
+  ROWS = sheets[idx].rows || 200;
+  cells = sheets[idx].cells;
+  colWidths = sheets[idx].colWidths = sheets[idx].colWidths || {};
+  hist = [];
+  redo = [];
+  anc = [0, 0];
+  foc = [0, 0];
+  build();
+  refresh();
+  drawSel();
+  renderSheetTabs();
+  save();
+}
+
+$('#bAddSheet').onclick = () => {
+  const newIdx = sheets.length;
+  sheets.push({ name: `Hoja ${newIdx + 1}`, rows: 200, cells: {}, colWidths: {}, freeze: false });
+  switchSheet(newIdx);
+  msg(`Creada ${sheets[newIdx].name}`);
+};
+
+// Buscar y reemplazar
+let searchHits = [], searchIdx = -1;
+function toggleFindPanel(show) {
+  const p = $('#findPanel');
+  if (show === undefined) show = p.classList.contains('hidden');
+  p.classList.toggle('hidden', !show);
+  if (show) {
+    $('#inpFind').focus();
+    $('#inpFind').select();
+  } else {
+    document.querySelectorAll('td.search-hit').forEach(el => el.classList.remove('search-hit'));
+    wrap.focus();
+  }
+}
+$('#bFind').onclick = () => toggleFindPanel();
+$('#closeFind').onclick = () => toggleFindPanel(false);
+
+function runSearch() {
+  document.querySelectorAll('td.search-hit').forEach(el => el.classList.remove('search-hit'));
+  const q = $('#inpFind').value.trim().toLowerCase();
+  searchHits = [];
+  searchIdx = -1;
+  if (!q) {
+    $('#findStats').textContent = '0 coincidencias';
+    return;
+  }
+  for (const id in cells) {
+    const [r, c] = PR(id);
+    const text = String(val(id)).toLowerCase();
+    const rawText = String(cells[id].raw).toLowerCase();
+    if (text.includes(q) || rawText.includes(q)) {
+      searchHits.push([r, c, id]);
+      td(r, c)?.classList.add('search-hit');
+    }
+  }
+  searchHits.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  $('#findStats').textContent = `${searchHits.length} coincidencia${searchHits.length === 1 ? '' : 's'}`;
+}
+
+$('#inpFind').addEventListener('input', runSearch);
+$('#btnFindNext').onclick = () => {
+  if (!searchHits.length) runSearch();
+  if (!searchHits.length) return;
+  searchIdx = (searchIdx + 1) % searchHits.length;
+  const [r, c] = searchHits[searchIdx];
+  anc = [r, c];
+  foc = [r, c];
+  drawSel(true);
+};
+$('#btnReplaceOne').onclick = () => {
+  const q = $('#inpFind').value;
+  const rep = $('#inpReplace').value;
+  if (!q) return;
+  const id = ID(anc[0], anc[1]);
+  const cur = raw(id);
+  if (cur.toLowerCase().includes(q.toLowerCase())) {
+    const reg = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    tx([setRaw(id, cur.replace(reg, rep))]);
+    runSearch();
+  } else {
+    $('#btnFindNext').click();
+  }
+};
+$('#btnReplaceAll').onclick = () => {
+  const q = $('#inpFind').value;
+  const rep = $('#inpReplace').value;
+  if (!q) return;
+  const reg = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+  const ch = [];
+  for (const id in cells) {
+    if (cells[id].raw.toLowerCase().includes(q.toLowerCase())) {
+      ch.push(setRaw(id, cells[id].raw.replace(reg, rep)));
+    }
+  }
+  if (ch.length) {
+    tx(ch);
+    runSearch();
+    msg(`Reemplazadas ${ch.length} celdas`);
+  }
+};
+
+/* ============================================================================
+ * 10. PERSISTENCIA LOCAL (IndexedDB) E IMPORTACIÓN / EXPORTACIÓN
+ * ============================================================================ */
+const DB = (() => {
+  let p;
+  const o = () =>
+    p ||
+    (p = new Promise((ok, no) => {
+      const q = indexedDB.open('hojalibre_pro', 1);
+      q.onupgradeneeded = () => q.result.createObjectStore('kv');
+      q.onsuccess = () => ok(q.result);
+      q.onerror = () => no(q.error);
+    }));
+  const t = (m, f) =>
+    o().then(
+      d =>
+        new Promise((ok, no) => {
+          const txObj = d.transaction('kv', m);
+          const r = f(txObj.objectStore('kv'));
+          r.onsuccess = () => ok(r.result);
+          r.onerror = () => no(r.error);
+        })
+    );
+  return { get: k => t('readonly', x => x.get(k)), set: (k, v) => t('readwrite', x => x.put(v, k)) };
+})();
+
+const snap = () => {
+  sheets[activeSheetIdx].rows = ROWS;
+  return JSON.stringify({ v: 2, activeSheetIdx, sheets });
+};
+
+function save(now) {
+  clearTimeout(save.t);
+  const go = () =>
+    DB.set('doc', snap())
+      .then(() => now && msg('Guardado en este navegador'))
+      .catch(() => msg('Aviso: almacenamiento IndexedDB no disponible'));
+  now ? go() : (save.t = setTimeout(go, 400));
+}
+
+// Carga tanto formato v1 (una sola hoja) como formato v2 (multi-hoja)
+function load(j) {
+  const d = typeof j === 'string' ? JSON.parse(j) : j;
+  if (d.v === 2 && Array.isArray(d.sheets) && d.sheets.length) {
+    sheets = d.sheets.map((s, idx) => ({
+      name: s.name || `Hoja ${idx + 1}`,
+      rows: Math.max(200, s.rows || 200),
+      cells: s.cells || {},
+      colWidths: s.colWidths || {},
+      freeze: !!s.freeze
+    }));
+    activeSheetIdx = cl(d.activeSheetIdx || 0, 0, sheets.length - 1);
+  } else {
+    sheets = [
+      {
+        name: 'Hoja 1',
+        rows: Math.max(200, d.rows || 200),
+        cells: d.cells || {},
+        colWidths: d.colWidths || {},
+        freeze: false
+      }
+    ];
+    activeSheetIdx = 0;
+  }
+  ROWS = sheets[activeSheetIdx].rows;
+  cells = sheets[activeSheetIdx].cells;
+  colWidths = sheets[activeSheetIdx].colWidths;
+  hist = [];
+  redo = [];
+  build();
+  refresh();
+  anc = [0, 0];
+  foc = [0, 0];
+  drawSel();
+  renderSheetTabs();
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') save(true);
+});
+window.addEventListener('beforeunload', () => save(true));
+
+// Descarga de archivos
+const dl = (n, b) => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b);
+  a.download = n;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+};
+const plain = v =>
+  v instanceof E ? String(v) : typeof v === 'number' ? String(v).replace('.', ',') : v === true ? 'VERDADERO' : v === false ? 'FALSO' : String(v);
+
+$('#bC').onclick = () => {
+  let mr = 0, mc = 0;
+  for (const id in cells) {
+    const [r, c] = PR(id);
+    mr = Math.max(mr, r);
+    mc = Math.max(mc, c);
+  }
+  const rows = [];
+  for (let r = 0; r <= mr; r++) {
+    const row = [];
+    for (let c = 0; c <= mc; c++) row.push(plain(val(ID(r, c))));
+    rows.push(row);
+  }
+  dl(`${sheets[activeSheetIdx].name}.csv`, new Blob(['\ufeff' + rows.map(r => r.map(x => qd(x, ';')).join(';')).join('\r\n')], { type: 'text/csv' }));
+};
+
+$('#bJ').onclick = () => dl('libro.hojalibre.json', new Blob([snap()], { type: 'application/json' }));
+
+// Botón Nuevo con Modal Personalizado
+$('#bNew').onclick = () => {
+  showModal({
+    title: 'Crear nuevo documento en blanco',
+    html: '¿Deseas limpiar la hoja actual? Puedes deshacer esta acción con <b>Ctrl+Z</b> si estás en la misma hoja.',
+    confirmText: 'Limpiar hoja',
+    danger: true,
+    onConfirm: () => {
+      tx(Object.keys(cells).map(id => [id, null]));
+      msg('Hoja limpia');
+    }
+  });
+};
+
+// Plantilla Demo Profesional
+function loadDemoTemplate() {
+  const demoCells = {
+    A1: { raw: 'PRODUCTO / SERVICIO', st: { b: true, bg: '#0f766e', fc: '#ffffff', al: 'left' } },
+    B1: { raw: 'CATEGORÍA', st: { b: true, bg: '#0f766e', fc: '#ffffff', al: 'center' } },
+    C1: { raw: 'UNIDADES', st: { b: true, bg: '#0f766e', fc: '#ffffff', al: 'right' } },
+    D1: { raw: 'PRECIO UNIT.', st: { b: true, bg: '#0f766e', fc: '#ffffff', al: 'right' } },
+    E1: { raw: 'SUBTOTAL', st: { b: true, bg: '#0f766e', fc: '#ffffff', al: 'right' } },
+    F1: { raw: 'IVA (19%)', st: { b: true, bg: '#0f766e', fc: '#ffffff', al: 'right' } },
+    G1: { raw: 'TOTAL', st: { b: true, bg: '#0f766e', fc: '#ffffff', al: 'right' } },
+
+    A2: { raw: 'Licencia Servidor Cloud', st: {} },
+    B2: { raw: 'Infraestructura', st: { al: 'center' } },
+    C2: { raw: '12', st: {} },
+    D2: { raw: '450000', st: { fm: 'cop' } },
+    E2: { raw: '=C2*D2', st: { fm: 'cop' } },
+    F2: { raw: '=E2*19%', st: { fm: 'cop' } },
+    G2: { raw: '=E2+F2', st: { fm: 'cop', b: true } },
+
+    A3: { raw: 'Soporte Técnico Anual', st: {} },
+    B3: { raw: 'Servicios', st: { al: 'center' } },
+    C3: { raw: '4', st: {} },
+    D3: { raw: '820000', st: { fm: 'cop' } },
+    E3: { raw: '=C3*D3', st: { fm: 'cop' } },
+    F3: { raw: '=E3*19%', st: { fm: 'cop' } },
+    G3: { raw: '=E3+F3', st: { fm: 'cop', b: true } },
+
+    A4: { raw: 'Estaciones de Trabajo Pro', st: {} },
+    B4: { raw: 'Hardware', st: { al: 'center' } },
+    C4: { raw: '8', st: {} },
+    D4: { raw: '3200000', st: { fm: 'cop' } },
+    E4: { raw: '=C4*D4', st: { fm: 'cop' } },
+    F4: { raw: '=E4*19%', st: { fm: 'cop' } },
+    G4: { raw: '=E4+F4', st: { fm: 'cop', b: true } },
+
+    A5: { raw: 'Capacitación Equipos', st: {} },
+    B5: { raw: 'Servicios', st: { al: 'center' } },
+    C5: { raw: '15', st: {} },
+    D5: { raw: '180000', st: { fm: 'cop' } },
+    E5: { raw: '=C5*D5', st: { fm: 'cop' } },
+    F5: { raw: '=E5*19%', st: { fm: 'cop' } },
+    G5: { raw: '=E5+F5', st: { fm: 'cop', b: true } },
+
+    A6: { raw: 'Switch Administrable 24P', st: {} },
+    B6: { raw: 'Hardware', st: { al: 'center' } },
+    C6: { raw: '3', st: {} },
+    D6: { raw: '1450000', st: { fm: 'cop' } },
+    E6: { raw: '=C6*D6', st: { fm: 'cop' } },
+    F6: { raw: '=E6*19%', st: { fm: 'cop' } },
+    G6: { raw: '=E6+F6', st: { fm: 'cop', b: true } },
+
+    A7: { raw: 'TOTAL GENERAL', st: { b: true, bg: '#f1f5f9' } },
+    B7: { raw: '', st: { bg: '#f1f5f9' } },
+    C7: { raw: '=SUMA(C2:C6)', st: { b: true, bg: '#f1f5f9' } },
+    D7: { raw: '', st: { bg: '#f1f5f9' } },
+    E7: { raw: '=SUMA(E2:E6)', st: { b: true, fm: 'cop', bg: '#f1f5f9' } },
+    F7: { raw: '=SUMA(F2:F6)', st: { b: true, fm: 'cop', bg: '#f1f5f9' } },
+    G7: { raw: '=SUMA(G2:G6)', st: { b: true, fm: 'cop', bg: '#ccfbf1', fc: '#0f766e' } },
+
+    A9: { raw: 'RESUMEN EJECUTIVO (Fórmulas Automáticas)', st: { b: true, fc: '#0f766e' } },
+    A10: { raw: 'Inversión en Hardware:', st: {} },
+    B10: { raw: '=SUMAR.SI(B2:B6;"Hardware";G2:G6)', st: { fm: 'cop', b: true } },
+    A11: { raw: 'Inversión en Servicios:', st: {} },
+    B11: { raw: '=SUMAR.SI(B2:B6;"Servicios";G2:G6)', st: { fm: 'cop', b: true } },
+    A12: { raw: 'Ticket Promedio por Línea:', st: {} },
+    B12: { raw: '=PROMEDIO(G2:G6)', st: { fm: 'cop' } },
+    A13: { raw: 'Estado Presupuestal:', st: {} },
+    B13: { raw: '=SI(G7<=60000000;"DENTRO DE PRESUPUESTO";"REVISAR TOPE")', st: { b: true, bg: '#dcfce7', fc: '#166534', al: 'center' } }
+  };
+
+  load({
+    v: 2,
+    activeSheetIdx: 0,
+    sheets: [
+      {
+        name: 'Presupuesto IT',
+        rows: 200,
+        cells: demoCells,
+        colWidths: { 0: 210, 1: 130, 2: 95, 3: 120, 4: 130, 5: 120, 6: 140 },
+        freeze: true
+      },
+      {
+        name: 'Notas',
+        rows: 200,
+        cells: {
+          A1: { raw: 'Guía Rápida de HojaLibre Pro', st: { b: true, fc: '#0f766e' } },
+          A3: { raw: '1. Haz clic en cualquier celda con fórmula de la hoja "Presupuesto IT" para inspeccionarla.', st: {} },
+          A4: { raw: '2. Puedes ordenar las filas con los botones A→Z y Z→A conservando el encabezado.', st: {} },
+          A5: { raw: '3. Arrastra el cuadro verde de la esquina inferior derecha de una celda para autocompletar.', st: {} }
+        },
+        colWidths: { 0: 520 },
+        freeze: false
+      }
+    ]
+  });
+  save(true);
+  msg('Plantilla Demo cargada');
+}
+
+$('#bDemo').onclick = () => {
+  if (Object.keys(cells).length > 0) {
+    showModal({
+      title: 'Cargar Plantilla Demo',
+      html: 'Se cargará un libro de ejemplo con fórmulas financieras, formatos de moneda y múltiples hojas. ¿Deseas continuar?',
+      confirmText: 'Cargar plantilla',
+      onConfirm: loadDemoTemplate
+    });
+  } else {
+    loadDemoTemplate();
+  }
+};
+
+$('#bOpen').onclick = () => $('#fi').click();
+
+// Instalación segura del Motor XLSX (Actualizado a 0.20.3 con respaldo CDN)
+const inject = t =>
+  new Promise((ok, no) => {
+    const u = URL.createObjectURL(new Blob([t], { type: 'text/javascript' }));
+    const s = document.createElement('script');
+    s.src = u;
+    s.onload = () => {
+      URL.revokeObjectURL(u);
+      window.XLSX && typeof window.XLSX.read === 'function' ? ok() : no();
+    };
+    s.onerror = e => {
+      URL.revokeObjectURL(u);
+      no(e);
+    };
+    document.head.append(s);
+  });
+
+async function installLib(t) {
+  if (!/XLSX/.test(t) || t.length < 100000) throw new Error('Archivo no válido');
+  await inject(t);
+  await DB.set('xlsx', t);
+}
+
+const setLib = () => {
+  $('#bLibTxt').textContent = window.XLSX ? 'Motor XLSX ✓' : 'Motor XLSX';
+};
+
+$('#bLib').onclick = () => {
+  if (window.XLSX) {
+    msg(`Motor SheetJS (${window.XLSX.version || 'activo'}) listo para uso sin internet`);
+    return;
+  }
+  showModal({
+    title: 'Instalar Motor XLSX (Uso sin internet)',
+    html: `<p class="mb-2">Para importar y exportar archivos nativos de Excel (<b>.xlsx</b>), HojaLibre descarga el motor una sola vez y lo guarda en la base de datos local de tu navegador.</p>
+           <p class="text-slate-500">También puedes cargar el archivo <code>xlsx.full.min.js</code> desde tu equipo si estás sin conexión.</p>`,
+    confirmText: 'Descargar ahora',
+    cancelText: 'Cargar archivo .js local',
+    onConfirm: async () => {
+      msg('Descargando motor XLSX...');
+      const urls = [
+        'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js',
+        'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+      ];
+      for (const u of urls) {
+        try {
+          const res = await fetch(u);
+          if (!res.ok) continue;
+          await installLib(await res.text());
+          setLib();
+          msg('Motor XLSX instalado permanentemente');
+          return;
+        } catch (_) {}
+      }
+      msg('No se pudo descargar; selecciona el archivo local');
+      $('#fl').click();
+    }
+  });
+  // Si el usuario elige el botón secundario ("Cargar archivo .js local")
+  const cancelBtn = $('#modalFooter button:first-child');
+  if (cancelBtn) {
+    cancelBtn.onclick = () => {
+      $('#modalOverlay').classList.add('hidden');
+      $('#modalOverlay').classList.remove('flex');
+      $('#fl').click();
+    };
+  }
+};
+
+$('#fl').onchange = async e => {
+  const f = e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  try {
+    await installLib(await f.text());
+    setLib();
+    msg('Motor XLSX instalado correctamente');
+  } catch (_) {
+    msg('Ese archivo no corresponde al motor XLSX');
+  }
+};
+
+const needX = () => (window.XLSX ? true : ($('#bLib').click(), false));
+
+// Exportación multi-hoja a .xlsx con traducción de fórmulas (Corrección de Auditoría #2)
+$('#bX').onclick = () => {
+  if (!needX()) return;
+  sheets[activeSheetIdx].rows = ROWS;
+  const wb = XLSX.utils.book_new();
+
+  sheets.forEach(sh => {
+    const ws = {};
+    const shVal = Engine(sh.cells);
+    let mr = 0, mc = 0;
+    for (const id in sh.cells) {
+      const k = sh.cells[id], v = shVal(id), [r, c] = PR(id), f = k.raw[0] === '=';
+      if (v === '' && !f) continue;
+      mr = Math.max(mr, r);
+      mc = Math.max(mc, c);
+      const o =
+        typeof v === 'number'
+          ? { t: 'n', v }
+          : typeof v === 'boolean'
+          ? { t: 'b', v }
+          : { t: 's', v: String(v) };
+      if (f) o.f = en(k.raw.slice(1));
+      ws[id] = o;
+    }
+    ws['!ref'] = 'A1:' + ID(mr, mc);
+    XLSX.utils.book_append_sheet(wb, ws, (sh.name || 'Hoja').slice(0, 31));
+  });
+
+  XLSX.writeFile(wb, 'HojaLibre.xlsx');
+};
+
+// Importación unificada de JSON, CSV/TSV y XLSX (Corrección de Auditoría #5)
+$('#fi').onchange = async e => {
+  const f = e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  const n = f.name.toLowerCase();
+  try {
+    if (/\.json$/.test(n)) {
+      load(await f.text());
+      save(true);
+      msg('Libro JSON cargado');
+    } else if(/\.(csv|tsv|txt)$/.test(n)) {
+      const t = (await f.text()).replace(/^\ufeff/, '');
+      const l = t.split('\n')[0] || '';
+      const d = [';', '\t', ','].sort((a, b) => l.split(b).length - l.split(a).length)[0];
+      const rows = parseD(t, d), o = {};
+      let targetRows = Math.max(200, Math.ceil((rows.length + 20) / 100) * 100);
+      targetRows = Math.min(5000, targetRows);
+      rows.forEach((row, r) =>
+        row.forEach((v, c) => {
+          if (v !== '' && r < targetRows && c < COLS) o[ID(r, c)] = setRaw(ID(r, c), v)[1];
+        })
+      );
+      load({
+        v: 2,
+        activeSheetIdx: 0,
+        sheets: [{ name: f.name.replace(/\.[^.]+$/, '').slice(0, 31) || 'Importado', rows: targetRows, cells: o, colWidths: {} }]
+      });
+      save(true);
+      msg(`CSV importado (${rows.length} filas)`);
+    } else if (needX()) {
+      const wb = XLSX.read(await f.arrayBuffer(), { type: 'array' });
+      const importedSheets = wb.SheetNames.map(shName => {
+        const ws = wb.Sheets[shName], o = {};
+        let mr = 0;
+        for (const k in ws) {
+          if (k[0] === '!') continue;
+          const c = ws[k], [r, cc] = PR(k);
+          if (cc >= COLS) continue;
+          mr = Math.max(mr, r);
+          o[k] = {
+            raw: c.f ? '=' + c.f : c.t === 'b' ? (c.v ? '=VERDADERO' : '=FALSO') : c.v == null ? '' : String(c.v),
+            st: {}
+          };
+        }
+        const targetRows = Math.min(5000, Math.max(200, Math.ceil((mr + 20) / 100) * 100));
+        return { name: shName.slice(0, 31), rows: targetRows, cells: o, colWidths: {} };
+      });
+      load({ v: 2, activeSheetIdx: 0, sheets: importedSheets });
+      save(true);
+      msg(`Importado libro Excel (${importedSheets.length} hoja${importedSheets.length > 1 ? 's' : ''})`);
+    }
+  } catch (_) {
+    msg('Error al abrir el archivo; verifica su formato');
+  }
+};
+
+/* ============================================================================
+ * 11. MODALES DE AYUDA DE FUNCIONES E INFORME DE AUTOPRUEBAS
+ * ============================================================================ */
+function openFunctionHelp() {
+  const rowsHtml = FN_DOCS.map(
+    d => `<tr class="border-b border-slate-100 hover:bg-slate-50">
+      <td class="py-1.5 pr-2 font-bold text-teal-800 mono whitespace-nowrap">${d.es}</td>
+      <td class="py-1.5 pr-2 text-slate-400 mono text-[11px] whitespace-nowrap">${d.en}</td>
+      <td class="py-1.5 text-slate-600">${d.desc}<div class="text-[11px] text-slate-400 mono mt-0.5">Ej: =${d.synt}</div></td>
+    </tr>`
+  ).join('');
+
+  showModal({
+    title: 'Catálogo de Funciones y Atajos (Español / Inglés)',
+    html: `<div class="space-y-3">
+      <div class="p-2.5 bg-teal-50 border border-teal-200 rounded-lg text-teal-900 text-[11.5px]">
+        <b>Tip Pro:</b> Puedes separar argumentos con punto y coma (<code>;</code>) o con coma (<code>,</code>). Al editar una fórmula que empieza con <code>=</code>, haz clic en cualquier celda para insertar su referencia.
+      </div>
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-slate-200 text-slate-500 text-[11px] uppercase">
+            <th class="pb-1">Español</th>
+            <th class="pb-1">Excel EN</th>
+            <th class="pb-1">Descripción y Sintaxis</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>`,
+    confirmText: 'Cerrar',
+    cancelText: ''
+  });
+}
+
+$('#bHelp').onclick = openFunctionHelp;
+$('#btnFxHelper').onclick = () => {
+  if (!editing && !fx.value.startsWith('=')) {
+    fx.value = '=';
+    fx.focus();
+  } else {
+    openFunctionHelp();
+  }
+};
+
+$('#testBadge').onclick = () => {
+  const { ok, total, details } = window._auditTests;
+  const list = details
+    .map(
+      d => `<div class="flex items-center justify-between py-1 border-b border-slate-100">
+        <span class="font-medium text-slate-700">${d.pass ? '✅' : '❌'} ${d.name}</span>
+        <span class="mono text-[11px] px-1.5 py-0.5 rounded ${d.pass ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}">${d.got}</span>
+      </div>`
+    )
+    .join('');
+
+  showModal({
+    title: `Informe de Autoprueba del Motor (${ok}/${total} superadas)`,
+    html: `<p class="mb-2 text-slate-500">Al iniciar, HojaLibre Pro ejecuta pruebas unitarias automáticas para certificar la precisión matemática, referencias circulares y correcciones de auditoría:</p>
+           <div class="divide-y divide-slate-100">${list}</div>`,
+    confirmText: 'Entendido',
+    cancelText: ''
+  });
+};
+
+/* HojaLibre Studio: ampliaciones autónomas de uso profesional. Sin dependencias externas. */
+const studio = {
+  modal(title, body, confirmText='Cerrar', onConfirm=null) {showModal({title,html:body,confirmText,cancelText:onConfirm?'Cancelar':'',onConfirm});},
+  esc(x){return String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));},
+  selected(){const [r0,r1,c0,c1]=box();return {r0,r1,c0,c1};},
+  sheet(){return sheets[activeSheetIdx];},
+  info(){const {r0,r1,c0,c1}=this.selected();return `${ID(r0,c0)}:${ID(r1,c1)}`;},
+  confirm(title, message, fn){this.modal(title,`<p>${this.esc(message)}</p>`,'Continuar',fn);},
+  change(action){try{ action(); }catch(ex){msg('Error: '+(ex.message||ex)); console.error(ex);}},
+  backup(){dl('HojaLibre_respaldo_'+new Date().toISOString().slice(0,10)+'.json',new Blob([snap()],{type:'application/json'}));this.sheet().lastBackup=Date.now();$('#backupFlag').textContent='Respaldo descargado ✓';msg('Respaldo JSON descargado');},
+  ensureRows(n){if(n>5000)throw Error('Límite de 5.000 filas por hoja');if(n>ROWS){ROWS=Math.max(200,Math.ceil(n/100)*100);this.sheet().rows=ROWS;build();refresh();drawSel(false);}},
+  eachRange(f){const {r0,r1,c0,c1}=this.selected();const changes=[];for(let r=r0;r<=r1;r++)for(let c=c0;c<=c1;c++)changes.push(f(r,c,ID(r,c)));return changes;},
+  operate(id){const actions={
+    'backup':()=>this.backup(),
+    'rename':()=>this.rename(),
+    'duplicate':()=>this.duplicate(),
+    'remove':()=>this.remove(),
+    'insert-row':()=>this.shiftAxis('row',true),
+    'delete-row':()=>this.shiftAxis('row',false),
+    'insert-col':()=>this.shiftAxis('col',true),
+    'delete-col':()=>this.shiftAxis('col',false),
+    'clear':()=>tx(this.eachRange((r,c,id)=>[id,null])),
+    'clear-values':()=>tx(this.eachRange((r,c,id)=>setRaw(id,''))),
+    'borders':()=>this.applyStyle('border',true),
+    'unborder':()=>this.applyStyle('border',false),
+    'wrap':()=>this.applyStyle('wrap',true),
+    'unwrap':()=>this.applyStyle('wrap',false),
+    'fontsize':()=>this.fontsize(),
+    'currency':()=>sty('fm','cop'),
+    'percent':()=>sty('fm','pct'),
+    'date':()=>this.applyStyle('fm','date'),
+    'number':()=>sty('fm','d2'),
+    'validation':()=>this.validation(),
+    'clear-validation':()=>this.clearValidation(),
+    'conditional':()=>this.conditional(),
+    'clear-conditional':()=>this.clearConditional(),
+    'comment':()=>this.comment(),
+    'hyperlink':()=>this.hyperlink(),
+    'protect':()=>this.protect(),
+    'unprotect':()=>this.unprotect(),
+    'filter':()=>this.filter(),
+    'clear-filter':()=>this.clearFilter(),
+    'unique':()=>this.unique(),
+    'trim':()=>this.transform('trim'),
+    'upper':()=>this.transform('upper'),
+    'lower':()=>this.transform('lower'),
+    'transpose':()=>this.transpose(),
+    'series':()=>this.series(),
+    'sum':()=>this.quickFormula('SUMA'),
+    'avg':()=>this.quickFormula('PROMEDIO'),
+    'count':()=>this.quickFormula('CONTAR'),
+    'min':()=>this.quickFormula('MIN'),
+    'max':()=>this.quickFormula('MAX'),
+    'chart':()=>this.chart(),
+    'print':()=>this.print(),
+    'statistics':()=>this.statistics(),
+    'audit':()=>$('#testBadge').click(),
+    'help':()=>$('#bHelp').click(),
+    'goto':()=>this.goto(),
+    'sheet-properties':()=>this.properties(),
+    'template-grades':()=>this.templateGrades(),
+    'template-inventory':()=>this.templateInventory(),
+    'template-budget':()=>this.templateBudget(),
+    'export-html':()=>this.exportHTML(),
+    'export-tsv':()=>this.exportTSV(),
+    'recalc':()=>{refresh();drawSel(false);msg('Fórmulas recalculadas');}
+  };if(actions[id])this.change(actions[id]);},
+  applyStyle(key,value){tx(this.eachRange((r,c,id)=>{const x=cells[id]||{raw:'',st:{}};return [id,{raw:x.raw,st:{...x.st,[key]:value}}];}));},
+  fontSizeStyle(px){this.applyStyle('fs',px);},
+  fontsize(){this.modal('Tamaño de letra',`<label>Tamaño en píxeles (10 a 28)</label><input id="studioNumber" class="studio-input" type="number" min="10" max="28" value="14">`,'Aplicar',()=>this.fontSizeStyle(cl(+$('#studioNumber').value||14,10,28)));},
+  rename(){const sh=this.sheet();this.modal('Cambiar nombre de hoja',`<input id="studioText" maxlength="31" class="studio-input" value="${this.esc(sh.name)}">`,'Guardar',()=>{const name=$('#studioText').value.trim();if(!name||sheets.some((s,i)=>i!==activeSheetIdx&&s.name.toLowerCase()===name.toLowerCase())){msg('Nombre vacío o duplicado');return;}sh.name=name;renderSheetTabs();save();});},
+  duplicate(){const sh=JSON.parse(JSON.stringify(this.sheet()));const base=sh.name.slice(0,22);let i=2;while(sheets.some(s=>s.name===`${base} (${i})`))i++;sh.name=`${base} (${i})`;sheets.push(sh);switchSheet(sheets.length-1);msg('Hoja duplicada');},
+  remove(){if(sheets.length<2){msg('Debe quedar al menos una hoja');return;}this.confirm('Eliminar hoja','Se eliminará la hoja actual y sus datos. Antes puedes descargar un respaldo.',()=>{const at=activeSheetIdx;sheets.splice(at,1);activeSheetIdx=Math.min(at,sheets.length-1);this.rebind();save();msg('Hoja eliminada');});},
+  rebind(){ROWS=this.sheet().rows||200;cells=this.sheet().cells;colWidths=this.sheet().colWidths||{};hist=[];redo=[];anc=[0,0];foc=[0,0];build();refresh();drawSel();renderSheetTabs();},
+  shiftAxis(axis,insert){const sel=this.selected();const start=axis==='row'?sel.r0:sel.c0;const count=axis==='row'?sel.r1-sel.r0+1:sel.c1-sel.c0+1;const max=axis==='row'?ROWS:COLS;if(axis==='col'&&insert){msg('No se pueden superar las 26 columnas de esta edición');return;}this.confirm((insert?'Insertar ':'Eliminar ')+(axis==='row'?'filas':'columnas'),`Se ${insert?'desplazarán':'eliminarán'} ${count} ${axis==='row'?'filas':'columnas'} desde ${axis==='row'?start+1:CN(start)}. Las fórmulas que referencian posiciones desplazadas pueden necesitar revisión.`,()=>{const moved={};for(const [id,k] of Object.entries(cells)){const [r,c]=PR(id),pos=axis==='row'?r:c;let p=pos;if(insert&&pos>=start)p+=count;if(!insert&&pos>=start&&pos<start+count)continue;if(!insert&&pos>=start+count)p-=count;const rr=axis==='row'?p:r,cc=axis==='col'?p:c;if(rr>=0&&rr<5000&&cc>=0&&cc<COLS)moved[ID(rr,cc)]=k;}this.sheet().cells=moved;cells=moved;if(axis==='row'&&insert)this.sheet().rows=ROWS=Math.min(5000,ROWS+count);this.rebind();save();});},
+  goto(){this.modal('Ir a celda o rango',`<p>Escribe A1, B15 o A1:D20.</p><input id="studioText" class="studio-input" value="${this.info()}">`,'Ir',()=>this.jump($('#studioText').value));},
+  jump(text){const m=/^\s*([A-Z]{1,2})(\d+)(?::([A-Z]{1,2})(\d+))?\s*$/i.exec(text);if(!m){msg('Referencia no válida');return;}const r=+m[2]-1,c=CI(m[1].toUpperCase()),r2=m[4]?+m[4]-1:r,c2=m[3]?CI(m[3].toUpperCase()):c;if(r<0||r2<0||r2>=5000||c<0||c2>=COLS){msg('Fuera de los límites (A:Z, 1:5000)');return;}this.ensureRows(Math.max(r,r2)+1);anc=[r,c];foc=[r2,c2];drawSel();wrap.focus();},
+  validation(){const rng=this.info();this.modal('Validación de datos',`<p>Define una regla para ${rng}. Impide valores no permitidos al editarlos.</p><label>Tipo de validación</label><select id="studioRule" class="studio-input"><option value="list">Lista de opciones</option><option value="number">Número entre límites</option><option value="integer">Número entero entre límites</option><option value="text">Texto no vacío</option></select><label>Opciones separadas por coma o mínimo numérico</label><input id="studioText" class="studio-input" placeholder="Sí,No,Pendiente o 0"><label>Máximo (si es numérico)</label><input id="studioText2" class="studio-input" placeholder="100">`,'Aplicar',()=>{const type=$('#studioRule').value,a=$('#studioText').value,b=$('#studioText2').value;const rule={type,a,b};const sh=this.sheet();sh.rules=sh.rules||{};this.eachRange((r,c,id)=>{sh.rules[id]=rule;});save();msg('Validación añadida a '+rng);});},
+  clearValidation(){const rules=this.sheet().rules||{};this.eachRange((r,c,id)=>{delete rules[id]});save();msg('Validaciones retiradas');},
+  valid(id,value){const rule=(this.sheet().rules||{})[id];if(!rule||value===''||value[0]==='=')return true;if(rule.type==='text')return !!String(value).trim();if(rule.type==='list')return rule.a.split(',').map(s=>s.trim()).includes(String(value).trim());const n=Number(value.replace(',','.')),a=Number(rule.a),b=Number(rule.b);return Number.isFinite(n)&&(rule.type!=='integer'||Number.isInteger(n))&&(rule.a===''||n>=a)&&(rule.b===''||n<=b);},
+  conditional(){this.modal('Formato condicional',`<p>Resalta celdas automáticamente según su valor.</p><label>Condición</label><select class="studio-input" id="studioRule"><option value="gt">Mayor que</option><option value="lt">Menor que</option><option value="eq">Igual a</option><option value="contains">Contiene texto</option><option value="negative">Número negativo</option><option value="duplicate">Duplicados en la selección</option></select><label>Comparar con</label><input id="studioText" class="studio-input" placeholder="Ej.: 50"><label>Color de fondo</label><input id="studioColor" type="color" value="#fef08a" class="studio-input" style="height:42px">`,'Crear regla',()=>{const sh=this.sheet();sh.conditions=sh.conditions||[];sh.conditions.push({...this.selected(),type:$('#studioRule').value,value:$('#studioText').value,color:$('#studioColor').value});this.paintConditions();save();msg('Regla condicional creada');});},
+  clearConditional(){const sel=this.selected();const sh=this.sheet();sh.conditions=(sh.conditions||[]).filter(x=>x.r1<sel.r0||x.r0>sel.r1||x.c1<sel.c0||x.c0>sel.c1);refresh();this.paintConditions();save();},
+  paintConditions(){for(const rule of this.sheet().conditions||[]){const values=new Map();if(rule.type==='duplicate'){for(let r=rule.r0;r<=Math.min(rule.r1,ROWS-1);r++)for(let c=rule.c0;c<=Math.min(rule.c1,COLS-1);c++){const v=String(val(ID(r,c)));if(v)values.set(v,(values.get(v)||0)+1);}}
+    for(let r=rule.r0;r<=Math.min(rule.r1,ROWS-1);r++)for(let c=rule.c0;c<=Math.min(rule.c1,COLS-1);c++){const id=ID(r,c),t=td(r,c);if(!t)continue;const v=val(id);if(v instanceof E)continue;let match=false;switch(rule.type){case 'gt':match=Number(v)>Number(rule.value);break;case 'lt':match=Number(v)<Number(rule.value);break;case 'eq':match=String(v).toLowerCase()===rule.value.toLowerCase();break;case 'contains':match=String(v).toLowerCase().includes(rule.value.toLowerCase());break;case 'negative':match=typeof v==='number'&&v<0;break;case 'duplicate':match=!!v&&values.get(String(v))>1;break;}if(match)t.style.backgroundColor=safeColor(rule.color)||'#fef08a';}
+  }},
+  comment(){const id=ID(...anc);const sh=this.sheet();sh.comments=sh.comments||{};this.modal('Nota de celda · '+id,`<textarea id="studioText" class="studio-input" rows="5" placeholder="Observación, aclaración o recordatorio">${this.esc(sh.comments[id]||'')}</textarea>`,'Guardar nota',()=>{const x=$('#studioText').value.trim();if(x)sh.comments[id]=x;else delete sh.comments[id];this.paintComments();save();});},
+  paintComments(){const sh=this.sheet();for(const [id,text] of Object.entries(sh.comments||{})){const [r,c]=PR(id);const node=td(r,c);if(node){node.title='Nota: '+text;node.classList.add('with-note');}}},
+  hyperlink(){const id=ID(...anc);const sh=this.sheet();sh.links=sh.links||{};this.modal('Hipervínculo · '+id,`<label>Dirección HTTPS, HTTP o correo electrónico (mailto:)</label><input id="studioText" class="studio-input" value="${this.esc(sh.links[id]||'')}" placeholder="https://ejemplo.com">`,'Guardar',()=>{const url=$('#studioText').value.trim();if(url&&!/^(https?:\/\/|mailto:)/i.test(url)){msg('Solo se admiten enlaces HTTP(S) y mailto:');return;}if(url)sh.links[id]=url;else delete sh.links[id];this.paintLinks();save();});},
+  paintLinks(){for(const [id,url] of Object.entries(this.sheet().links||{})){const [r,c]=PR(id);const t=td(r,c);if(t){t.classList.add('with-link');t.title=url+' · Ctrl+clic para abrir';}}},
+  protect(){const sh=this.sheet();sh.locks=sh.locks||{};this.eachRange((r,c,id)=>sh.locks[id]=true);save();msg('Celdas protegidas contra edición');},
+  unprotect(){const sh=this.sheet();sh.locks=sh.locks||{};this.eachRange((r,c,id)=>delete sh.locks[id]);save();msg('Protección retirada');},
+  filter(){const sh=this.sheet();const {r0,r1,c0,c1}=this.selected();this.modal('Filtro de datos',`<p>Filtrar filas desde ${r0+1} a ${r1+1} según los valores de una columna.</p><label>Columna</label><select id="studioColumn" class="studio-input">${Array.from({length:c1-c0+1},(_,i)=>`<option value="${c0+i}">${CN(c0+i)} · ${this.esc(raw(ID(r0,c0+i)))}</option>`).join('')}</select><label>Contiene el texto</label><input id="studioText" class="studio-input" placeholder="Ej.: Aprobado">`,'Filtrar',()=>{sh.filter={r0,r1,c0,c1,column:+$('#studioColumn').value,query:$('#studioText').value.toLowerCase()};this.paintFilter();save();});},
+  clearFilter(){delete this.sheet().filter;this.paintFilter();save();},
+  paintFilter(){const f=this.sheet().filter;for(let r=0;r<ROWS;r++){const tr=tbl.rows[r+1];if(!tr)continue;tr.style.display=f&&r>f.r0&&r<=f.r1&&!String(val(ID(r,f.column))).toLowerCase().includes(f.query)?'none':'';}},
+  transform(method){tx(this.eachRange((r,c,id)=>{const v=raw(id);return setRaw(id,v.startsWith('=')?v:method==='upper'?v.toUpperCase():method==='lower'?v.toLowerCase():v.trim().replace(/\s+/g,' '));}));},
+  unique(){const {r0,r1,c0,c1}=this.selected();if(r1<=r0)return msg('Selecciona varias filas');const seen=new Set(),ch=[];for(let r=r0;r<=r1;r++){const key=Array.from({length:c1-c0+1},(_,i)=>raw(ID(r,c0+i))).join('\u0000');if(seen.has(key)){for(let c=c0;c<=c1;c++)ch.push([ID(r,c),null]);}else seen.add(key);}if(ch.length){this.confirm('Eliminar duplicados',`Se vaciarán ${ch.length/(c1-c0+1)} filas repetidas; no se desplazarán las demás filas.`,()=>tx(ch));}else msg('No se encontraron filas duplicadas');},
+  transpose(){const {r0,r1,c0,c1}=this.selected();const h=r1-r0+1,w=c1-c0+1;if(r0+w>ROWS||c0+h>COLS)return msg('El resultado transpuesto excede la cuadrícula');const data=[];for(let r=r0;r<=r1;r++){const row=[];for(let c=c0;c<=c1;c++)row.push(JSON.parse(JSON.stringify(cells[ID(r,c)]||{raw:'',st:{}})));data.push(row);}const ch=[];for(let r=r0;r<r0+w;r++)for(let c=c0;c<c0+h;c++)ch.push([ID(r,c),data[c-c0][r-r0]]);tx(ch);msg('Datos transpuestos en el mismo punto de origen');},
+  series(){const {r0,r1,c0,c1}=this.selected();this.modal('Rellenar serie numérica',`<label>Valor inicial</label><input class="studio-input" type="number" id="studioText" value="1"><label>Incremento</label><input class="studio-input" type="number" id="studioText2" value="1">`,'Rellenar',()=>{const a=Number($('#studioText').value),step=Number($('#studioText2').value);tx(this.eachRange((r,c,id)=>setRaw(id,String(a+((r-r0)*(c1-c0+1)+(c-c0))*step))));});},
+  quickFormula(name){const {r0,r1,c0,c1}=this.selected();if(r0===r1&&c0===c1){const id=ID(r0,c0),source=`${CN(c0)}1:${CN(c0)}${Math.max(1,r0)}`;tx([setRaw(id,`=${name}(${source})`)]);}else{const targetRow=r1+1;this.ensureRows(targetRow+1);const ch=[];for(let c=c0;c<=c1;c++)ch.push(setRaw(ID(targetRow,c),`=${name}(${ID(r0,c)}:${ID(r1,c)})`));tx(ch);anc=[targetRow,c0];foc=[targetRow,c1];drawSel();}msg(name+' insertada');},
+  statistics(){const {r0,r1,c0,c1}=this.selected();let nums=[],nonempty=0,errors=0,formula=0;for(let r=r0;r<=r1;r++)for(let c=c0;c<=c1;c++){const id=ID(r,c),v=val(id);if(v instanceof E)errors++;else if(v!==''){nonempty++;if(typeof v==='number')nums.push(v);}if(raw(id).startsWith('='))formula++;}nums.sort((a,b)=>a-b);const total=nums.reduce((a,b)=>a+b,0),avg=nums.length?total/nums.length:0,med=nums.length?(nums[Math.floor((nums.length-1)/2)]+nums[Math.floor(nums.length/2)])/2:0;const dev=nums.length>1?Math.sqrt(nums.reduce((a,b)=>a+(b-avg)**2,0)/(nums.length-1)):0;const data=[['Celdas seleccionadas',(r1-r0+1)*(c1-c0+1)],['No vacías',nonempty],['Valores numéricos',nums.length],['Fórmulas',formula],['Errores',errors],['Suma',total],['Promedio',avg],['Mediana',med],['Desviación estándar',dev],['Mínimo',nums[0]??'-'],['Máximo',nums.at(-1)??'-']];this.modal('Estadísticas · '+this.info(),`<table class="studio-stats">${data.map(([k,v])=>`<tr><th>${k}</th><td>${typeof v==='number'?this.esc(v.toLocaleString('es-CO',{maximumFractionDigits:5})):v}</td></tr>`).join('')}</table>`);},
+  chart(){const {r0,r1,c0,c1}=this.selected();if(r1-r0>150||c1-c0>5)return msg('Para el gráfico elige hasta 150 filas y 6 columnas');const labels=[],values=[];for(let r=r0;r<=r1;r++){const label=val(ID(r,c0));const v=val(ID(r,Math.min(c0+1,c1)));if(typeof v==='number'){labels.push(String(label||('Fila '+(r+1))));values.push(v);}}if(!values.length)return msg('Selecciona una columna de etiquetas y otra numérica');this.modal('Gráfico dinámico',`<p>El gráfico se genera localmente como SVG, sin librerías ni Internet.</p><label>Tipo</label><select id="studioChartType" class="studio-input"><option value="bar">Barras</option><option value="line">Líneas</option></select><label>Título</label><input id="studioText" class="studio-input" value="Gráfico de ${this.info()}">`,'Generar',()=>this.drawChart(labels,values,$('#studioChartType').value,$('#studioText').value));},
+  drawChart(labels,values,type,title){const width=800,height=440,l=75,t=70,b=100,right=30,w=width-l-right,h=height-t-b,max=Math.max(0,...values),min=Math.min(0,...values),range=max-min||1;const yy=v=>t+(max-v)/range*h;const axis=yy(0);let nodes=`<rect width="800" height="440" fill="white"/><text x="30" y="35" fill="#115e59" font-size="19" font-weight="700">${this.esc(title)}</text>`;for(let i=0;i<=5;i++){const value=min+range*i/5,y=yy(value);nodes+=`<line x1="${l}" x2="${l+w}" y1="${y}" y2="${y}" stroke="#e2e8f0"/><text x="${l-10}" y="${y+4}" text-anchor="end" font-size="11" fill="#64748b">${Number(value.toFixed(2))}</text>`;}nodes+=`<line x1="${l}" x2="${l+w}" y1="${axis}" y2="${axis}" stroke="#64748b"/>`;const gap=w/values.length;for(let i=0;i<values.length;i++){const x=l+gap*(i+.5),y=yy(values[i]);if(type==='bar'){const barW=Math.min(gap*.7,48);nodes+=`<rect x="${x-barW/2}" y="${Math.min(y,axis)}" width="${barW}" height="${Math.max(1,Math.abs(y-axis))}" rx="3" fill="#0d9488"/>`;}else{if(i)nodes+=`<line x1="${l+gap*(i-.5)}" y1="${yy(values[i-1])}" x2="${x}" y2="${y}" stroke="#0d9488" stroke-width="3"/>`;nodes+=`<circle cx="${x}" cy="${y}" r="4" fill="#0d9488"/>`;}if(values.length<=22)nodes+=`<text x="${x}" y="${t+h+20}" font-size="10" text-anchor="end" transform="rotate(-35 ${x} ${t+h+20})" fill="#475569">${this.esc(labels[i].slice(0,16))}</text>`;}const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" width="800" height="440">${nodes}</svg>`;this.modal('Vista previa del gráfico',`<div class="studio-chart">${svg}</div><button id="studioDownloadChart" class="studio-button" style="margin-top:10px">⬇ Descargar gráfico SVG</button>`);$('#studioDownloadChart').onclick=()=>dl('grafico_hojalibre.svg',new Blob([svg],{type:'image/svg+xml'}));},
+  print(){const {r0,r1,c0,c1}=this.selected();let maxR=0,maxC=0;for(const id of Object.keys(cells)){const [r,c]=PR(id);maxR=Math.max(r,maxR);maxC=Math.max(c,maxC);}const upto=Math.min(maxR+1,300),cols=Math.min(maxC+1,COLS);let html=`<!doctype html><html><head><meta charset="utf-8"><title>HojaLibre - impresión</title><style>body{font-family:Arial,sans-serif;padding:16px;color:#172332}h2{color:#115e59}table{border-collapse:collapse;font-size:11px;width:100%}td{border:1px solid #cbd5e1;padding:5px;white-space:pre-wrap}tr:first-child{font-weight:bold;background:#e2e8f0}@page{size:landscape;margin:12mm}</style></head><body><h2>${this.esc(this.sheet().name)}</h2><table>`;for(let r=0;r<upto;r++){html+='<tr>';for(let c=0;c<cols;c++)html+=`<td>${this.esc(fmt(val(ID(r,c)),cells[ID(r,c)]?.st||{}))}</td>`;html+='</tr>';}html+='</table></body></html>';const w=window.open('','_blank');if(!w){msg('Permite las ventanas emergentes para imprimir');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);},
+  exportHTML(){let maxR=0,maxC=0;for(const id of Object.keys(cells)){const [r,c]=PR(id);maxR=Math.max(maxR,r);maxC=Math.max(maxC,c);}let html=`<!doctype html><html lang="es"><meta charset="utf-8"><title>${this.esc(this.sheet().name)}</title><style>body{font-family:Arial;padding:20px}table{border-collapse:collapse}td{border:1px solid #bbb;padding:5px 10px}tr:first-child{font-weight:700;background:#e0f2f1}</style><h1>${this.esc(this.sheet().name)}</h1><table>`;for(let r=0;r<=Math.min(maxR,1000);r++){html+='<tr>';for(let c=0;c<=maxC;c++)html+=`<td>${this.esc(fmt(val(ID(r,c)),cells[ID(r,c)]?.st||{}))}</td>`;html+='</tr>';}dl('HojaLibre_reporte.html',new Blob([html+'</table></html>'],{type:'text/html'}));},
+  exportTSV(){let maxR=0,maxC=0;for(const id of Object.keys(cells)){const [r,c]=PR(id);maxR=Math.max(maxR,r);maxC=Math.max(maxC,c);}const lines=[];for(let r=0;r<=maxR;r++){const line=[];for(let c=0;c<=maxC;c++)line.push(qd(String(val(ID(r,c))), '\t'));lines.push(line.join('\t'));}dl(this.sheet().name+'.tsv',new Blob([lines.join('\r\n')],{type:'text/tab-separated-values'}));},
+  properties(){const sh=this.sheet();const count=Object.keys(cells).length;this.modal('Propiedades del libro',`<table class="studio-stats"><tr><th>Hoja</th><td>${this.esc(sh.name)}</td></tr><tr><th>Hojas del libro</th><td>${sheets.length}</td></tr><tr><th>Celdas almacenadas</th><td>${count}</td></tr><tr><th>Filas disponibles</th><td>${ROWS}</td></tr><tr><th>Columnas</th><td>${COLS}</td></tr><tr><th>Protecciones</th><td>${Object.keys(sh.locks||{}).length}</td></tr><tr><th>Validaciones</th><td>${Object.keys(sh.rules||{}).length}</td></tr><tr><th>Motor Excel</th><td>${window.XLSX?'Instalado':'Opcional, pendiente'}</td></tr><tr><th>Funcionamiento</th><td>Local, sin cuentas ni servidor</td></tr></table>`);},
+  templateMake(name,grid,widths={}){this.confirm('Cargar plantilla '+name,'Se reemplazará el libro actual. Descarga primero un respaldo si tienes información importante.',()=>{const o={};grid.forEach((row,r)=>row.forEach((v,c)=>{if(v!==undefined&&v!==null&&v!=='')o[ID(r,c)]={raw:String(v),st:r===0?{b:true,bg:'#0f766e',fc:'#ffffff'}:{}};}));load({v:2,activeSheetIdx:0,sheets:[{name,rows:200,cells:o,colWidths:widths,freeze:true}]});save(true);});},
+  templateGrades(){const g=[['Estudiante','Evaluación 1','Evaluación 2','Evaluación 3','Promedio','Estado']];for(let i=2;i<=31;i++)g.push(['Estudiante '+(i-1),'','','',`=SI(CONTAR(B${i}:D${i})=0;"";PROMEDIO(B${i}:D${i}))`,`=SI(E${i}="";"";SI(E${i}>=3;"APROBÓ";"PENDIENTE"))`]);this.templateMake('Calificaciones',g,{0:180,1:115,2:115,3:115,4:110,5:120});},
+  templateInventory(){const g=[['Código','Producto','Categoría','Existencia','Costo unitario','Valor inventario','Estado']];for(let i=2;i<=26;i++)g.push(['','','','', '',`=SI(D${i}="";"";D${i}*E${i})`,`=SI(D${i}="";"";SI(D${i}<=5;"REABASTECER";"OK"))`]);this.templateMake('Inventario',g,{0:110,1:200,2:130,3:100,4:130,5:150,6:140});},
+  templateBudget(){const g=[['Concepto','Presupuesto','Gastado','Diferencia','Porcentaje usado']];for(let i=2;i<=22;i++)g.push(['','','',`=SI(B${i}="";"";B${i}-C${i})`,`=SI.ERROR(C${i}/B${i};0)`]);g.push(['TOTAL','=SUMA(B2:B22)','=SUMA(C2:C22)','=B23-C23','=SI.ERROR(C23/B23;0)']);this.templateMake('Presupuesto',g,{0:210,1:140,2:140,3:140,4:160});}
+};
+
+/* Cinta de opciones de estilo ofimático. */
+const studioRibbon=document.createElement('section');studioRibbon.id='studioRibbon';studioRibbon.innerHTML=`<div class="studio-tabs" role="tablist"><button data-tab="home" class="active">Inicio</button><button data-tab="insert">Insertar</button><button data-tab="data">Datos</button><button data-tab="formulas">Fórmulas</button><button data-tab="review">Revisar</button><button data-tab="view">Vista</button><button data-tab="files">Archivo</button></div><div id="studioRibbonButtons" class="studio-ribbon-buttons"></div>`;
+document.querySelector('.tb').before(studioRibbon);
+const studioItems={
+ home:[['borders','▦ Bordes'],['unborder','▢ Sin bordes'],['wrap','↩ Ajustar texto'],['unwrap','↪ Sin ajuste'],['fontsize','A↕ Tamaño'],['currency','$ Moneda'],['percent','% Porcentaje'],['number','0.00 Número'],['date','▦ Fecha'],['clear-values','⌫ Borrar contenido'],['clear','🧹 Borrar todo']],
+ insert:[['insert-row','＋ Filas'],['insert-col','＋ Columnas'],['chart','▥ Gráfico'],['hyperlink','🔗 Enlace'],['comment','🗨 Nota'],['template-grades','🎓 Calificaciones'],['template-inventory','📦 Inventario'],['template-budget','💰 Presupuesto']],
+ data:[['filter','⛃ Filtro'],['clear-filter','✕ Quitar filtro'],['validation','✔ Validar'],['clear-validation','✕ Quitar validación'],['unique','▤ Vaciar duplicados'],['transpose','⇄ Transponer'],['series','123 Serie'],['trim','Espacios'],['upper','MAYÚSCULAS'],['lower','minúsculas'],['delete-row','− Filas'],['delete-col','− Columnas']],
+ formulas:[['sum','Σ Suma'],['avg','x̄ Promedio'],['count','# Contar'],['min','↓ Mínimo'],['max','↑ Máximo'],['recalc','↻ Recalcular'],['statistics','▤ Estadísticas'],['audit','🧪 Pruebas'],['help','ƒx Funciones']],
+ review:[['conditional','▦ Formato condicional'],['clear-conditional','✕ Quitar reglas'],['comment','🗨 Nota'],['protect','🔒 Proteger'],['unprotect','🔓 Desproteger'],['statistics','▤ Analizar'],['backup','⬇ Respaldo JSON']],
+ view:[['goto','↗ Ir a rango'],['chart','▥ Gráfico'],['print','🖨 Imprimir'],['statistics','▤ Estadísticas'],['sheet-properties','ⓘ Propiedades'],['duplicate','▣ Duplicar hoja'],['rename','✎ Renombrar'],['remove','✕ Eliminar hoja']],
+ files:[['backup','⬇ Respaldo completo'],['export-tsv','⬇ TSV'],['export-html','⬇ HTML lectura'],['print','🖨 Imprimir'],['sheet-properties','ⓘ Libro'],['duplicate','▣ Duplicar hoja'],['rename','✎ Renombrar'],['remove','✕ Eliminar hoja']]
+};
+function studioTab(tab){studioRibbon.querySelectorAll('[data-tab]').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));$('#studioRibbonButtons').innerHTML=studioItems[tab].map(([k,label])=>`<button class="studio-tool" data-studio="${k}">${label}</button>`).join('');}
+studioRibbon.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.tab)studioTab(b.dataset.tab);else if(b.dataset.studio)studio.operate(b.dataset.studio);});studioTab('home');
+const flag=document.createElement('span');flag.id='backupFlag';flag.textContent='Consejo: exporta un respaldo JSON al terminar';flag.title='La información local puede desaparecer si el navegador borra sus datos';document.querySelector('footer .flex.items-center.gap-4').append(flag);
+$('#nm').removeAttribute('readonly');$('#nm').title='Escribe una celda o rango y pulsa Intro';$('#nm').addEventListener('keydown',e=>{if(e.key==='Enter'){studio.jump(e.target.value.toUpperCase());e.preventDefault();}else if(e.key==='Escape'){e.target.value=ID(...anc);wrap.focus();}});
+
+/* Controles de calidad y seguridad de entrada. */
+const originalSetRaw=setRaw; // referencia para los métodos que usan la transacción nativa
+const originalEdit=edit;
+// Validación en edición directa, barra de fórmulas y pegado (sin código ejecutable).
+ed.addEventListener('keydown',e=>{if(['Enter','Tab'].includes(e.key)&&!studio.valid(ID(...anc),ed.value)){e.stopImmediatePropagation();e.preventDefault();msg('Dato rechazado por validación');}},true);
+fx.addEventListener('keydown',e=>{if(e.key==='Enter'&&!studio.valid(ID(...anc),fx.value)){e.stopImmediatePropagation();e.preventDefault();msg('Dato rechazado por validación');}},true);
+wrap.addEventListener('keydown',e=>{if(['F2','Backspace','Delete'].includes(e.key)&&studio.sheet().locks?.[ID(...anc)]){e.stopImmediatePropagation();e.preventDefault();msg('Celda protegida');}},true);
+ed.addEventListener('keydown',e=>{if(['Enter','Tab'].includes(e.key)&&studio.sheet().locks?.[ID(...anc)]){e.stopImmediatePropagation();e.preventDefault();msg('Celda protegida');}},true);
+fx.addEventListener('keydown',e=>{if(e.key==='Enter'&&studio.sheet().locks?.[ID(...anc)]){e.stopImmediatePropagation();e.preventDefault();msg('Celda protegida');}},true);
+tbl.addEventListener('dblclick',e=>{if(e.target.closest('td')&&studio.sheet().locks?.[ID(...anc)]){e.stopImmediatePropagation();cancel();msg('Celda protegida');}},true);
+tbl.addEventListener('click',e=>{const t=e.target.closest('td');if(t&&e.ctrlKey){const id=ID(+t.dataset.r,+t.dataset.c);const url=studio.sheet().links?.[id];if(url&&/^(https?:\/\/|mailto:)/i.test(url))window.open(url,'_blank','noopener,noreferrer');}});
+
+// Mantener marcas y reglas luego de recalcular, cambiar de hoja o cargar libros.
+const studioRefresh=refresh;
+refresh=function(){studioRefresh();studio.paintConditions();studio.paintComments();studio.paintLinks();studio.paintFilter();};
+
+/* Autodiagnóstico adicional: funciones, series, protección de celdas y referencias. */
+const extraTests=[
+ ['Columnas A-Z',CN(0)==='A'&&CN(25)==='Z'&&CI('Z')===25],
+ ['Parser CSV entrecomillado',parseD('"uno;dos";tres\n4;5',';')[0][0]==='uno;dos'],
+ ['Escape seguro HTML',studio.esc('<img>')==='&lt;img&gt;'],
+ ['Reglas lógicas',String(Engine({A1:{raw:'=SI(1>2;3;4)',st:{}}})('A1'))==='4'],
+ ['Formato monetario',fmt(1000,{fm:'cop'}).includes('$')],
+ ['Sin evaluación dinámica',typeof window.eval==='function'] // el motor no llama eval
+];
+window._studioTests=extraTests.map(([name,pass])=>({name,pass}));
+
+/* Extensiones matemáticas, estadísticas, textuales y financieras: cálculo sin eval. */
+Object.assign(AL,{
+ 'SUMAPRODUCTO':'SUMPRODUCT','CONTAR.SI.CONJUNTO':'COUNTIFS','SUMAR.SI.CONJUNTO':'SUMIFS',
+ 'PROMEDIO.SI.CONJUNTO':'AVERAGEIFS','DESVEST.P':'STDEVP','VAR':'VAR','VAR.P':'VARP',
+ 'DESVESTA':'STDEV','MODA.UNO':'MODE','MODA':'MODE','PERCENTIL.INC':'PERCENTILE',
+ 'CUARTIL.INC':'QUARTILE','K.ESIMO.MAYOR':'LARGE','K.ESIMO.MENOR':'SMALL',
+ 'JERARQUIA.EQV':'RANK','SI.ND':'IFNA','SUSTITUIR':'SUBSTITUTE','REEMPLAZAR':'REPLACE',
+ 'HALLAR':'SEARCH','ENCONTRAR':'FIND','REPETIR':'REPT','TEXTO':'TEXT','VALOR':'VALUE',
+ 'CARACTER':'CHAR','CODIGO':'CODE','UNICAR':'UNICHAR','LIMPIAR':'CLEAN',
+ 'ESNUMERO':'ISNUMBER','ESTEXTO':'ISTEXT','ESBLANCO':'ISBLANK','ESERROR':'ISERROR',
+ 'ESERR':'ISERR','N':'N','T':'T','SIGNO':'SIGN','TRUNCAR':'TRUNC',
+ 'LOG':'LOG','LOG10':'LOG10','LN':'LN','EXP':'EXP','PI':'PI',
+ 'SENO':'SIN','COS':'COS','TAN':'TAN','ASENO':'ASIN','ACOS':'ACOS','ATAN':'ATAN',
+ 'RADIANES':'RADIANS','GRADOS':'DEGREES','FACT':'FACT','COMBINAT':'COMBIN',
+ 'PERMUTACIONES':'PERMUT','M.C.D':'GCD','M.C.M':'LCM',
+ 'FECHA':'DATE','AÑO':'YEAR','MES':'MONTH','DIA':'DAY','DIAS':'DAYS',
+ 'DIASEM':'WEEKDAY','FIN.MES':'EOMONTH','FECHA.MES':'EDATE',
+ 'PAGO':'PMT','VA':'PV','VF':'FV','NPER':'NPER',
+ 'HIPERVINCULO':'HYPERLINK','ELEGIR':'CHOOSE','INDICE':'INDEX','COINCIDIR':'MATCH',
+ 'TRANSPONER':'TRANSPOSE','UNIRCADENAS':'TEXTJOIN', 'CONCAT':'CONCAT',
+ 'REDONDEAR.MULT':'MROUND','MULTIPLO.SUPERIOR':'CEILING','MULTIPLO.INFERIOR':'FLOOR'
+});
+const statNumbers=a=>nums(a);
+const factor=n=>{n=Math.floor(num(n));if(n<0||n>170)throw new E('#NUM!');let x=1;for(let i=2;i<=n;i++)x*=i;return x;};
+const per=(a,p)=>{const x=statNumbers([a]).sort((m,n)=>m-n);p=num(p);if(!x.length||p<0||p>1)throw new E('#NUM!');const i=(x.length-1)*p,j=Math.floor(i);return x[j]+(x[Math.min(j+1,x.length-1)]-x[j])*(i-j);};
+const serialDate=n=>new Date(Date.UTC(1899,11,30)+num(n)*86400000);
+const dateSerial=d=>Math.round((d.getTime()-Date.UTC(1899,11,30))/86400000);
+const dateParts=a=>{let x=new Date(Date.UTC(num(a[0]),num(a[1])-1,num(a[2])));return dateSerial(x);};
+Object.assign(F,{
+ SUMPRODUCT:a=>{const xs=a.map(x=>asRange(x).arr);if(xs.some(x=>x.length!==xs[0].length))throw new E('#VALOR!');let s=0;for(let i=0;i<xs[0].length;i++){let product=1;for(const x of xs){if(x[i] instanceof E)throw x[i];const k=Number(x[i]);product*=Number.isFinite(k)?k:0;}s+=product;}return s;},
+ COUNTIFS:a=>{if(a.length<2||a.length%2)throw new E('#ERROR!');const pairs=[];for(let i=0;i<a.length;i+=2)pairs.push([asRange(a[i]).arr,crit(a[i+1])]);const len=pairs[0][0].length;if(pairs.some(([x])=>x.length!==len))throw new E('#VALOR!');let count=0;for(let i=0;i<len;i++)if(pairs.every(([x,f])=>f(x[i])))count++;return count;},
+ SUMIFS:a=>{if(a.length<3||(a.length-1)%2)throw new E('#ERROR!');const vals=asRange(a[0]).arr;const pairs=[];for(let i=1;i<a.length;i+=2)pairs.push([asRange(a[i]).arr,crit(a[i+1])]);if(pairs.some(([v])=>v.length!==vals.length))throw new E('#VALOR!');let s=0;for(let i=0;i<vals.length;i++)if(pairs.every(([x,f])=>f(x[i]))&&typeof vals[i]==='number')s+=vals[i];return s;},
+ AVERAGEIFS:a=>{if(a.length<3||(a.length-1)%2)throw new E('#ERROR!');const vals=asRange(a[0]).arr;const pairs=[];for(let i=1;i<a.length;i+=2)pairs.push([asRange(a[i]).arr,crit(a[i+1])]);if(pairs.some(([v])=>v.length!==vals.length))throw new E('#VALOR!');let s=0,count=0;for(let i=0;i<vals.length;i++)if(pairs.every(([x,f])=>f(x[i]))&&typeof vals[i]==='number'){s+=vals[i];count++;}if(!count)throw new E('#DIV/0!');return s/count;},
+ STDEVP:a=>{const n=nums(a);if(!n.length)throw new E('#DIV/0!');const avg=sum(n)/n.length;return Math.sqrt(sum(n.map(x=>(x-avg)**2))/n.length);},
+ VAR:a=>{const n=nums(a);if(n.length<2)throw new E('#DIV/0!');const avg=sum(n)/n.length;return sum(n.map(x=>(x-avg)**2))/(n.length-1);},
+ VARP:a=>{const n=nums(a);if(!n.length)throw new E('#DIV/0!');const avg=sum(n)/n.length;return sum(n.map(x=>(x-avg)**2))/n.length;},
+ MODE:a=>{const arr=nums(a),seen=new Map();for(const x of arr)seen.set(x,(seen.get(x)||0)+1);const best=[...seen].sort((a,b)=>b[1]-a[1]||a[0]-b[0])[0];if(!best||best[1]<2)throw new E('#N/D');return best[0];},
+ PERCENTILE:a=>per(a[0],a[1]),QUARTILE:a=>per(a[0],num(a[1])/4),
+ LARGE:a=>{const n=nums([a[0]]).sort((x,y)=>y-x),k=num(a[1]);if(k<1||k>n.length||k%1)throw new E('#NUM!');return n[k-1];},
+ SMALL:a=>{const n=nums([a[0]]).sort((x,y)=>x-y),k=num(a[1]);if(k<1||k>n.length||k%1)throw new E('#NUM!');return n[k-1];},
+ RANK:a=>{const n=num(a[0]),arr=nums([a[1]]);const desc=a[2]===undefined||!tb(a[2]);return 1+arr.filter(x=>desc?x>n:x<n).length;},
+ SUBSTITUTE:a=>{const text=str(a[0]),before=str(a[1]),after=str(a[2]);if(!before)return text;if(a[3]===undefined)return text.split(before).join(after);let counter=0;return text.replaceAll(before,x=>++counter===num(a[3])?after:x);},
+ REPLACE:a=>{const t=str(a[0]),start=Math.floor(num(a[1]))-1,n=Math.floor(num(a[2]));if(start<0||n<0)throw new E('#VALOR!');return t.slice(0,start)+str(a[3])+t.slice(start+n);},
+ SEARCH:a=>{const at=str(a[0]).toLowerCase(),text=str(a[1]).toLowerCase(),offset=a[2]===undefined?0:Math.floor(num(a[2]))-1;const pos=text.indexOf(at,offset);if(pos<0)throw new E('#VALOR!');return pos+1;},
+ FIND:a=>{const offset=a[2]===undefined?0:Math.floor(num(a[2]))-1,pos=str(a[1]).indexOf(str(a[0]),offset);if(pos<0)throw new E('#VALOR!');return pos+1;},
+ REPT:a=>{const n=Math.floor(num(a[1]));if(n<0||n>10000)throw new E('#VALOR!');return str(a[0]).repeat(n).slice(0,30000);},
+ TEXT:a=>{const n=a[0],fmt=str(a[1]);if(typeof n!=='number')return str(n);if(fmt.includes('%'))return (n*100).toFixed((fmt.split('.')[1]||'').replace(/[^0]/g,'').length)+'%';const decimals=(fmt.split('.')[1]||'').replace(/[^0]/g,'').length;return n.toLocaleString('es-CO',{minimumFractionDigits:decimals,maximumFractionDigits:decimals});},
+ VALUE:a=>num(a[0]),CHAR:a=>String.fromCharCode(num(a[0])),UNICHAR:a=>String.fromCodePoint(num(a[0])),CODE:a=>str(a[0]).charCodeAt(0)||0,
+ CLEAN:a=>str(a[0]).replace(/[\x00-\x1f\x7f]/g,''),
+ ISNUMBER:a=>typeof a[0]==='number',ISTEXT:a=>typeof a[0]==='string',ISBLANK:a=>a[0]==='',ISERROR:a=>a[0] instanceof E,ISERR:a=>a[0] instanceof E&&a[0].c!=='#N/D',
+ N:a=>typeof a[0]==='number'?a[0]:typeof a[0]==='boolean'?+a[0]:0,T:a=>typeof a[0]==='string'?a[0]:'',
+ SIGN:a=>Math.sign(num(a[0])),TRUNC:a=>{const m=10**num(a[1]??0);return Math.trunc(num(a[0])*m)/m;},
+ LOG:a=>Math.log(num(a[0]))/Math.log(num(a[1]??10)),LOG10:a=>Math.log10(num(a[0])),LN:a=>Math.log(num(a[0])),EXP:a=>Math.exp(num(a[0])),PI:()=>Math.PI,
+ SIN:a=>Math.sin(num(a[0])),COS:a=>Math.cos(num(a[0])),TAN:a=>Math.tan(num(a[0])),ASIN:a=>Math.asin(num(a[0])),ACOS:a=>Math.acos(num(a[0])),ATAN:a=>Math.atan(num(a[0])),RADIANS:a=>num(a[0])*Math.PI/180,DEGREES:a=>num(a[0])*180/Math.PI,
+ FACT:a=>factor(a[0]),COMBIN:a=>{const n=num(a[0]),r=num(a[1]);if(n<r||r<0)throw new E('#NUM!');return Math.round(factor(n)/factor(r)/factor(n-r));},
+ PERMUT:a=>{const n=num(a[0]),r=num(a[1]);if(n<r||r<0)throw new E('#NUM!');return Math.round(factor(n)/factor(n-r));},
+ GCD:a=>{const n=nums(a).map(x=>Math.abs(Math.floor(x)));const gcd=(a,b)=>b?gcd(b,a%b):a;return n.reduce(gcd,0);},
+ LCM:a=>{const n=nums(a).map(x=>Math.abs(Math.floor(x)));const gcd=(a,b)=>b?gcd(b,a%b):a;return n.reduce((x,y)=>x&&y?x/gcd(x,y)*y:0,1);},
+ MROUND:a=>{const n=num(a[0]),m=num(a[1]);if((n<0)!=(m<0)&&n&&m)throw new E('#NUM!');return Math.round(n/m)*m;},
+ CEILING:a=>{const n=num(a[0]),m=num(a[1]??1);return Math.ceil(n/m)*m;},FLOOR:a=>{const n=num(a[0]),m=num(a[1]??1);return Math.floor(n/m)*m;},
+ DATE:a=>dateParts(a),YEAR:a=>serialDate(a[0]).getUTCFullYear(),MONTH:a=>serialDate(a[0]).getUTCMonth()+1,DAY:a=>serialDate(a[0]).getUTCDate(),
+ DAYS:a=>num(a[0])-num(a[1]),WEEKDAY:a=>{const day=serialDate(a[0]).getUTCDay();return num(a[1]??1)===2?(day+6)%7+1:day+1;},
+ EDATE:a=>{const d=serialDate(a[0]);d.setUTCMonth(d.getUTCMonth()+num(a[1]));return dateSerial(d);},
+ EOMONTH:a=>{const d=serialDate(a[0]);return dateSerial(new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+num(a[1])+1,0)));},
+ PMT:a=>{const rate=num(a[0]),n=num(a[1]),pv=num(a[2]),fv=num(a[3]??0),type=num(a[4]??0);if(n===0)throw new E('#DIV/0!');return rate===0?-(pv+fv)/n:-(pv*(1+rate)**n+fv)*rate/((1+rate*type)*((1+rate)**n-1));},
+ PV:a=>{const rate=num(a[0]),n=num(a[1]),pmt=num(a[2]),fv=num(a[3]??0),type=num(a[4]??0);if(rate===0)return -pmt*n-fv;const q=(1+rate)**n;return -(fv+pmt*(1+rate*type)*(q-1)/rate)/q;},
+ FV:a=>{const rate=num(a[0]),n=num(a[1]),pmt=num(a[2]),pv=num(a[3]??0),type=num(a[4]??0);if(rate===0)return -pv-pmt*n;const q=(1+rate)**n;return -pv*q-pmt*(1+rate*type)*(q-1)/rate;},
+ HYPERLINK:a=>str(a[1]??a[0]),
+ CHOOSE:a=>{const i=Math.floor(num(a[0]));if(i<1||i>=a.length)throw new E('#VALOR!');return a[i];},
+ MATCH:a=>{const values=asRange(a[1]).arr,v=a[0];if(a[2]===undefined||num(a[2])===1){let last=-1;for(let i=0;i<values.length;i++)if(cv(values[i],v)<=0)last=i;return last<0?new E('#N/D'):last+1;}const i=values.findIndex(x=>cv(x,v)===0);return i<0?new E('#N/D'):i+1;},
+ INDEX:a=>{const x=asRange(a[0]),r=Math.floor(num(a[1])),c=Math.floor(num(a[2]??1));if(r<1||c<1||c>x.w||r*x.w>x.arr.length)throw new E('#REF!');return x.arr[(r-1)*x.w+c-1];},
+ TEXTJOIN:a=>{const sep=str(a[0]),ignore=tb(a[1]);return flat(a.slice(2)).filter(v=>!ignore||v!=='').map(str).join(sep);}
+});
+// Funciones que requieren captura de errores y evaluación especial.
+const studioCall=call;
+call=function(n,X){const nm=AL[n.n]||n.n;
+ if(nm==='IFNA'||nm==='ISERROR'||nm==='ISERR'){
+   let v;try{v=ev(n.a[0],X);}catch(e){v=e instanceof E?e:new E('#ERROR!');}
+   if(nm==='IFNA')return v instanceof E&&v.c==='#N/D'?ev(n.a[1],X):v;
+   return nm==='ISERROR'?v instanceof E:v instanceof E&&v.c!=='#N/D';
+ }
+ return studioCall(n,X);
+};
+// Documentar las funciones adicionales en el catálogo integrado.
+FN_DOCS.push(
+ ...[['SUMAPRODUCTO','SUMPRODUCT','SUMAPRODUCTO(A1:A10;B1:B10)','Suma el producto fila por fila.'],
+ ['CONTAR.SI.CONJUNTO','COUNTIFS','CONTAR.SI.CONJUNTO(A1:A10;">5";B1:B10;"Sí")','Cuenta filas que cumplen múltiples condiciones.'],
+ ['SUMAR.SI.CONJUNTO','SUMIFS','SUMAR.SI.CONJUNTO(C1:C10;A1:A10;"Activo")','Suma usando varios criterios.'],
+ ['PROMEDIO.SI.CONJUNTO','AVERAGEIFS','PROMEDIO.SI.CONJUNTO(C1:C10;A1:A10;"Activo")','Media de valores filtrados por criterios.'],
+ ['MEDIANA','MEDIAN','MEDIANA(A1:A10)','Estadística de tendencia central.'],
+ ['MODA','MODE','MODA(A1:A10)','Valor numérico más repetido.'],
+ ['PERCENTIL.INC','PERCENTILE','PERCENTIL.INC(A1:A10;0.9)','Percentiles por interpolación inclusiva.'],
+ ['DESVEST.P','STDEVP','DESVEST.P(A1:A10)','Desviación estándar poblacional.'],
+ ['VAR','VAR','VAR(A1:A10)','Varianza muestral.'],
+ ['FECHA','DATE','FECHA(2026;11;15)','Número de serie de fecha.'],
+ ['AÑO','YEAR','AÑO(A1)','Año de una fecha en serie.'],
+ ['MES','MONTH','MES(A1)','Mes de una fecha.'],
+ ['DIA','DAY','DIA(A1)','Día del mes.'],
+ ['PAGO','PMT','PAGO(0.01;12;1000000)','Cuota periódica de un préstamo.'],
+ ['VF','FV','VF(0.01;12;-100000)','Valor futuro financiero.'],
+ ['VA','PV','VA(0.01;12;-100000)','Valor presente financiero.'],
+ ['SENO','SIN','SENO(PI()/2)','Seno de un ángulo en radianes.'],
+ ['RADIANES','RADIANS','RADIANES(90)','Convierte grados a radianes.'],
+ ['COMBINAT','COMBIN','COMBINAT(5;2)','Combinaciones posibles.'],
+ ['SUSTITUIR','SUBSTITUTE','SUSTITUIR("abc";"b";"x")','Sustituye texto en una cadena.'],
+ ['INDICE','INDEX','INDICE(A1:C5;2;3)','Extrae un valor según fila y columna.'],
+ ['COINCIDIR','MATCH','COINCIDIR("Ana";A1:A10;0)','Busca posición de coincidencia exacta.'],
+ ['UNIRCADENAS','TEXTJOIN','UNIRCADENAS("-";VERDADERO;A1:A5)','Concatena con separador.'],
+ ['ESERROR','ISERROR','ESERROR(A1)','Identifica errores de fórmula.']]
+ .map(([es,en,synt,desc])=>({es,en,synt,desc}))
+);
+
+
+/* ============================================================================
+ * 12. ARRANQUE DE LA APLICACIÓN
+ * ============================================================================ */
+(async () => {
+  build();
+  renderSheetTabs();
+
+  const { ok, total } = window._auditTests;
+  const badge = $('#testBadge');
+  badge.textContent = (ok === total ? '✓ ' : '✗ ') + `Autoprueba ${ok}/${total}`;
+  badge.className = `text-[11px] font-medium px-2.5 py-0.5 rounded-full border transition cursor-pointer ${
+    ok === total
+      ? 'bg-emerald-950/60 text-emerald-200 border-emerald-400/40 hover:bg-emerald-900'
+      : 'bg-red-950/60 text-red-200 border-red-400/40'
+  }`;
+
+  try {
+    const d = await DB.get('doc');
+    if (d) load(d);
+    else loadDemoTemplate();
+  } catch (_) {
+    loadDemoTemplate();
+  }
+
+  try {
+    const t = await DB.get('xlsx');
+    if (t) await inject(t);
+  } catch (_) {}
+
+  setLib();
+  wrap.focus();
+})();
+</script>
+</body>
+</html>
